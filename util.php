@@ -77,7 +77,7 @@
 	}
 
 	function util_generateRequestFingerprint() {
-		util_doEqReserveIdSecurityCheck();
+		util_doDigitalFieldNotebooksIdSecurityCheck();
 
 		return md5(FINGERPRINT_SALT . $_SESSION["digitalfieldnotebooks_id"] .
 			(isset($_SERVER['HTTP_USER_AGENT']) ? substr($_SERVER['HTTP_USER_AGENT'], 18) : 'nouseragent')
