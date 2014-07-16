@@ -23,9 +23,9 @@
 		unset($_SESSION['isAuthenticated']);
 		unset($_SESSION['fingerprint']);
 		unset($_SESSION['userdata']);
-		unset($_SESSION['eqreserve_id']);
-		$_COOKIE['eqreserve_id'] = "";
-		setcookie("eqreserve_id", "", time() - 3600);
+		unset($_SESSION['digitalfieldnotebooks_id']);
+		$_COOKIE['digitalfieldnotebooks_id'] = "";
+		setcookie("digitalfieldnotebooks_id", "", time() - 3600);
 
 		return;
 	}
@@ -57,73 +57,19 @@
 		util_redirectToAppHome();
 	}
 
-	function library_ScreenMessages($num = 0) {
-		$screen_messages = [
-			10   => "Please sign in."
-			, 11 => "Sign in failed."
-			, 20 => "Missing required parameter: equipment group id (eid)"
-			, 50 => "You do not have access to that group."
-			, 51 => "You do not have access to that institutional group."
-			, 52 => "You do not have access to that schedule."
-			, 53 => "You do not have access to that account."
-			, 60 => "Record does not exist in database"
-			, 61 => "Record already exists in database"
-			#, 100 => "User or LDAP something or other message"
-		];
-		if (array_key_exists($num, $screen_messages)) {
-			return $screen_messages[$num];
-		}
-	}
-
-	function util_displaySuccessMessage($num = 0) {
-		$message = library_ScreenMessages($num);
-		if ($message) {
-			// success message
-			echo "<div class=\"alert alert-success\">";
-			echo "<button type=\"button\" class=\"close\" data-dismiss=\"alert\">&times;</button>";
-			echo "<h4>Success!</h4>";
-			echo $message;
-			echo "</div>";
-		}
-	}
-
-	function util_displayFailureMessage($num = 0) {
-		$message = library_ScreenMessages($num);
-		if ($message) {
-			// failure message
-			echo "<div class=\"alert alert-error\">";
-			echo "<button type=\"button\" class=\"close\" data-dismiss=\"alert\">&times;</button>";
-			echo "<h4>Failed!</h4>";
-			echo $message;
-			echo "</div>";
-		}
-	}
-
-	function util_displayInfoMessage($num = 0) {
-		$message = library_ScreenMessages($num);
-		if ($message) {
-			// info message
-			echo "<div class=\"alert alert-info\">";
-			echo "<button type=\"button\" class=\"close\" data-dismiss=\"alert\">&times;</button>";
-			echo "<h4>Oops!</h4>";
-			echo $message;
-			echo "</div>";
-		}
-	}
-
 	// this section adds and checks a random id string for the browser and does some checking against that ID string.
 	// this makes it much harder to spoof sessions
-	function util_doEqReserveIdSecurityCheck() {
-		if ((!isset($_COOKIE["eqreserve_id"])) || (!$_COOKIE["eqreserve_id"])) {
-			if (isset($_SESSION['eqreserve_id']) && ($_SESSION['eqreserve_id'])) { // the session has an eqreserve id, but there was no cookie set for it - highly suspicious
+	function util_doDigitalFieldNotebooksIdSecurityCheck() {
+		if ((!isset($_COOKIE["digitalfieldnotebooks_id"])) || (!$_COOKIE["digitalfieldnotebooks_id"])) {
+			if (isset($_SESSION['digitalfieldnotebooks_id']) && ($_SESSION['digitalfieldnotebooks_id'])) { // the session has an digitalfieldnotebooks id, but there was no cookie set for it - highly suspicious
 				// TODO: log and/or message?
 				util_redirectToAppHomeWithPrejudice();
 			}
-			$eqreserve_id = util_genRandomIdString(300);
-			setcookie("eqreserve_id", $eqreserve_id);
-			$_SESSION['eqreserve_id'] = $eqreserve_id;
+			$digitalfieldnotebooks_id = util_genRandomIdString(300);
+			setcookie("digitalfieldnotebooks_id", $digitalfieldnotebooks_id);
+			$_SESSION['digitalfieldnotebooks_id'] = $digitalfieldnotebooks_id;
 		}
-		elseif ((!isset($_SESSION['eqreserve_id'])) || ($_COOKIE["eqreserve_id"] != $_SESSION['eqreserve_id'])) {
+		elseif ((!isset($_SESSION['digitalfieldnotebooks_id'])) || ($_COOKIE["digitalfieldnotebooks_id"] != $_SESSION['digitalfieldnotebooks_id'])) {
 			// there was an appropriately named cookie, but the value doesn't match the one associated with this session
 			// TODO: log and/or message?
 			util_redirectToAppHomeWithPrejudice();
@@ -133,7 +79,7 @@
 	function util_generateRequestFingerprint() {
 		util_doEqReserveIdSecurityCheck();
 
-		return md5(FINGERPRINT_SALT . $_SESSION["eqreserve_id"] .
+		return md5(FINGERPRINT_SALT . $_SESSION["digitalfieldnotebooks_id"] .
 			(isset($_SERVER['HTTP_USER_AGENT']) ? substr($_SERVER['HTTP_USER_AGENT'], 18) : 'nouseragent')
 		);
 	}
@@ -165,31 +111,6 @@
 		}
 		return $value;
 	}
-
-	//	# convert minute to pretty words using: days, hours, minutes
-	//	function util_minutesToWords($minutes) {
-	//		$ret = "";
-	//
-	//		/*** get the days ***/
-	//		$days = intval(intval($minutes) / (60 * 24));
-	//		if ($days > 0) {
-	//			$ret .= "$days days ";
-	//		}
-	//
-	//		/*** get the hours ***/
-	//		$hours = (intval($minutes) / 60) % 24;
-	//		if ($hours > 0) {
-	//			$ret .= "$hours hours ";
-	//		}
-	//
-	//		/*** get the minutes ***/
-	//		$minutes = intval($minutes) % 60;
-	//		if ($minutes > 0) {
-	//			$ret .= "$minutes minutes ";
-	//		}
-	//
-	//		return $ret;
-	//	}
 
 	# Output an object wrapped with HTML PRE tags for pretty output
 	function util_prePrintR($obj) {
@@ -305,13 +226,4 @@
 		}
 
 		return "$first_part-$second_part";
-	}
-
-
-	#####################################
-	# Array Map Object Queries
-	#####################################
-
-	function util_returnUserID($e) {
-		return $e->user_id;
 	}

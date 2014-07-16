@@ -1,5 +1,5 @@
-eqreserve
-=========
+digitalfieldnotebooks
+=====================
 
-Equipment Reservation System
+Digital Field Notebooks
 

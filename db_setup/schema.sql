@@ -31,8 +31,8 @@ FOR TESTING ONLY:
 # ----------------------------
 # IMPORTANT: Select which database you wish to run this script against
 # ----------------------------
--- USE eqreserve;
-USE eqreservetest;
+-- USE digitalfieldnotebooks;
+USE digitalfieldnotebookstest;
 
 
 CREATE TABLE IF NOT EXISTS `eq_groups` (
@@ -121,7 +121,7 @@ CREATE TABLE IF NOT EXISTS `roles` (
 	`priority` INT NOT NULL,    
 	`name` VARCHAR(255) NULL,
     `flag_delete` BIT(1) NOT NULL DEFAULT 0
-)  ENGINE=innodb DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT='determines allowable actions within the eqreserve system';
+)  ENGINE=innodb DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT='determines allowable actions within the digitalfieldnotebooks system';
 /* name: admin, manager, consumer ("none" is implied by a lack of an entry in the permissions table) */
 /* priority: Highest admin role is priority = 1; lowest anonymous/guest priority is > 1 */
  
