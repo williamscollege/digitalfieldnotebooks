@@ -1,0 +1,16 @@
+tables:
+
+users - linked to / derived from LDAP info
+    username
+    fname
+    lname
+    email
+    advisor
+    notes - a general text/comments field
+    flag_is_banned
+    flag_delete
+    
+roles
+    name: admin, manager, consumer ('none' is implied by a lack of an entry in the link_user_roles table)
+    flag_delete
+    

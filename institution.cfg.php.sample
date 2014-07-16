@@ -1,0 +1,48 @@
+<?php
+
+
+	# copy this file to institution.cfg.php and replace the example values
+	# below with the ones appropriate for your institution
+
+	define('INSTITUTION_DOMAIN', 'institution.edu');
+
+    # used for session security
+    define('FINGERPRINT_SALT', 'yoursaltstringhere');
+
+	# application folder path
+	define('APP_FOLDER',	   'http://localhost/eqreserve');
+
+	# database connection
+	define('DB_SERVER',	'yourdbserver'); // e.g. mysql.college.edu
+	define('DB_NAME',	'digitalfieldnotebooks');
+	define('DB_USER',	'digitalfieldnotebooksweb'); // this user (whatever you call it) should have only basic SELECT, INSERT, UPDATE, DELETE privileges
+	define('DB_PASS',	'yourfancypassword');
+
+	# external Content Delivery Network
+	# ***** Google CDN: https://developers.google.com/speed/libraries/devguide#jquery
+	define('PATH_JQUERY_JS', '//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js');
+	define('PATH_JQUERYUI_JS', '//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js');
+	define('PATH_JQUERYUI_CSS', '//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/dot-luv/jquery-ui.min.css');
+
+	# local file paths
+	# ***** Bootstrap: http://getbootstrap.com/
+	define('PATH_BOOTSTRAP_JS', 'js/bootstrap.min.js?rel=2.3.2');
+	define('PATH_BOOTSTRAP_CSS', 'css/bootstrap.min.css?rel=2.3.2');
+	define('PATH_BOOTSTRAP_RESPONSIVE_CSS', 'css/bootstrap-responsive.min.css?rel=2.3.2');
+
+	# these are used in the automated tests.
+	define('TESTING_DB_SERVER',	'localhost'); // e.g. localhost
+	define('TESTING_DB_NAME',	'digitalfieldnotebookstest');
+	define('TESTING_DB_USER',	'digitalfieldnotebooksweb'); // this user (whatever you call it) should have only basic SELECT, INSERT, UPDATE, DELETE privileges
+	define('TESTING_DB_PASS',	'yourfancypassword');
+
+	# NOTE: it's VERY IMPORTANT to change the password (and possibly the username) for these as this user will always be authenticated!
+	define('TESTINGUSER','testinguser');
+	define('TESTINGPASSWORD','testinguserpassword');
+
+	# ---------------------------
+	# External Dependency: php.ini configuration file
+	# ---------------------------
+	# TimeZone Problem: the default php.ini setting may be incorrect; correct by explicitly setting this configuration to your region
+	# TimeZone Solution: (Line 1044 of php.ini: Module Settings/Date/date.timezone = America/New_York)
+?>
