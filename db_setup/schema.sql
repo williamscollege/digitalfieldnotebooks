@@ -19,6 +19,8 @@ FOR TESTING ONLY:
 	DROP TABLE `actions`;
 	DROP TABLE `role_action_target_links`;
 	DROP TABLE `metadata_structures`;
+	DROP TABLE `metadata_term_sets`;
+	DROP TABLE `metadata_term_values`;
 	DROP TABLE `metadata_references`;
 	DROP TABLE `reference_plants`;
 	DROP TABLE `reference_plant_extras`;
@@ -87,23 +89,49 @@ CREATE TABLE IF NOT EXISTS `role_action_target_links` (
 /* NOTE: action permissions are hardcoded into the application - a fully fleshed out action control system is outside the scope of this project */
 
 # ----------------------------
-# metadata structure
+# metadata stuff
 
 CREATE TABLE IF NOT EXISTS `metadata_structures` (
   `metadata_structure_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `parent_metadata_structure_id` INT NULL, /* if null or <= 0 then this record is a top-level category */
   `created_at` TIMESTAMP,
   `updated_at` TIMESTAMP,
-  `type` VARCHAR(24) NOT NULL, /* category, sub-category, term */
   `name` VARCHAR(255) NULL,
   `ordering` DECIMAL NOT NULL DEFAULT 0, /* NOTE: the main ordering is by category, then sub-category, then term; this sorts within those levels, not across them */
   `description` VARCHAR(255) NULL,
   `details` TEXT NULL,
+  `metadata_term_set_id` INT NULL, /* if null or <= 0 then this element has no controlled vocab */
   `flag_delete` BIT(1) NOT NULL DEFAULT 0
 )  ENGINE=innodb DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT='defining the metadata available for notebook pages';
+/* FK:parent_metadata_structure_id - metadata_structures.metadata_structure_id */
+/* FK: metadata_term_sets.metadata_term_set_id */
+
+CREATE TABLE IF NOT EXISTS `metadata_term_sets` (
+  `metadata_term_set_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `created_at` TIMESTAMP,
+  `updated_at` TIMESTAMP,
+  `name` VARCHAR(255) NULL,
+  `ordering` DECIMAL NOT NULL DEFAULT 0, /* NOTE: within a given ordering value the term sets are ordered by name */
+  `description` VARCHAR(255) NULL,
+  `flag_delete` BIT(1) NOT NULL DEFAULT 0
+)  ENGINE=innodb DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT='defining the sets of controlled vocab';
+
+CREATE TABLE IF NOT EXISTS `metadata_term_values` (
+  `metadata_term_value_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `metadata_term_set_id` INT NOT NULL,
+  `created_at` TIMESTAMP,
+  `updated_at` TIMESTAMP,
+  `name` VARCHAR(255) NULL,
+  `ordering` DECIMAL NOT NULL DEFAULT 0, /* NOTE: within a given ordering value the term values are ordered by name */
+  `description` VARCHAR(255) NULL,
+  `flag_delete` BIT(1) NOT NULL DEFAULT 0
+)  ENGINE=innodb DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT='defining the actual values of controlled vocab';
+/* FK:metadata_term_set_id -  metadata_term_sets.metadata_term_set_id */
 
 CREATE TABLE IF NOT EXISTS `metadata_references` (
   `metadata_reference_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  `metadata_structure_id` INT NOT NULL,
+  `metadata_type` VARCHAR(24) NULL, /* structure, set, value */
+  `metadata_id` INT NOT NULL,
   `created_at` TIMESTAMP,
   `updated_at` TIMESTAMP,
   `type` VARCHAR(24) NOT NULL, /* text, image, audio, etc. */
@@ -112,7 +140,7 @@ CREATE TABLE IF NOT EXISTS `metadata_references` (
   `ordering` DECIMAL NOT NULL DEFAULT 0,
   `flag_delete` BIT(1) NOT NULL DEFAULT 0
 )  ENGINE=innodb DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT='example/reference info pertaining to metadata';
-/* FK: metadata_structures.metadata_structure_id */
+/* FK:metadata_id - single value inheritance pattern: metadata_structures.metadata_structure_id, or metadata_term_sets.metadata_term_set_id or metadata_term_values.metadata_term_value_id*/
 
 # ----------------------------
 # pre-loaded data & global reference/lookup data

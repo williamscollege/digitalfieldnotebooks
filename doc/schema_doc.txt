@@ -1,16 +1,60 @@
-tables:
+TABLES/OJECTS
+=============
 
-users - linked to / derived from LDAP info
-    username
-    fname
-    lname
-    email
-    advisor
-    notes - a general text/comments field
-    flag_is_banned
-    flag_delete
-    
+-------------------------------
+
+users
+    linked to / derived from LDAP info
+
 roles
-    name: admin, manager, consumer ('none' is implied by a lack of an entry in the link_user_roles table)
-    flag_delete
-    
+    name: admin, manager, field, anonymous
+
+user_role_links
+    what kind of roles a given user has
+
+actions
+    what kinds of things users can do (view, edit, etc.)
+
+role_action_target_links
+    the ways that users of a given role can affect a given object/record
+
+-------------------------------
+
+metadata_structures
+    a generalized hierarchical metadata structure/schema definition
+
+metadata_term_sets
+    a way to group controlled vocab values, so that more than one structure may use the same value set (e.g. 'small lengths' might be used by 'leaf width', 'leaf height', and 'bud spacing')
+
+metadata_term_values
+    controlled vocab terms/values
+
+metadata_references
+    example and/or additional info about structure, set, or value records/objects (e.g. images, more detailed descriptions, etc.)
+
+-------------------------------
+
+reference_plants
+    primary table that holds canonical data about plants
+
+reference_plant_extras
+    additional data for plants (e.g. common names, description, etc.)
+
+-------------------------------
+
+notebooks
+    primary organizational unit of data entered by a field user - mainly used to control access and group pages
+
+notebook_pages
+    organizational grouping of information that a field users records about a plant (i.e. a plant species)- links to a reference plant record
+
+notebook_page_fields
+    the actual information that a field user enters on a given notebook page
+
+-------------------------------
+
+specimens
+    specific examples for reference plants and notebook pages
+
+specimen_images
+    image info for specimens
