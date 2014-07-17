@@ -13,19 +13,20 @@ NOTES:
 	reservations are for items, not groups. if a manager reserves a group, she is really reserving all items (i.e. to take the group offline for a period of time)
 
 FOR TESTING ONLY:
-	DROP TABLE `eq_groups`;
-	DROP TABLE `eq_subgroups`;
-	DROP TABLE `eq_items`;
 	DROP TABLE `users`;
-	DROP TABLE `inst_groups`;
-	DROP TABLE `inst_memberships`;
-	DROP TABLE `comm_prefs`;
 	DROP TABLE `roles`;
-	DROP TABLE `permissions`;
-	DROP TABLE `schedules`;
-	DROP TABLE `reservations`;
-	DROP TABLE `time_blocks`;
-	DROP TABLE `queued_messages`;
+	DROP TABLE `user_role_links`;
+	DROP TABLE `actions`;
+	DROP TABLE `role_action_target_links`;
+	DROP TABLE `metadata_structures`;
+	DROP TABLE `metadata_references`;
+	DROP TABLE `reference_plants`;
+	DROP TABLE `reference_plant_extras`;
+	DROP TABLE `notebooks`;
+	DROP TABLE `notebook_pages`;
+	DROP TABLE `notebook_page_fields`;
+	DROP TABLE `specimens`;
+	DROP TABLE `specimen_images`;
 */
 
 # ----------------------------
@@ -90,6 +91,8 @@ CREATE TABLE IF NOT EXISTS `role_action_target_links` (
 
 CREATE TABLE IF NOT EXISTS `metadata_structures` (
   `metadata_structure_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `created_at` TIMESTAMP,
+  `updated_at` TIMESTAMP,
   `type` VARCHAR(24) NOT NULL, /* category, sub-category, term */
   `name` VARCHAR(255) NULL,
   `ordering` DECIMAL NOT NULL DEFAULT 0, /* NOTE: the main ordering is by category, then sub-category, then term; this sorts within those levels, not across them */
@@ -101,6 +104,8 @@ CREATE TABLE IF NOT EXISTS `metadata_structures` (
 CREATE TABLE IF NOT EXISTS `metadata_references` (
   `metadata_reference_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `metadata_structure_id` INT NOT NULL,
+  `created_at` TIMESTAMP,
+  `updated_at` TIMESTAMP,
   `type` VARCHAR(24) NOT NULL, /* text, image, audio, etc. */
   `external_reference` VARCHAR(255) NULL, /* URL or file path */
   `description` VARCHAR(255) NULL,
@@ -114,6 +119,8 @@ CREATE TABLE IF NOT EXISTS `metadata_references` (
 
 CREATE TABLE IF NOT EXISTS `reference_plants` (
   `reference_plant_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `created_at` TIMESTAMP,
+  `updated_at` TIMESTAMP,
   `class` VARCHAR(255) NULL,
   `order` VARCHAR(255) NULL,
   `family` VARCHAR(255) NULL,
@@ -126,6 +133,8 @@ CREATE TABLE IF NOT EXISTS `reference_plants` (
 CREATE TABLE IF NOT EXISTS `reference_plant_extras` (
   `reference_plant_extra_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `reference_plant_id` INT NOT NULL,
+  `created_at` TIMESTAMP,
+  `updated_at` TIMESTAMP,
   `type` VARCHAR(255) NULL, /* common name, description, image */
   `value` VARCHAR(255) NULL, /* either the direct info (for common name and description) or a URL or file path */
   `ordering` DECIMAL NOT NULL DEFAULT 0,
@@ -138,6 +147,8 @@ CREATE TABLE IF NOT EXISTS `reference_plant_extras` (
 
 CREATE TABLE IF NOT EXISTS `notebooks` (
   `notebook_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `created_at` TIMESTAMP,
+  `updated_at` TIMESTAMP,
   `user_id` INT NOT NULL,
   `name` VARCHAR(255) NULL,
   `notes` TEXT NULL,
@@ -148,6 +159,8 @@ CREATE TABLE IF NOT EXISTS `notebooks` (
 CREATE TABLE IF NOT EXISTS `notebook_pages` (
   `notebook_page_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `notebook_id` INT NOT NULL,
+  `created_at` TIMESTAMP,
+  `updated_at` TIMESTAMP,
   `reference_plant_id` INT NOT NULL,
   `notes` TEXT NULL,
   `flag_delete` BIT(1) NOT NULL DEFAULT 0
@@ -158,6 +171,8 @@ CREATE TABLE IF NOT EXISTS `notebook_pages` (
 CREATE TABLE IF NOT EXISTS `notebook_page_fields` (
   `notebook_page_field_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `notebook_page_id` INT NOT NULL,
+  `created_at` TIMESTAMP,
+  `updated_at` TIMESTAMP,
   `label_metadata_structure_id` INT NOT NULL,
   `value_metadata_structure_id` INT NOT NULL,
   `value_open` VARCHAR(255) NULL,
@@ -172,6 +187,8 @@ CREATE TABLE IF NOT EXISTS `notebook_page_fields` (
 
 CREATE TABLE IF NOT EXISTS `specimens` (
   `specimen_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `created_at` TIMESTAMP,
+  `updated_at` TIMESTAMP,
   `link_to_type` INT NOT NULL, /* reference_plant or notebook_page */
   `link_to_id` INT NOT NULL,
   `name` VARCHAR(255) NULL, /* brief identification of the specimen - e.g. 'science quad elm' */
@@ -187,6 +204,8 @@ CREATE TABLE IF NOT EXISTS `specimens` (
 CREATE TABLE IF NOT EXISTS `specimen_images` (
   `specimen_image_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `specimen_id` INT NOT NULL,
+  `created_at` TIMESTAMP,
+  `updated_at` TIMESTAMP,
   `image_reference` VARCHAR(255) NULL, /* URL or file path */
   `ordering` DECIMAL NOT NULL DEFAULT 0,
   `flag_delete` BIT(1) NOT NULL DEFAULT 0
