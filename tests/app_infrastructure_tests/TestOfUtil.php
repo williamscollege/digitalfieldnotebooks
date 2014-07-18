@@ -48,7 +48,7 @@ class TestOfUtil extends UnitTestCase {
 
     function testCreateDbConnection() {
         
-        $dbConn = util_createDbConnection(24);
+        $dbConn = util_createDbConnection();
 
         $this->assertEqual(get_class($dbConn),'PDO');
     }

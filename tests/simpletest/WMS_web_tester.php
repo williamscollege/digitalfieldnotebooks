@@ -13,6 +13,7 @@ require_once dirname(__FILE__) . '/web_tester.php';
 /**#@-*/
 
 require_once dirname(__FILE__).'/../../institution.cfg.php';
+require_once dirname(__FILE__).'/../../util.php';
 require_once dirname(__FILE__) . '/../dataForTesting.php';
 
 /**
