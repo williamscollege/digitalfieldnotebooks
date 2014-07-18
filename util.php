@@ -227,3 +227,52 @@
 
 		return "$first_part-$second_part";
 	}
+
+    function library_ScreenMessages($num = 0) {
+        $screen_messages = [
+            10   => "Please sign in."
+            , 11 => "Sign in failed."
+            , 60 => "Record does not exist in database"
+            , 61 => "Record already exists in database"
+            #, 100 => "User or LDAP something or other message"
+        ];
+        if (array_key_exists($num, $screen_messages)) {
+            return $screen_messages[$num];
+        }
+    }
+
+    function util_displaySuccessMessage($num = 0) {
+        $message = library_ScreenMessages($num);
+        if ($message) {
+            // success message
+            echo "<div class=\"alert alert-success\">";
+            echo "<button type=\"button\" class=\"close\" data-dismiss=\"alert\">&times;</button>";
+            echo "<h4>Success!</h4>";
+            echo $message;
+            echo "</div>";
+        }
+    }
+
+    function util_displayFailureMessage($num = 0) {
+        $message = library_ScreenMessages($num);
+        if ($message) {
+            // failure message
+            echo "<div class=\"alert alert-error\">";
+            echo "<button type=\"button\" class=\"close\" data-dismiss=\"alert\">&times;</button>";
+            echo "<h4>Failed!</h4>";
+            echo $message;
+            echo "</div>";
+        }
+    }
+
+    function util_displayInfoMessage($num = 0) {
+        $message = library_ScreenMessages($num);
+        if ($message) {
+            // info message
+            echo "<div class=\"alert alert-info\">";
+            echo "<button type=\"button\" class=\"close\" data-dismiss=\"alert\">&times;</button>";
+            echo "<h4>Oops!</h4>";
+            echo $message;
+            echo "</div>";
+        }
+    }

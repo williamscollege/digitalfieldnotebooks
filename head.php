@@ -22,8 +22,6 @@
 				$_SESSION['userdata']['firstname'] = $AUTH->fname;
 				$_SESSION['userdata']['lastname']  = $AUTH->lname;
 				$_SESSION['userdata']['sortname']  = $AUTH->sortname;
-				// array of institutional group names for this user
-				$_SESSION['userdata']['inst_groups'] = array_slice($AUTH->inst_groups, 0); // makes a copy of the array
 				util_redirectToAppHome();
 			}
 			else {
@@ -65,8 +63,6 @@
 		//print_r($_SESSION['userdata']);
 		$USER->updateDbFromAuth($_SESSION['userdata']);
 		//echo "<pre>"; print_r($USER); echo "</pre>";
-		$USER->loadInstGroups();
-		$USER->loadEqGroups();
 
 		//echo "<pre>"; print_r($USER); echo "</pre>";
 	}
@@ -91,7 +87,6 @@
 	<!-- <link rel="stylesheet" href="--><?php //echo PATH_BOOTSTRAP_RESPONSIVE_CSS; ?><!--" type="text/css"> -->
 	<!-- CSS: Plugins -->
 	<link rel="stylesheet" href="<?php echo PATH_JQUERYUI_CSS; ?>" />
-	<link rel="stylesheet" href="<?php echo PATH_BOOTSTRAP_TIMEPICKER_CSS; ?>" type="text/css" media="all">
 	<link rel="stylesheet" href="css/WMS_bootstrap_PATCH.css" type="text/css" media="all">
 	<!-- jQuery: Framework -->
 	<script src="<?php echo PATH_JQUERY_JS; ?>"></script>
@@ -99,8 +94,6 @@
 	<!-- jQuery: Plugins -->
 	<script src="<?php echo PATH_BOOTSTRAP_JS; ?>"></script>
 	<script src="<?php echo PATH_BOOTSTRAP_BOOTBOX_JS; ?>"></script>
-	<script src="<?php echo PATH_BOOTSTRAP_TIMEPICKER_JS; ?>"></script>
-	<script src="<?php echo PATH_JQUERY_VALIDATION_JS; ?>"></script>
 	<!-- local JS -->
 	<script src="js/digitalfieldnotebooks_util.js"></script>
 </head>

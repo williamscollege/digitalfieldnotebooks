@@ -8,7 +8,7 @@
 		function TestOfAllSuite() {
 			$this->TestSuite('Full application test');
 			$this->addFile('TestOfAppInfrastructureSuite.php');
-//			$this->addFile('TestOfWebPageSuite.php');
+			$this->addFile('TestOfWebPageSuite.php');
 
 
 			# Sound Effect

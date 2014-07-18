@@ -5,18 +5,10 @@ class IndexPageDBTest extends WMSWebTestCase {
 
 	function setUp() {
 		removeTestData_Users($this->DB);
-		removeTestData_EqGroups($this->DB);
-		removeTestData_InstGroups($this->DB);
-		removeTestData_InstMemberships($this->DB);
-		removeTestData_Permissions($this->DB);
 	}
 
 	function tearDown() {
 		removeTestData_Users($this->DB);
-		removeTestData_EqGroups($this->DB);
-		removeTestData_InstGroups($this->DB);
-		removeTestData_InstMemberships($this->DB);
-		removeTestData_Permissions($this->DB);
 	}
 
     function testInstGroupMembershipCreatedOnLogIn() {
@@ -35,8 +27,6 @@ class IndexPageDBTest extends WMSWebTestCase {
 		$u = User::getOneFromDb(['username'=>TESTINGUSER], $this->DB);
 		$this->assertTrue($u->matchesDb);
 
-        $test = InstMembership::getAllFromDb(['user_id'=>$u->user_id],$this->DB);
-		$this->assertEqual(count(Auth_Base::$TEST_INST_GROUPS),count($test));
 		//exit;
     }
 

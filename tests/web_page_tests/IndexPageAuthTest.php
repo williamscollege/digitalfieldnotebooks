@@ -5,10 +5,6 @@ class IndexPageAuthTest extends WMSWebTestCase {
 
 	function tearDown() {
 		removeTestData_Users($this->DB);
-		removeTestData_EqGroups($this->DB);
-		removeTestData_InstGroups($this->DB);
-		removeTestData_InstMemberships($this->DB);
-		removeTestData_Permissions($this->DB);
 	}
 
 	function testIndexNotLoggedIn() {
