@@ -26,6 +26,8 @@ class IndexPageAuthTest extends WMSWebTestCase {
         $this->assertFalse($this->setField('password','bar')); //$value
         $this->assertPattern('/Signed in: \<a[^\>]*\>'.TESTINGUSER.'\<\/a\>/');
         $this->assertNoPattern('/Sign in failed/i');
+        $this->assertNoPattern('/warning/i');
+        $this->assertNoPattern('/error/i');
 
         $this->assertEltByIdHasAttrOfValue('submit_signout','value',new PatternExpectation('/Sign\s?out/i'));
     }
@@ -49,27 +51,11 @@ class IndexPageAuthTest extends WMSWebTestCase {
         $this->assertPattern('/Signed in: \<a[^\>]*\>'.TESTINGUSER.'\<\/a\>/');
         $this->assertEltByIdHasAttrOfValue('submit_signout','value',new PatternExpectation('/Sign\s?out/i'));
 
-//        echo "pre-signout-click";
 //        echo $this->getBrowser()->getContent();
 
         $this->clickSubmit('Sign out');
-//        $this->submitFormById('frmSignout');
-//        echo "post-signout-click";
-//        echo $this->getBrowser()->getContent();
 
-//        $this->assertField('username'); //$value
-//        $this->assertField('password'); //$value
-        echo "NOTE: skipping logging out test because the automated logout submission doesn't seem to work, though the functionality works fine when used in a browser<br/>\n";
+        echo "<br><b>NOTE: skipping logging out test because the automated logout submission doesn't seem to work, though the functionality works fine when used in a browser</b><br/>\n";
     }
 
-/*    
-    function testGetEQGroups() {
-    	$this->get('http://localhost/digitalfieldnotebooks/');
-    	$this->setField('username', TESTINGUSER);
-    	$this->setField('password', TESTINGPASSWORD);
-    	$this->click('Sign in');
-		$this->assertPattern('/Equipment Groups:/');
-		$this->assertPattern('/<li>Science: Spectometers \[description:\]<\/li>/');
-    }
-*/
 }

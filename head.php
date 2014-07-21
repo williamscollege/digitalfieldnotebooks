@@ -144,11 +144,12 @@
 					<?php
 					}
 					else {
+                        //util_prePrintR($LANGUAGE);
 						?>
 						<form id="frmSignin" class="navbar-form pull-right" method="post" action="">
-							<input type="text" id="username" class="span2" name="username" placeholder="Williams Username" value="" />
-							<input type="password" id="password_login" class="span2" name="password" placeholder="Password" value="" />
-							<input type="submit" id="submit_signin" class="btn" name="submit_signin" value="Sign in" />
+							<input type="text" id="username" class="span2" name="username" placeholder="<?php echo util_lang('username'); ?>" value="" />
+							<input type="password" id="password_login" class="span2" name="password" placeholder="<?php echo util_lang('password'); ?>" value="" />
+							<input type="submit" id="submit_signin" class="btn" name="submit_signin" value="<?php echo util_lang('app_sign_in_action'); ?>" />
 						</form>
 					<?php
 					}

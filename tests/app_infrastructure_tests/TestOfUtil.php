@@ -97,4 +97,13 @@ class TestOfUtil extends UnitTestCase {
         $this->assertEqual(util_timeRangeString('2013-03-09 15:00:00','2013-03-10 15:00:00'),'2013/3/9 3:00 PM-2013/3/10 3:00 PM');
     }
 
+    function testLang() {
+        // 1. set up LANGUAGE and CURRENT_LANGUAGE_SET
+        // 2. run the assert
+        global $LANGUAGE, $CUR_LANG_SET;
+        $CUR_LANG_SET = 'test';
+        $LANGUAGE[$CUR_LANG_SET]['foo'] = 'bar';
+
+        $this->assertEqual(util_lang('foo'),'bar');
+    }
 }

@@ -6,115 +6,8 @@
 	if ($IS_AUTHENTICATED) {
 		// SECTION: authenticated
 
-		?>
-		<script type="text/javascript">
-			$(document).ready(function () {
-				// default conditions
-
-				// ***************************
-				// Listeners
-				// ***************************
-
-				// Show ajax form
-				$("#btnDisplayAddEqGroup").click(function () {
-					$("#btnDisplayAddEqGroup").addClass('hide');
-					$("#eqGroupFields").removeClass('hide');
-				});
-
-				// custom form cleanup
-				$("#btnCancelAddEqGroup").click(function () {
-					cleanUpForm("frmAddGroup");
-				});
-
-
-				// ***************************
-				// Form validation
-				// ***************************
-
-				var validateAddGroup = $('#frmAddGroup').validate({
-					rules: {
-						groupName: {
-							minlength: 2,
-							required: true
-						},
-						groupDescription: {
-							minlength: 2,
-							required: true
-						}
-					},
-					highlight: function (element) {
-						$(element).closest('.control-group').removeClass('success').addClass('error');
-					},
-					success: function (element) {
-						element
-							.text('OK!').addClass('valid')
-							.closest('.control-group').removeClass('error').addClass('success');
-					},
-					submitHandler: function (form) {
-						// show loading text (button)
-						$("#btnSubmitAddEqGroup").button('loading');
-
-						var formName = $("#frmAddGroup").attr('name');		// get name from the form element
-						var action = $('#' + formName + ' #ajaxGroupAction').val();
-						var group_name = $('#' + formName + ' #groupName').val();
-						var group_description = $('#' + formName + ' #groupDescription').val();
-						// alert('formName=' + formName + '\n' + 'group_name=' + group_name + '\n' + 'group_description=' + group_description);
-
-						$.ajax({
-							type: 'GET',
-							url: $("#frmAddGroup").attr('action'),
-							data: {
-								ajaxVal_Action: action,
-								ajaxVal_Name: group_name,
-								ajaxVal_Description: group_description
-							},
-							dataType: 'json',
-							success: function (data) {
-								// reset form
-								cleanUpForm("frmAddGroup");
-
-								if (data.status == 'success') {
-									// remove error messages
-									$('DIV.alert-error').remove();
-
-									// update the element with new data from the ajax call
-									$("UL#displayEqGroups").append(data.html_output);
-								}
-								else {
-									// show error message
-									$("UL#displayEqGroups").after('<div class="alert alert-error"><button type="button" class="close" data-dismiss="alert">&times;</button><h4>Failed: No action taken</h4> A record with that same name already exists in database.</div>');
-								}
-							}
-						});
-
-					}
-				})
-
-
-				// ***************************
-				// Custom functions
-				// ***************************
-
-				function cleanUpForm(formName) {
-					// reset form
-					$("#" + formName).trigger("reset");
-					validateAddGroup.resetForm();
-					// hide form, show button to activate form
-					$("#eqGroupFields").addClass('hide');
-					$("#btnDisplayAddEqGroup").removeClass('hide');
-					// manually remove input highlights
-					$(".control-group").removeClass('success').removeClass('error');
-					// reset button
-					$("#btnSubmitAddEqGroup").button('reset');
-				}
-
-			});
-		</script>
-
-
-		<?php
 		echo "<hr />";
-		echo "<h3>Your Equipment Groups</h3>";
+		echo '<h3>'.util_lang('you_possesive').' '.util_lang('notebooks').'</h3>';
 		echo "<ul class=\"unstyled\" id=\"displayEqGroups\">";
 
 		# is system admin?
@@ -190,9 +83,9 @@
 
 			<br />
 
-			<p>This is our system for scheduling equipment reservations.</p>
+			<p><?php echo util_lang('app_short_description'); ?></p>
 
-			<p>To sign in, please use your <?php echo LANG_INSTITUTION_NAME; ?> username and password.</p>
+            <p><?php echo util_lang('app_sign_in_msg'); ?></p>
 
 		</div>
 	<?php

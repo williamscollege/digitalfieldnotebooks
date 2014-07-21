@@ -5,6 +5,7 @@
 
 	require_once('../institution.cfg.php');
 	require_once('../lang.cfg.php');
+    require_once('../util.php');
 
 	class TestOfWebSuite extends TestSuite {
 		function TestOfWebSuite() {

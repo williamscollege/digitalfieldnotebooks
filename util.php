@@ -276,3 +276,16 @@
             echo "</div>";
         }
     }
+
+    function util_lang($label) {
+        global $LANGUAGE, $CUR_LANG_SET;
+
+        $ret = "UNKNOWN LANGUAGE LABEL '$label' FOR LANGUAGE '$CUR_LANG_SET'";
+
+        if (array_key_exists($label, $LANGUAGE[$CUR_LANG_SET])) {
+            $ret =  $LANGUAGE[$CUR_LANG_SET][$label];
+        }
+
+//        util_prePrintR($ret);
+        return $ret;
+    }
