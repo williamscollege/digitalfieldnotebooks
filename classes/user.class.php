@@ -78,7 +78,15 @@
 
 
         public function getAccessibleNotebooks() {
+            $notebooks = array();
 
+            if ($this->flag_is_system_admin) {
+                $notebooks = Notebook::getAllFromDb(['flag_delete' => FALSE],$this->dbConnection);
+            } else {
+                $notebooks = Notebook::getAllFromDb(['user_id' => $this->user_id],$this->dbConnection);
+            }
+
+            return $notebooks;
         }
 
 	}
