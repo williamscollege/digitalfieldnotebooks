@@ -111,7 +111,28 @@
 
         //// instance methods - related data
 
-		//// auth-related tests
+        function testGetAccessibleNotebooksBasic() {
+            $u = User::getOneFromDb(['user_id' => 101], $this->DB);
+            $notebooks = $u->getAccessibleNotebooks();
+
+            $this->assertEqual(2,count($notebooks),'number of notebooks mismatch');
+            $this->assertEqual(1001,$notebooks[0]->notebook_id,'notebook id mismatch');
+            $this->assertEqual(1002,$notebooks[1]->notebook_id,'notebook id mismatch');
+        }
+
+        function testGetAccessibleNotebooksAdmin() {
+            makeAuthedTestUserAdmin($this->DB);
+            $u = User::getOneFromDb(['user_id' => 101], $this->DB);
+            $notebooks = $u->getAccessibleNotebooks();
+
+            $this->assertEqual(3,count($notebooks),'number of notebooks mismatch');
+            $this->assertEqual(1001,$notebooks[0]->notebook_id,'notebook id mismatch');
+            $this->assertEqual(1002,$notebooks[1]->notebook_id,'notebook id mismatch');
+            $this->assertEqual(1003,$notebooks[2]->notebook_id,'notebook id mismatch');
+            $this->assertEqual(102,$notebooks[2]->user_id,'notebook user id mismatch');
+        }
+
+        //// auth-related tests
 
 		function testUserUpdatesBaseDbWhenValidAuthDataIsDifferent() {
 			$u = User::getOneFromDb(['user_id' => 101], $this->DB);
@@ -151,6 +172,4 @@
 			$this->assertFalse($status);
 		}
 
-	}
-
-?>
+    }

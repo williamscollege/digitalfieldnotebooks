@@ -14,7 +14,7 @@
 			# Tests: Index page
 			$this->addFile('web_page_tests/IndexPageLoadTest.php');
 			$this->addFile('web_page_tests/IndexPageAuthTest.php');
-			$this->addFile('web_page_tests/IndexPageDBTest.php');
+			$this->addFile('web_page_tests/IndexPageLoggedInTest.php');
 
             # Sound Effect
 			$this->addFile('soundForTesting.php');

@@ -107,7 +107,7 @@
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 			</button>
-			<a class="brand" href="<?php echo APP_FOLDER; ?>"><?php echo LANG_APP_NAME; ?></a>
+			<a id="home-link" class="brand" href="<?php echo APP_FOLDER; ?>"><?php echo LANG_APP_NAME; ?></a>
 
 			<div class="nav-collapse collapse">
 				<ul class="nav">

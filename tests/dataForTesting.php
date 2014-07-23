@@ -3,7 +3,8 @@
 	require_once dirname(__FILE__) . '/../classes/auth_LDAP.class.php';
 
 //	require_once dirname(__FILE__) . '/../classes/role.class.php';
-	require_once dirname(__FILE__) . '/../classes/user.class.php';
+require_once dirname(__FILE__) . '/../classes/user.class.php';
+require_once dirname(__FILE__) . '/../classes/notebook.class.php';
 
 	/*
 	This file contains a series of methods for creating known test data in a target database
@@ -34,48 +35,66 @@ function createTestData_Users($dbConn) {
         exit;
     }
 }
-	function makeAuthedTestUserAdmin($dbConn) {
-		$u1                       = User::getOneFromDb(['username' => TESTINGUSER], $dbConn);
-		$u1->flag_is_system_admin = TRUE;
-		$u1->updateDb();
-	}
 
-function createTestData_Permissions($dbConn) {
-    # Permission[user|inst_group]: permission_id, entity_id, entity_type, role_id, eq_group_id, flag_delete
-    # NOTE: no one has access to eqg8
-    $addTestPermissionSql  = "INSERT INTO " . Permission::$dbTable . " VALUES
-        (701,1101,'user',     2,202,0), # user1 user access eqg2
-        (702,1101,'user',     2,201,0), # user1 user access eqg1 (flipped to test ordering functions)
-        (703,1101,'user',     1,203,0), # user1 manager access eqg3
-        (704,1101,'user',     2,204,1), # user1 deleted access eqg4
-        (705,1101,'user',     2,205,0), # user1 user access deleted eqg5
-        (706,1101,'user',     2,207,0), # user1 user access to eqg 7
-        (707,501,'inst_group',1,201,0), # ig1 has manager access to eqg1 (overrides user1 eqg1 user access)
-        (708,501,'inst_group',2,202,0), # ig1 has user access to eqg2 (dual user access on user1 eqg2)
-        (709,501,'inst_group',2,203,0), # ig1 has user access to eqg3 (overridden by user1 eqg2 manager access)
-        (710,501,'inst_group',2,206,0), # ig1 has user access to eqg6 (gives user1 indirect user access)
-        (711,502,'inst_group',2,201,0), # ig2 has user access to eqg1
-        (712,502,'inst_group',2,204,0), # ig2 has user access to eqg4
-        (713,502,'inst_group',2,207,1), # ig2 has deleted access to eqg7
-        (714,1103,'user',     2,201,0), # deleted user3
-        (715,504,'inst_group',2,206,0), # deleted instgroup4
-        (716,1102,'user',     2,207,0), # user2 user access to eqg 7
-        (717,1102,'user',     1,202,0), # user2 manager access to eqg 2
-        (718,1102,'user',     2,201,0), # user2 user access to eqg 1
-        (719,1106,'user',     1,201,0)  # user6 manager access to eqg 1
+function makeAuthedTestUserAdmin($dbConn) {
+    $u1                       = User::getOneFromDb(['username' => TESTINGUSER], $dbConn);
+    $u1->flag_is_system_admin = TRUE;
+    $u1->updateDb();
+}
+
+
+function createTestData_Notebooks($dbConn) {
+    $addTestNotebookSql  = "INSERT INTO " . Notebook::$dbTable . " VALUES
+        (1001,NOW(),NOW(),101,'testnotebook1','this is testnotebook1, owned by user 101', 0),
+        (1002,NOW(),NOW(),101,'testnotebook2','this is testnotebook2, owned by user 101', 0)
     ";
-    $addTestPermissionStmt = $dbConn->prepare($addTestPermissionSql);
-    $addTestPermissionStmt->execute();
-    if ($addTestPermissionStmt->errorInfo()[0] != '0000') {
-        echo "<pre>error adding test Permissions data to the DB\n";
-        print_r($addTestPermissionStmt->errorInfo());
+    $addTestNotebookStmt = $dbConn->prepare($addTestNotebookSql);
+    $addTestNotebookStmt->execute();
+    if ($addTestNotebookStmt->errorInfo()[0] != '0000') {
+        echo "<pre>error adding test Notebooks data to the DB\n";
+        print_r($addTestNotebookStmt->errorInfo());
         debug_print_backtrace();
         exit;
     }
 }
 
+//function createTestData_Permissions($dbConn) {
+//    # Permission[user|inst_group]: permission_id, entity_id, entity_type, role_id, eq_group_id, flag_delete
+//    # NOTE: no one has access to eqg8
+//    $addTestPermissionSql  = "INSERT INTO " . Permission::$dbTable . " VALUES
+//        (701,1101,'user',     2,202,0), # user1 user access eqg2
+//        (702,1101,'user',     2,201,0), # user1 user access eqg1 (flipped to test ordering functions)
+//        (703,1101,'user',     1,203,0), # user1 manager access eqg3
+//        (704,1101,'user',     2,204,1), # user1 deleted access eqg4
+//        (705,1101,'user',     2,205,0), # user1 user access deleted eqg5
+//        (706,1101,'user',     2,207,0), # user1 user access to eqg 7
+//        (707,501,'inst_group',1,201,0), # ig1 has manager access to eqg1 (overrides user1 eqg1 user access)
+//        (708,501,'inst_group',2,202,0), # ig1 has user access to eqg2 (dual user access on user1 eqg2)
+//        (709,501,'inst_group',2,203,0), # ig1 has user access to eqg3 (overridden by user1 eqg2 manager access)
+//        (710,501,'inst_group',2,206,0), # ig1 has user access to eqg6 (gives user1 indirect user access)
+//        (711,502,'inst_group',2,201,0), # ig2 has user access to eqg1
+//        (712,502,'inst_group',2,204,0), # ig2 has user access to eqg4
+//        (713,502,'inst_group',2,207,1), # ig2 has deleted access to eqg7
+//        (714,1103,'user',     2,201,0), # deleted user3
+//        (715,504,'inst_group',2,206,0), # deleted instgroup4
+//        (716,1102,'user',     2,207,0), # user2 user access to eqg 7
+//        (717,1102,'user',     1,202,0), # user2 manager access to eqg 2
+//        (718,1102,'user',     2,201,0), # user2 user access to eqg 1
+//        (719,1106,'user',     1,201,0)  # user6 manager access to eqg 1
+//    ";
+//    $addTestPermissionStmt = $dbConn->prepare($addTestPermissionSql);
+//    $addTestPermissionStmt->execute();
+//    if ($addTestPermissionStmt->errorInfo()[0] != '0000') {
+//        echo "<pre>error adding test Permissions data to the DB\n";
+//        print_r($addTestPermissionStmt->errorInfo());
+//        debug_print_backtrace();
+//        exit;
+//    }
+//}
+
 	function createAllTestData($dbConn) {
 		createTestData_Users($dbConn);
+        createTestData_Notebooks($dbConn);
 //		createTestData_Permissions($dbConn);
 	}
 
@@ -88,15 +107,18 @@ function createTestData_Permissions($dbConn) {
 		$stmt->execute();
 	}
 
-	function removeTestData_Permissions($dbConn) {
-		_removeTestDataFromTable($dbConn, Permission::$dbTable);
-	}
+//	function removeTestData_Permissions($dbConn) {
+//		_removeTestDataFromTable($dbConn, Permission::$dbTable);
+//	}
 	function removeTestData_Users($dbConn) {
 		_removeTestDataFromTable($dbConn, User::$dbTable);
 	}
-
+    function removeTestData_Notebooks($dbConn) {
+        _removeTestDataFromTable($dbConn, Notebook::$dbTable);
+    }
 
 	function removeAllTestData($dbConn) {
-		removeTestData_Users($dbConn);
+        removeTestData_Users($dbConn);
+        removeTestData_Notebooks($dbConn);
 //		removeTestData_Permissions($dbConn);
 	}

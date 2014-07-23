@@ -11,23 +11,7 @@ class IndexPageDBTest extends WMSWebTestCase {
 		removeTestData_Users($this->DB);
 	}
 
-    function testInstGroupMembershipCreatedOnLogIn() {
-        $this->get('http://localhost/digitalfieldnotebooks/');
-        $this->assertCookie('PHPSESSID');
-        $this->setField('username', TESTINGUSER);
-        $this->setField('password', TESTINGPASSWORD);
-
-
-        $this->click('Sign in');
-
-//		$this->dump($this->getBrowser()->getContent());
-
-		$this->assertPattern('/Signed in: \<a[^\>]*\>'.TESTINGUSER.'\<\/a\>/');
-
-		$u = User::getOneFromDb(['username'=>TESTINGUSER], $this->DB);
-		$this->assertTrue($u->matchesDb);
-
-		//exit;
-    }
+//    function testInstGroupMembershipCreatedOnLogIn() {
+//    }
 
 }

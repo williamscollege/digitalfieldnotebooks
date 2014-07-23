@@ -14,5 +14,3 @@
 			$this->role = Role::getOneFromDb(['role_id' => $this->role_id, 'flag_delete' => FALSE], $this->dbConnection);
 		}
 	}
-
-?>

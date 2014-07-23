@@ -7,71 +7,20 @@
 		// SECTION: authenticated
 
 		echo "<hr />";
-		echo '<h3>'.util_lang('you_possesive').' '.util_lang('notebooks').'</h3>';
-		echo "<ul class=\"unstyled\" id=\"displayEqGroups\">";
+		echo '<h3>'.ucfirst(util_lang('you_possesive')).' '.ucfirst(util_lang('notebooks')).'</h3>';
 
 		# is system admin?
 		if ($USER->flag_is_system_admin) {
-			# get groups for this ordinary user
-			$UserEqGroups = EqGroup::getAllEqGroupsForAdminUser($USER);
-			if (count($UserEqGroups) > 0) {
-				foreach ($UserEqGroups as $ueg) {
-					echo "<li><a href=\"equipment_group.php?eid=" . $ueg->eq_group_id . "\" title=\"\">" . $ueg->name . "</a>: " . $ueg->descr . "</li>";
-				}
-			}
-			else {
-				echo "<li>You do not belong to any equipment groups.</li>";
-			}
-			echo "</ul>";
-			# system admin may add new eq_groups
-			?>
-
-			<form action="ajax_actions/ajax_eq_group.php" id="frmAddGroup" class="form-horizontal" name="frmAddGroup" method="post">
-				<button type="button" id="btnDisplayAddEqGroup" class="btn btn-primary" name="btnDisplayAddEqGroup">Add a new equipment group
-				</button>
-
-				<div id="eqGroupFields" class="hide">
-					<legend>Add a new equipment group</legend>
-					<div class="control-group">
-						<label class="control-label" for="groupName">Name</label>
-
-						<div class="controls">
-							<input type="hidden" id="ajaxGroupAction" name="ajaxGroupAction" value="add-group" />
-							<input type="text" id="groupName" class="input-large" name="groupName" value="" placeholder="Name of group" maxlength="200" />
-						</div>
-					</div>
-					<div class="control-group">
-						<label class="control-label" for="groupDescription">Description</label>
-
-						<div class="controls">
-							<input type="text" id="groupDescription" class="input-xlarge" name="groupDescription" value="" placeholder="Description of group" maxlength="200" />
-						</div>
-					</div>
-					<div class="control-group">
-						<label class="control-label" for="btnSubmitAddEqGroup"></label>
-
-						<div class="controls">
-							<button type="submit" id="btnSubmitAddEqGroup" class="btn btn-success" data-loading-text="Saving...">Add Group</button>
-							<button type="reset" id="btnCancelAddEqGroup" class="btn btn-link btn-cancel">Cancel</button>
-						</div>
-					</div>
-				</div>
-			</form>
-		<?php
+            // TODO: show special admin-only stuff
 		}
-		else {
-			# get groups for this ordinary user
-			$UserEqGroups = EqGroup::getAllEqGroupsForNonAdminUser($USER);
-			if (count($UserEqGroups) > 0) {
-				foreach ($UserEqGroups as $ueg) {
-					echo $ueg->toListItemLinked();
-				}
-			}
-			else {
-				echo "<li>You do not have access to any equipment groups.</li>";
-			}
-			echo "</ul>";
-		}
+
+        // TODO: show user stuff (list of notebooks et al)
+        $num_notebooks = 0;
+        echo "<ul class=\"unstyled\" id=\"listOfUserNotebooks\" data-notebook-count=\"$num_notebooks\">\n";
+        echo "</ul>\n";
+?>
+        <input type="button" id="btn-add-notebook" value="<?php echo util_lang('add_notebook'); ?>"/>
+<?php
 	}
 	else {
 		// SECTION: not yet authenticated, wants to log in

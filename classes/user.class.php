@@ -76,7 +76,9 @@
 			return TRUE;
 		}
 
+
+        public function getAccessibleNotebooks() {
+
+        }
+
 	}
-
-
-?>
