@@ -2,7 +2,7 @@
 	require_once dirname(__FILE__) . '/db_linked.class.php';
 
 	class Notebook extends Db_Linked {
-		public static $fields = array('notebook_id', 'created_at', 'updated_at', 'user_id', 'name', 'notes', 'flag_delete');
+		public static $fields = array('notebook_id', 'created_at', 'updated_at', 'user_id', 'name', 'notes', 'flag_workflow_published', 'flag_workflow_validated', 'flag_delete');
 		public static $primaryKeyField = 'notebook_id';
 		public static $dbTable = 'notebooks';
 

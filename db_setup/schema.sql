@@ -187,6 +187,8 @@ CREATE TABLE IF NOT EXISTS `notebooks` (
   `user_id` INT NOT NULL,
   `name` VARCHAR(255) NULL,
   `notes` TEXT NULL,
+  `flag_workflow_published` BIT(1) NOT NULL DEFAULT 0,
+  `flag_workflow_validated` BIT(1) NOT NULL DEFAULT 0,
   `flag_delete` BIT(1) NOT NULL DEFAULT 0
 )  ENGINE=innodb DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT='';
 /* FK: users.user_id */
@@ -198,6 +200,8 @@ CREATE TABLE IF NOT EXISTS `notebook_pages` (
   `notebook_id` INT NOT NULL,
   `authoritative_plant_id` INT NOT NULL,
   `notes` TEXT NULL,
+  `flag_workflow_published` BIT(1) NOT NULL DEFAULT 0,
+  `flag_workflow_validated` BIT(1) NOT NULL DEFAULT 0,
   `flag_delete` BIT(1) NOT NULL DEFAULT 0
 )  ENGINE=innodb DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT='';
 /* FK: notebooks.notebook_id */
@@ -224,6 +228,7 @@ CREATE TABLE IF NOT EXISTS `specimens` (
   `specimen_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `created_at` TIMESTAMP,
   `updated_at` TIMESTAMP,
+  `user_id` INT NOT NULL,
   `link_to_type` INT NOT NULL, /* authoritative_plant or notebook_page */
   `link_to_id` INT NOT NULL,
   `name` VARCHAR(255) NULL, /* brief identification of the specimen - e.g. 'science quad elm' */
@@ -232,6 +237,8 @@ CREATE TABLE IF NOT EXISTS `specimens` (
   `notes` TEXT NULL,
   `ordering` DECIMAL NOT NULL DEFAULT 0,
   `catalog_identifier` VARCHAR(255) NULL,
+  `flag_workflow_published` BIT(1) NOT NULL DEFAULT 0,
+  `flag_workflow_validated` BIT(1) NOT NULL DEFAULT 0,
   `flag_delete` BIT(1) NOT NULL DEFAULT 0
 )  ENGINE=innodb DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT='';
 /* FK: if link_to_type == authoritative_plant : link_to_id -> authoritative_plants.authoritative_plant_id */
@@ -239,11 +246,14 @@ CREATE TABLE IF NOT EXISTS `specimens` (
 
 CREATE TABLE IF NOT EXISTS `specimen_images` (
   `specimen_image_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  `specimen_id` INT NOT NULL,
   `created_at` TIMESTAMP,
   `updated_at` TIMESTAMP,
+  `specimen_id` INT NOT NULL,
+  `user_id` INT NOT NULL,
   `image_reference` VARCHAR(255) NULL, /* URL or file path */
   `ordering` DECIMAL NOT NULL DEFAULT 0,
+  `flag_workflow_published` BIT(1) NOT NULL DEFAULT 0,
+  `flag_workflow_validated` BIT(1) NOT NULL DEFAULT 0,
   `flag_delete` BIT(1) NOT NULL DEFAULT 0
 )  ENGINE=innodb DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT='';
 /* FK: specimens.specimen_id */
