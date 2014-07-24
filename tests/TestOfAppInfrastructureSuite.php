@@ -13,11 +13,26 @@
 			$this->addFile('app_infrastructure_tests/TestOfDB_Linked.class.php');
             $this->addFile('app_infrastructure_tests/TestOfAuth_Base.class.php');
             $this->addFile('app_infrastructure_tests/TestOfAuth_LDAP.class.php');
+
             $this->addFile('app_infrastructure_tests/TestOfUser.class.php');
-            /*
             $this->addFile('app_infrastructure_tests/TestOfRole.class.php');
-            $this->addFile('app_infrastructure_tests/TestOfPermission.class.php');
-            */
+            $this->addFile('app_infrastructure_tests/TestOfAction.class.php');
+
+            $this->addFile('app_infrastructure_tests/TestOfMetadataStructure.class.php');
+            $this->addFile('app_infrastructure_tests/TestOfMetadataTermSet.class.php');
+            $this->addFile('app_infrastructure_tests/TestOfMetadataTermValue.class.php');
+            $this->addFile('app_infrastructure_tests/TestOfMetadataReference.class.php');
+
+            $this->addFile('app_infrastructure_tests/TestOfReferencePlant.class.php');
+            $this->addFile('app_infrastructure_tests/TestOfReferencePlantExtra.class.php');
+
+            $this->addFile('app_infrastructure_tests/TestOfNotebook.class.php');
+            $this->addFile('app_infrastructure_tests/TestOfNotebookPage.class.php');
+            $this->addFile('app_infrastructure_tests/TestOfNotebookPageField.class.php');
+
+            $this->addFile('app_infrastructure_tests/TestOfSpecimen.class.php');
+            $this->addFile('app_infrastructure_tests/TestOfSpecimenImage.class.php');
+
 			# Sound Effect
 			$this->addFile('soundForTesting.php');
 		}

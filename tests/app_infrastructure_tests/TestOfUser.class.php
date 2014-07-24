@@ -120,16 +120,24 @@
             $this->assertEqual(1002,$notebooks[1]->notebook_id,'notebook id mismatch');
         }
 
-        function testGetAccessibleNotebooksAdmin() {
+        function testGetAccessibleNotebooksSystemAdmin() {
             makeAuthedTestUserAdmin($this->DB);
             $u = User::getOneFromDb(['user_id' => 101], $this->DB);
             $notebooks = $u->getAccessibleNotebooks();
 
-            $this->assertEqual(3,count($notebooks),'number of notebooks mismatch');
+            $this->assertEqual(4,count($notebooks),'number of notebooks mismatch: 3 vs '.count($notebooks));
             $this->assertEqual(1001,$notebooks[0]->notebook_id,'notebook id mismatch');
             $this->assertEqual(1002,$notebooks[1]->notebook_id,'notebook id mismatch');
             $this->assertEqual(1003,$notebooks[2]->notebook_id,'notebook id mismatch');
             $this->assertEqual(102,$notebooks[2]->user_id,'notebook user id mismatch');
+        }
+
+        function testGetAccessibleNotebooksManager() {
+            $this->fail("TODO: create test for testGetAccessibleNotebooksManager");
+        }
+
+        function testGetAccessibleNotebooksFieldUser() {
+            $this->fail("TODO: create test for testGetAccessibleNotebooksFieldUser");
         }
 
         //// auth-related tests

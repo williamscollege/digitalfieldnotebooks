@@ -11,7 +11,10 @@
 		public static function cmpRoles($a, $b) {
 			# The most powerful system admin role is priority = 1; lowest anonymous/guest priority is X
 			if ($a->priority == $b->priority) {
-				return 0;
+                if ($a->name == $b->name) {
+    				return 0;
+                }
+                return ($a->name > $b->name) ? -1 : 1;
 			}
 			return ($a->priority > $b->priority) ? -1 : 1;
 		}

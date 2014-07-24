@@ -62,6 +62,9 @@ CREATE TABLE IF NOT EXISTS `roles` (
 
 CREATE TABLE IF NOT EXISTS `user_role_links` (
   `user_role_link_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `created_at` TIMESTAMP,
+  `updated_at` TIMESTAMP,
+  `last_user_id` INT NOT NULL, /* id of the user that created/updated this record */
   `user_id`  INT NOT NULL,
   `role_id` INT NOT NULL
 )  ENGINE=innodb DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT='determines allowable actions within the digitalfieldnotebooks system';
@@ -76,9 +79,12 @@ CREATE TABLE IF NOT EXISTS `actions` (
 
 CREATE TABLE IF NOT EXISTS `role_action_target_links` (
   `role_action_target_link_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `created_at` TIMESTAMP,
+  `updated_at` TIMESTAMP,
+  `last_user_id` INT NOT NULL, /* id of the user that created/updated this record */
   `role_id` INT NOT NULL,
   `action_id` INT NOT NULL,
-  `target_type` VARCHAR(255) NOT NULL, /* target_type: global_notebook, global_metadata, global_plants, notebook, metadata_category, metadata_subcategory, plant NOTE: the first two are used for overall managers/admins (and in those cases the target_id is 0) */
+  `target_type` VARCHAR(255) NOT NULL, /* target_type: global_notebook, global_metadata, global_plants, global_specimens, notebook, metadata_category, metadata_subcategory, plant, specimen NOTE: the first two are used for overall managers/admins (and in those cases the target_id is 0) */
   `target_id` INT NOT NULL,
   `flag_delete` BIT(1) NOT NULL DEFAULT 0
 )  ENGINE=innodb DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT='';
@@ -93,9 +99,9 @@ CREATE TABLE IF NOT EXISTS `role_action_target_links` (
 
 CREATE TABLE IF NOT EXISTS `metadata_structures` (
   `metadata_structure_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  `parent_metadata_structure_id` INT NULL, /* if null or <= 0 then this record is a top-level category */
   `created_at` TIMESTAMP,
   `updated_at` TIMESTAMP,
+  `parent_metadata_structure_id` INT NULL, /* if null or <= 0 then this record is a top-level category */
   `name` VARCHAR(255) NULL,
   `ordering` DECIMAL NOT NULL DEFAULT 0, /* NOTE: the main ordering is by category, then sub-category, then term; this sorts within those levels, not across them */
   `description` VARCHAR(255) NULL,
@@ -118,9 +124,9 @@ CREATE TABLE IF NOT EXISTS `metadata_term_sets` (
 
 CREATE TABLE IF NOT EXISTS `metadata_term_values` (
   `metadata_term_value_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  `metadata_term_set_id` INT NOT NULL,
   `created_at` TIMESTAMP,
   `updated_at` TIMESTAMP,
+  `metadata_term_set_id` INT NOT NULL,
   `name` VARCHAR(255) NULL,
   `ordering` DECIMAL NOT NULL DEFAULT 0, /* NOTE: within a given ordering value the term values are ordered by name */
   `description` VARCHAR(255) NULL,
@@ -130,10 +136,10 @@ CREATE TABLE IF NOT EXISTS `metadata_term_values` (
 
 CREATE TABLE IF NOT EXISTS `metadata_references` (
   `metadata_reference_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  `metadata_type` VARCHAR(24) NULL, /* structure, set, value */
-  `metadata_id` INT NOT NULL,
   `created_at` TIMESTAMP,
   `updated_at` TIMESTAMP,
+  `metadata_type` VARCHAR(24) NULL, /* structure, term_set, term_value */
+  `metadata_id` INT NOT NULL,
   `type` VARCHAR(24) NOT NULL, /* text, image, audio, etc. */
   `external_reference` VARCHAR(255) NULL, /* URL or file path */
   `description` VARCHAR(255) NULL,
@@ -249,5 +255,47 @@ INSERT INTO
 	roles
 VALUES
 (1,10,'Manager',0),
-(2,20,'Field User',0),
-(3,30,'Public',0)
+(2,15,'Assistant',0),
+(3,20,'Field User',0),
+(4,30,'Public',0);
+
+# Required constant values for actions table
+INSERT INTO
+actions
+VALUES
+(1,'view',0),
+(2,'edit',0),
+(3,'create',0),
+(4,'delete',0),
+(5,'publish',0),
+(6,'verify',0);
+
+# Required constant values for role_action_target_links table (managers can do everything)
+INSERT INTO
+  role_action_target_links
+  VALUES
+  (1,NOW(),NOW(),0,1,1,'global_notebook',0,0),
+  (2,NOW(),NOW(),0,1,2,'global_notebook',0,0),
+  (3,NOW(),NOW(),0,1,3,'global_notebook',0,0),
+  (4,NOW(),NOW(),0,1,4,'global_notebook',0,0),
+  (5,NOW(),NOW(),0,1,5,'global_notebook',0,0),
+  (6,NOW(),NOW(),0,1,6,'global_notebook',0,0),
+  (7,NOW(),NOW(),0,1,1,'global_metadata',0,0),
+  (8,NOW(),NOW(),0,1,2,'global_metadata',0,0),
+  (9,NOW(),NOW(),0,1,3,'global_metadata',0,0),
+  (10,NOW(),NOW(),0,1,4,'global_metadata',0,0),
+  (11,NOW(),NOW(),0,1,5,'global_metadata',0,0),
+  (12,NOW(),NOW(),0,1,6,'global_metadata',0,0),
+  (13,NOW(),NOW(),0,1,1,'global_plants',0,0),
+  (14,NOW(),NOW(),0,1,2,'global_plants',0,0),
+  (15,NOW(),NOW(),0,1,3,'global_plants',0,0),
+  (16,NOW(),NOW(),0,1,4,'global_plants',0,0),
+  (17,NOW(),NOW(),0,1,5,'global_plants',0,0),
+  (18,NOW(),NOW(),0,1,6,'global_plants',0,0),
+  (19,NOW(),NOW(),0,1,1,'global_specimens',0,0),
+  (20,NOW(),NOW(),0,1,2,'global_specimens',0,0),
+  (21,NOW(),NOW(),0,1,3,'global_specimens',0,0),
+  (22,NOW(),NOW(),0,1,4,'global_specimens',0,0),
+  (23,NOW(),NOW(),0,1,5,'global_specimens',0,0),
+  (24,NOW(),NOW(),0,1,6,'global_specimens',0,0);
+

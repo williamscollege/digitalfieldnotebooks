@@ -46,7 +46,9 @@ function makeAuthedTestUserAdmin($dbConn) {
 function createTestData_Notebooks($dbConn) {
     $addTestNotebookSql  = "INSERT INTO " . Notebook::$dbTable . " VALUES
         (1001,NOW(),NOW(),101,'testnotebook1','this is testnotebook1, owned by user 101', 0),
-        (1002,NOW(),NOW(),101,'testnotebook2','this is testnotebook2, owned by user 101', 0)
+        (1002,NOW(),NOW(),101,'testnotebook2','this is testnotebook2, owned by user 101', 0),
+        (1003,NOW(),NOW(),102,'testnotebook3','this is testnotebook3, owned by user 102', 0),
+        (1004,NOW(),NOW(),111,'testnotebook4','this is testnotebook4, owned by user 111', 0)
     ";
     $addTestNotebookStmt = $dbConn->prepare($addTestNotebookSql);
     $addTestNotebookStmt->execute();
