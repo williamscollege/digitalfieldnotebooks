@@ -2,9 +2,22 @@
 	require_once dirname(__FILE__) . '/../classes/auth_base.class.php';
 	require_once dirname(__FILE__) . '/../classes/auth_LDAP.class.php';
 
-//	require_once dirname(__FILE__) . '/../classes/role.class.php';
-require_once dirname(__FILE__) . '/../classes/user.class.php';
-require_once dirname(__FILE__) . '/../classes/notebook.class.php';
+    require_once dirname(__FILE__) . '/../classes/action.class.php';
+    require_once dirname(__FILE__) . '/../classes/authoritative_plant.class.php';
+    require_once dirname(__FILE__) . '/../classes/authoritative_plant_extra.class.php';
+    require_once dirname(__FILE__) . '/../classes/metadata_reference.class.php';
+    require_once dirname(__FILE__) . '/../classes/metadata_structure.class.php';
+    require_once dirname(__FILE__) . '/../classes/metadata_term_set.class.php';
+    require_once dirname(__FILE__) . '/../classes/metadata_term_value.class.php';
+    require_once dirname(__FILE__) . '/../classes/notebook.class.php';
+    require_once dirname(__FILE__) . '/../classes/notebook_page.class.php';
+    require_once dirname(__FILE__) . '/../classes/notebook_page_field.class.php';
+    require_once dirname(__FILE__) . '/../classes/role.class.php';
+    require_once dirname(__FILE__) . '/../classes/role_action_target.class.php';
+    require_once dirname(__FILE__) . '/../classes/specimen.class.php';
+    require_once dirname(__FILE__) . '/../classes/specimen_image.class.php';
+    require_once dirname(__FILE__) . '/../classes/user.class.php';
+    require_once dirname(__FILE__) . '/../classes/user_role.class.php';
 
 	/*
 	This file contains a series of methods for creating known test data in a target database

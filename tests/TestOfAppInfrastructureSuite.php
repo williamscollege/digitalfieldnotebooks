@@ -23,8 +23,8 @@
             $this->addFile('app_infrastructure_tests/TestOfMetadataTermValue.class.php');
             $this->addFile('app_infrastructure_tests/TestOfMetadataReference.class.php');
 
-            $this->addFile('app_infrastructure_tests/TestOfReferencePlant.class.php');
-            $this->addFile('app_infrastructure_tests/TestOfReferencePlantExtra.class.php');
+            $this->addFile('app_infrastructure_tests/TestOfAuthoritativePlant.class.php');
+            $this->addFile('app_infrastructure_tests/TestOfAuthoritativePlantExtra.class.php');
 
             $this->addFile('app_infrastructure_tests/TestOfNotebook.class.php');
             $this->addFile('app_infrastructure_tests/TestOfNotebookPage.class.php');

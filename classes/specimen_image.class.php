@@ -27,7 +27,7 @@
 
 
         public function getSpecimen() {
-            return Specimen::getOneFromDb(['specimen_id' => $this->specimen_id,, 'flag_delete' => FALSE],$this->dbConnection);
+            return Specimen::getOneFromDb(['specimen_id' => $this->specimen_id, 'flag_delete' => FALSE],$this->dbConnection);
         }
 
 	}
