@@ -22,8 +22,8 @@ FOR TESTING ONLY:
 	DROP TABLE `metadata_term_sets`;
 	DROP TABLE `metadata_term_values`;
 	DROP TABLE `metadata_references`;
-	DROP TABLE `reference_plants`;
-	DROP TABLE `reference_plant_extras`;
+	DROP TABLE `authoritative_plants`;
+	DROP TABLE `authoritative_plant_extras`;
 	DROP TABLE `notebooks`;
 	DROP TABLE `notebook_pages`;
 	DROP TABLE `notebook_page_fields`;
@@ -151,8 +151,8 @@ CREATE TABLE IF NOT EXISTS `metadata_references` (
 # ----------------------------
 # pre-loaded data & global reference/lookup data
 
-CREATE TABLE IF NOT EXISTS `reference_plants` (
-  `reference_plant_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS `authoritative_plants` (
+  `authoritative_plant_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `created_at` TIMESTAMP,
   `updated_at` TIMESTAMP,
   `class` VARCHAR(255) NULL,
@@ -161,14 +161,15 @@ CREATE TABLE IF NOT EXISTS `reference_plants` (
   `genus` VARCHAR(255) NULL,
   `species` VARCHAR(255) NULL,
   `variety` VARCHAR(255) NULL,
+  `catalog_identifier` VARCHAR(255) NULL,
   `flag_delete` BIT(1) NOT NULL DEFAULT 0
 )  ENGINE=innodb DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT='';
 
-CREATE TABLE IF NOT EXISTS `reference_plant_extras` (
-  `reference_plant_extra_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  `reference_plant_id` INT NOT NULL,
+CREATE TABLE IF NOT EXISTS `authoritative_plant_extras` (
+  `authoritative_plant_extra_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `created_at` TIMESTAMP,
   `updated_at` TIMESTAMP,
+  `authoritative_plant_id` INT NOT NULL,
   `type` VARCHAR(255) NULL, /* common name, description, image */
   `value` VARCHAR(255) NULL, /* either the direct info (for common name and description) or a URL or file path */
   `ordering` DECIMAL NOT NULL DEFAULT 0,
@@ -195,7 +196,7 @@ CREATE TABLE IF NOT EXISTS `notebook_pages` (
   `notebook_id` INT NOT NULL,
   `created_at` TIMESTAMP,
   `updated_at` TIMESTAMP,
-  `reference_plant_id` INT NOT NULL,
+  `authoritative_plant_id` INT NOT NULL,
   `notes` TEXT NULL,
   `flag_delete` BIT(1) NOT NULL DEFAULT 0
 )  ENGINE=innodb DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT='';
@@ -208,7 +209,7 @@ CREATE TABLE IF NOT EXISTS `notebook_page_fields` (
   `created_at` TIMESTAMP,
   `updated_at` TIMESTAMP,
   `label_metadata_structure_id` INT NOT NULL,
-  `value_metadata_structure_id` INT NOT NULL,
+  `value_metadata_term_value_id` INT NOT NULL,
   `value_open` VARCHAR(255) NULL,
   `flag_delete` BIT(1) NOT NULL DEFAULT 0
 )  ENGINE=innodb DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT='';
@@ -223,16 +224,17 @@ CREATE TABLE IF NOT EXISTS `specimens` (
   `specimen_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `created_at` TIMESTAMP,
   `updated_at` TIMESTAMP,
-  `link_to_type` INT NOT NULL, /* reference_plant or notebook_page */
+  `link_to_type` INT NOT NULL, /* authoritative_plant or notebook_page */
   `link_to_id` INT NOT NULL,
   `name` VARCHAR(255) NULL, /* brief identification of the specimen - e.g. 'science quad elm' */
   `gps_x` DECIMAL NULL,
   `gps_y` DECIMAL NULL,
   `notes` TEXT NULL,
   `ordering` DECIMAL NOT NULL DEFAULT 0,
+  `catalog_identifier` VARCHAR(255) NULL,
   `flag_delete` BIT(1) NOT NULL DEFAULT 0
 )  ENGINE=innodb DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT='';
-/* FK: if link_to_type == reference_plant : link_to_id -> reference_plants.reference_plant_id */
+/* FK: if link_to_type == authoritative_plant : link_to_id -> authoritative_plants.authoritative_plant_id */
 /* FK: if link_to_type == notebook_page : link_to_id -> notebook_pages.notebook_page_id */
 
 CREATE TABLE IF NOT EXISTS `specimen_images` (
