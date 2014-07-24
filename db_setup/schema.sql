@@ -193,9 +193,9 @@ CREATE TABLE IF NOT EXISTS `notebooks` (
 
 CREATE TABLE IF NOT EXISTS `notebook_pages` (
   `notebook_page_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  `notebook_id` INT NOT NULL,
   `created_at` TIMESTAMP,
   `updated_at` TIMESTAMP,
+  `notebook_id` INT NOT NULL,
   `authoritative_plant_id` INT NOT NULL,
   `notes` TEXT NULL,
   `flag_delete` BIT(1) NOT NULL DEFAULT 0
@@ -205,9 +205,9 @@ CREATE TABLE IF NOT EXISTS `notebook_pages` (
 
 CREATE TABLE IF NOT EXISTS `notebook_page_fields` (
   `notebook_page_field_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  `notebook_page_id` INT NOT NULL,
   `created_at` TIMESTAMP,
   `updated_at` TIMESTAMP,
+  `notebook_page_id` INT NOT NULL,
   `label_metadata_structure_id` INT NOT NULL,
   `value_metadata_term_value_id` INT NOT NULL,
   `value_open` VARCHAR(255) NULL,
