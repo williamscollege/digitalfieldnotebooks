@@ -28,8 +28,8 @@
 /*
 function createTestData_XXXX($dbConn) {
     // 1100 series ids
-    # user: user_id, created_at, updated_at, username, screen_name, flag_is_system_admin, flag_is_banned, flag_delete
-    $addTestSql  = "INSERT INTO " . User::$dbTable . " VALUES
+    # XXXX: user_id, created_at, updated_at, username, screen_name, flag_is_system_admin, flag_is_banned, flag_delete
+    $addTestSql  = "INSERT INTO " . XXXX::$dbTable . " VALUES
         (1,NOW(),NOW())
     ";
     $addTestStmt = $dbConn->prepare($addTestSql);
@@ -90,12 +90,102 @@ function createTestData_XXXX($dbConn) {
         }
     }
 
+    function createTestData_Metadata_Structures($dbConn) {
+        // 6000 series ids
+        # Metadata_Structure: 'metadata_structure_id', 'created_at', 'updated_at', 'parent_metadata_structure_id', 'name', 'ordering', 'description', 'details', 'metadata_term_set_id', 'flag_delete'
+        $addTestSql  = "INSERT INTO " . Metadata_Structure::$dbTable . " VALUES
+            (6001,NOW(),NOW(), 0, 'flower', 1, 'info about the flower', '', 0, 0),
+            (6002,NOW(),NOW(), 6001, 'flower size', 1, 'the size of the flower in its largest dimension', '', 6101, 0),
+            (6003,NOW(),NOW(), 6001, 'flower primary color', 2, 'the primary / dominant color of the flower', '', 6102, 0),
+            (6004,NOW(),NOW(), 0, 'leaf', .5, 'info about the individual leaves of the plant', 'details', 0, 0)
+        ";
+        $addTestStmt = $dbConn->prepare($addTestSql);
+        $addTestStmt->execute();
+        if ($addTestStmt->errorInfo()[0] != '0000') {
+            echo "<pre>error adding test Metadata_Structure data to the DB\n";
+            print_r($addTestStmt->errorInfo());
+            debug_print_backtrace();
+            exit;
+        }
+    }
+
+    function createTestData_Metadata_Term_Sets($dbConn) {
+        // 6100 series ids
+        # Metadata_Term_Set: 'metadata_term_set_id', 'created_at', 'updated_at', 'name', 'ordering', 'description', 'flag_delete'
+        $addTestSql  = "INSERT INTO " . Metadata_Term_Set::$dbTable . " VALUES
+            (6101,NOW(),NOW(), 'small lengths', 1, 'lengths ranging from 3 mm to 30 cm', 0),
+            (6102,NOW(),NOW(), 'colors', 2, 'basic colors', 0),
+            (6103,NOW(),NOW(), 'margin styles', 3, 'the shape / pattern of an edge', 0),
+            (6104,NOW(),NOW(), 'habitats', 4, 'general kinds of places plants live (no terms)', 0)
+        ";
+        $addTestStmt = $dbConn->prepare($addTestSql);
+        $addTestStmt->execute();
+        if ($addTestStmt->errorInfo()[0] != '0000') {
+            echo "<pre>error adding test Metadata_Term_Set data to the DB\n";
+            print_r($addTestStmt->errorInfo());
+            debug_print_backtrace();
+            exit;
+        }
+    }
+
+    function createTestData_Metadata_Term_Values($dbConn) {
+        // 6200 series ids
+        # Metadata_Term_Value: 'metadata_term_value_id', 'created_at', 'updated_at', 'metadata_term_set_id', 'name', 'ordering', 'description', 'flag_delete'
+        $addTestSql  = "INSERT INTO " . Metadata_Term_Value::$dbTable . " VALUES
+            (6201,NOW(),NOW(), 6101, '< 3 mm', 1, 'less than the thickness of 3 pennies', 0),
+            (6202,NOW(),NOW(), 6101, '3 mm - 1cm', 2, 'smaller than the smallest thickness of your pinkie finger', 0),
+            (6203,NOW(),NOW(), 6101, '1-3 cm', 3, 'up to the largest thickness of your thumb', 0),
+            (6204,NOW(),NOW(), 6101, '3-6 cm', 4, 'up to the thicness of 3 fingers', 0),
+            (6205,NOW(),NOW(), 6101, '6-12 cm', 5, 'up to the thicness of 2 fists side face to face', 0),
+            (6206,NOW(),NOW(), 6101, '12-20 cm', 6, 'up to the thicness of 2 fists pinkie to pinkie (palms up)', 0),
+            (6207,NOW(),NOW(), 6101, '20-30 cm', 7, 'up to the length of your forearm', 0),
+            (6208,NOW(),NOW(), 6101, '> 30 cm', 8, 'bigger than that', 0),
+            (6209,NOW(),NOW(), 6102, 'red', 3, '', 0),
+            (6210,NOW(),NOW(), 6102, 'green', 2, '', 0),
+            (6211,NOW(),NOW(), 6102, 'blue', 1, '', 0),
+            (6212,NOW(),NOW(), 6103, 'serrate', 1, 'teeth forward pointing - 1 level / degree of teeth', 0),
+            (6213,NOW(),NOW(), 6103, 'dentate', 2, 'teeth outward pointing - 1 level / degree of teeth', 0)
+        ";
+        $addTestStmt = $dbConn->prepare($addTestSql);
+        $addTestStmt->execute();
+        if ($addTestStmt->errorInfo()[0] != '0000') {
+            echo "<pre>error adding test Metadata_Term_Value data to the DB\n";
+            print_r($addTestStmt->errorInfo());
+            debug_print_backtrace();
+            exit;
+        }
+    }
+
+    function createTestData_Metadata_References($dbConn) {
+        // 6300 series ids
+        # Metadata_Reference: 'metadata_reference_id', 'created_at', 'updated_at', 'metadata_type', 'metadata_id', 'type', 'external_reference', 'description', 'ordering', 'flag_delete'
+        # VALID_METADATA_TYPES = ['structure', 'set', 'value'];
+        # VALID_TYPES = ['text', 'image', 'link'];
+        $addTestSql  = "INSERT INTO " . Metadata_Reference::$dbTable . " VALUES
+            (6301,NOW(),NOW(), 'structure', 6001, 'text', 'testing/flower_descr.txt', 'description of what a flower is', 1, 0),
+            (6302,NOW(),NOW(), 'set', 6101, 'text', 'testing/small_sizes.txt', 'description of the small sizes', 1, 0),
+            (6303,NOW(),NOW(), 'value', 6209, 'image', 'testing/red.jpg', 'image of the color red', 1, 0),
+            (6304,NOW(),NOW(), 'value', 6213, 'image', 'http://cf.ydcdn.net/1.0.1.20/images/main/dentate.jpg', 'picture of dentate', 1, 0),
+            (6305,NOW(),NOW(), 'value', 6212, 'link', 'http://dictionary.reference.com/browse/serrate', 'definition of serrate', 1, 0)
+        ";
+        $addTestStmt = $dbConn->prepare($addTestSql);
+        $addTestStmt->execute();
+        if ($addTestStmt->errorInfo()[0] != '0000') {
+            echo "<pre>error adding test Metadata_Reference data to the DB\n";
+            print_r($addTestStmt->errorInfo());
+            debug_print_backtrace();
+            exit;
+        }
+    }
+
     function createTestData_Notebooks($dbConn) {
+        // 1000 series ids
+        // Notebook: 'notebook_id', 'created_at', 'updated_at', 'user_id', 'name', 'notes', 'flag_workflow_published', 'flag_workflow_validated', 'flag_delete'
         $addTestNotebookSql  = "INSERT INTO " . Notebook::$dbTable . " VALUES
-            (1001,NOW(),NOW(),101,'testnotebook1','this is testnotebook1, owned by user 101', 0),
-            (1002,NOW(),NOW(),101,'testnotebook2','this is testnotebook2, owned by user 101', 0),
-            (1003,NOW(),NOW(),102,'testnotebook3','this is testnotebook3, owned by user 102', 0),
-            (1004,NOW(),NOW(),111,'testnotebook4','this is testnotebook4, owned by user 111', 0)
+            (1001,NOW(),NOW(),101,'testnotebook1','this is testnotebook1, owned by user 101', 0, 0, 0),
+            (1002,NOW(),NOW(),101,'testnotebook2','this is testnotebook2, owned by user 101', 0, 0, 0),
+            (1003,NOW(),NOW(),102,'testnotebook3','this is testnotebook3, owned by user 102', 0, 0, 0),
+            (1004,NOW(),NOW(),111,'testnotebook4','this is testnotebook4, owned by user 111', 0, 0, 0)
         ";
         $addTestNotebookStmt = $dbConn->prepare($addTestNotebookSql);
         $addTestNotebookStmt->execute();
@@ -143,10 +233,10 @@ function createTestData_XXXX($dbConn) {
 	function createAllTestData($dbConn) {
         createTestData_Authoritative_Plants($dbConn);
         createTestData_Authoritative_Plant_Extras($dbConn);
-        createTestData_Metadata_References($dbConn);
         createTestData_Metadata_Structures($dbConn);
         createTestData_Metadata_Term_Sets($dbConn);
         createTestData_Metadata_Term_Values($dbConn);
+        createTestData_Metadata_References($dbConn);
         createTestData_Notebooks($dbConn);
         createTestData_Notebook_Pages($dbConn);
         createTestData_Notebook_Page_Fields($dbConn);

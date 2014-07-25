@@ -6,8 +6,8 @@
 		public static $primaryKeyField = 'metadata_reference_id';
 		public static $dbTable = 'metadata_references';
 
-        // NOTE: valid metadata types: structure, set, value
-        // NOTE: valid types (of references): text, image, link
+        public static $VALID_METADATA_TYPES = ['structure', 'set', 'value'];
+        public static $VALID_TYPES = ['text', 'image', 'link'];
 
 		public function getReferrent() {
             if ($this->metadata_type == 'structure') {
