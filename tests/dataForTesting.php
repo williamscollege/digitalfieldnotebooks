@@ -197,6 +197,45 @@ function createTestData_XXXX($dbConn) {
         }
     }
 
+    function createTestData_Notebook_Pages($dbConn) {
+        // 1100 series ids
+        // Notebook_Page: 'notebook_page_id', 'created_at', 'updated_at', 'notebook_id', 'authoritative_plant_id', 'notes', 'flag_workflow_published', 'flag_workflow_validated', 'flag_delete'
+        $addTestNotebookSql  = "INSERT INTO " . Notebook_Page::$dbTable . " VALUES
+                (1101,NOW(),NOW(), 1001, 5001, 'testing notebook page the first in testnotebook1, owned by user 101', 0, 0, 0),
+                (1102,NOW(),NOW(), 1001, 5008, 'second testing notebook page in testnotebook1, owned by user 101', 0, 0, 0),
+                (1103,NOW(),NOW(), 1002, 5001, 'first page of testnotebook2, owned by user 101', 0, 0, 0),
+                (1104,NOW(),NOW(), 1004, 5001, 'first page of testnotebook4, owned by user 111', 0, 0, 0)
+            ";
+        $addTestNotebookStmt = $dbConn->prepare($addTestNotebookSql);
+        $addTestNotebookStmt->execute();
+        if ($addTestNotebookStmt->errorInfo()[0] != '0000') {
+            echo "<pre>error adding test Notebook_Pages data to the DB\n";
+            print_r($addTestNotebookStmt->errorInfo());
+            debug_print_backtrace();
+            exit;
+        }
+    }
+
+    function createTestData_Notebook_Page_Fields($dbConn) {
+        // 1200 series ids
+        // Notebook_Page_Field: 'notebook_page_field_id', 'created_at', 'updated_at', 'notebook_page_id', 'label_metadata_structure_id', 'value_metadata_term_value_id', 'value_open', 'flag_delete'
+        $addTestNotebookSql  = "INSERT INTO " . Notebook_Page_Field::$dbTable . " VALUES
+                    (1201,NOW(),NOW(), 1101, 6002, 6202, '', 0),
+                    (1202,NOW(),NOW(), 1101, 6002, 6203, '', 0),
+                    (1203,NOW(),NOW(), 1101, 6003, 6211, '', 0),
+                    (1204,NOW(),NOW(), 1101, 6004, 0, 'wavy-ish', 0),
+                    (1205,NOW(),NOW(), 1104, 6002, 6205, 'rare', 0)
+                ";
+        $addTestNotebookStmt = $dbConn->prepare($addTestNotebookSql);
+        $addTestNotebookStmt->execute();
+        if ($addTestNotebookStmt->errorInfo()[0] != '0000') {
+            echo "<pre>error adding test Notebook_Page_Fields data to the DB\n";
+            print_r($addTestNotebookStmt->errorInfo());
+            debug_print_backtrace();
+            exit;
+        }
+    }
+
     function createTestData_Users($dbConn) {
         // 1100 series ids
         # user: user_id, created_at, updated_at, username, screen_name, flag_is_system_admin, flag_is_banned, flag_delete
