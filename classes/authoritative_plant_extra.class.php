@@ -7,6 +7,8 @@
 		public static $primaryKeyField = 'authoritative_plant_extra_id';
 		public static $dbTable = 'authoritative_plant_extras';
 
+        public static $VALID_TYPES = ['common name', 'description', 'image'];
+
         public function getAuthoritativePlant() {
             return Authoritative_Plant::getOneFromDb(['authoritative_plant_id' => $this->authoritative_plant_id, 'flag_delete' => FALSE], $this->dbConnection);
         }
