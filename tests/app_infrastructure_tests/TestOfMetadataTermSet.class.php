@@ -14,7 +14,7 @@
 		}
 
 		function testMetadataTermSetAtributesExist() {
-			$this->assertEqual(count(Metadata_Term_Set::$fields), 0);
+			$this->assertEqual(count(Metadata_Term_Set::$fields), 7);
 
 //			  $this->assertTrue(in_array('action_id', Action::$fields));
 //            $this->assertTrue(in_array('created_at', Action::$fields));

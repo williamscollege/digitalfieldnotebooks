@@ -14,7 +14,7 @@
 		}
 
 		function testNotebookPageAtributesExist() {
-			$this->assertEqual(count(Notebook_Page::$fields), 0);
+			$this->assertEqual(count(Notebook_Page::$fields), 9);
 
 //			  $this->assertTrue(in_array('action_id', Action::$fields));
 //            $this->assertTrue(in_array('created_at', Action::$fields));

@@ -14,7 +14,7 @@
 		}
 
 		function testMetadataReferenceAtributesExist() {
-			$this->assertEqual(count(Metadata_Reference::$fields), 0);
+			$this->assertEqual(count(Metadata_Reference::$fields), 10);
 
 //			  $this->assertTrue(in_array('action_id', Action::$fields));
 //            $this->assertTrue(in_array('created_at', Action::$fields));

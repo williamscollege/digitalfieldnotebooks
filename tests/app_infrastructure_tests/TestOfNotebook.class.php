@@ -14,7 +14,7 @@
 		}
 
 		function testNotebookAtributesExist() {
-			$this->assertEqual(count(Notebook::$fields), 7);
+			$this->assertEqual(count(Notebook::$fields), 9);
 
 			$this->assertTrue(in_array('notebook_id', Notebook::$fields));
             $this->assertTrue(in_array('created_at', Notebook::$fields));

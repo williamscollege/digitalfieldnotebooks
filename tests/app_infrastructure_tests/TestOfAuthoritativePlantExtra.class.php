@@ -14,7 +14,7 @@
 		}
 
 		function testAuthoritativePlantExtraAtributesExist() {
-			$this->assertEqual(count(Authoritative_Plant_Extra::$fields), 0);
+			$this->assertEqual(count(Authoritative_Plant_Extra::$fields), 8);
 
 //			  $this->assertTrue(in_array('action_id', Action::$fields));
 //            $this->assertTrue(in_array('created_at', Action::$fields));

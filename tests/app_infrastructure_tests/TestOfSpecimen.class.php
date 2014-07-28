@@ -14,7 +14,7 @@
 		}
 
 		function testSpecimenAtributesExist() {
-			$this->assertEqual(count(Specimen::$fields), 0);
+			$this->assertEqual(count(Specimen::$fields), 15);
 
 //			  $this->assertTrue(in_array('action_id', Action::$fields));
 //            $this->assertTrue(in_array('created_at', Action::$fields));
