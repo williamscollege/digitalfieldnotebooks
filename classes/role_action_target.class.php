@@ -6,7 +6,9 @@
 		public static $primaryKeyField = 'role_action_target_link_id';
 		public static $dbTable = 'role_action_target_links';
 
-		// instance attributes
+        public static $VALID_TARGET_TYPES =  ['global_notebook', 'global_metadata', 'global_plant', 'global_specimen', 'notebook', 'metadata', 'plant', 'specimen'];
+
+        // instance attributes
         public $role = '';
         public $action = '';
         public $target = '';

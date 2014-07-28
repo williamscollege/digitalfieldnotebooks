@@ -74,7 +74,7 @@ function createTestData_XXXX($dbConn) {
                 (5101,NOW(),NOW(), 5001, 'common name', 'AP_A common z chestnut', 1, 0),
                 (5102,NOW(),NOW(), 5001, 'common name', 'AP_A common a american chestnut', 2, 0),
                 (5103,NOW(),NOW(), 5001, 'common name', 'AP_A common y achestnut', 1, 0),
-                (5105,NOW(),NOW(), 5001, 'image', 'authoritative/testing/castanea_dentata.jpg', 2, 0),
+                (5105,NOW(),NOW(), 5001, 'image', 'testing/castanea_dentata.jpg', 2, 0),
                 (5106,NOW(),NOW(), 5001, 'image', 'https://www.flickr.com/photos/plussed/14761853313', 1, 0),
                 (5107,NOW(),NOW(), 5008, 'common name', 'AP_C common beebalm', 5, 0),
                 (5108,NOW(),NOW(), 5008, 'image', 'https://www.flickr.com/photos/plussed/213953635', 1, 0),
@@ -181,17 +181,17 @@ function createTestData_XXXX($dbConn) {
     function createTestData_Notebooks($dbConn) {
         // 1000 series ids
         // Notebook: 'notebook_id', 'created_at', 'updated_at', 'user_id', 'name', 'notes', 'flag_workflow_published', 'flag_workflow_validated', 'flag_delete'
-        $addTestNotebookSql  = "INSERT INTO " . Notebook::$dbTable . " VALUES
+        $addTestSql  = "INSERT INTO " . Notebook::$dbTable . " VALUES
             (1001,NOW(),NOW(),101,'testnotebook1','this is testnotebook1, owned by user 101', 0, 0, 0),
             (1002,NOW(),NOW(),101,'testnotebook2','this is testnotebook2, owned by user 101', 0, 0, 0),
             (1003,NOW(),NOW(),102,'testnotebook3','this is testnotebook3, owned by user 102', 0, 0, 0),
-            (1004,NOW(),NOW(),111,'testnotebook4','this is testnotebook4, owned by user 111', 0, 0, 0)
+            (1004,NOW(),NOW(),111,'testnotebook4','this is generally viewable testnotebook4, owned by user 111', 0, 0, 0)
         ";
-        $addTestNotebookStmt = $dbConn->prepare($addTestNotebookSql);
-        $addTestNotebookStmt->execute();
-        if ($addTestNotebookStmt->errorInfo()[0] != '0000') {
+        $addTestStmt = $dbConn->prepare($addTestSql);
+        $addTestStmt->execute();
+        if ($addTestStmt->errorInfo()[0] != '0000') {
             echo "<pre>error adding test Notebooks data to the DB\n";
-            print_r($addTestNotebookStmt->errorInfo());
+            print_r($addTestStmt->errorInfo());
             debug_print_backtrace();
             exit;
         }
@@ -200,17 +200,17 @@ function createTestData_XXXX($dbConn) {
     function createTestData_Notebook_Pages($dbConn) {
         // 1100 series ids
         // Notebook_Page: 'notebook_page_id', 'created_at', 'updated_at', 'notebook_id', 'authoritative_plant_id', 'notes', 'flag_workflow_published', 'flag_workflow_validated', 'flag_delete'
-        $addTestNotebookSql  = "INSERT INTO " . Notebook_Page::$dbTable . " VALUES
+        $addTestSql  = "INSERT INTO " . Notebook_Page::$dbTable . " VALUES
                 (1101,NOW(),NOW(), 1001, 5001, 'testing notebook page the first in testnotebook1, owned by user 101', 0, 0, 0),
                 (1102,NOW(),NOW(), 1001, 5008, 'second testing notebook page in testnotebook1, owned by user 101', 0, 0, 0),
                 (1103,NOW(),NOW(), 1002, 5001, 'first page of testnotebook2, owned by user 101', 0, 0, 0),
                 (1104,NOW(),NOW(), 1004, 5001, 'first page of testnotebook4, owned by user 111', 0, 0, 0)
             ";
-        $addTestNotebookStmt = $dbConn->prepare($addTestNotebookSql);
-        $addTestNotebookStmt->execute();
-        if ($addTestNotebookStmt->errorInfo()[0] != '0000') {
+        $addTestStmt = $dbConn->prepare($addTestSql);
+        $addTestStmt->execute();
+        if ($addTestStmt->errorInfo()[0] != '0000') {
             echo "<pre>error adding test Notebook_Pages data to the DB\n";
-            print_r($addTestNotebookStmt->errorInfo());
+            print_r($addTestStmt->errorInfo());
             debug_print_backtrace();
             exit;
         }
@@ -219,27 +219,93 @@ function createTestData_XXXX($dbConn) {
     function createTestData_Notebook_Page_Fields($dbConn) {
         // 1200 series ids
         // Notebook_Page_Field: 'notebook_page_field_id', 'created_at', 'updated_at', 'notebook_page_id', 'label_metadata_structure_id', 'value_metadata_term_value_id', 'value_open', 'flag_delete'
-        $addTestNotebookSql  = "INSERT INTO " . Notebook_Page_Field::$dbTable . " VALUES
+        $addTestSql  = "INSERT INTO " . Notebook_Page_Field::$dbTable . " VALUES
                     (1201,NOW(),NOW(), 1101, 6002, 6202, '', 0),
                     (1202,NOW(),NOW(), 1101, 6002, 6203, '', 0),
                     (1203,NOW(),NOW(), 1101, 6003, 6211, '', 0),
                     (1204,NOW(),NOW(), 1101, 6004, 0, 'wavy-ish', 0),
                     (1205,NOW(),NOW(), 1104, 6002, 6205, 'rare', 0)
                 ";
-        $addTestNotebookStmt = $dbConn->prepare($addTestNotebookSql);
-        $addTestNotebookStmt->execute();
-        if ($addTestNotebookStmt->errorInfo()[0] != '0000') {
+        $addTestStmt = $dbConn->prepare($addTestSql);
+        $addTestStmt->execute();
+        if ($addTestStmt->errorInfo()[0] != '0000') {
             echo "<pre>error adding test Notebook_Page_Fields data to the DB\n";
-            print_r($addTestNotebookStmt->errorInfo());
+            print_r($addTestStmt->errorInfo());
+            debug_print_backtrace();
+            exit;
+        }
+    }
+
+    function createTestData_Role_Action_Targets($dbConn) {
+        // 200 series ids
+        // Role_Action_Target: 'role_action_target_link_id', 'created_at', 'updated_at', 'last_user_id', 'role_id', 'action_id', 'target_type', 'target_id', 'flag_delete'
+        // VALID_TARGET_TYPES = ['global_notebook', 'global_metadata', 'global_plants', 'global_specimens', 'notebook', 'metadata', 'plant', 'specimen'];
+        $addTestSql  = "INSERT INTO " . Role_Action_Target::$dbTable . " VALUES
+                        (201,NOW(),NOW(), 110, 2, 1, 'global_notebook', 0, 0),
+                        (202,NOW(),NOW(), 110, 2, 2, 'global_notebook', 0, 0),
+                        (203,NOW(),NOW(), 110, 2, 2, 'global_metadata', 0, 0),
+                        (204,NOW(),NOW(), 110, 2, 2, 'global_plant', 0, 0),
+                        (205,NOW(),NOW(), 110, 2, 2, 'global_specimens', 0, 0),
+                        (206,NOW(),NOW(), 110, 2, 1, 'global_metadata', 0, 0),
+                        (207,NOW(),NOW(), 110, 3, 1, 'global_metadata', 0, 0),
+                        (208,NOW(),NOW(), 110, 4, 1, 'global_metadata', 0, 0),
+                        (209,NOW(),NOW(), 110, 2, 1, 'global_plant', 0, 0),
+                        (210,NOW(),NOW(), 110, 3, 1, 'global_plant', 0, 0),
+                        (211,NOW(),NOW(), 110, 4, 1, 'global_plant', 0, 0),
+                        (212,NOW(),NOW(), 110, 3, 1, 'notebook', 1004, 0),
+                        (213,NOW(),NOW(), 110, 4, 1, 'notebook', 1004, 0)
+                    ";
+        $addTestStmt = $dbConn->prepare($addTestSql);
+        $addTestStmt->execute();
+        if ($addTestStmt->errorInfo()[0] != '0000') {
+            echo "<pre>error adding test Role_Action_Targets data to the DB\n";
+            print_r($addTestStmt->errorInfo());
+            debug_print_backtrace();
+            exit;
+        }
+    }
+
+
+    function createTestData_Specimens($dbConn) {
+        // 8000 series ids
+        # Specimen: 'specimen_id', 'created_at', 'updated_at', 'user_id', 'link_to_type', 'link_to_id', 'name', 'gps_x', 'gps_y', 'notes', 'ordering', 'catalog_identifier', 'flag_workflow_published', 'flag_workflow_validated', 'flag_delete'
+        # VALID_LINK_TO_TYPES =  ['authoritative_plant', 'notebook_page'];
+        $addTestSql  = "INSERT INTO " . Specimen::$dbTable . " VALUES
+            (8001,NOW(),NOW(), 110, 'authoritative_plant', 5001, 'sci quad authoritative', -73.2054918, 42.7118454, 'notes on authoritative specimen', 1, '1a', 1, 1, 0),
+            (8002,NOW(),NOW(), 101, 'notebook_page', 1101, 'sci quad notebook page', -73.2054918, 42.7118454, 'notes on notebook specimen', 1, '1n', 0, 1, 0)
+        ";
+        $addTestStmt = $dbConn->prepare($addTestSql);
+        $addTestStmt->execute();
+        if ($addTestStmt->errorInfo()[0] != '0000') {
+            echo "<pre>error adding test Specimen data to the DB\n";
+            print_r($addTestStmt->errorInfo());
+            debug_print_backtrace();
+            exit;
+        }
+    }
+
+    function createTestData_Specimen_Images($dbConn) {
+        // 8100 series ids
+        # Specimen_Image: 'specimen_image_id', 'created_at', 'updated_at', 'specimen_id', 'user_id', 'image_reference', 'ordering', 'flag_workflow_published', 'flag_workflow_validated', 'flag_delete'
+        $addTestSql  = "INSERT INTO " . Specimen_Image::$dbTable . " VALUES
+            (8101,NOW(),NOW(), 8001, 110, 'testing/cnh_castanea_dentata.jpg', 1, 1, 1, 0),
+            (8102,NOW(),NOW(), 8001, 110, 'https://www.flickr.com/photos/plussed/14761853313', 2, 1, 1, 0),
+            (8103,NOW(),NOW(), 8002, 101, 'testing/USER101_8103_cnh_castanea_dentata.jpg', ordering, 0, 1, 0)
+        ";
+        $addTestStmt = $dbConn->prepare($addTestSql);
+        $addTestStmt->execute();
+        if ($addTestStmt->errorInfo()[0] != '0000') {
+            echo "<pre>error adding test Specimen_Image data to the DB\n";
+            print_r($addTestStmt->errorInfo());
             debug_print_backtrace();
             exit;
         }
     }
 
     function createTestData_Users($dbConn) {
-        // 1100 series ids
+        // 100 series ids
         # user: user_id, created_at, updated_at, username, screen_name, flag_is_system_admin, flag_is_banned, flag_delete
-        $addTestUserSql  = "INSERT INTO " . User::$dbTable . " VALUES
+        $addTestSql  = "INSERT INTO " . User::$dbTable . " VALUES
             (101,NOW(),NOW(),'" . Auth_Base::$TEST_USERNAME . "','" . Auth_Base::$TEST_LNAME . ", " . Auth_Base::$TEST_FNAME . "',0,0,0),
             (102,NOW(),NOW(),'testUser2','tu2L, tu2F',0,0,0),
             (103,NOW(),NOW(),'testUser3','tu3L, tu3F',0,0,0),
@@ -251,11 +317,11 @@ function createTestData_XXXX($dbConn) {
             (110,NOW(),NOW(),'testUser9','tu9L, tu9F',0,0,0),
             (111,NOW(),NOW(),'testUser10','tu10L, tu10F',0,0,0)
         ";
-        $addTestUserStmt = $dbConn->prepare($addTestUserSql);
-        $addTestUserStmt->execute();
-        if ($addTestUserStmt->errorInfo()[0] != '0000') {
+        $addTestStmt = $dbConn->prepare($addTestSql);
+        $addTestStmt->execute();
+        if ($addTestStmt->errorInfo()[0] != '0000') {
             echo "<pre>error adding test Users data to the DB\n";
-            print_r($addTestUserStmt->errorInfo());
+            print_r($addTestStmt->errorInfo());
             debug_print_backtrace();
             exit;
         }
@@ -266,6 +332,32 @@ function createTestData_XXXX($dbConn) {
         $u1->flag_is_system_admin = TRUE;
         $u1->updateDb();
     }
+
+function createTestData_User_Roles($dbConn) {
+    // 300 series ids
+    # User_Role: 'user_role_link_id', 'created_at', 'updated_at', 'last_user_id', 'user_id', 'role_id'
+    $addTestSql  = "INSERT INTO " . User_Role::$dbTable . " VALUES
+        (301,NOW(),NOW(),110,101,3),
+        (302,NOW(),NOW(),110,102,3),
+        (303,NOW(),NOW(),110,103,3),
+        (304,NOW(),NOW(),110,104,3),
+        (305,NOW(),NOW(),110,105,2),
+        (306,NOW(),NOW(),110,106,3),
+        (307,NOW(),NOW(),110,107,3),
+        (308,NOW(),NOW(),110,108,3),
+        (309,NOW(),NOW(),110,109,3),
+        (310,NOW(),NOW(),110,110,1),
+        (311,NOW(),NOW(),110,111,3)
+    ";
+    $addTestStmt = $dbConn->prepare($addTestSql);
+    $addTestStmt->execute();
+    if ($addTestStmt->errorInfo()[0] != '0000') {
+        echo "<pre>error adding test User_Role data to the DB\n";
+        print_r($addTestStmt->errorInfo());
+        debug_print_backtrace();
+        exit;
+    }
+}
 
 //--------------------------------------------------------------------------------------------------------------
 

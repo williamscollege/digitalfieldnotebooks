@@ -8,6 +8,8 @@
 		public static $primaryKeyField = 'specimen_id';
 		public static $dbTable = 'specimens';
 
+        public static $VALID_LINK_TO_TYPES =  ['authoritative_plant', 'notebook_page'];
+
         public $images;
 
 		public function __construct($initsHash) {
