@@ -28,6 +28,32 @@
             $this->assertTrue(in_array('flag_delete', Metadata_Structure::$fields));
 		}
 
+		//// static methods
+
+		function testCmp() {
+            $mds1 = Metadata_Structure::getOneFromDb(['metadata_structure_id'=>6001],$this->DB);
+            $mds2 = Metadata_Structure::getOneFromDb(['metadata_structure_id'=>6004],$this->DB);
+            $this->assertEqual(-1,Metadata_Structure::cmp($mds2,$mds1));
+            $this->assertEqual(1,Metadata_Structure::cmp($mds1,$mds2));
+            $this->assertEqual(0,Metadata_Structure::cmp($mds2,$mds2));
+
+            $mds3 = Metadata_Structure::getOneFromDb(['metadata_structure_id'=>6002],$this->DB);
+            $this->assertEqual(-1,Metadata_Structure::cmp($mds1,$mds3));
+            $this->assertEqual(1,Metadata_Structure::cmp($mds3,$mds1));
+
+
+            $mds = Metadata_Structure::getAllFromDb(['parent_metadata_structure_id'=>0],$this->DB);
+
+            usort($mds,'Metadata_Structure::cmp');
+
+            $this->assertEqual('leaf',$mds[0]->name);
+            $this->assertEqual('flower',$mds[1]->name);
+        }
+
+        //// instance methods - object itself
+
+        //// instance methods - related data
+
         function testGetParent() {
             $mdsP = Metadata_Structure::getOneFromDb(['metadata_structure_id'=>6001],$this->DB);
 
@@ -65,30 +91,12 @@
             $this->assertEqual(6001,$lin2[0]->metadata_structure_id);
             $this->assertEqual(6002,$lin2[1]->metadata_structure_id);
         }
-		//// static methods
 
-		function testCmp() {
-            $mds1 = Metadata_Structure::getOneFromDb(['metadata_structure_id'=>6001],$this->DB);
-            $mds2 = Metadata_Structure::getOneFromDb(['metadata_structure_id'=>6004],$this->DB);
-            $this->assertEqual(-1,Metadata_Structure::cmp($mds2,$mds1));
-            $this->assertEqual(1,Metadata_Structure::cmp($mds1,$mds2));
-            $this->assertEqual(0,Metadata_Structure::cmp($mds2,$mds2));
-
-            $mds3 = Metadata_Structure::getOneFromDb(['metadata_structure_id'=>6002],$this->DB);
-            $this->assertEqual(-1,Metadata_Structure::cmp($mds1,$mds3));
-            $this->assertEqual(1,Metadata_Structure::cmp($mds3,$mds1));
-
-
-            $mds = Metadata_Structure::getAllFromDb(['parent_metadata_structure_id'=>0],$this->DB);
-
-            usort($mds,'Metadata_Structure::cmp');
-
-            $this->assertEqual('leaf',$mds[0]->name);
-            $this->assertEqual('flower',$mds[1]->name);
+        function testGetChildren() {
+            $this->fail('TODO: test for getChildren');
         }
 
-        //// instance methods - object itself
-
-        //// instance methods - related data
-
+        function testLoadReferences() {
+            $this->fail('TODO: test for loadReferences');
+        }
     }

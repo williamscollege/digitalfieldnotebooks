@@ -9,6 +9,17 @@
         public $term_values;
         public $references;
 
+
+        public static function cmp($a, $b) {
+            if ($a->ordering == $b->ordering) {
+                if ($a->name == $b->name) {
+                    return 0;
+                }
+                return ($a->name < $b->name) ? -1 : 1;
+            }
+            return ($a->ordering < $b->ordering) ? -1 : 1;
+        }
+
         //  NOTE: returns 0 if there is no parent
 		public function getMetadataStructures() {
             return Metadata_Structure::getAllFromDb(['metadata_term_set_id' => $this->metadata_term_set_id, 'flag_delete' => FALSE], $this->dbConnection);

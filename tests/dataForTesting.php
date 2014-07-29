@@ -115,7 +115,7 @@ function createTestData_XXXX($dbConn) {
         $addTestSql  = "INSERT INTO " . Metadata_Term_Set::$dbTable . " VALUES
             (6101,NOW(),NOW(), 'small lengths', 1, 'lengths ranging from 3 mm to 30 cm', 0),
             (6102,NOW(),NOW(), 'colors', 2, 'basic colors', 0),
-            (6103,NOW(),NOW(), 'margin styles', 3, 'the shape / pattern of an edge', 0),
+            (6103,NOW(),NOW(), 'margin styles', 1, 'the shape / pattern of an edge', 0),
             (6104,NOW(),NOW(), 'habitats', 4, 'general kinds of places plants live (no terms)', 0)
         ";
         $addTestStmt = $dbConn->prepare($addTestSql);
