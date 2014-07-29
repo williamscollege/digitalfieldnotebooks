@@ -7,6 +7,7 @@
 		public static $primaryKeyField = 'role_id';
 		public static $dbTable = 'roles';
 
+        public static $VALID_ROLE_NAMES = ['manager','assistant','field user','public'];
 
 		public static function cmpRoles($a, $b) {
 			# The most powerful system admin role is priority = 1; lowest anonymous/guest priority is X

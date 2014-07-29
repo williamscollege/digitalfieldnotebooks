@@ -77,16 +77,60 @@
 		}
 
 
-        public function getAccessibleNotebooks() {
-            $notebooks = array();
+        public function getRoles() {
+            $user_roles = array();
+            $user_roles = User_Role::getAllFromDb(['user_id' => $this->user_id],$this->dbConnection);
+            if (count($user_roles) <= 0) { return array(Role::getOneFromDb(['name'=>'public'],$this->dbConnection)); }
 
+//            $roles = Role::getAllFromDb(['role_id'=>array_map(function($e){return $e->role_id;},$user_roles)],
+              $roles = Role::getAllFromDb(['role_id'=> Db_Linked::arrayOfAttrValues($user_roles,'role_id')],
+                $this->dbConnection);
+            return $roles;
+        }
+
+        public function getAccessibleNotebooks($for_action,$debug_flag = 0) {
             if ($this->flag_is_system_admin) {
-                $notebooks = Notebook::getAllFromDb(['flag_delete' => FALSE],$this->dbConnection);
-            } else {
-                $notebooks = Notebook::getAllFromDb(['user_id' => $this->user_id],$this->dbConnection);
+                if ($debug_flag) {
+                    echo "user is system admin<br/>\n";
+                }
+                return Notebook::getAllFromDb(['flag_delete' => FALSE],$this->dbConnection);
             }
 
-            return $notebooks;
+            $accessible_notebooks_ids = array();
+            $roles = $this->getRoles();
+            if ($debug_flag) {
+                echo "user roles are<br/>\n";
+                util_prePrintR($roles);
+            }
+            foreach (Db_Linked::arrayOfAttrValues($roles,'role_id') as $role_id) {
+                $global_check = Role_Action_Target::getAllFromDb(['role_id'=>$role_id,'action_id'=>$for_action->action_id,'target_type'=>'global_notebook'],$this->dbConnection);
+                if (count($global_check) > 0) {
+                    return Notebook::getAllFromDb(['flag_delete' => FALSE],$this->dbConnection);
+                }
+                $role_action_targets = Role_Action_Target::getAllFromDb(['role_id'=>$role_id,'action_id'=>$for_action->action_id,'target_type'=>'notebook'],$this->dbConnection);
+                foreach ($role_action_targets as $rat) {
+                    if (! in_array($rat->target_id,$accessible_notebooks_ids)) {
+                        $accessible_notebooks_ids[] = $rat->target_id;
+                    }
+                }
+            }
+
+            $owned_notebooks = Notebook::getAllFromDb(['user_id' => $this->user_id],$this->dbConnection);
+            $owned_notebook_ids = Db_Linked::arrayOfAttrValues($owned_notebooks,'notebook_id');
+
+            $additional_notebook_ids = array();
+            foreach ($accessible_notebooks_ids as $an_id) {
+                if (! in_array($an_id,$owned_notebook_ids)) {
+                    $additional_notebook_ids[] = $an_id;
+                }
+            }
+
+            $additional_notebooks = array();
+            if (count($additional_notebook_ids) > 0) {
+                $additional_notebooks = Notebook::getAllFromDb(['notebook_id' => $additional_notebook_ids],$this->dbConnection);
+            }
+
+            return array_merge($owned_notebooks,$additional_notebooks);
         }
 
 	}

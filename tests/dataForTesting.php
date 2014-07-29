@@ -252,8 +252,8 @@ function createTestData_XXXX($dbConn) {
                         (209,NOW(),NOW(), 110, 2, 1, 'global_plant', 0, 0),
                         (210,NOW(),NOW(), 110, 3, 1, 'global_plant', 0, 0),
                         (211,NOW(),NOW(), 110, 4, 1, 'global_plant', 0, 0),
-                        (212,NOW(),NOW(), 110, 3, 1, 'notebook', 1004, 0),
-                        (213,NOW(),NOW(), 110, 4, 1, 'notebook', 1004, 0)
+                        (213,NOW(),NOW(), 110, 3, 1, 'notebook', 1004, 0),
+                        (214,NOW(),NOW(), 110, 4, 1, 'notebook', 1004, 0)
                     ";
         $addTestStmt = $dbConn->prepare($addTestSql);
         $addTestStmt->execute();
@@ -305,6 +305,12 @@ function createTestData_XXXX($dbConn) {
     function createTestData_Users($dbConn) {
         // 100 series ids
         # user: user_id, created_at, updated_at, username, screen_name, flag_is_system_admin, flag_is_banned, flag_delete
+        // 101-104 are field user
+        // 105 is assistant
+        // 106-108 are field user
+        // 109 has no roles (implicit 'public' role)
+        // 110 is manager
+        // 111 is field user
         $addTestSql  = "INSERT INTO " . User::$dbTable . " VALUES
             (101,NOW(),NOW(),'" . Auth_Base::$TEST_USERNAME . "','" . Auth_Base::$TEST_LNAME . ", " . Auth_Base::$TEST_FNAME . "',0,0,0),
             (102,NOW(),NOW(),'testUser2','tu2L, tu2F',0,0,0),
@@ -345,7 +351,6 @@ function createTestData_User_Roles($dbConn) {
         (306,NOW(),NOW(),110,106,3),
         (307,NOW(),NOW(),110,107,3),
         (308,NOW(),NOW(),110,108,3),
-        (309,NOW(),NOW(),110,109,3),
         (310,NOW(),NOW(),110,110,1),
         (311,NOW(),NOW(),110,111,3)
     ";
@@ -417,7 +422,10 @@ function createTestData_User_Roles($dbConn) {
         _removeTestDataFromTable($dbConn, Notebook_Page_Field::$dbTable);
     }
     function removeTestData_Role_Action_Targets($dbConn) {
-        _removeTestDataFromTable($dbConn, Role_Action_Target::$dbTable);
+        $sql = "DELETE FROM ".Role_Action_Target::$dbTable." WHERE ".Role_Action_Target::$primaryKeyField." > 100";
+        //echo "<pre>" . $sql . "\n</pre>";
+        $stmt = $dbConn->prepare($sql);
+        $stmt->execute();
     }
     function removeTestData_Specimens($dbConn) {
         _removeTestDataFromTable($dbConn, Specimen::$dbTable);

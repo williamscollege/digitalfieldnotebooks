@@ -111,9 +111,32 @@
 
         //// instance methods - related data
 
+        function testGetRoles() {
+            $u1 = User::getOneFromDb(['user_id' => 101], $this->DB);
+            $u2 = User::getOneFromDb(['user_id' => 110], $this->DB);
+            $u3 = new User(['user_id' => 50, 'username' => 'fjones', 'screen_name' => 'jones, fred', 'DB' => $this->DB]);
+            $u4 = User::getOneFromDb(['user_id' => 109], $this->DB);
+
+            $r1 = $u1->getRoles();
+            $this->assertEqual(1,count($r1));
+            $this->assertEqual('field user',$r1[0]->name);
+
+            $r2 = $u2->getRoles();
+            $this->assertEqual(1,count($r2));
+            $this->assertEqual('manager',$r2[0]->name);
+
+            $r3 = $u3->getRoles();
+            $this->assertEqual(1,count($r3));
+            $this->assertEqual('public',$r3[0]->name);
+
+            $r4 = $u4->getRoles();
+            $this->assertEqual(1,count($r4));
+            $this->assertEqual('public',$r4[0]->name);
+        }
+
         function testGetAccessibleNotebooksBasic() {
             $u = User::getOneFromDb(['user_id' => 101], $this->DB);
-            $notebooks = $u->getAccessibleNotebooks();
+            $notebooks = $u->getAccessibleNotebooks(Action::getOneFromDb(['name'=>'edit'],$this->DB));
 
             $this->assertEqual(2,count($notebooks),'number of notebooks mismatch');
             $this->assertEqual(1001,$notebooks[0]->notebook_id,'notebook id mismatch');
@@ -123,9 +146,9 @@
         function testGetAccessibleNotebooksSystemAdmin() {
             makeAuthedTestUserAdmin($this->DB);
             $u = User::getOneFromDb(['user_id' => 101], $this->DB);
-            $notebooks = $u->getAccessibleNotebooks();
+            $notebooks = $u->getAccessibleNotebooks(Action::getOneFromDb(['name'=>'edit'],$this->DB));
 
-            $this->assertEqual(4,count($notebooks),'number of notebooks mismatch: 3 vs '.count($notebooks));
+            $this->assertEqual(4,count($notebooks),'number of notebooks mismatch: 4 vs '.count($notebooks));
             $this->assertEqual(1001,$notebooks[0]->notebook_id,'notebook id mismatch');
             $this->assertEqual(1002,$notebooks[1]->notebook_id,'notebook id mismatch');
             $this->assertEqual(1003,$notebooks[2]->notebook_id,'notebook id mismatch');
@@ -133,11 +156,78 @@
         }
 
         function testGetAccessibleNotebooksManager() {
-            $this->fail("TODO: create test for testGetAccessibleNotebooksManager");
+            $u = User::getOneFromDb(['user_id' => 110], $this->DB);
+            $r = $u->getRoles();
+            $this->assertTrue(in_array('manager',array_map(function($e){return $e->name;},$r)));
+
+            $actions = Action::getAllFromDb([],$this->DB);
+            $this->assertEqual(6,count($actions));
+
+            $all_n = Notebook::getAllFromDb([],$this->DB);
+            $num_all_n = count($all_n);
+
+            foreach ($actions as $a) {
+
+                //!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                // THIS IS THE MAIN TESTED ACTION
+                $accessible_n = $u->getAccessibleNotebooks($a);
+                //!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+                $num_accessible_n = count($accessible_n);
+                $this->assertEqual($num_all_n,$num_accessible_n,'mismatch on notebooks accesible for action '.$a->name.": expecting $num_all_n, but got $num_accessible_n instead");
+            }
         }
 
         function testGetAccessibleNotebooksFieldUser() {
-            $this->fail("TODO: create test for testGetAccessibleNotebooksFieldUser");
+            $u = User::getOneFromDb(['user_id' => 101], $this->DB);
+            $r = $u->getRoles();
+            $this->assertFalse(in_array('manager',array_map(function($e){return $e->name;},$r)));
+            $this->assertTrue(in_array('field user',array_map(function($e){return $e->name;},$r)));
+
+            $actions = Action::getAllFromDb([],$this->DB);
+            $this->assertEqual(6,count($actions));
+
+            foreach ($actions as $a) {
+
+                //!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                // THIS IS THE MAIN TESTED ACTION
+                $accessible_n = $u->getAccessibleNotebooks($a);
+                //!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+                $num_accessible_n = count($accessible_n);
+                if ($a->name == 'view') {
+                    $this->assertEqual(3,$num_accessible_n,'mismatch on notebooks accesible for action '.$a->name.": expecting3n, but got $num_accessible_n instead");
+                } else {
+                    $this->assertEqual(2,$num_accessible_n,'mismatch on notebooks accesible for action '.$a->name.": expecting 2, but got $num_accessible_n instead");
+                }
+            }
+        }
+
+        function testGetAccessibleNotebooksPublicUser() {
+            $u = User::getOneFromDb(['user_id' => 109], $this->DB);
+
+            $r = $u->getRoles();
+            $this->assertFalse(in_array('manager',array_map(function($e){return $e->name;},$r)));
+            $this->assertFalse(in_array('field user',array_map(function($e){return $e->name;},$r)));
+            $this->assertTrue(in_array('public',array_map(function($e){return $e->name;},$r)));
+
+            $actions = Action::getAllFromDb([],$this->DB);
+            $this->assertEqual(6,count($actions));
+
+            foreach ($actions as $a) {
+
+                //!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                // THIS IS THE MAIN TESTED ACTION
+                $accessible_n = $u->getAccessibleNotebooks($a);
+                //!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+                $num_accessible_n = count($accessible_n);
+                if ($a->name == 'view') {
+                    $this->assertEqual(1,$num_accessible_n,'mismatch on notebooks accesible for action '.$a->name.": expecting3n, but got $num_accessible_n instead");
+                } else {
+                    $this->assertEqual(0,$num_accessible_n,'mismatch on notebooks accesible for action '.$a->name.": expecting 2, but got $num_accessible_n instead");
+                }
+            }
         }
 
         //// auth-related tests

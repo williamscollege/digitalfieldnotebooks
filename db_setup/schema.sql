@@ -266,10 +266,10 @@ CREATE TABLE IF NOT EXISTS `specimen_images` (
 INSERT INTO 
 	roles
 VALUES
-(1,10,'Manager',0),
-(2,15,'Assistant',0),
-(3,20,'Field User',0),
-(4,30,'Public',0);
+(1,10,'manager',0),
+(2,15,'assistant',0),
+(3,20,'field user',0),
+(4,30,'public',0);
 
 # Required constant values for actions table
 INSERT INTO
