@@ -407,6 +407,27 @@ class Trial_Bad_Db_Linked_No_Table extends Db_Linked {
         $this->assertEqual($pkHash[11]->dblinktest_id,11);
     }
 
+        function testArrayOfAttrValues() {
+            $objAr = [
+                new Trial_Db_Linked( ['dblinktest_id'=>'3','DB'=>$this->DB]),
+                new Trial_Db_Linked( ['dblinktest_id'=>'8','DB'=>$this->DB]),
+                new Trial_Db_Linked( ['dblinktest_id'=>'11','DB'=>$this->DB]),
+                new Trial_Db_Linked( ['dblinktest_id'=>'5','DB'=>$this->DB])
+            ];
+
+            $this->assertEqual(count($objAr),4);
+            $this->assertEqual(array_keys($objAr),[0,1,2,3]);
+
+            $valArr = Trial_Db_Linked::arrayOfAttrValues($objAr,'dblinktest_id');
+
+            $this->assertEqual(4,count($valArr));
+
+            $this->assertEqual($valArr[0],3);
+            $this->assertEqual($valArr[1],8);
+            $this->assertEqual($valArr[2],11);
+            $this->assertEqual($valArr[3],5);
+        }
+
     function testStartListItem() {
         $this->assertEqual('<li>',Trial_Db_Linked::listItemTag());
         $this->assertEqual('<li id="idfoo">',Trial_Db_Linked::listItemTag('idfoo'));

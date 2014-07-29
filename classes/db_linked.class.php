@@ -180,6 +180,13 @@
 			return $pkHash;
 		}
 
+        public static function arrayOfAttrValues($arrayOfDbLinkedObjects,$attr_name) {
+            $valArray  = [];
+            foreach ($arrayOfDbLinkedObjects as $obj) {
+                $valArray[] = $obj->$attr_name;
+            }
+            return $valArray;
+        }
 
 		public static function checkStmtError($stmt) {
 			if ($stmt->errorInfo()[0] != '0000') {
