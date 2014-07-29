@@ -233,8 +233,8 @@ CREATE TABLE IF NOT EXISTS `specimens` (
   `link_to_type` INT NOT NULL, /* authoritative_plant or notebook_page */
   `link_to_id` INT NOT NULL,
   `name` VARCHAR(255) NULL, /* brief identification of the specimen - e.g. 'science quad elm' */
-  `gps_x` DECIMAL(10,5)NULL,
-  `gps_y` DECIMAL(10,5)NULL,
+  `gps_x` DECIMAL(10,7)NULL,
+  `gps_y` DECIMAL(10,7)NULL,
   `notes` TEXT NULL,
   `ordering` DECIMAL(10,5)NOT NULL DEFAULT 0,
   `catalog_identifier` VARCHAR(255) NULL,
