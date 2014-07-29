@@ -74,7 +74,7 @@ CREATE TABLE IF NOT EXISTS `user_role_links` (
 CREATE TABLE IF NOT EXISTS `actions` (
   `action_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `name` VARCHAR(255) NULL,
-  `ordering` DECIMAL,
+  `ordering` DECIMAL (10,5),
   `flag_delete` BIT(1) NOT NULL DEFAULT 0
 )  ENGINE=innodb DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT='actions that users can take - together with roles are used to define permissions';
 
@@ -104,7 +104,7 @@ CREATE TABLE IF NOT EXISTS `metadata_structures` (
   `updated_at` TIMESTAMP,
   `parent_metadata_structure_id` INT NULL, /* if null or <= 0 then this record is a top-level category */
   `name` VARCHAR(255) NULL,
-  `ordering` DECIMAL NOT NULL DEFAULT 0, /* NOTE: the main ordering is by category, then sub-category, then term; this sorts within those levels, not across them */
+  `ordering` DECIMAL (10,5),
   `description` VARCHAR(255) NULL,
   `details` TEXT NULL,
   `metadata_term_set_id` INT NULL, /* if null or <= 0 then this element has no controlled vocab */
@@ -118,7 +118,7 @@ CREATE TABLE IF NOT EXISTS `metadata_term_sets` (
   `created_at` TIMESTAMP,
   `updated_at` TIMESTAMP,
   `name` VARCHAR(255) NULL,
-  `ordering` DECIMAL NOT NULL DEFAULT 0, /* NOTE: within a given ordering value the term sets are ordered by name */
+  `ordering` DECIMAL(10,5)NOT NULL DEFAULT 0, /* NOTE: within a given ordering value the term sets are ordered by name */
   `description` VARCHAR(255) NULL,
   `flag_delete` BIT(1) NOT NULL DEFAULT 0
 )  ENGINE=innodb DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT='defining the sets of controlled vocab';
@@ -129,7 +129,7 @@ CREATE TABLE IF NOT EXISTS `metadata_term_values` (
   `updated_at` TIMESTAMP,
   `metadata_term_set_id` INT NOT NULL,
   `name` VARCHAR(255) NULL,
-  `ordering` DECIMAL NOT NULL DEFAULT 0, /* NOTE: within a given ordering value the term values are ordered by name */
+  `ordering` DECIMAL(10,5)NOT NULL DEFAULT 0, /* NOTE: within a given ordering value the term values are ordered by name */
   `description` VARCHAR(255) NULL,
   `flag_delete` BIT(1) NOT NULL DEFAULT 0
 )  ENGINE=innodb DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT='defining the actual values of controlled vocab';
@@ -144,7 +144,7 @@ CREATE TABLE IF NOT EXISTS `metadata_references` (
   `type` VARCHAR(24) NOT NULL, /* text, image, audio, etc. */
   `external_reference` VARCHAR(255) NULL, /* URL or file path */
   `description` VARCHAR(255) NULL,
-  `ordering` DECIMAL NOT NULL DEFAULT 0,
+  `ordering` DECIMAL(10,5)NOT NULL DEFAULT 0,
   `flag_delete` BIT(1) NOT NULL DEFAULT 0
 )  ENGINE=innodb DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT='example/reference info pertaining to metadata';
 /* FK:metadata_id - single value inheritance pattern: metadata_structures.metadata_structure_id, or metadata_term_sets.metadata_term_set_id or metadata_term_values.metadata_term_value_id*/
@@ -173,7 +173,7 @@ CREATE TABLE IF NOT EXISTS `authoritative_plant_extras` (
   `authoritative_plant_id` INT NOT NULL,
   `type` VARCHAR(255) NULL, /* common name, description, image */
   `value` VARCHAR(255) NULL, /* either the direct info (for common name and description) or a URL or file path */
-  `ordering` DECIMAL NOT NULL DEFAULT 0,
+  `ordering` DECIMAL(10,5)NOT NULL DEFAULT 0,
   `flag_delete` BIT(1) NOT NULL DEFAULT 0
 )  ENGINE=innodb DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT='';
 /* FK: plants.plant_id */
@@ -233,10 +233,10 @@ CREATE TABLE IF NOT EXISTS `specimens` (
   `link_to_type` INT NOT NULL, /* authoritative_plant or notebook_page */
   `link_to_id` INT NOT NULL,
   `name` VARCHAR(255) NULL, /* brief identification of the specimen - e.g. 'science quad elm' */
-  `gps_x` DECIMAL NULL,
-  `gps_y` DECIMAL NULL,
+  `gps_x` DECIMAL(10,5)NULL,
+  `gps_y` DECIMAL(10,5)NULL,
   `notes` TEXT NULL,
-  `ordering` DECIMAL NOT NULL DEFAULT 0,
+  `ordering` DECIMAL(10,5)NOT NULL DEFAULT 0,
   `catalog_identifier` VARCHAR(255) NULL,
   `flag_workflow_published` BIT(1) NOT NULL DEFAULT 0,
   `flag_workflow_validated` BIT(1) NOT NULL DEFAULT 0,
@@ -252,7 +252,7 @@ CREATE TABLE IF NOT EXISTS `specimen_images` (
   `specimen_id` INT NOT NULL,
   `user_id` INT NOT NULL,
   `image_reference` VARCHAR(255) NULL, /* URL or file path */
-  `ordering` DECIMAL NOT NULL DEFAULT 0,
+  `ordering` DECIMAL(10,5)NOT NULL DEFAULT 0,
   `flag_workflow_published` BIT(1) NOT NULL DEFAULT 0,
   `flag_workflow_validated` BIT(1) NOT NULL DEFAULT 0,
   `flag_delete` BIT(1) NOT NULL DEFAULT 0
