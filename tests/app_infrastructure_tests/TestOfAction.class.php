@@ -14,30 +14,33 @@
 		}
 
 		function testActionAtributesExist() {
-			$this->assertEqual(count(Action::$fields), 3);
+			$this->assertEqual(count(Action::$fields), 4);
 
-//			  $this->assertTrue(in_array('action_id', Action::$fields));
-//            $this->assertTrue(in_array('created_at', Action::$fields));
-//            $this->assertTrue(in_array('updated_at', Action::$fields));
-//			  $this->assertTrue(in_array('user_id', Action::$fields));
-//            $this->assertTrue(in_array('name', Action::$fields));
-//            $this->assertTrue(in_array('notes', Action::$fields));
-//			  $this->assertTrue(in_array('flag_delete', Action::$fields));
-
-            $this->fail("TODO: implement this test");
+        	$this->assertTrue(in_array('action_id', Action::$fields));
+            $this->assertTrue(in_array('name', Action::$fields));
+            $this->assertTrue(in_array('ordering', Action::$fields));
+			$this->assertTrue(in_array('flag_delete', Action::$fields));
 		}
 
 		//// static methods
 
 		function testCmp() {
-//            $n1 = new Action(['action_id' => 50, 'name' => 'nA', 'DB' => $this->DB]);
-//            $n2 = new Action(['action_id' => 60, 'name' => 'nB', 'DB' => $this->DB]);
-//
-//			$this->assertEqual(Action::cmp($n1, $n2), -1);
-//			$this->assertEqual(Action::cmp($n1, $n1), 0);
-//			$this->assertEqual(Action::cmp($n2, $n1), 1);
+            $n1 = new Action(['action_id' => 50, 'name' => 'nA', 'ordering'=>2, 'DB' => $this->DB]);
+            $n2 = new Action(['action_id' => 60, 'name' => 'nB', 'ordering'=>1, 'DB' => $this->DB]);
 
-            $this->fail("TODO: implement this test");
+            $nar = [$n1,$n2];
+            usort($nar,'Action::cmp');
+
+            $this->assertEqual('nB',$nar[0]->name);
+            $this->assertEqual('nA',$nar[1]->name);
+
+            $n1->ordering = 1;
+
+            $nar = [$n1,$n2];
+            usort($nar,'Action::cmp');
+
+            $this->assertEqual('nA',$nar[0]->name);
+            $this->assertEqual('nB',$nar[1]->name);
         }
 
         //// instance methods - object itself

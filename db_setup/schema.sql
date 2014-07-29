@@ -74,6 +74,7 @@ CREATE TABLE IF NOT EXISTS `user_role_links` (
 CREATE TABLE IF NOT EXISTS `actions` (
   `action_id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `name` VARCHAR(255) NULL,
+  `ordering` DECIMAL,
   `flag_delete` BIT(1) NOT NULL DEFAULT 0
 )  ENGINE=innodb DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT='actions that users can take - together with roles are used to define permissions';
 
@@ -275,12 +276,12 @@ VALUES
 INSERT INTO
 actions
 VALUES
-(1,'view',0),
-(2,'edit',0),
-(3,'create',0),
-(4,'delete',0),
-(5,'publish',0),
-(6,'verify',0);
+(1,'view',1,0),
+(2,'edit',2,0),
+(3,'create',3,0),
+(4,'delete',4,0),
+(5,'publish',5,0),
+(6,'verify',6,0);
 
 # Required constant values for role_action_target_links table (managers can do everything)
 INSERT INTO
