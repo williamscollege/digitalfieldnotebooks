@@ -16,32 +16,51 @@
 		function testAuthoritativePlantExtraAtributesExist() {
 			$this->assertEqual(count(Authoritative_Plant_Extra::$fields), 8);
 
-//			  $this->assertTrue(in_array('action_id', Action::$fields));
-//            $this->assertTrue(in_array('created_at', Action::$fields));
-//            $this->assertTrue(in_array('updated_at', Action::$fields));
-//			  $this->assertTrue(in_array('user_id', Action::$fields));
-//            $this->assertTrue(in_array('name', Action::$fields));
-//            $this->assertTrue(in_array('notes', Action::$fields));
-//			  $this->assertTrue(in_array('flag_delete', Action::$fields));
-
-            $this->fail("TODO: implement this test");
+            $this->assertTrue(in_array('authoritative_plant_extra_id', Authoritative_Plant_Extra::$fields));
+            $this->assertTrue(in_array('created_at', Authoritative_Plant_Extra::$fields));
+            $this->assertTrue(in_array('updated_at', Authoritative_Plant_Extra::$fields));
+            $this->assertTrue(in_array('authoritative_plant_id', Authoritative_Plant_Extra::$fields));
+            $this->assertTrue(in_array('type', Authoritative_Plant_Extra::$fields));
+            $this->assertTrue(in_array('value', Authoritative_Plant_Extra::$fields));
+            $this->assertTrue(in_array('ordering', Authoritative_Plant_Extra::$fields));
+            $this->assertTrue(in_array('flag_delete', Authoritative_Plant_Extra::$fields));
 		}
 
 		//// static methods
 
 		function testCmp() {
-//            $n1 = new Action(['action_id' => 50, 'name' => 'nA', 'DB' => $this->DB]);
-//            $n2 = new Action(['action_id' => 60, 'name' => 'nB', 'DB' => $this->DB]);
-//
-//			$this->assertEqual(Action::cmp($n1, $n2), -1);
-//			$this->assertEqual(Action::cmp($n1, $n1), 0);
-//			$this->assertEqual(Action::cmp($n2, $n1), 1);
+            $pe1 = Authoritative_Plant_Extra::getOneFromDb(['authoritative_plant_extra_id'=>5101],$this->DB);
+            $pe2 = Authoritative_Plant_Extra::getOneFromDb(['authoritative_plant_extra_id'=>5102],$this->DB);
 
-            $this->fail("TODO: implement this test");
+			$this->assertEqual(Action::cmp($pe1, $pe2), -1);
+			$this->assertEqual(Action::cmp($pe1, $pe1), 0);
+			$this->assertEqual(Action::cmp($pe2, $pe1), 1);
+
+            $pes = Authoritative_Plant_Extra::getAllFromDb([],$this->DB);
+
+            usort($pes,'Authoritative_Plant_Extra::cmp');
+
+            $this->assertEqual(5103,$pes[0]->authoritative_plant_extra_id);
+            $this->assertEqual(5101,$pes[1]->authoritative_plant_extra_id);
+            $this->assertEqual(5102,$pes[2]->authoritative_plant_extra_id);
+            $this->assertEqual(5106,$pes[3]->authoritative_plant_extra_id);
+            $this->assertEqual(5105,$pes[4]->authoritative_plant_extra_id);
+            $this->assertEqual(5104,$pes[5]->authoritative_plant_extra_id);
+            $this->assertEqual(5107,$pes[6]->authoritative_plant_extra_id);
+            $this->assertEqual(5108,$pes[7]->authoritative_plant_extra_id);
+            $this->assertEqual(5109,$pes[8]->authoritative_plant_extra_id);
         }
 
         //// instance methods - object itself
 
         //// instance methods - related data
+
+		function testGetAuthoritativePlant() {
+            $pe1 = Authoritative_Plant_Extra::getOneFromDb(['authoritative_plant_extra_id'=>5101],$this->DB);
+
+            $ap = $pe1->getAuthoritativePlant();
+
+            $this->assertEqual(5001,$ap->authoritative_plant_id);
+        }
 
     }

@@ -48,13 +48,13 @@ function createTestData_XXXX($dbConn) {
         # 'authoritative_plant_id', 'created_at', 'updated_at', 'class', 'order', 'family', 'genus', 'species', 'variety', 'catalog_identifier', 'flag_delete'
         $addTestSql  = "INSERT INTO " . Authoritative_Plant::$dbTable . " VALUES
             (5001,NOW(),NOW(), 'AP_A_class', 'AP_A_order', 'AP_A_family', 'AP_A_genus', 'AP_A_species', 'AP_A_variety', 'AP_1_CI', 0),
-            (5002,NOW(),NOW(), 'AP_A_class', 'AP_A_order', 'AP_A_family', 'AP_A_genus', 'AP_A_species', 'AP_B_variety', 'AP_2_CI', 0),
-            (5003,NOW(),NOW(), 'AP_A_class', 'AP_A_order', 'AP_A_family', 'AP_A_genus', 'AP_B_species', 'AP_B_variety', 'AP_3_CI', 0),
-            (5004,NOW(),NOW(), 'AP_A_class', 'AP_A_order', 'AP_A_family', 'AP_B_genus', 'AP_B_species', 'AP_B_variety', 'AP_4_CI', 0),
-            (5005,NOW(),NOW(), 'AP_A_class', 'AP_A_order', 'AP_B_family', 'AP_B_genus', 'AP_B_species', 'AP_B_variety', 'AP_5_CI', 0),
+            (5002,NOW(),NOW(), 'AP_A_class', 'AP_A_order', 'AP_A_family', 'AP_A_genus', 'AP_B_species', 'AP_B_variety', 'AP_3_CI', 0),
+            (5003,NOW(),NOW(), 'AP_A_class', 'AP_A_order', 'AP_A_family', 'AP_A_genus', 'AP_A_species', 'AP_B_variety', 'AP_2_CI', 0),
+            (5004,NOW(),NOW(), 'AP_C_class', 'AP_C_order', 'AP_C_family', 'AP_C_genus', 'AP_C_species', 'AP_C_variety', 'AP_8_CI', 0),
+            (5005,NOW(),NOW(), 'AP_A_class', 'AP_A_order', 'AP_A_family', 'AP_B_genus', 'AP_B_species', 'AP_B_variety', 'AP_4_CI', 0),
             (5006,NOW(),NOW(), 'AP_A_class', 'AP_B_order', 'AP_B_family', 'AP_B_genus', 'AP_B_species', 'AP_B_variety', 'AP_6_CI', 0),
             (5007,NOW(),NOW(), 'AP_B_class', 'AP_B_order', 'AP_B_family', 'AP_B_genus', 'AP_B_species', 'AP_B_variety', 'AP_7_CI', 0),
-            (5008,NOW(),NOW(), 'AP_C_class', 'AP_C_order', 'AP_C_family', 'AP_C_genus', 'AP_C_species', 'AP_C_variety', 'AP_8_CI', 0)
+            (5008,NOW(),NOW(), 'AP_A_class', 'AP_A_order', 'AP_B_family', 'AP_B_genus', 'AP_B_species', 'AP_B_variety', 'AP_5_CI', 0)
         ";
         $addTestStmt = $dbConn->prepare($addTestSql);
         $addTestStmt->execute();
@@ -74,6 +74,7 @@ function createTestData_XXXX($dbConn) {
                 (5101,NOW(),NOW(), 5001, 'common name', 'AP_A common z chestnut', 1, 0),
                 (5102,NOW(),NOW(), 5001, 'common name', 'AP_A common a american chestnut', 2, 0),
                 (5103,NOW(),NOW(), 5001, 'common name', 'AP_A common y achestnut', 1, 0),
+                (5104,NOW(),NOW(), 5001, 'description', 'description of american chestnut', 1, 0),
                 (5105,NOW(),NOW(), 5001, 'image', 'testing/castanea_dentata.jpg', 2, 0),
                 (5106,NOW(),NOW(), 5001, 'image', 'https://www.flickr.com/photos/plussed/14761853313', 1, 0),
                 (5107,NOW(),NOW(), 5008, 'common name', 'AP_C common beebalm', 5, 0),

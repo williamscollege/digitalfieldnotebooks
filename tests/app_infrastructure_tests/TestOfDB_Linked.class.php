@@ -436,6 +436,12 @@ class Trial_Bad_Db_Linked_No_Table extends Db_Linked {
         $this->assertEqual('<li foostatus="statusfoo" typebar="bartype">',Trial_Db_Linked::listItemTag('',[],['foostatus'=>'statusfoo','typebar'=>'bartype']));
         $this->assertEqual('<li id="idfoo" class="class1foo class2foo" foostatus="statusfoo" typebar="bartype">',Trial_Db_Linked::listItemTag('idfoo',['class1foo','class2foo'],['foostatus'=>'statusfoo','typebar'=>'bartype']));
     }
+
+    function testSanitizeFieldName() {
+        $f = 'order';
+
+        $this->assertEqual('`order`',Db_Linked::sanitizeFieldName($f));
+    }
 }
 
 
