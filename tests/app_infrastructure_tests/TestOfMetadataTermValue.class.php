@@ -16,15 +16,14 @@
 		function testMetadataTermValueAtributesExist() {
 			$this->assertEqual(count(Metadata_Term_Value::$fields), 8);
 
-//			  $this->assertTrue(in_array('action_id', Action::$fields));
-//            $this->assertTrue(in_array('created_at', Action::$fields));
-//            $this->assertTrue(in_array('updated_at', Action::$fields));
-//			  $this->assertTrue(in_array('user_id', Action::$fields));
-//            $this->assertTrue(in_array('name', Action::$fields));
-//            $this->assertTrue(in_array('notes', Action::$fields));
-//			  $this->assertTrue(in_array('flag_delete', Action::$fields));
-
-            $this->fail("TODO: implement this test");
+            $this->assertTrue(in_array('metadata_term_value_id', Metadata_Term_Value::$fields));
+            $this->assertTrue(in_array('created_at', Metadata_Term_Value::$fields));
+            $this->assertTrue(in_array('updated_at', Metadata_Term_Value::$fields));
+            $this->assertTrue(in_array('metadata_term_set_id', Metadata_Term_Value::$fields));
+            $this->assertTrue(in_array('name', Metadata_Term_Value::$fields));
+            $this->assertTrue(in_array('ordering', Metadata_Term_Value::$fields));
+            $this->assertTrue(in_array('description', Metadata_Term_Value::$fields));
+            $this->assertTrue(in_array('flag_delete', Metadata_Term_Value::$fields));
 		}
 
 		//// static methods
@@ -37,11 +36,54 @@
 //			$this->assertEqual(Action::cmp($n1, $n1), 0);
 //			$this->assertEqual(Action::cmp($n2, $n1), 1);
 
-            $this->fail("TODO: implement this test");
+            $mdtv1 = Metadata_Term_Value::getOneFromDb(['metadata_term_value_id'=>6201],$this->DB);
+            $mdtv2 = Metadata_Term_Value::getOneFromDb(['metadata_term_value_id'=>6202],$this->DB);
+
+			$this->assertEqual(Metadata_Term_Value::cmp($mdtv1, $mdtv2), -1);
+			$this->assertEqual(Metadata_Term_Value::cmp($mdtv1, $mdtv1), 0);
+			$this->assertEqual(Metadata_Term_Value::cmp($mdtv2, $mdtv1), 1);
+
+            $all = Metadata_Term_Value::getAllFromDb([],$this->DB);
+
+            usort($all,'Metadata_Term_Value::cmp');
+
+            $this->assertEqual(6201, $all[0]->metadata_term_value_id);
+            $this->assertEqual(6202, $all[1]->metadata_term_value_id);
+            $this->assertEqual(6203, $all[2]->metadata_term_value_id);
+            $this->assertEqual(6204, $all[3]->metadata_term_value_id);
+            $this->assertEqual(6205, $all[4]->metadata_term_value_id);
+            $this->assertEqual(6206, $all[5]->metadata_term_value_id);
+            $this->assertEqual(6207, $all[6]->metadata_term_value_id);
+            $this->assertEqual(6208, $all[7]->metadata_term_value_id);
+            $this->assertEqual(6212, $all[8]->metadata_term_value_id);
+            $this->assertEqual(6213, $all[9]->metadata_term_value_id);
+            $this->assertEqual(6211, $all[10]->metadata_term_value_id);
+            $this->assertEqual(6210, $all[11]->metadata_term_value_id);
+            $this->assertEqual(6209, $all[12]->metadata_term_value_id);
         }
 
         //// instance methods - object itself
 
         //// instance methods - related data
+
+        function testGetMetadataTermSet() {
+            $mdtv1 = Metadata_Term_Value::getOneFromDb(['metadata_term_value_id'=>6201],$this->DB);
+
+            $s = $mdtv1->getMetadataTermSet();
+
+            $this->assertEqual(6101,$s->metadata_term_set_id);
+        }
+
+        function testLoadReferences() {
+            $mdtv = Metadata_Term_Value::getOneFromDb(['metadata_term_value_id' => 6213],$this->DB);
+            $this->assertEqual(0,count($mdtv->references));
+
+            $mdtv->loadReferences();
+
+            $this->assertEqual(2,count($mdtv->references));
+
+            $this->assertEqual(6305,$mdtv->references[0]->metadata_reference_id);
+            $this->assertEqual(6304,$mdtv->references[1]->metadata_reference_id);
+        }
 
     }

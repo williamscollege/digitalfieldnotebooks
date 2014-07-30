@@ -140,11 +140,11 @@ function createTestData_XXXX($dbConn) {
             (6206,NOW(),NOW(), 6101, '12-20 cm', 6, 'up to the thicness of 2 fists pinkie to pinkie (palms up)', 0),
             (6207,NOW(),NOW(), 6101, '20-30 cm', 7, 'up to the length of your forearm', 0),
             (6208,NOW(),NOW(), 6101, '> 30 cm', 8, 'bigger than that', 0),
-            (6209,NOW(),NOW(), 6102, 'red', 3, '', 0),
-            (6210,NOW(),NOW(), 6102, 'green', 2, '', 0),
-            (6211,NOW(),NOW(), 6102, 'blue', 1, '', 0),
-            (6212,NOW(),NOW(), 6103, 'serrate', 1, 'teeth forward pointing - 1 level / degree of teeth', 0),
-            (6213,NOW(),NOW(), 6103, 'dentate', 2, 'teeth outward pointing - 1 level / degree of teeth', 0)
+            (6209,NOW(),NOW(), 6103, 'serrate', 1, 'teeth forward pointing - 1 level / degree of teeth', 0),
+            (6210,NOW(),NOW(), 6103, 'dentate', 1, 'teeth outward pointing - 1 level / degree of teeth', 0),
+            (6211,NOW(),NOW(), 6102, 'red', 3, '', 0),
+            (6212,NOW(),NOW(), 6102, 'green', 1, '', 0),
+            (6213,NOW(),NOW(), 6102, 'blue', 2, '', 0)
         ";
         $addTestStmt = $dbConn->prepare($addTestSql);
         $addTestStmt->execute();
@@ -163,10 +163,12 @@ function createTestData_XXXX($dbConn) {
         # VALID_TYPES = ['text', 'image', 'link'];
         $addTestSql  = "INSERT INTO " . Metadata_Reference::$dbTable . " VALUES
             (6301,NOW(),NOW(), 'structure', 6001, 'text', 'testing/flower_descr.txt', 'description of what a flower is', 1, 0),
-            (6302,NOW(),NOW(), 'set', 6101, 'text', 'testing/small_sizes.txt', 'description of the small sizes', 1, 0),
-            (6303,NOW(),NOW(), 'value', 6209, 'image', 'testing/red.jpg', 'image of the color red', 1, 0),
-            (6304,NOW(),NOW(), 'value', 6213, 'image', 'http://cf.ydcdn.net/1.0.1.20/images/main/dentate.jpg', 'picture of dentate', 1, 0),
-            (6305,NOW(),NOW(), 'value', 6212, 'link', 'http://dictionary.reference.com/browse/serrate', 'definition of serrate', 1, 0)
+            (6302,NOW(),NOW(), 'term_set', 6101, 'text', 'testing/small_sizes.txt', 'description of the small sizes', 1, 0),
+            (6303,NOW(),NOW(), 'term_value', 6209, 'image', 'testing/red.jpg', 'image of the color red', 1, 0),
+            (6304,NOW(),NOW(), 'term_value', 6213, 'link', 'http://dictionary.reference.com/browse/dentate', 'definition of dentate', 1, 0),
+            (6305,NOW(),NOW(), 'term_value', 6213, 'image', 'http://cf.ydcdn.net/1.0.1.20/images/main/dentate.jpg', 'picture of dentate', 1, 0),
+            (6306,NOW(),NOW(), 'term_value', 6212, 'link', 'http://dictionary.reference.com/browse/serrate', 'definition of serrate', 1, 0),
+            (6307,NOW(),NOW(), 'term_value', 6212, 'link', 'http://dictionary.reference.com/browse/serrate', 'another definition of serrate', .5, 0)
         ";
         $addTestStmt = $dbConn->prepare($addTestSql);
         $addTestStmt->execute();

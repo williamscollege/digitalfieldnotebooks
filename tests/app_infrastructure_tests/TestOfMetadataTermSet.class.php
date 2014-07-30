@@ -44,15 +44,41 @@
         //// instance methods - related data
 
         function testGetMetadataStructures() {
-            $this->fail('TODO: implement test for getMetadataStructures');
+            $mdts = Metadata_Term_Set::getOneFromDb(['metadata_term_set_id' => 6101],$this->DB);
+
+            $structures = $mdts->getMetadataStructures();
+
+            $this->assertEqual(1,count($structures));
+            $this->assertEqual(6002,$structures[0]->metadata_structure_id);
         }
 
         function testLoadTermValues() {
-            $this->fail('TODO: implement test for loadTermValues');
+            $mdts = Metadata_Term_Set::getOneFromDb(['metadata_term_set_id' => 6101],$this->DB);
+            $this->assertEqual(0,count($mdts->term_values));
+
+            $mdts->loadTermValues();
+
+            $this->assertEqual(8,count($mdts->term_values));
+
+            $this->assertEqual(6201,$mdts->term_values[0]->metadata_term_value_id);
+            $this->assertEqual(6202,$mdts->term_values[1]->metadata_term_value_id);
+            $this->assertEqual(6203,$mdts->term_values[2]->metadata_term_value_id);
+            $this->assertEqual(6204,$mdts->term_values[3]->metadata_term_value_id);
+            $this->assertEqual(6205,$mdts->term_values[4]->metadata_term_value_id);
+            $this->assertEqual(6206,$mdts->term_values[5]->metadata_term_value_id);
+            $this->assertEqual(6207,$mdts->term_values[6]->metadata_term_value_id);
+            $this->assertEqual(6208,$mdts->term_values[7]->metadata_term_value_id);
         }
 
         function testLoadReferences() {
-            $this->fail('TODO: implement test for loadReferences');
+            $mdts = Metadata_Term_Set::getOneFromDb(['metadata_term_set_id' => 6101],$this->DB);
+            $this->assertEqual(0,count($mdts->references));
+
+            $mdts->loadReferences();
+
+            $this->assertEqual(1,count($mdts->references));
+
+            $this->assertEqual(6302,$mdts->references[0]->metadata_reference_id);
         }
 
     }

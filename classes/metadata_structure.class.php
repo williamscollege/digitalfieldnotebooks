@@ -8,6 +8,16 @@
 
         public $references;
 
+        public function __construct($initsHash) {
+            parent::__construct($initsHash);
+
+
+            // now do custom stuff
+            // e.g. automatically load all accessibility info associated with the user
+
+            $this->references = array();
+        }
+
         public static function cmp($a, $b) {
             if ($a->parent_metadata_structure_id == $b->parent_metadata_structure_id) {
                 if ($a->ordering == $b->ordering) {
@@ -70,10 +80,13 @@
         }
 
         public function getChildren() {
-            return Metadata_Structure::getAllFromDb(['parent_metadata_structure_id' => $this->metadata_structure_id, 'flag_delete' => FALSE], $this->dbConnection);
+            $children = Metadata_Structure::getAllFromDb(['parent_metadata_structure_id' => $this->metadata_structure_id, 'flag_delete' => FALSE], $this->dbConnection);
+//            util_prePrintR($children);
+            usort($children,'Metadata_Structure::cmp');
+            return $children;
         }
 
         public function loadReferences() {
-            $this->references = Metadata_References::getAllFromDb(['metadata_type'=>'term_set', 'metadata_id' => $this->metadata_term_value_id, 'flag_delete' => FALSE], $this->dbConnection);
+            $this->references = Metadata_Reference::getAllFromDb(['metadata_type'=>'structure', 'metadata_id' => $this->metadata_structure_id, 'flag_delete' => FALSE], $this->dbConnection);
         }
 	}

@@ -93,10 +93,22 @@
         }
 
         function testGetChildren() {
-            $this->fail('TODO: test for getChildren');
+            $mds1 = Metadata_Structure::getOneFromDb(['metadata_structure_id'=>6001],$this->DB);
+
+            $c = $mds1->getChildren();
+
+            $this->assertEqual(2,count($c));
+            $this->assertEqual(6002,$c[0]->metadata_structure_id);
+            $this->assertEqual(6003,$c[1]->metadata_structure_id);
         }
 
         function testLoadReferences() {
-            $this->fail('TODO: test for loadReferences');
+            $mds1 = Metadata_Structure::getOneFromDb(['metadata_structure_id'=>6001],$this->DB);
+            $this->assertEqual(0,count($mds1->references));
+
+            $mds1->loadReferences();
+
+            $this->assertEqual(1,count($mds1->references));
+            $this->assertEqual(6301,$mds1->references[0]->metadata_reference_id);
         }
     }
