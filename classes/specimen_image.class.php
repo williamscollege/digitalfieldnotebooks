@@ -22,7 +22,13 @@
 		}
 
 		public static function cmp($a, $b) {
-            return 0;
+            if ($a->specimen_id == $b->specimen_id) {
+                if ($a->ordering == $b->ordering) {
+                    return strcmp($a->image_reference,$b->image_reference);
+                }
+                return ($a->ordering < $b->ordering) ? -1 : 1;
+            }
+            return Specimen::cmp($a->getSpecimen(),$b->getSpecimen());
 		}
 
 

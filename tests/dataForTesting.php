@@ -275,7 +275,9 @@ function createTestData_XXXX($dbConn) {
         # VALID_LINK_TO_TYPES =  ['authoritative_plant', 'notebook_page'];
         $addTestSql  = "INSERT INTO " . Specimen::$dbTable . " VALUES
             (8001,NOW(),NOW(), 110, 'authoritative_plant', 5001, 'sci quad authoritative', -73.2054918, 42.7118454, 'notes on authoritative specimen', 1, '1a', 1, 1, 0),
-            (8002,NOW(),NOW(), 101, 'notebook_page', 1101, 'sci quad notebook page', -73.2054918, 42.7118454, 'notes on notebook specimen', 1, '1n', 0, 1, 0)
+            (8002,NOW(),NOW(), 101, 'notebook_page', 1101, 'sci quad 1 notebook page 1', -73.2054918, 42.7118454, 'notes 1.1 on notebook specimen', 2.5, '1n1.1', 0, 1, 0),
+            (8003,NOW(),NOW(), 101, 'notebook_page', 1101, 'sci quad 2 notebook page 1', -73.2054919, 42.7118455, 'notes 1.2 on notebook specimen', 2, '1n1.2', 0, 0, 0),
+            (8004,NOW(),NOW(), 101, 'notebook_page', 1102, 'sci quad 1 notebook page 2', -73.2054918, 42.7118454, 'notes 2.1 on notebook specimen', 1, '2n1.1', 0, 0, 0)
         ";
         $addTestStmt = $dbConn->prepare($addTestSql);
         $addTestStmt->execute();
@@ -292,8 +294,9 @@ function createTestData_XXXX($dbConn) {
         # Specimen_Image: 'specimen_image_id', 'created_at', 'updated_at', 'specimen_id', 'user_id', 'image_reference', 'ordering', 'flag_workflow_published', 'flag_workflow_validated', 'flag_delete'
         $addTestSql  = "INSERT INTO " . Specimen_Image::$dbTable . " VALUES
             (8101,NOW(),NOW(), 8001, 110, 'testing/cnh_castanea_dentata.jpg', 1, 1, 1, 0),
-            (8102,NOW(),NOW(), 8001, 110, 'https://www.flickr.com/photos/plussed/14761853313', 2, 1, 1, 0),
-            (8103,NOW(),NOW(), 8002, 101, 'testing/USER101_8103_cnh_castanea_dentata.jpg', ordering, 0, 1, 0)
+            (8102,NOW(),NOW(), 8001, 110, 'https://www.flickr.com/photos/plussed/14761853313', .5, 1, 1, 0),
+            (8103,NOW(),NOW(), 8002, 101, 'testing/USER101_8103_cnh_castanea_dentata.jpg', .75, 0, 1, 0),
+            (8104,NOW(),NOW(), 8002, 101, 'testing/USER101_8103_a_nonexistent_file.jpg', .75, 0, 1, 0)
         ";
         $addTestStmt = $dbConn->prepare($addTestSql);
         $addTestStmt->execute();

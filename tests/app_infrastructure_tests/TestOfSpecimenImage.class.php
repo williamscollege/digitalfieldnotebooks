@@ -16,32 +16,52 @@
 		function testSpecimenImageAtributesExist() {
 			$this->assertEqual(count(Specimen_Image::$fields), 10);
 
-//			  $this->assertTrue(in_array('action_id', Action::$fields));
-//            $this->assertTrue(in_array('created_at', Action::$fields));
-//            $this->assertTrue(in_array('updated_at', Action::$fields));
-//			  $this->assertTrue(in_array('user_id', Action::$fields));
-//            $this->assertTrue(in_array('name', Action::$fields));
-//            $this->assertTrue(in_array('notes', Action::$fields));
-//			  $this->assertTrue(in_array('flag_delete', Action::$fields));
+            $this->assertTrue(in_array('specimen_image_id', Specimen_Image::$fields));
+            $this->assertTrue(in_array('created_at', Specimen_Image::$fields));
+            $this->assertTrue(in_array('updated_at', Specimen_Image::$fields));
+            $this->assertTrue(in_array('specimen_id', Specimen_Image::$fields));
+            $this->assertTrue(in_array('user_id', Specimen_Image::$fields));
 
-            $this->fail("TODO: implement this test");
+            $this->assertTrue(in_array('image_reference', Specimen_Image::$fields));
+            $this->assertTrue(in_array('ordering', Specimen_Image::$fields));
+
+            $this->assertTrue(in_array('flag_workflow_published', Specimen_Image::$fields));
+            $this->assertTrue(in_array('flag_workflow_validated', Specimen_Image::$fields));
+            $this->assertTrue(in_array('flag_delete', Specimen_Image::$fields));
 		}
 
 		//// static methods
 
 		function testCmp() {
-//            $n1 = new Action(['action_id' => 50, 'name' => 'nA', 'DB' => $this->DB]);
-//            $n2 = new Action(['action_id' => 60, 'name' => 'nB', 'DB' => $this->DB]);
-//
-//			$this->assertEqual(Action::cmp($n1, $n2), -1);
-//			$this->assertEqual(Action::cmp($n1, $n1), 0);
-//			$this->assertEqual(Action::cmp($n2, $n1), 1);
+            $si1 = Specimen_Image::getOneFromDb(['specimen_image_id'=>8101],$this->DB);
+            $si2 = Specimen_Image::getOneFromDb(['specimen_image_id'=>8102],$this->DB);
+            $si3 = Specimen_Image::getOneFromDb(['specimen_image_id'=>8103],$this->DB);
+            $si4 = Specimen_Image::getOneFromDb(['specimen_image_id'=>8104],$this->DB);
 
-            $this->fail("TODO: implement this test");
+            $this->assertEqual(Specimen_Image::cmp($si1, $si1), 0); // self-equal
+
+            $this->assertEqual(Specimen_Image::cmp($si1, $si2), 1); // by ordering
+            $this->assertEqual(Specimen_Image::cmp($si2, $si1), -1);
+
+            $this->assertEqual(Specimen_Image::cmp($si1, $si3), -1); // by specimen
+            $this->assertEqual(Specimen_Image::cmp($si3, $si1), 1);
+
+            $this->assertEqual(Specimen_Image::cmp($si2, $si3), -1); // by specimen
+            $this->assertEqual(Specimen_Image::cmp($si3, $si2), 1);
+
+            $this->assertEqual(Specimen_Image::cmp($si3, $si4), 1); // by image_reference
+            $this->assertEqual(Specimen_Image::cmp($si4, $si3), -1);
         }
 
         //// instance methods - object itself
 
         //// instance methods - related data
+        function testGetSpecimen() {
+            $si = Specimen_Image::getOneFromDb(['specimen_image_id'=>8101],$this->DB);
+
+            $s = $si->getSpecimen();
+
+            $this->assertEqual(8001,$s->specimen_id);
+        }
 
     }
