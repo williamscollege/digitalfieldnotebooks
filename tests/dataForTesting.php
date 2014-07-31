@@ -248,15 +248,15 @@ function createTestData_XXXX($dbConn) {
                         (202,NOW(),NOW(), 110, 2, 2, 'global_notebook', 0, 0),
                         (203,NOW(),NOW(), 110, 2, 2, 'global_metadata', 0, 0),
                         (204,NOW(),NOW(), 110, 2, 2, 'global_plant', 0, 0),
-                        (205,NOW(),NOW(), 110, 2, 2, 'global_specimens', 0, 0),
+                        (205,NOW(),NOW(), 110, 2, 2, 'global_specimen', 0, 0),
                         (206,NOW(),NOW(), 110, 2, 1, 'global_metadata', 0, 0),
                         (207,NOW(),NOW(), 110, 3, 1, 'global_metadata', 0, 0),
                         (208,NOW(),NOW(), 110, 4, 1, 'global_metadata', 0, 0),
                         (209,NOW(),NOW(), 110, 2, 1, 'global_plant', 0, 0),
                         (210,NOW(),NOW(), 110, 3, 1, 'global_plant', 0, 0),
                         (211,NOW(),NOW(), 110, 4, 1, 'global_plant', 0, 0),
-                        (213,NOW(),NOW(), 110, 3, 1, 'notebook', 1004, 0),
-                        (214,NOW(),NOW(), 110, 4, 1, 'notebook', 1004, 0)
+                        (212,NOW(),NOW(), 110, 3, 1, 'notebook', 1004, 0),
+                        (213,NOW(),NOW(), 110, 4, 1, 'notebook', 1004, 0)
                     ";
         $addTestStmt = $dbConn->prepare($addTestSql);
         $addTestStmt->execute();
@@ -323,11 +323,11 @@ function createTestData_XXXX($dbConn) {
             (103,NOW(),NOW(),'testUser3','tu3L, tu3F',0,0,0),
             (104,NOW(),NOW(),'testUser4','tu4L, tu4F',0,0,0),
             (105,NOW(),NOW(),'testUser5','tu5L, tu5F',0,0,0),
-            (107,NOW(),NOW(),'testUser6','tu6L, tu6F',1,0,0),
-            (108,NOW(),NOW(),'testUser7','tu7L, tu7F',0,1,0),
-            (109,NOW(),NOW(),'testUser8','tu8L, tu8F',0,0,1),
+            (106,NOW(),NOW(),'testUser6','tu6L, tu6F',1,0,0),
+            (107,NOW(),NOW(),'testUser7','tu7L, tu7F',0,1,0),
+            (108,NOW(),NOW(),'testUser8','tu8L, tu8F',0,0,1),
             (110,NOW(),NOW(),'testUser9','tu9L, tu9F',0,0,0),
-            (111,NOW(),NOW(),'testUser10','tu10L, tu10F',0,0,0)
+            (109,NOW(),NOW(),'testUser10','tu10L, tu10F',0,0,0)
         ";
         $addTestStmt = $dbConn->prepare($addTestSql);
         $addTestStmt->execute();
@@ -345,30 +345,29 @@ function createTestData_XXXX($dbConn) {
         $u1->updateDb();
     }
 
-function createTestData_User_Roles($dbConn) {
-    // 300 series ids
-    # User_Role: 'user_role_link_id', 'created_at', 'updated_at', 'last_user_id', 'user_id', 'role_id'
-    $addTestSql  = "INSERT INTO " . User_Role::$dbTable . " VALUES
-        (301,NOW(),NOW(),110,101,3),
-        (302,NOW(),NOW(),110,102,3),
-        (303,NOW(),NOW(),110,103,3),
-        (304,NOW(),NOW(),110,104,3),
-        (305,NOW(),NOW(),110,105,2),
-        (306,NOW(),NOW(),110,106,3),
-        (307,NOW(),NOW(),110,107,3),
-        (308,NOW(),NOW(),110,108,3),
-        (310,NOW(),NOW(),110,110,1),
-        (311,NOW(),NOW(),110,111,3)
-    ";
-    $addTestStmt = $dbConn->prepare($addTestSql);
-    $addTestStmt->execute();
-    if ($addTestStmt->errorInfo()[0] != '0000') {
-        echo "<pre>error adding test User_Role data to the DB\n";
-        print_r($addTestStmt->errorInfo());
-        debug_print_backtrace();
-        exit;
+    function createTestData_User_Roles($dbConn) {
+        // 300 series ids
+        # User_Role: 'user_role_link_id', 'created_at', 'updated_at', 'last_user_id', 'user_id', 'role_id'
+        $addTestSql  = "INSERT INTO " . User_Role::$dbTable . " VALUES
+            (301,NOW(),NOW(),110,101,3),
+            (302,NOW(),NOW(),110,102,3),
+            (303,NOW(),NOW(),110,103,3),
+            (304,NOW(),NOW(),110,104,3),
+            (305,NOW(),NOW(),110,105,2),
+            (306,NOW(),NOW(),110,106,3),
+            (307,NOW(),NOW(),110,107,3),
+            (308,NOW(),NOW(),110,110,1),
+            (309,NOW(),NOW(),110,108,3)
+        ";
+        $addTestStmt = $dbConn->prepare($addTestSql);
+        $addTestStmt->execute();
+        if ($addTestStmt->errorInfo()[0] != '0000') {
+            echo "<pre>error adding test User_Role data to the DB\n";
+            print_r($addTestStmt->errorInfo());
+            debug_print_backtrace();
+            exit;
+        }
     }
-}
 
 //--------------------------------------------------------------------------------------------------------------
 

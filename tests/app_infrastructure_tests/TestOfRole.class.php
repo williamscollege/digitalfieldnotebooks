@@ -1,46 +1,66 @@
 <?php
-	require_once dirname(__FILE__) . '/../simpletest/WMS_unit_tester_DB.php';
-	require_once dirname(__FILE__) . '/../../classes/role.class.php';
-
+    require_once dirname(__FILE__) . '/../simpletest/WMS_unit_tester_DB.php';
 
 	class TestOfRole extends WMSUnitTestCaseDB
 	{
+        function setUp() {
+            createAllTestData($this->DB);
+        }
 
-		function setUp() {
+        function tearDown() {
+            removeAllTestData($this->DB);
+        }
+
+        function testRoleAtributesExist() {
+            $this->assertEqual(count(Role::$fields), 4);
+
+            $this->assertTrue(in_array('role_id', Role::$fields));
+            $this->assertTrue(in_array('priority', Role::$fields));
+            $this->assertTrue(in_array('name', Role::$fields));
+            $this->assertTrue(in_array('flag_delete', Role::$fields));
+        }
+
+        //// static methods
+
+		public function testOfCmp() {
+            $r1 = Role::getOneFromDb(['role_id'=>1],$this->DB);
+            $r2 = Role::getOneFromDb(['role_id'=>2],$this->DB);
+
+            $this->assertEqual(Role::cmp($r1,$r2),-1);
+            $this->assertEqual(Role::cmp($r1,$r1),0);
+            $this->assertEqual(Role::cmp($r2,$r1),1);
 		}
 
-		function tearDown() {
-		}
+        //// instance methods - object itself
 
+        //// instance methods - related data
 
-		public function TestOfCmpRolesByPriority(){
-			$r1 = new Role(['priority'=>1, 'DB'=>$this->DB]);
-			$r2 = new Role(['priority'=>2, 'DB'=>$this->DB]);
+        public function testGetUsers() {
+            $r = Role::getOneFromDb(['role_id'=>3],$this->DB);
 
-			$cmp = Role::cmpRoles($r1,$r2);
-			$this->assertNotNull($cmp);
-			$this->assertEqual($cmp, 1);
+            $us = $r->getUsers();
 
-			$cmp = Role::cmpRoles($r2,$r1);
-			$this->assertEqual($cmp, -1);
-		}
+            $this->assertEqual(6,count($us));
 
-		public function TestOfRolePriority(){
-			$r1 = new Role(['role_id'=>1, 'priority'=> 1, 'DB'=>$this->DB]);
-			$r2 = new Role(['role_id'=>2, 'priority'=> 2, 'DB'=>$this->DB]);
-			$r3 = new Role(['role_id'=>3, 'priority'=> 3, 'DB'=>$this->DB]);
-			$r4 = new Role(['role_id'=>4, 'priority'=> 4, 'DB'=>$this->DB]);
+            $this->assertEqual(101,$us[0]->user_id);
+            $this->assertEqual(102,$us[1]->user_id);
+            $this->assertEqual(103,$us[2]->user_id);
+            $this->assertEqual(104,$us[3]->user_id);
+            $this->assertEqual(106,$us[4]->user_id);
+            $this->assertEqual(107,$us[5]->user_id);
+        }
 
-			$this->assertEqual($r1->role_id, 1);
-			$this->assertEqual($r1->priority, 1);
-			$this->assertEqual($r2->role_id, 2);
-			$this->assertEqual($r2->priority, 2);
-			$this->assertEqual($r3->role_id, 3);
-			$this->assertEqual($r3->priority, 3);
-			$this->assertEqual($r4->role_id, 4);
-			$this->assertEqual($r4->priority, 4);
-		}
+        public function testGetRoleActionTargets() {
+            $r = Role::getOneFromDb(['role_id'=>3],$this->DB);
 
+            $ats = $r->getRoleActionTargets();
+
+            $this->assertEqual(3,count($ats));
+
+            $this->assertEqual(207,$ats[0]->role_action_target_link_id);
+            $this->assertEqual(210,$ats[1]->role_action_target_link_id);
+            $this->assertEqual(212,$ats[2]->role_action_target_link_id);
+        }
 	}
 
 ?>

@@ -3,8 +3,6 @@
 
 	class TestOfNotebook extends WMSUnitTestCaseDB {
 
-		public $auth;
-
 		function setUp() {
 			createAllTestData($this->DB);
 		}
