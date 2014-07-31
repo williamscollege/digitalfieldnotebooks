@@ -230,7 +230,7 @@ CREATE TABLE IF NOT EXISTS `specimens` (
   `created_at` TIMESTAMP,
   `updated_at` TIMESTAMP,
   `user_id` INT NOT NULL,
-  `link_to_type` INT NOT NULL, /* authoritative_plant or notebook_page */
+  `link_to_type` VARCHAR(255) NULL, /* authoritative_plant or notebook_page */
   `link_to_id` INT NOT NULL,
   `name` VARCHAR(255) NULL, /* brief identification of the specimen - e.g. 'science quad elm' */
   `gps_x` DECIMAL(10,7)NULL,
