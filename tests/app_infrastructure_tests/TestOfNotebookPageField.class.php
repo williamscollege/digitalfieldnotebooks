@@ -16,32 +16,50 @@
 		function testNotebookPageFieldAtributesExist() {
 			$this->assertEqual(count(Notebook_Page_Field::$fields), 8);
 
-//			  $this->assertTrue(in_array('action_id', Action::$fields));
-//            $this->assertTrue(in_array('created_at', Action::$fields));
-//            $this->assertTrue(in_array('updated_at', Action::$fields));
-//			  $this->assertTrue(in_array('user_id', Action::$fields));
-//            $this->assertTrue(in_array('name', Action::$fields));
-//            $this->assertTrue(in_array('notes', Action::$fields));
-//			  $this->assertTrue(in_array('flag_delete', Action::$fields));
-
-            $this->fail("TODO: implement this test");
+            $this->assertTrue(in_array('notebook_page_field_id', Notebook_Page_Field::$fields));
+            $this->assertTrue(in_array('created_at', Notebook_Page_Field::$fields));
+            $this->assertTrue(in_array('updated_at', Notebook_Page_Field::$fields));
+            $this->assertTrue(in_array('notebook_page_id', Notebook_Page_Field::$fields));
+            $this->assertTrue(in_array('label_metadata_structure_id', Notebook_Page_Field::$fields));
+            $this->assertTrue(in_array('value_metadata_term_value_id', Notebook_Page_Field::$fields));
+            $this->assertTrue(in_array('value_open', Notebook_Page_Field::$fields));
+            $this->assertTrue(in_array('flag_delete', Notebook_Page_Field::$fields));
 		}
 
 		//// static methods
 
 		function testCmp() {
-//            $n1 = new Action(['action_id' => 50, 'name' => 'nA', 'DB' => $this->DB]);
-//            $n2 = new Action(['action_id' => 60, 'name' => 'nB', 'DB' => $this->DB]);
-//
-//			$this->assertEqual(Action::cmp($n1, $n2), -1);
-//			$this->assertEqual(Action::cmp($n1, $n1), 0);
-//			$this->assertEqual(Action::cmp($n2, $n1), 1);
+            $pfs = Notebook_Page_Field::getAllFromDb([],$this->DB);
 
-            $this->fail("TODO: implement this test");
+            usort($pfs,'Notebook_Page_Field::cmp');
+
+            $this->assertEqual(1204,$pfs[0]->notebook_page_field_id);
+            $this->assertEqual(1201,$pfs[1]->notebook_page_field_id);
+            $this->assertEqual(1202,$pfs[2]->notebook_page_field_id);
+            $this->assertEqual(1203,$pfs[3]->notebook_page_field_id);
+            $this->assertEqual(1205,$pfs[4]->notebook_page_field_id);
         }
 
         //// instance methods - object itself
 
         //// instance methods - related data
+
+        function testGetNotebookPage() {
+            $npf = Notebook_Page_Field::getOneFromDb(['notebook_page_field_id'=>1201],$this->DB);
+            $p = $npf->getNotebookPage();
+            $this->assertEqual(1101,$p->notebook_page_id);
+        }
+
+        function testGetMetadataStructure() {
+            $npf = Notebook_Page_Field::getOneFromDb(['notebook_page_field_id'=>1201],$this->DB);
+            $s = $npf->getMetadataStructure();
+            $this->assertEqual(6002,$s->metadata_structure_id);
+        }
+
+        function testGetMetadataTermValue() {
+            $npf = Notebook_Page_Field::getOneFromDb(['notebook_page_field_id'=>1201],$this->DB);
+            $v = $npf->getMetadataTermValue();
+            $this->assertEqual(6202,$v->metadata_term_value_id);
+        }
 
     }

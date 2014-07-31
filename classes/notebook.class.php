@@ -12,9 +12,8 @@
 
 			// now do custom stuff
 			// e.g. automatically load all accessibility info associated with the user
-
-			//		$this->flag_is_system_admin = false;
-			//		$this->flag_is_banned = false;
+            $this->flag_workflow_published = false;
+            $this->flag_workflow_validated = false;
 		}
 
 		public static function cmp($a, $b) {

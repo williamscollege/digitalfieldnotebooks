@@ -43,10 +43,15 @@
                 return -1;
             }
 
+//            util_prePrintR($lineageA);
+//            util_prePrintR($lineageB);
+
             // trim off matching ancestories
             while ($lineageA[0]->metadata_structure_id == $lineageB[0]->metadata_structure_id) {
-                array_pop($lineageA);
-                array_pop($lineageB);
+                array_shift($lineageA);
+                array_shift($lineageB);
+//                util_prePrintR($lineageA);
+//                util_prePrintR($lineageB);
             }
 
             // return the cmp of the first descendents of the point of ancestral divergence

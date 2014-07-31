@@ -19,7 +19,31 @@
 		}
 
 		public static function cmp($a, $b) {
-            return 0;
-		}
+            if ($a->notebook_page_id == $b->notebook_page_id) {
+                if ($a->label_metadata_structure_id == $b->label_metadata_structure_id) {
+                    if ($a-> value_metadata_term_value_id && $b->value_metadata_term_value_id) {
+                        return Metadata_Structure::cmp($a->getMetadataTermValue(),$b->getMetadataTermValue());
+                    } else {
+                        return strcmp($a->value_open,$b->value_open);
+                    }
+                }
+                return Metadata_Structure::cmp($a->getMetadataStructure(),$b->getMetadataStructure());
+            }
+            return Notebook_Page::cmp($a->getNotebookPage(),$b->getNotebookPage());
+        }
+
+        //------------------------------------------
+
+        public function getNotebookPage() {
+            return Notebook_Page::getOneFromDb(['notebook_page_id'=>$this->notebook_page_id],$this->dbConnection);
+        }
+
+        public function getMetadataStructure() {
+            return Metadata_Structure::getOneFromDb(['metadata_structure_id'=>$this->label_metadata_structure_id],$this->dbConnection);
+        }
+
+        public function getMetadataTermValue() {
+            return Metadata_Term_Value::getOneFromDb(['metadata_term_value_id'=>$this->value_metadata_term_value_id],$this->dbConnection);
+        }
 
 	}

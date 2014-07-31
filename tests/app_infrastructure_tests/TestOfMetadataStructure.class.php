@@ -41,6 +41,8 @@
             $this->assertEqual(-1,Metadata_Structure::cmp($mds1,$mds3));
             $this->assertEqual(1,Metadata_Structure::cmp($mds3,$mds1));
 
+            $this->assertEqual(-1,Metadata_Structure::cmp($mds2,$mds3));
+            $this->assertEqual(1,Metadata_Structure::cmp($mds3,$mds2));
 
             $mds = Metadata_Structure::getAllFromDb(['parent_metadata_structure_id'=>0],$this->DB);
 
