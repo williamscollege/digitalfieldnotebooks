@@ -106,4 +106,15 @@ class TestOfUtil extends UnitTestCase {
 
         $this->assertEqual(util_lang('foo'),'bar');
     }
+
+    function testStartListItem() {
+        $this->assertEqual('<li>',util_listItemTag());
+        $this->assertEqual('<li id="idfoo">',util_listItemTag('idfoo'));
+        $this->assertEqual('<li class="class1foo class2foo">',util_listItemTag('',['class1foo','class2foo']));
+        $this->assertEqual('<li id="idfoo" class="class1foo class2foo">',util_listItemTag('idfoo',['class1foo','class2foo']));
+        $this->assertEqual('<li foostatus="statusfoo" typebar="bartype">',util_listItemTag('',[],['foostatus'=>'statusfoo','typebar'=>'bartype']));
+        $this->assertEqual('<li id="idfoo" class="class1foo class2foo" foostatus="statusfoo" typebar="bartype">',util_listItemTag('idfoo',['class1foo','class2foo'],['foostatus'=>'statusfoo','typebar'=>'bartype']));
+        $this->assertEqual('<li id="idfoo" class="class1foo class2foo" foostatus="statusfoo" typebar="bartype">',util_listItemTag('idfoo',['class1foo','class2foo'],['typebar'=>'bartype','foostatus'=>'statusfoo']));
+    }
+
 }

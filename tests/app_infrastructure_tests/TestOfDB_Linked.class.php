@@ -428,19 +428,35 @@ class Trial_Bad_Db_Linked_No_Table extends Db_Linked {
             $this->assertEqual($valArr[3],5);
         }
 
-    function testStartListItem() {
-        $this->assertEqual('<li>',Trial_Db_Linked::listItemTag());
-        $this->assertEqual('<li id="idfoo">',Trial_Db_Linked::listItemTag('idfoo'));
-        $this->assertEqual('<li class="class1foo class2foo">',Trial_Db_Linked::listItemTag('',['class1foo','class2foo']));
-        $this->assertEqual('<li id="idfoo" class="class1foo class2foo">',Trial_Db_Linked::listItemTag('idfoo',['class1foo','class2foo']));
-        $this->assertEqual('<li foostatus="statusfoo" typebar="bartype">',Trial_Db_Linked::listItemTag('',[],['foostatus'=>'statusfoo','typebar'=>'bartype']));
-        $this->assertEqual('<li id="idfoo" class="class1foo class2foo" foostatus="statusfoo" typebar="bartype">',Trial_Db_Linked::listItemTag('idfoo',['class1foo','class2foo'],['foostatus'=>'statusfoo','typebar'=>'bartype']));
-    }
-
     function testSanitizeFieldName() {
         $f = 'order';
 
         $this->assertEqual('`order`',Db_Linked::sanitizeFieldName($f));
+    }
+
+    function testFieldsAsDataAttribs() {
+        $testObj = new Trial_Db_Linked( ['DB'=>$this->DB,
+            'dblinktest_id'=>43,
+            'charfield'=>'even stringier',
+            'intfield'=>42,
+            'flagfield'=>false]);
+
+        $attrib_string = $testObj->fieldsAsDataAttribs();
+        $this->assertEqual('data-dblinktest_id="43" data-charfield="even stringier" data-intfield="42" data-flagfield="0"',$attrib_string);
+
+        $testObj->flagfield = true;
+        $attrib_string = $testObj->fieldsAsDataAttribs();
+        $this->assertEqual('data-dblinktest_id="43" data-charfield="even stringier" data-intfield="42" data-flagfield="1"',$attrib_string);
+
+        $testObj->flagfield = false;
+        $testObj->charfield = 'this is a "quotes" test';
+        $attrib_string = $testObj->fieldsAsDataAttribs();
+        $this->assertEqual('data-dblinktest_id="43" data-charfield="this is a &quot;quotes&quot; test" data-intfield="42" data-flagfield="0"',$attrib_string);
+
+        $testObj->charfield = 'this is a string-too-long test string-too-long test string-too-long test string-too-long test string-too-long test string-too-long test string-too-long test string-too-long test string-too-long test string-too-long test string-too-long test string-too-long test string-too-long test string-too-long test string-too-long test string-too-long test string-too-long test string-too-long test string-too-long test string-too-long test string-too-long test';
+        $attrib_string = $testObj->fieldsAsDataAttribs();
+        $this->assertEqual('data-dblinktest_id="43" data-charfield="&lt;DATA TOO LONG&gt;" data-intfield="42" data-flagfield="0"',$attrib_string);
+
     }
 }
 

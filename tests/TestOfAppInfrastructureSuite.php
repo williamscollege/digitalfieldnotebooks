@@ -16,7 +16,10 @@
 
             $this->addFile('app_infrastructure_tests/TestOfUser.class.php');
             $this->addFile('app_infrastructure_tests/TestOfRole.class.php');
+            $this->addFile('app_infrastructure_tests/TestOfUserRole.class.php');
+
             $this->addFile('app_infrastructure_tests/TestOfAction.class.php');
+            $this->addFile('app_infrastructure_tests/TestOfRoleActionTarget.class.php');
 
             $this->addFile('app_infrastructure_tests/TestOfMetadataStructure.class.php');
             $this->addFile('app_infrastructure_tests/TestOfMetadataTermSet.class.php');

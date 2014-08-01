@@ -551,19 +551,27 @@
 			}
 		}
 
-		public static function listItemTag($id = '', $class_ar = [], $other_attr_hash = []) {
-			$li = '<li';
-			if ($id) {
-				$li .= " id=\"$id\"";
-			}
-			if ($class_ar) {
-				$li .= " class=\"" . implode(' ', $class_ar) . '"';
-			}
-			foreach ($other_attr_hash as $k => $v) {
-				$li .= " $k=\"$v\"";
-			}
-			$li .= '>';
-			return $li;
-		}
+        public function fieldsAsDataAttribs() {
+            $ret = '';
+            foreach (static::$fields as $k) {
+                if ($ret) { $ret .= ' '; }
+                $field_val = '&lt;DATA TOO LONG&gt;';
+                if ('flag' == substr($k,0,4)) {
+                    if ($this->fieldValues[$k]) {
+                        $field_val = 1;
+                    } else {
+                        $field_val = '0';
+                    }
+                } elseif (strlen($this->fieldValues[$k]) <= 255) {
+                    $field_val = htmlentities($this->fieldValues[$k]);
+                }
+                $ret .= "data-$k=\"$field_val\"";
+            }
+            return $ret;
+        }
+
+        public function renderAsListItem($idstr='',$classes_array = [],$other_attribs_hash = []) {
+            return 'MUST BE IMPLEMENTED IN SUB-CLASS!';
+        }
 
 	}

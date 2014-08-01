@@ -62,6 +62,33 @@
 
         //// instance methods - object itself
 
+        function testRenderAsListItem() {
+            $n = Notebook::getOneFromDb(['notebook_id' => 1001], $this->DB);
+
+            $rendered = $n->renderAsListItem();
+            $canonical = '<li data-notebook_id="1001" data-created_at="'.$n->created_at.'" data-updated_at="'.$n->updated_at.'" data-user_id="101" data-name="testnotebook1" data-notes="this is testnotebook1, owned by user 101" data-flag_workflow_published="0" data-flag_workflow_validated="0" data-flag_delete="0">testnotebook1</li>';
+
+//            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
+
+            $this->assertEqual($canonical,$rendered);
+
+            $rendered = $n->renderAsListItem('testid');
+            $canonical = '<li id="testid" data-notebook_id="1001" data-created_at="'.$n->created_at.'" data-updated_at="'.$n->updated_at.'" data-user_id="101" data-name="testnotebook1" data-notes="this is testnotebook1, owned by user 101" data-flag_workflow_published="0" data-flag_workflow_validated="0" data-flag_delete="0">testnotebook1</li>';
+            $this->assertEqual($canonical,$rendered);
+
+            $rendered = $n->renderAsListItem('',['testclass']);
+            $canonical = '<li class="testclass" data-notebook_id="1001" data-created_at="'.$n->created_at.'" data-updated_at="'.$n->updated_at.'" data-user_id="101" data-name="testnotebook1" data-notes="this is testnotebook1, owned by user 101" data-flag_workflow_published="0" data-flag_workflow_validated="0" data-flag_delete="0">testnotebook1</li>';
+            $this->assertEqual($canonical,$rendered);
+
+            $rendered = $n->renderAsListItem('',[],['data-first-arbitrary'=>'testarbitrary1','data-second-arbitrary'=>'testarbitrary2']);
+            $canonical = '<li data-first-arbitrary="testarbitrary1" data-second-arbitrary="testarbitrary2" data-notebook_id="1001" data-created_at="'.$n->created_at.'" data-updated_at="'.$n->updated_at.'" data-user_id="101" data-name="testnotebook1" data-notes="this is testnotebook1, owned by user 101" data-flag_workflow_published="0" data-flag_workflow_validated="0" data-flag_delete="0">testnotebook1</li>';
+            $this->assertEqual($canonical,$rendered);
+
+            $rendered = $n->renderAsListItem('',[],['data-second-arbitrary'=>'testarbitrary2','data-first-arbitrary'=>'testarbitrary1']);
+            $canonical = '<li data-first-arbitrary="testarbitrary1" data-second-arbitrary="testarbitrary2" data-notebook_id="1001" data-created_at="'.$n->created_at.'" data-updated_at="'.$n->updated_at.'" data-user_id="101" data-name="testnotebook1" data-notes="this is testnotebook1, owned by user 101" data-flag_workflow_published="0" data-flag_workflow_validated="0" data-flag_delete="0">testnotebook1</li>';
+            $this->assertEqual($canonical,$rendered);
+        }
+
         //// instance methods - related data
 
     }

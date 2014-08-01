@@ -289,3 +289,22 @@
 //        util_prePrintR($ret);
         return $ret;
     }
+
+    function util_listItemTag($id = '', $class_ar = [], $other_attr_hash = []) {
+        $li = '<li';
+        if ($id) {
+            $li .= " id=\"$id\"";
+        }
+        if ($class_ar) {
+            $li .= " class=\"" . implode(' ', $class_ar) . '"';
+        }
+
+        $hash_keys = array_keys($other_attr_hash);
+        sort($hash_keys);
+        foreach ($hash_keys as $k) {
+            $v = $other_attr_hash[$k];
+            $li .= " $k=\"$v\"";
+        }
+        $li .= '>';
+        return $li;
+    }

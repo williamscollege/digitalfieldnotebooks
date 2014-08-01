@@ -28,4 +28,12 @@
 			return ($a->name < $b->name) ? -1 : 1;
 		}
 
-	}
+        public function renderAsListItem($idstr='',$classes_array = [],$other_attribs_hash = []) {
+            $tag_start = substr(util_listItemTag($idstr,$classes_array,$other_attribs_hash),0,-1);
+            $tag_start .= ' '.$this->fieldsAsDataAttribs().'>';
+            $tag_start .= htmlentities($this->name).'</li>';
+            return $tag_start;
+        }
+
+
+    }

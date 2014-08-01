@@ -3,7 +3,9 @@
 
 	require_once('institution.cfg.php');
 	require_once('lang.cfg.php');
-	require_once('/classes/user.class.php');
+
+	require_once('/classes/ALL_CLASS_INCLUDES.php');
+
 	require_once('auth.cfg.php');
 	require_once('util.php');
 

@@ -15,8 +15,15 @@
 		}
 
         // TODO: show user stuff (list of notebooks et al)
-        $num_notebooks = 0;
+        $notebooks = $USER->getAccessibleNotebooks(Action::getOneFromDb(['name'=>'view'],$DB));
+        $num_notebooks = count($notebooks);
+
+        $counter = 0;
         echo "<ul class=\"unstyled\" id=\"listOfUserNotebooks\" data-notebook-count=\"$num_notebooks\">\n";
+        foreach ($notebooks as $notebook) {
+            $counter++;
+            echo $notebook->renderAsListItem('notebook_item_'.$counter)."\n";
+        }
         echo "</ul>\n";
 ?>
         <input type="button" id="btn-add-notebook" value="<?php echo util_lang('add_notebook'); ?>"/>

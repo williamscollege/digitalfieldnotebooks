@@ -3,9 +3,8 @@
 	require_once('simpletest/WMS_web_tester.php');
 	SimpleTest::prefer(new TextReporter());
 
-	require_once('../institution.cfg.php');
-	require_once('../lang.cfg.php');
-    require_once('../util.php');
+    require_once('../institution.cfg.php');
+    require_once('../lang.cfg.php');
 
 	class TestOfWebSuite extends TestSuite {
 		function TestOfWebSuite() {
