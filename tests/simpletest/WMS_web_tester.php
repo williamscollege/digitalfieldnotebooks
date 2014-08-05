@@ -68,6 +68,28 @@ abstract class WMSWebTestCase extends WebTestCase {
 
         return $this->assert($attrValueExpected, $haystack, "Element with id [$eltId] attribute [$attrName] value does not match- ".$attrValueExpected->testMessage($haystack));
     }
+
+    function assertEltByIdDoesNotHaveAttr($eltId,$attrName) {
+        $matches = array();
+        $haystack = $this->getBrowser()->getContent();
+
+//        preg_match('/(\<[^\>]\s+id\s*=\s*"'.$eltId.'"\s+[^\>]*\>)/',$this->getBrowser()->getContent(),$matches);
+        preg_match('/(\<[^\>]*\s+id\s*=\s*"'.$eltId.'"\s+[^\>]*\>)/',$haystack,$matches);
+
+        //echo $matches[1];
+
+        if (! $this->assertTrue(isset($matches[1]),"Element with id [$eltId] should exist")) {
+            return false;
+        }
+
+        $haystack = $matches[1];
+        $matches = array();
+        preg_match('/\s+('.$attrName.')\s*=\s*"([^"]*)"/',$haystack,$matches);
+        if (! $this->assertFalse(isset($matches[1]) && isset($matches[2]),"Element with id [$eltId] should NOT have attribute of [$attrName]")) {
+            return false;
+        }
+        return true;
+    }
 }
 ?>
 
