@@ -58,6 +58,88 @@
             return Role::cmp($a->getRole(),$b->getRole());
         }
 
+        public static function getGlobalTargetTypeForObject($obj) {
+            $obj_class = get_class($obj);
+            switch ($obj_class) {
+                case 'Authoritative_Plant':
+                    return 'global_plant';
+                    break;
+                case 'Authoritative_Plant_Extra':
+                    return 'global_plant';
+                    break;
+                case 'Metadata_Structure':
+                    return 'global_metadata';
+                    break;
+                case 'Metadata_Term_Set':
+                    return 'global_metadata';
+                    break;
+                case 'Metadata_Term_Value':
+                    return 'global_metadata';
+                    break;
+                case 'Metadata_Reference':
+                    return 'global_metadata';
+                    break;
+                case 'Notebook':
+                    return 'global_notebook';
+                    break;
+                case 'Notebook_Page':
+                    return 'global_notebook';
+                    break;
+                case 'Notebook_Page_Field':
+                    return 'global_notebook';
+                    break;
+                case 'Specimen':
+                    return 'global_specimen';
+                    break;
+                case 'Specimen_Image':
+                    return 'global_specimen';
+                    break;
+                default:
+                    return false;
+            }
+        }
+
+        public static function getSpecificTargetTypeForObject($obj) {
+            $obj_class = get_class($obj);
+            switch ($obj_class) {
+                case 'Authoritative_Plant':
+                    return 'plant';
+                    break;
+                case 'Authoritative_Plant_Extra':
+                    return 'plant';
+                    break;
+                case 'Metadata_Structure':
+                    return 'metadata_structure';
+                    break;
+                case 'Metadata_Term_Set':
+                    return 'metadata_structure';
+                    break;
+                case 'Metadata_Term_Value':
+                    return 'metadata_structure';
+                    break;
+                case 'Metadata_Reference':
+                    return 'metadata_structure';
+                    break;
+                case 'Notebook':
+                    return 'notebook';
+                    break;
+                case 'Notebook_Page':
+                    return 'notebook';
+                    break;
+                case 'Notebook_Page_Field':
+                    return 'notebook';
+                    break;
+                case 'Specimen':
+                    return 'specimen';
+                    break;
+                case 'Specimen_Image':
+                    return 'specimen';
+                    break;
+                default:
+                    return false;
+            }
+        }
+
         // NOTE: roles are basically fixed; role_id of 1 corresponds to manager, 2 to assistant, 3 to field user, and 4 to public
 		public function getRole() {
 			return Role::getOneFromDb(['role_id' => $this->role_id, 'flag_delete' => FALSE], $this->dbConnection);

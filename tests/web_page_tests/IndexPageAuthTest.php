@@ -3,7 +3,12 @@ require_once dirname(__FILE__) . '/../simpletest/WMS_web_tester.php';
 
 class IndexPageAuthTest extends WMSWebTestCase {
 
-	function tearDown() {
+    function setUp() {
+        global $CUR_LANG_SET;
+        $CUR_LANG_SET = 'en';
+    }
+
+    function tearDown() {
 		removeTestData_Users($this->DB);
 	}
 

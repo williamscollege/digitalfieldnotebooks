@@ -197,6 +197,8 @@
                 $num_accessible_n = count($accessible_n);
                 if ($a->name == 'view') {
                     $this->assertEqual(3,$num_accessible_n,'mismatch on notebooks accesible for action '.$a->name.": expecting3n, but got $num_accessible_n instead");
+                } elseif ($a->name == 'create') {
+                    $this->assertEqual(4,$num_accessible_n,'mismatch on notebooks accesible for action '.$a->name.": expecting 2, but got $num_accessible_n instead");
                 } else {
                     $this->assertEqual(2,$num_accessible_n,'mismatch on notebooks accesible for action '.$a->name.": expecting 2, but got $num_accessible_n instead");
                 }
@@ -228,6 +230,329 @@
                     $this->assertEqual(0,$num_accessible_n,'mismatch on notebooks accesible for action '.$a->name.": expecting 2, but got $num_accessible_n instead");
                 }
             }
+        }
+
+        function testCacheRoleActionTargets() {
+            $u = User::getOneFromDb(['user_id' => 101], $this->DB);
+
+            $u->cacheRoleActionTargets();
+
+            $this->assertEqual(1,count($u->cached_roles));
+            $this->assertEqual('field user',$u->cached_roles[0]->name);
+
+            $rats_ids = array_keys($u->cached_role_action_targets_hash_by_id);
+            $this->assertEqual(5,count($rats_ids));
+            $this->assertTrue(in_array(207,$rats_ids));
+            $this->assertTrue(in_array(210,$rats_ids));
+            $this->assertTrue(in_array(212,$rats_ids));
+            $this->assertTrue(in_array(217,$rats_ids));
+            $this->assertTrue(in_array(218,$rats_ids));
+
+            $rats_targets = array_keys($u->cached_role_action_targets_hash_by_target_type_by_id);
+            $this->assertEqual(5,count($rats_targets));
+            $this->assertTrue(in_array('global_metadata',$rats_targets));
+            $this->assertTrue(in_array('global_plant',$rats_targets));
+            $this->assertTrue(in_array('global_notebook',$rats_targets));
+            $this->assertTrue(in_array('global_specimen',$rats_targets));
+            $this->assertTrue(in_array('notebook',$rats_targets));
+
+            $rats_actions = array_keys($u->cached_role_action_targets_hash_by_action_name_by_id);
+            $this->assertEqual(2,count($rats_actions));
+            $this->assertTrue(in_array('view',$rats_actions));
+            $this->assertTrue(in_array('create',$rats_actions));
+
+            $rats_view_ids = array_keys($u->cached_role_action_targets_hash_by_action_name_by_id['view']);
+            $this->assertEqual(3,count($rats_view_ids));
+            $this->assertTrue(in_array(207,$rats_view_ids));
+            $this->assertTrue(in_array(210,$rats_view_ids));
+            $this->assertTrue(in_array(212,$rats_view_ids));
+
+            $rats_create_ids = array_keys($u->cached_role_action_targets_hash_by_action_name_by_id['create']);
+            $this->assertEqual(2,count($rats_create_ids));
+            $this->assertTrue(in_array(217,$rats_create_ids));
+            $this->assertTrue(in_array(218,$rats_create_ids));
+        }
+
+        function testCanActOnTarget() {
+            $n1 = Notebook::getOneFromDb(['notebook_id'=>1001],$this->DB); // owned by 101
+            $n2 = Notebook::getOneFromDb(['notebook_id'=>1003],$this->DB); // owned by 102
+            $n3 = Notebook::getOneFromDb(['notebook_id'=>1004],$this->DB); // owned by 110
+            $s1 = Specimen::getOneFromDb(['specimen_id'=>8001],$this->DB); // owned by 110
+            $s2 = Specimen::getOneFromDb(['specimen_id'=>8002],$this->DB); // owned by 101
+            $mds = Metadata_Structure::getOneFromDb(['metadata_structure_id'=>6004],$this->DB);
+            $mdts = Metadata_Term_Set::getOneFromDb(['metadata_term_set_id'=>6101],$this->DB);
+            $mdtv = Metadata_Term_Value::getOneFromDb(['metadata_term_value_id'=>6211],$this->DB);
+            $ap = Authoritative_Plant::getOneFromDb(['authoritative_plant_id'=>5001],$this->DB);
+
+            $actions_list = Action::getAllFromDb([],$this->DB);
+            $actions = [];
+            foreach ($actions_list as $act_elt) {
+                $actions[$act_elt->name] = $act_elt;
+            }
+
+            // basic, field user
+            $u = User::getOneFromDb(['user_id' => 101], $this->DB);
+
+            $this->assertTrue($u->canActOnTarget($actions['view'],$n1));
+            $this->assertTrue($u->canActOnTarget($actions['edit'],$n1));
+            $this->assertTrue($u->canActOnTarget($actions['create'],$n1));
+            $this->assertTrue($u->canActOnTarget($actions['delete'],$n1));
+            $this->assertTrue($u->canActOnTarget($actions['publish'],$n1));
+            $this->assertFalse($u->canActOnTarget($actions['verify'],$n1));
+
+            $this->assertFalse($u->canActOnTarget($actions['view'],$n2));
+            $this->assertFalse($u->canActOnTarget($actions['edit'],$n2));
+            $this->assertTrue($u->canActOnTarget($actions['create'],$n2));
+            $this->assertFalse($u->canActOnTarget($actions['delete'],$n2));
+            $this->assertFalse($u->canActOnTarget($actions['publish'],$n2));
+            $this->assertFalse($u->canActOnTarget($actions['verify'],$n2));
+
+            $this->assertTrue ($u->canActOnTarget($actions['view'],   $n3));
+            $this->assertFalse($u->canActOnTarget($actions['edit'],   $n3));
+            $this->assertTrue ($u->canActOnTarget($actions['create'], $n3));
+            $this->assertFalse($u->canActOnTarget($actions['delete'], $n3));
+            $this->assertFalse($u->canActOnTarget($actions['publish'],$n3));
+            $this->assertFalse($u->canActOnTarget($actions['verify'], $n3));
+
+            $this->assertFalse($u->canActOnTarget($actions['view'],   $s1));
+            $this->assertFalse($u->canActOnTarget($actions['edit'],   $s1));
+            $this->assertTrue ($u->canActOnTarget($actions['create'], $s1));
+            $this->assertFalse($u->canActOnTarget($actions['delete'], $s1));
+            $this->assertFalse($u->canActOnTarget($actions['publish'],$s1));
+            $this->assertFalse($u->canActOnTarget($actions['verify'], $s1));
+
+            $this->assertTrue ($u->canActOnTarget($actions['view'],   $s2));
+            $this->assertTrue ($u->canActOnTarget($actions['edit'],   $s2));
+            $this->assertTrue ($u->canActOnTarget($actions['create'], $s2));
+            $this->assertTrue ($u->canActOnTarget($actions['delete'], $s2));
+            $this->assertTrue ($u->canActOnTarget($actions['publish'],$s2));
+            $this->assertFalse($u->canActOnTarget($actions['verify'], $s2));
+
+            $this->assertTrue ($u->canActOnTarget($actions['view'],   $mds));
+            $this->assertFalse($u->canActOnTarget($actions['edit'],   $mds));
+            $this->assertFalse($u->canActOnTarget($actions['create'], $mds));
+            $this->assertFalse($u->canActOnTarget($actions['delete'], $mds));
+            $this->assertFalse($u->canActOnTarget($actions['publish'],$mds));
+            $this->assertFalse($u->canActOnTarget($actions['verify'], $mds));
+
+            $this->assertTrue ($u->canActOnTarget($actions['view'],   $mdts));
+            $this->assertFalse($u->canActOnTarget($actions['edit'],   $mdts));
+            $this->assertFalse($u->canActOnTarget($actions['create'], $mdts));
+            $this->assertFalse($u->canActOnTarget($actions['delete'], $mdts));
+            $this->assertFalse($u->canActOnTarget($actions['publish'],$mdts));
+            $this->assertFalse($u->canActOnTarget($actions['verify'], $mdts));
+
+            $this->assertTrue ($u->canActOnTarget($actions['view'],   $mdtv));
+            $this->assertFalse($u->canActOnTarget($actions['edit'],   $mdtv));
+            $this->assertFalse($u->canActOnTarget($actions['create'], $mdtv));
+            $this->assertFalse($u->canActOnTarget($actions['delete'], $mdtv));
+            $this->assertFalse($u->canActOnTarget($actions['publish'],$mdtv));
+            $this->assertFalse($u->canActOnTarget($actions['verify'], $mdtv));
+
+            $this->assertTrue ($u->canActOnTarget($actions['view'],   $ap));
+            $this->assertFalse($u->canActOnTarget($actions['edit'],   $ap));
+            $this->assertFalse($u->canActOnTarget($actions['create'], $ap));
+            $this->assertFalse($u->canActOnTarget($actions['delete'], $ap));
+            $this->assertFalse($u->canActOnTarget($actions['publish'],$ap));
+            $this->assertFalse($u->canActOnTarget($actions['verify'], $ap));
+
+            // system admin
+            $u->flag_is_system_admin = true;
+
+            $this->assertTrue($u->canActOnTarget($actions['view'],$n1));
+            $this->assertTrue($u->canActOnTarget($actions['edit'],$n1));
+            $this->assertTrue($u->canActOnTarget($actions['create'],$n1));
+            $this->assertTrue($u->canActOnTarget($actions['delete'],$n1));
+            $this->assertTrue($u->canActOnTarget($actions['publish'],$n1));
+            $this->assertTrue($u->canActOnTarget($actions['verify'],$n1));
+
+            $this->assertTrue($u->canActOnTarget($actions['view'],$n2));
+            $this->assertTrue($u->canActOnTarget($actions['edit'],$n2));
+            $this->assertTrue($u->canActOnTarget($actions['create'],$n2));
+            $this->assertTrue($u->canActOnTarget($actions['delete'],$n2));
+            $this->assertTrue($u->canActOnTarget($actions['publish'],$n2));
+            $this->assertTrue($u->canActOnTarget($actions['verify'],$n2));
+
+            $this->assertTrue ($u->canActOnTarget($actions['view'],   $n3));
+            $this->assertTrue($u->canActOnTarget($actions['edit'],   $n3));
+            $this->assertTrue ($u->canActOnTarget($actions['create'], $n3));
+            $this->assertTrue($u->canActOnTarget($actions['delete'], $n3));
+            $this->assertTrue($u->canActOnTarget($actions['publish'],$n3));
+            $this->assertTrue($u->canActOnTarget($actions['verify'], $n3));
+
+            $this->assertTrue($u->canActOnTarget($actions['view'],   $s1));
+            $this->assertTrue($u->canActOnTarget($actions['edit'],   $s1));
+            $this->assertTrue ($u->canActOnTarget($actions['create'], $s1));
+            $this->assertTrue($u->canActOnTarget($actions['delete'], $s1));
+            $this->assertTrue($u->canActOnTarget($actions['publish'],$s1));
+            $this->assertTrue($u->canActOnTarget($actions['verify'], $s1));
+
+            $this->assertTrue ($u->canActOnTarget($actions['view'],   $s2));
+            $this->assertTrue ($u->canActOnTarget($actions['edit'],   $s2));
+            $this->assertTrue ($u->canActOnTarget($actions['create'], $s2));
+            $this->assertTrue ($u->canActOnTarget($actions['delete'], $s2));
+            $this->assertTrue ($u->canActOnTarget($actions['publish'],$s2));
+            $this->assertTrue($u->canActOnTarget($actions['verify'], $s2));
+
+            $this->assertTrue ($u->canActOnTarget($actions['view'],   $mds));
+            $this->assertTrue($u->canActOnTarget($actions['edit'],   $mds));
+            $this->assertTrue($u->canActOnTarget($actions['create'], $mds));
+            $this->assertTrue($u->canActOnTarget($actions['delete'], $mds));
+            $this->assertTrue($u->canActOnTarget($actions['publish'],$mds));
+            $this->assertTrue($u->canActOnTarget($actions['verify'], $mds));
+
+            $this->assertTrue ($u->canActOnTarget($actions['view'],   $mdts));
+            $this->assertTrue($u->canActOnTarget($actions['edit'],   $mdts));
+            $this->assertTrue($u->canActOnTarget($actions['create'], $mdts));
+            $this->assertTrue($u->canActOnTarget($actions['delete'], $mdts));
+            $this->assertTrue($u->canActOnTarget($actions['publish'],$mdts));
+            $this->assertTrue($u->canActOnTarget($actions['verify'], $mdts));
+
+            $this->assertTrue ($u->canActOnTarget($actions['view'],   $mdtv));
+            $this->assertTrue($u->canActOnTarget($actions['edit'],   $mdtv));
+            $this->assertTrue($u->canActOnTarget($actions['create'], $mdtv));
+            $this->assertTrue($u->canActOnTarget($actions['delete'], $mdtv));
+            $this->assertTrue($u->canActOnTarget($actions['publish'],$mdtv));
+            $this->assertTrue($u->canActOnTarget($actions['verify'], $mdtv));
+
+            $this->assertTrue ($u->canActOnTarget($actions['view'],   $ap));
+            $this->assertTrue($u->canActOnTarget($actions['edit'],   $ap));
+            $this->assertTrue($u->canActOnTarget($actions['create'], $ap));
+            $this->assertTrue($u->canActOnTarget($actions['delete'], $ap));
+            $this->assertTrue($u->canActOnTarget($actions['publish'],$ap));
+            $this->assertTrue($u->canActOnTarget($actions['verify'], $ap));
+
+            // public user
+            $u = User::getOneFromDb(['user_id' => 109], $this->DB);
+
+            $this->assertFalse($u->canActOnTarget($actions['view'],$n1));
+            $this->assertFalse($u->canActOnTarget($actions['edit'],$n1));
+            $this->assertFalse($u->canActOnTarget($actions['create'],$n1));
+            $this->assertFalse($u->canActOnTarget($actions['delete'],$n1));
+            $this->assertFalse($u->canActOnTarget($actions['publish'],$n1));
+            $this->assertFalse($u->canActOnTarget($actions['verify'],$n1));
+
+            $this->assertFalse($u->canActOnTarget($actions['view'],$n2));
+            $this->assertFalse($u->canActOnTarget($actions['edit'],$n2));
+            $this->assertFalse($u->canActOnTarget($actions['create'],$n2));
+            $this->assertFalse($u->canActOnTarget($actions['delete'],$n2));
+            $this->assertFalse($u->canActOnTarget($actions['publish'],$n2));
+            $this->assertFalse($u->canActOnTarget($actions['verify'],$n2));
+
+            $this->assertTrue ($u->canActOnTarget($actions['view'],   $n3));
+            $this->assertFalse($u->canActOnTarget($actions['edit'],   $n3));
+            $this->assertFalse ($u->canActOnTarget($actions['create'], $n3));
+            $this->assertFalse($u->canActOnTarget($actions['delete'], $n3));
+            $this->assertFalse($u->canActOnTarget($actions['publish'],$n3));
+            $this->assertFalse($u->canActOnTarget($actions['verify'], $n3));
+
+            $this->assertFalse($u->canActOnTarget($actions['view'],   $s1));
+            $this->assertFalse($u->canActOnTarget($actions['edit'],   $s1));
+            $this->assertFalse ($u->canActOnTarget($actions['create'], $s1));
+            $this->assertFalse($u->canActOnTarget($actions['delete'], $s1));
+            $this->assertFalse($u->canActOnTarget($actions['publish'],$s1));
+            $this->assertFalse($u->canActOnTarget($actions['verify'], $s1));
+
+            $this->assertFalse ($u->canActOnTarget($actions['view'],   $s2));
+            $this->assertFalse ($u->canActOnTarget($actions['edit'],   $s2));
+            $this->assertFalse ($u->canActOnTarget($actions['create'], $s2));
+            $this->assertFalse ($u->canActOnTarget($actions['delete'], $s2));
+            $this->assertFalse ($u->canActOnTarget($actions['publish'],$s2));
+            $this->assertFalse($u->canActOnTarget($actions['verify'], $s2));
+
+            $this->assertTrue ($u->canActOnTarget($actions['view'],   $mds));
+            $this->assertFalse($u->canActOnTarget($actions['edit'],   $mds));
+            $this->assertFalse($u->canActOnTarget($actions['create'], $mds));
+            $this->assertFalse($u->canActOnTarget($actions['delete'], $mds));
+            $this->assertFalse($u->canActOnTarget($actions['publish'],$mds));
+            $this->assertFalse($u->canActOnTarget($actions['verify'], $mds));
+
+            $this->assertTrue ($u->canActOnTarget($actions['view'],   $mdts));
+            $this->assertFalse($u->canActOnTarget($actions['edit'],   $mdts));
+            $this->assertFalse($u->canActOnTarget($actions['create'], $mdts));
+            $this->assertFalse($u->canActOnTarget($actions['delete'], $mdts));
+            $this->assertFalse($u->canActOnTarget($actions['publish'],$mdts));
+            $this->assertFalse($u->canActOnTarget($actions['verify'], $mdts));
+
+            $this->assertTrue ($u->canActOnTarget($actions['view'],   $mdtv));
+            $this->assertFalse($u->canActOnTarget($actions['edit'],   $mdtv));
+            $this->assertFalse($u->canActOnTarget($actions['create'], $mdtv));
+            $this->assertFalse($u->canActOnTarget($actions['delete'], $mdtv));
+            $this->assertFalse($u->canActOnTarget($actions['publish'],$mdtv));
+            $this->assertFalse($u->canActOnTarget($actions['verify'], $mdtv));
+
+            $this->assertTrue ($u->canActOnTarget($actions['view'],   $ap));
+            $this->assertFalse($u->canActOnTarget($actions['edit'],   $ap));
+            $this->assertFalse($u->canActOnTarget($actions['create'], $ap));
+            $this->assertFalse($u->canActOnTarget($actions['delete'], $ap));
+            $this->assertFalse($u->canActOnTarget($actions['publish'],$ap));
+            $this->assertFalse($u->canActOnTarget($actions['verify'], $ap));
+
+            // manager
+            $u = User::getOneFromDb(['user_id' => 110], $this->DB); // manager user
+
+            $this->assertTrue($u->canActOnTarget($actions['view'],$n1));
+            $this->assertTrue($u->canActOnTarget($actions['edit'],$n1));
+            $this->assertTrue($u->canActOnTarget($actions['create'],$n1));
+            $this->assertTrue($u->canActOnTarget($actions['delete'],$n1));
+            $this->assertTrue($u->canActOnTarget($actions['publish'],$n1));
+            $this->assertTrue($u->canActOnTarget($actions['verify'],$n1));
+
+            $this->assertTrue($u->canActOnTarget($actions['view'],$n2));
+            $this->assertTrue($u->canActOnTarget($actions['edit'],$n2));
+            $this->assertTrue($u->canActOnTarget($actions['create'],$n2));
+            $this->assertTrue($u->canActOnTarget($actions['delete'],$n2));
+            $this->assertTrue($u->canActOnTarget($actions['publish'],$n2));
+            $this->assertTrue($u->canActOnTarget($actions['verify'],$n2));
+
+            $this->assertTrue ($u->canActOnTarget($actions['view'],   $n3));
+            $this->assertTrue($u->canActOnTarget($actions['edit'],   $n3));
+            $this->assertTrue ($u->canActOnTarget($actions['create'], $n3));
+            $this->assertTrue($u->canActOnTarget($actions['delete'], $n3));
+            $this->assertTrue($u->canActOnTarget($actions['publish'],$n3));
+            $this->assertTrue($u->canActOnTarget($actions['verify'], $n3));
+
+            $this->assertTrue($u->canActOnTarget($actions['view'],   $s1));
+            $this->assertTrue($u->canActOnTarget($actions['edit'],   $s1));
+            $this->assertTrue ($u->canActOnTarget($actions['create'], $s1));
+            $this->assertTrue($u->canActOnTarget($actions['delete'], $s1));
+            $this->assertTrue($u->canActOnTarget($actions['publish'],$s1));
+            $this->assertTrue($u->canActOnTarget($actions['verify'], $s1));
+
+            $this->assertTrue ($u->canActOnTarget($actions['view'],   $s2));
+            $this->assertTrue ($u->canActOnTarget($actions['edit'],   $s2));
+            $this->assertTrue ($u->canActOnTarget($actions['create'], $s2));
+            $this->assertTrue ($u->canActOnTarget($actions['delete'], $s2));
+            $this->assertTrue ($u->canActOnTarget($actions['publish'],$s2));
+            $this->assertTrue($u->canActOnTarget($actions['verify'], $s2));
+
+            $this->assertTrue ($u->canActOnTarget($actions['view'],   $mds));
+            $this->assertTrue($u->canActOnTarget($actions['edit'],   $mds));
+            $this->assertTrue($u->canActOnTarget($actions['create'], $mds));
+            $this->assertTrue($u->canActOnTarget($actions['delete'], $mds));
+            $this->assertTrue($u->canActOnTarget($actions['publish'],$mds));
+            $this->assertTrue($u->canActOnTarget($actions['verify'], $mds));
+
+            $this->assertTrue ($u->canActOnTarget($actions['view'],   $mdts));
+            $this->assertTrue($u->canActOnTarget($actions['edit'],   $mdts));
+            $this->assertTrue($u->canActOnTarget($actions['create'], $mdts));
+            $this->assertTrue($u->canActOnTarget($actions['delete'], $mdts));
+            $this->assertTrue($u->canActOnTarget($actions['publish'],$mdts));
+            $this->assertTrue($u->canActOnTarget($actions['verify'], $mdts));
+
+            $this->assertTrue ($u->canActOnTarget($actions['view'],   $mdtv));
+            $this->assertTrue($u->canActOnTarget($actions['edit'],   $mdtv));
+            $this->assertTrue($u->canActOnTarget($actions['create'], $mdtv));
+            $this->assertTrue($u->canActOnTarget($actions['delete'], $mdtv));
+            $this->assertTrue($u->canActOnTarget($actions['publish'],$mdtv));
+            $this->assertTrue($u->canActOnTarget($actions['verify'], $mdtv));
+
+            $this->assertTrue ($u->canActOnTarget($actions['view'],   $ap));
+            $this->assertTrue($u->canActOnTarget($actions['edit'],   $ap));
+            $this->assertTrue($u->canActOnTarget($actions['create'], $ap));
+            $this->assertTrue($u->canActOnTarget($actions['delete'], $ap));
+            $this->assertTrue($u->canActOnTarget($actions['publish'],$ap));
+            $this->assertTrue($u->canActOnTarget($actions['verify'], $ap));
         }
 
         //// auth-related tests

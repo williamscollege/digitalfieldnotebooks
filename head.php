@@ -11,6 +11,14 @@
 
 	$FINGERPRINT = util_generateRequestFingerprint(); // used to prevent/complicate session hijacking ands XSS attacks
 
+    $DB = util_createDbConnection();
+
+    $all_actions = Action::getAllFromDb([],$DB);
+    $ACTIONS = array();
+    foreach ($all_actions as $a) {
+        $ACTIONS[$a->name] = $a;
+    }
+
 	if ((!isset($_SESSION['isAuthenticated'])) || (!$_SESSION['isAuthenticated'])) {
 		if ((isset($_REQUEST['username'])) && (isset($_REQUEST['password']))) { // SECTION: not yet authenticated, wants to log in
 
@@ -53,7 +61,6 @@
 
 	$IS_AUTHENTICATED = util_checkAuthentication();
 	if ($IS_AUTHENTICATED) { // SECTION: is signed in
-		$DB = util_createDbConnection();
 
 		// now create user object
 		$USER = new User(['username' => $_SESSION['userdata']['username'], 'DB' => $DB]);

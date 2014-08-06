@@ -6,6 +6,11 @@
 		public static $primaryKeyField = 'user_id';
 		public static $dbTable = 'users';
 
+        public $cached_roles;
+        public $cached_role_action_targets_hash_by_id;
+        public $cached_role_action_targets_hash_by_target_type_by_id;
+        public $cached_role_action_targets_hash_by_action_name_by_id;
+
 		public function __construct($initsHash) {
 			parent::__construct($initsHash);
 
@@ -86,6 +91,158 @@
               $roles = Role::getAllFromDb(['role_id'=> Db_Linked::arrayOfAttrValues($user_roles,'role_id')],
                 $this->dbConnection);
             return $roles;
+        }
+
+        public function cacheRoles() {
+            if (! $this->cached_roles) {
+                $this->cached_roles = $this->getRoles();
+            }
+        }
+
+        public function cacheRoleActionTargets() {
+            if (! $this->cached_role_action_targets_hash_by_id) {
+
+                $this->cacheRoles();
+
+                $this->cached_role_action_targets_hash_by_id = array();
+
+                $this->cached_role_action_targets_hash_by_target_type_by_id = array();
+                $this->cached_role_action_targets_hash_by_action_name_by_id = array();
+
+                foreach ($this->cached_roles as $r) {
+
+//                    util_prePrintR($r);
+
+                    $rats = $r->getRoleActionTargets();
+
+//                    util_prePrintR($rats);
+
+                    foreach ($rats as $rat) {
+                        $this->cached_role_action_targets_hash_by_id[$rat->role_action_target_link_id] = $rat;
+
+                        if (! array_key_exists($rat->target_type,$this->cached_role_action_targets_hash_by_target_type_by_id)) {
+                            $this->cached_role_action_targets_hash_by_target_type_by_id[$rat->target_type] = array();
+                        }
+                        $this->cached_role_action_targets_hash_by_target_type_by_id[$rat->target_type][$rat->role_action_target_link_id] = $rat;
+
+                        $action_name = $rat->getAction()->name;
+                        if (! array_key_exists($action_name,$this->cached_role_action_targets_hash_by_action_name_by_id)) {
+                            $this->cached_role_action_targets_hash_by_action_name_by_id[$action_name] = array();
+                        }
+                        $this->cached_role_action_targets_hash_by_action_name_by_id[$action_name][$rat->role_action_target_link_id] = $rat;
+                    }
+                }
+            }
+        }
+
+
+        public function canActOnTarget($action,$target) {
+            // system admin -> always yes
+            // owner of target -> always yes, except for verification
+            // all other situatons -> check role action targets
+            //   - matching globals -> yes
+            //   - specifics
+            //      + gets messy
+            //   - otherwise -> no
+
+            if ($this->flag_is_system_admin) {
+                return true;
+            }
+
+            if ($target->user_id == $this->user_id) {
+                if ($action->name != 'verify') { return true; }
+            }
+
+            $this->cacheRoleActionTargets();
+
+            $target_global_type = Role_Action_Target::getGlobalTargetTypeForObject($target);
+            if (in_array($target_global_type,array_keys($this->cached_role_action_targets_hash_by_target_type_by_id))) {
+                foreach ($this->cached_role_action_targets_hash_by_target_type_by_id[$target_global_type] as $glob_rat) {
+                    if ($glob_rat->action_id == $action->action_id) {
+                        return true;
+                    }
+                }
+            }
+
+            // if the allowed target types do not contain the specific type of the target in question, then no need to go further
+            $target_specific_type = Role_Action_Target::getSpecificTargetTypeForObject($target);
+            if (! in_array($target_specific_type,array_keys($this->cached_role_action_targets_hash_by_target_type_by_id))) {
+                return false;
+            }
+
+            // get a list of all the specific ids to check. This gets a bit messy as we have to climb or include a hierarchy depending on what exactly the target is
+
+//            util_prePrintR($target);
+
+            $ids_to_check = array();
+
+            $target_class = get_class($target);
+            switch ($target_class) {
+                case 'Authoritative_Plant':
+                    $ids_to_check = array($target->authoritative_plant_id);
+                    break;
+                case 'Authoritative_Plant_Extra':
+                    // can edit this if can edit the plant
+                    $p = $target->getAuthoritativePlant();
+                    $ids_to_check = array($p->authoritative_plant_id);
+                    break;
+                case 'Metadata_Structure':
+                    // can edit this if can edit itself or any parent
+                    $ids_to_check = Db_Linked::arrayOfAttrValues($target->getLineage(),'metadata_structure_id');
+                    break;
+                case 'Metadata_Term_Set':
+                    // can edit if can edit any structure that uses this term set
+                    $structures = Metadata_Structure::getAllFromDb(['metadata_term_set_id'=>$target->metadata_term_set_id],$this->dbConnection);
+                    $ids_to_check = array();
+                    foreach ($structures as $s) {
+                        $ids_to_check = array_merge($ids_to_check,Db_Linked::arrayOfAttrValues($s->getLineage(),'metadata_structure_id'));
+                    }
+                    break;
+                case 'Metadata_Term_Value':
+                    // can edit if can edit any structure that uses the term set for which this is a value
+                    return $this->canActOnTarget($action,Metadata_Term_Set::getOneFromDb(['metadata_term_set_id'=>$target->metadata_term_set_id],$this->dbConnection));
+                    break;
+                case 'Metadata_Reference':
+                    // can edit if can edit anything to which this refers
+                    return $this->canActOnTarget($action,$target->getReferrent());
+                    break;
+                case 'Notebook':
+                    $ids_to_check = array($target->notebook_id);
+                    break;
+                case 'Notebook_Page':
+                    // can edit if can edit the notebook that contains this page
+                    $n = $target->getNotebook();
+                    $ids_to_check = array($n->notebook_id);
+                    break;
+                case 'Notebook_Page_Field':
+                    // can edit if can edit the notebook that contains the notebook page that this page field
+                    $np = $target->getNotebookPage();
+                    $n = $np->getNotebook();
+                    $ids_to_check = array($n->notebook_id);
+                    break;
+                case 'Specimen':
+                    $ids_to_check = array($target->specimen_id);
+                    break;
+                case 'Specimen_Image':
+                    // can edit if can edit the specimen
+                    $s = $target->getSpecimen();
+                    $ids_to_check = array($s->specimen_id);
+                    break;
+                default:
+                    break;
+            }
+
+//            util_prePrintR($ids_to_check);
+//            util_prePrintR($this->cached_role_action_targets_hash_by_target_type_by_id);
+
+            foreach ($this->cached_role_action_targets_hash_by_target_type_by_id[$target_specific_type] as $spec_rat) {
+
+                if (($spec_rat->action_id == $action->action_id) && (in_array($spec_rat->target_id,$ids_to_check))) {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public function getAccessibleNotebooks($for_action,$debug_flag = 0) {

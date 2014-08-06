@@ -29,9 +29,18 @@
 		}
 
         public function renderAsListItem($idstr='',$classes_array = [],$other_attribs_hash = []) {
+            global $USER,$ACTIONS;
+            $actions_attribs = '';
+
+            if ($USER->user_id == $this->user_id) {
+                array_push($classes_array,'owned-object');
+                $actions_attribs .= ' data-can-edit="1"';
+            } elseif ($USER->canActOnTarget($ACTIONS['edit'],$this)) {
+                $actions_attribs .= ' data-can-edit="1"';
+            }
             $tag_start = substr(util_listItemTag($idstr,$classes_array,$other_attribs_hash),0,-1);
-            $tag_start .= ' '.$this->fieldsAsDataAttribs().'>';
-            $tag_start .= htmlentities($this->name).'</li>';
+            $tag_start .= ' '.$this->fieldsAsDataAttribs().$actions_attribs.'>';
+            $tag_start .= '<a href="/notebook.php?notebook_id='.$this->notebook_id.'">'.htmlentities($this->name).'</a></li>';
             return $tag_start;
         }
 

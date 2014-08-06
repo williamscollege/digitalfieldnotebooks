@@ -75,7 +75,7 @@
             return $parent->getRoot();
         }
 
-        // returns: the structure at the root of the structure tree (itself for structures with no parent, otherwise the most distant ancestor)
+        // returns: array of structures from this up to a structure with no parent
         public function getLineage() {
             if ($this->parent_metadata_structure_id == 0) {
                 return [$this];

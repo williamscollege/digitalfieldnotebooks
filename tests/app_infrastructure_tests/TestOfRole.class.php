@@ -55,11 +55,13 @@
 
             $ats = $r->getRoleActionTargets();
 
-            $this->assertEqual(3,count($ats));
+            $this->assertEqual(5,count($ats));
 
             $this->assertEqual(207,$ats[0]->role_action_target_link_id);
             $this->assertEqual(210,$ats[1]->role_action_target_link_id);
             $this->assertEqual(212,$ats[2]->role_action_target_link_id);
+            $this->assertEqual(217,$ats[3]->role_action_target_link_id);
+            $this->assertEqual(218,$ats[4]->role_action_target_link_id);
         }
 	}
 

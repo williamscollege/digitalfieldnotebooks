@@ -52,23 +52,30 @@
 //                'plant'          =>70,
 //                'specimen'       =>80
 //            ];
-//
+
 //            (201,NOW(),NOW(), 110, 2, 1, 'global_notebook', 0, 0),
 //            (206,NOW(),NOW(), 110, 2, 1, 'global_metadata', 0, 0),
 //            (209,NOW(),NOW(), 110, 2, 1, 'global_plant', 0, 0),
-//
+
 //            (202,NOW(),NOW(), 110, 2, 2, 'global_notebook', 0, 0),
 //            (203,NOW(),NOW(), 110, 2, 2, 'global_metadata', 0, 0),
 //            (204,NOW(),NOW(), 110, 2, 2, 'global_plant', 0, 0),
 //            (205,NOW(),NOW(), 110, 2, 2, 'global_specimen', 0, 0),
-//
+
+//            (215,NOW(),NOW(), 110, 2, 3, 'global_notebook', 0, 0),
+//            (214,NOW(),NOW(), 110, 2, 3, 'global_metadata', 0, 0),
+//            (216,NOW(),NOW(), 110, 2, 3, 'global_specimen', 0, 0),
+
 //            (207,NOW(),NOW(), 110, 3, 1, 'global_metadata', 0, 0),
 //            (210,NOW(),NOW(), 110, 3, 1, 'global_plant', 0, 0),
 //            (212,NOW(),NOW(), 110, 3, 1, 'notebook', 1004, 0),
-//
+
+//            (217,NOW(),NOW(), 110, 3, 3, 'global_notebook', 0, 0),
+//            (218,NOW(),NOW(), 110, 3, 3, 'global_specimen', 0, 0)
+
 //            (208,NOW(),NOW(), 110, 4, 1, 'global_metadata', 0, 0),
 //            (211,NOW(),NOW(), 110, 4, 1, 'global_plant', 0, 0),
-//            (213,NOW(),NOW(), 110, 4, 1, 'notebook', 1004, 0)
+//            (213,NOW(),NOW(), 110, 4, 1, 'notebook', 1004, 0),
 
             $this->assertEqual(201, $all[0]->role_action_target_link_id);
             $this->assertEqual(206, $all[1]->role_action_target_link_id);
@@ -79,13 +86,58 @@
             $this->assertEqual(204, $all[5]->role_action_target_link_id);
             $this->assertEqual(205, $all[6]->role_action_target_link_id);
 
-            $this->assertEqual(207, $all[7]->role_action_target_link_id);
-            $this->assertEqual(210, $all[8]->role_action_target_link_id);
-            $this->assertEqual(212, $all[9]->role_action_target_link_id);
+            $this->assertEqual(215, $all[7]->role_action_target_link_id);
+            $this->assertEqual(214, $all[8]->role_action_target_link_id);
+            $this->assertEqual(216, $all[9]->role_action_target_link_id);
 
-            $this->assertEqual(208, $all[10]->role_action_target_link_id);
-            $this->assertEqual(211, $all[11]->role_action_target_link_id);
-            $this->assertEqual(213, $all[12]->role_action_target_link_id);
+            $this->assertEqual(207, $all[10]->role_action_target_link_id);
+            $this->assertEqual(210, $all[11]->role_action_target_link_id);
+            $this->assertEqual(212, $all[12]->role_action_target_link_id);
+
+            $this->assertEqual(217, $all[13]->role_action_target_link_id);
+            $this->assertEqual(218, $all[14]->role_action_target_link_id);
+
+            $this->assertEqual(208, $all[15]->role_action_target_link_id);
+            $this->assertEqual(211, $all[16]->role_action_target_link_id);
+            $this->assertEqual(213, $all[17]->role_action_target_link_id);
+        }
+
+        function testGetGlobalTargetTypeForObject() {
+            $this->assertEqual('global_plant', Role_Action_Target::getGlobalTargetTypeForObject(new Authoritative_Plant(['DB' => $this->DB])));
+            $this->assertEqual('global_plant', Role_Action_Target::getGlobalTargetTypeForObject(new Authoritative_Plant_Extra(['DB' => $this->DB])));
+
+            $this->assertEqual('global_metadata', Role_Action_Target::getGlobalTargetTypeForObject(new Metadata_Structure(['DB' => $this->DB])));
+            $this->assertEqual('global_metadata', Role_Action_Target::getGlobalTargetTypeForObject(new Metadata_Term_Set(['DB' => $this->DB])));
+            $this->assertEqual('global_metadata', Role_Action_Target::getGlobalTargetTypeForObject(new Metadata_Term_Value(['DB' => $this->DB])));
+            $this->assertEqual('global_metadata', Role_Action_Target::getGlobalTargetTypeForObject(new Metadata_Reference(['DB' => $this->DB])));
+
+            $this->assertEqual('global_notebook', Role_Action_Target::getGlobalTargetTypeForObject(new Notebook(['DB' => $this->DB])));
+            $this->assertEqual('global_notebook', Role_Action_Target::getGlobalTargetTypeForObject(new Notebook_Page(['DB' => $this->DB])));
+            $this->assertEqual('global_notebook', Role_Action_Target::getGlobalTargetTypeForObject(new Notebook_Page_Field(['DB' => $this->DB])));
+
+            $this->assertEqual('global_specimen', Role_Action_Target::getGlobalTargetTypeForObject(new Specimen(['DB' => $this->DB])));
+            $this->assertEqual('global_specimen', Role_Action_Target::getGlobalTargetTypeForObject(new Specimen_Image(['DB' => $this->DB])));
+
+            $this->assertEqual(false, Role_Action_Target::getGlobalTargetTypeForObject(new Action(['DB' => $this->DB])));
+        }
+
+        function testGetSpecificTargetTypeForObject() {
+            $this->assertEqual('plant', Role_Action_Target::getSpecificTargetTypeForObject(new Authoritative_Plant(['DB' => $this->DB])));
+            $this->assertEqual('plant', Role_Action_Target::getSpecificTargetTypeForObject(new Authoritative_Plant_Extra(['DB' => $this->DB])));
+
+            $this->assertEqual('metadata_structure', Role_Action_Target::getSpecificTargetTypeForObject(new Metadata_Structure(['DB' => $this->DB])));
+            $this->assertEqual('metadata_structure', Role_Action_Target::getSpecificTargetTypeForObject(new Metadata_Term_Set(['DB' => $this->DB])));
+            $this->assertEqual('metadata_structure', Role_Action_Target::getSpecificTargetTypeForObject(new Metadata_Term_Value(['DB' => $this->DB])));
+            $this->assertEqual('metadata_structure', Role_Action_Target::getSpecificTargetTypeForObject(new Metadata_Reference(['DB' => $this->DB])));
+
+            $this->assertEqual('notebook', Role_Action_Target::getSpecificTargetTypeForObject(new Notebook(['DB' => $this->DB])));
+            $this->assertEqual('notebook', Role_Action_Target::getSpecificTargetTypeForObject(new Notebook_Page(['DB' => $this->DB])));
+            $this->assertEqual('notebook', Role_Action_Target::getSpecificTargetTypeForObject(new Notebook_Page_Field(['DB' => $this->DB])));
+
+            $this->assertEqual('specimen', Role_Action_Target::getSpecificTargetTypeForObject(new Specimen(['DB' => $this->DB])));
+            $this->assertEqual('specimen', Role_Action_Target::getSpecificTargetTypeForObject(new Specimen_Image(['DB' => $this->DB])));
+
+            $this->assertEqual(false, Role_Action_Target::getSpecificTargetTypeForObject(new Action(['DB' => $this->DB])));
         }
 
         //// instance methods - object itself

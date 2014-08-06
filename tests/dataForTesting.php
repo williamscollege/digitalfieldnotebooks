@@ -42,6 +42,7 @@ function createTestData_XXXX($dbConn) {
     }
 }
 */
+    $ACTIONS = array();
 
     function createTestData_Authoritative_Plants($dbConn) {
         // 5000 series ids
@@ -188,7 +189,7 @@ function createTestData_XXXX($dbConn) {
             (1001,NOW(),NOW(),101,'testnotebook1','this is testnotebook1, owned by user 101', 0, 0, 0),
             (1002,NOW(),NOW(),101,'testnotebook2','this is testnotebook2, owned by user 101', 0, 0, 0),
             (1003,NOW(),NOW(),102,'testnotebook3','this is testnotebook3, owned by user 102', 0, 0, 0),
-            (1004,NOW(),NOW(),111,'testnotebook4','this is generally viewable testnotebook4, owned by user 111', 0, 0, 0)
+            (1004,NOW(),NOW(),110,'testnotebook4','this is generally viewable testnotebook4, owned by user 110', 1, 1, 0)
         ";
         $addTestStmt = $dbConn->prepare($addTestSql);
         $addTestStmt->execute();
@@ -207,7 +208,7 @@ function createTestData_XXXX($dbConn) {
                 (1101,NOW(),NOW(), 1001, 5001, 'testing notebook page the first in testnotebook1, owned by user 101', 0, 0, 0),
                 (1102,NOW(),NOW(), 1001, 5008, 'second testing notebook page in testnotebook1, owned by user 101', 0, 0, 0),
                 (1103,NOW(),NOW(), 1002, 5001, 'first page of testnotebook2, owned by user 101', 0, 0, 0),
-                (1104,NOW(),NOW(), 1004, 5001, 'first page of testnotebook4, owned by user 111', 0, 0, 0)
+                (1104,NOW(),NOW(), 1004, 5001, 'first page of testnotebook4, owned by user 110', 0, 0, 0)
             ";
         $addTestStmt = $dbConn->prepare($addTestSql);
         $addTestStmt->execute();
@@ -256,7 +257,13 @@ function createTestData_XXXX($dbConn) {
                         (210,NOW(),NOW(), 110, 3, 1, 'global_plant', 0, 0),
                         (211,NOW(),NOW(), 110, 4, 1, 'global_plant', 0, 0),
                         (212,NOW(),NOW(), 110, 3, 1, 'notebook', 1004, 0),
-                        (213,NOW(),NOW(), 110, 4, 1, 'notebook', 1004, 0)
+                        (213,NOW(),NOW(), 110, 4, 1, 'notebook', 1004, 0),
+                        (214,NOW(),NOW(), 110, 2, 3, 'global_metadata', 0, 0),
+                        (215,NOW(),NOW(), 110, 2, 3, 'global_notebook', 0, 0),
+                        (216,NOW(),NOW(), 110, 2, 3, 'global_specimen', 0, 0),
+                        (217,NOW(),NOW(), 110, 3, 3, 'global_notebook', 0, 0),
+                        (218,NOW(),NOW(), 110, 3, 3, 'global_specimen', 0, 0)
+
                     ";
         $addTestStmt = $dbConn->prepare($addTestSql);
         $addTestStmt->execute();
@@ -386,6 +393,12 @@ function createTestData_XXXX($dbConn) {
         createTestData_Specimen_Images($dbConn);
         createTestData_Users($dbConn);
         createTestData_User_Roles($dbConn);
+
+        $all_actions = Action::getAllFromDb([],$dbConn);
+        global $ACTIONS;
+        foreach ($all_actions as $a) {
+            $ACTIONS[$a->name] = $a;
+        }
 	}
 
 //--------------------------------------------------------------------------------------------------------------

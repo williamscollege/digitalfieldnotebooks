@@ -2,6 +2,12 @@
 require_once dirname(__FILE__) . '/../simpletest/WMS_web_tester.php';
 
 class IndexPageLoadTest extends WMSWebTestCase {
+
+    function setUp() {
+        global $CUR_LANG_SET;
+        $CUR_LANG_SET = 'en';
+    }
+
     function testIndexPageLoad() {
         $this->get('http://localhost/digitalfieldnotebooks/');
         $this->assertResponse(200);
