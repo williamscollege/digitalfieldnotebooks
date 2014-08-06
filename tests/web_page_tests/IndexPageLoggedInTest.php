@@ -35,6 +35,10 @@ class IndexPageLoggedInTest extends WMSWebTestCase {
         $this->doLoginBasic();
 
         $this->assertNoPattern('/UNKNOWN LANGUAGE LABEL/i');
+        $this->assertFalse($this->setField('password','bar')); //$value
+        $this->assertPattern('/Signed in: \<a[^\>]*\>'.TESTINGUSER.'\<\/a\>/');
+        $this->assertNoPattern('/Sign in failed/i');
+        $this->assertEltByIdHasAttrOfValue('submit_signout','value',new PatternExpectation('/Sign\s?out/i'));
 
         // page heading text
         $this->assertText(ucfirst(util_lang('you_possesive')).' '.ucfirst(util_lang('notebooks')));
@@ -61,48 +65,84 @@ class IndexPageLoggedInTest extends WMSWebTestCase {
         $this->assertEltByIdHasAttrOfValue('home-link','href',APP_FOLDER);
     }
 
+    function testIndexBasicNoCreate() {
+        $rat = Role_Action_Target::getOneFromDb(['role_action_target_link_id'=>217],$this->DB);
+        $rat->doDelete();
+
+        $this->doLoginBasic();
+
+        // same as basic, but should have links to all four notebooks, with can-edit on all of them
+        $this->assertNoPattern('/UNKNOWN LANGUAGE LABEL/i');
+        $this->assertFalse($this->setField('password','bar')); //$value
+        $this->assertPattern('/Signed in: \<a[^\>]*\>'.TESTINGUSER.'\<\/a\>/');
+        $this->assertNoPattern('/Sign in failed/i');
+        $this->assertEltByIdHasAttrOfValue('submit_signout','value',new PatternExpectation('/Sign\s?out/i'));
+
+        // page heading text
+        $this->assertText(ucfirst(util_lang('you_possesive')).' '.ucfirst(util_lang('notebooks')));
+
+        // number of notebooks shown
+        $this->assertEltByIdHasAttrOfValue('listOfUserNotebooks','data-notebook-count','3');
+
+        $this->assertEltByIdHasAttrOfValue('notebook_item_1','data-notebook_id','1001');
+        $this->assertEltByIdHasAttrOfValue('notebook_item_2','data-notebook_id','1002');
+        $this->assertEltByIdHasAttrOfValue('notebook_item_3','data-notebook_id','1004');
+
+        $this->assertEltByIdHasAttrOfValue('notebook_item_1','class','owned-object');
+        $this->assertEltByIdHasAttrOfValue('notebook_item_2','class','owned-object');
+        $this->assertEltByIdDoesNotHaveAttr('notebook_item_3','data-can-edit');
+
+        $this->assertLink('testnotebook1');
+        $this->assertLink('testnotebook2');
+        $this->assertLink('testnotebook4');
+
+        ///////////////////////////////////////////
+        // NO 'add notebook' control
+        $this->assertNoPattern("/btn-add-notebook/");
+        ///////////////////////////////////////////
+
+        $this->assertEltByIdHasAttrOfValue('home-link','href',APP_FOLDER);
+    }
+
     function testIndexAdmin() {
         $this->doLoginAdmin();
 
-//        // same as basic, but should have links to all four notebooks, with can-edit on all of them
-//        $this->assertNoPattern('/UNKNOWN LANGUAGE LABEL/i');
-//
-//        // page heading text
-//        $this->assertText(ucfirst(util_lang('you_possesive')).' '.ucfirst(util_lang('notebooks')));
-//
-//        // number of notebooks shown
-//        $this->assertEltByIdHasAttrOfValue('listOfUserNotebooks','data-notebook-count','4');
-//
-//        $this->assertEltByIdHasAttrOfValue('notebook_item_1','data-notebook_id','1001');
-//        $this->assertEltByIdHasAttrOfValue('notebook_item_2','data-notebook_id','1002');
-//        $this->assertEltByIdHasAttrOfValue('notebook_item_3','data-notebook_id','1003');
-//        $this->assertEltByIdHasAttrOfValue('notebook_item_4','data-notebook_id','1004');
-//
-//        $this->assertEltByIdHasAttrOfValue('notebook_item_1','class','owned-object');
-//        $this->assertEltByIdHasAttrOfValue('notebook_item_2','class','owned-object');
-//
-//        $this->assertEltByIdHasAttrOfValue('notebook_item_1','data-can-edit','1');
-//        $this->assertEltByIdHasAttrOfValue('notebook_item_2','data-can-edit','1');
-//        $this->assertEltByIdHasAttrOfValue('notebook_item_3','data-can-edit','1');
-//        $this->assertEltByIdHasAttrOfValue('notebook_item_4','data-can-edit','1');
-//
-//        $this->assertLink('testnotebook1');
-//        $this->assertLink('testnotebook2');
-//        $this->assertLink('testnotebook3');
-//        $this->assertLink('testnotebook4');
-//
-//        // 'add notebook' control
-//        $this->assertEltByIdHasAttrOfValue('btn-add-notebook','value',util_lang('add_notebook'));
-//
-//        // link to main/front page
-//        $this->assertEltByIdHasAttrOfValue('home-link','href',APP_FOLDER);
+        // same as basic, but should have links to all four notebooks, with can-edit on all of them
+        $this->assertNoPattern('/UNKNOWN LANGUAGE LABEL/i');
+        $this->assertFalse($this->setField('password','bar')); //$value
+        $this->assertPattern('/Signed in: \<a[^\>]*\>'.TESTINGUSER.'\<\/a\>/');
+        $this->assertNoPattern('/Sign in failed/i');
+        $this->assertEltByIdHasAttrOfValue('submit_signout','value',new PatternExpectation('/Sign\s?out/i'));
 
-//        $this->assertFalse($this->setField('password','bar')); //$value
-//        $this->assertPattern('/Signed in: \<a[^\>]*\>'.TESTINGUSER.'\<\/a\>/');
-//        $this->assertNoPattern('/Sign in failed/i');
-//        $this->assertEltByIdHasAttrOfValue('submit_signout','value',new PatternExpectation('/Sign\s?out/i'));
+        // page heading text
+        $this->assertText(ucfirst(util_lang('you_possesive')).' '.ucfirst(util_lang('notebooks')));
 
-        $this->fail('TODO: implement this test');
+        // number of notebooks shown
+        $this->assertEltByIdHasAttrOfValue('listOfUserNotebooks','data-notebook-count','4');
+
+        $this->assertEltByIdHasAttrOfValue('notebook_item_1','data-notebook_id','1001');
+        $this->assertEltByIdHasAttrOfValue('notebook_item_2','data-notebook_id','1002');
+        $this->assertEltByIdHasAttrOfValue('notebook_item_3','data-notebook_id','1003');
+        $this->assertEltByIdHasAttrOfValue('notebook_item_4','data-notebook_id','1004');
+
+        $this->assertEltByIdHasAttrOfValue('notebook_item_1','class','owned-object');
+        $this->assertEltByIdHasAttrOfValue('notebook_item_2','class','owned-object');
+
+        $this->assertEltByIdHasAttrOfValue('notebook_item_1','data-can-edit','1');
+        $this->assertEltByIdHasAttrOfValue('notebook_item_2','data-can-edit','1');
+        $this->assertEltByIdHasAttrOfValue('notebook_item_3','data-can-edit','1');
+        $this->assertEltByIdHasAttrOfValue('notebook_item_4','data-can-edit','1');
+
+        $this->assertLink('testnotebook1');
+        $this->assertLink('testnotebook2');
+        $this->assertLink('testnotebook3');
+        $this->assertLink('testnotebook4');
+
+        // 'add notebook' control
+        $this->assertEltByIdHasAttrOfValue('btn-add-notebook','value',util_lang('add_notebook'));
+
+        // link to main/front page
+        $this->assertEltByIdHasAttrOfValue('home-link','href',APP_FOLDER);
     }
 
 }

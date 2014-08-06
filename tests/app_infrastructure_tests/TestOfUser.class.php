@@ -356,6 +356,9 @@
             $this->assertFalse($u->canActOnTarget($actions['publish'],$ap));
             $this->assertFalse($u->canActOnTarget($actions['verify'], $ap));
 
+            // basic user on arbitrary object
+            $this->assertTrue ($u->canActOnTarget($actions['view'],   new Authoritative_Plant(['DB'=>$this->DB])));
+
             // system admin
             $u->flag_is_system_admin = true;
 

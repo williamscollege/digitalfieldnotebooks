@@ -25,9 +25,12 @@
             echo $notebook->renderAsListItem('notebook_item_'.$counter)."\n";
         }
         echo "</ul>\n";
-?>
+
+        if ($USER->canActOnTarget($ACTIONS['create'],new Notebook(['DB'=>$DB]))) {
+        ?>
         <input type="button" id="btn-add-notebook" value="<?php echo util_lang('add_notebook'); ?>"/>
 <?php
+        }
 	}
 	else {
 		// SECTION: not yet authenticated, wants to log in
