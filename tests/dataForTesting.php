@@ -452,10 +452,14 @@ function createTestData_XXXX($dbConn) {
         _removeTestDataFromTable($dbConn, Specimen_Image::$dbTable);
     }
     function removeTestData_Users($dbConn) {
-        _removeTestDataFromTable($dbConn, User::$dbTable);
+        $sql = "DELETE FROM ".User::$dbTable." WHERE ".User::$primaryKeyField." > 1";
+        $stmt = $dbConn->prepare($sql);
+        $stmt->execute();
     }
     function removeTestData_User_Roles($dbConn) {
-        _removeTestDataFromTable($dbConn, User_Role::$dbTable);
+        $sql = "DELETE FROM ".User_Role::$dbTable." WHERE ".User_Role::$primaryKeyField." > 1";
+        $stmt = $dbConn->prepare($sql);
+        $stmt->execute();
     }
 
 //--------------------------------------------------------------------------------------------------------------

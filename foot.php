@@ -1,4 +1,4 @@
-<hr>
+<hr/>
 
 <footer>
 	<!-- Link to trigger modal -->

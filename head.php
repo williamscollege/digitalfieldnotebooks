@@ -74,7 +74,9 @@
 		//echo "<pre>"; print_r($USER); echo "</pre>";
 
 		//echo "<pre>"; print_r($USER); echo "</pre>";
-	}
+	} else {
+        $USER = User::getOneFromDb(['username'=>'canonical_public'],$DB);
+    }
 ?>
 <!DOCTYPE html>
 <html lang="en">

@@ -312,3 +312,13 @@ INSERT INTO
   (23,NOW(),NOW(),0,1,5,'global_specimen',0,0),
   (24,NOW(),NOW(),0,1,6,'global_specimen',0,0);
 
+# a canonical public user
+INSERT INTO
+  users
+  VALUES
+ (1,NOW(),NOW(),'canonical_public','reserved_public_user',0,0,0);
+
+INSERT INTO
+  user_role_links
+  VALUES
+  (1,NOW(),NOW(),0,1,4);

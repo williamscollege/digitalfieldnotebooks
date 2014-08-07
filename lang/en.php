@@ -19,7 +19,7 @@ $LANGUAGE['en'] = [
     'you_possesive' => 'your',
     'notebooks' => 'notebooks',
     'add_notebook' => '+ Add Notebook +',
-    '' => '',
+    'public' => 'public',
 
     '' => ''
 ];
