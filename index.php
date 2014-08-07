@@ -39,10 +39,10 @@
 
     if ($num_notebooks > 0) {
         $counter = 0;
-        echo "<ul class=\"unstyled\" id=\"listOfUserNotebooks\" data-notebook-count=\"$num_notebooks\">\n";
+        echo "<ul class=\"unstyled\" id=\"list-of-user-notebooks\" data-notebook-count=\"$num_notebooks\">\n";
         foreach ($notebooks as $notebook) {
             $counter++;
-            echo $notebook->renderAsListItem('notebook_item_'.$counter)."\n";
+            echo $notebook->renderAsListItem('notebook-item-'.$counter)."\n";
         }
         echo "</ul>\n";
     }

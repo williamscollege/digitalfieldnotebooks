@@ -37,8 +37,8 @@ class IndexPageLoadTest extends WMSWebTestCase {
 
         // check for published, verfied notebooks that are publically viewable
         $this->assertText(ucfirst(util_lang('public')).' '.ucfirst(util_lang('notebooks')));
-        $this->assertEltByIdHasAttrOfValue('listOfUserNotebooks','data-notebook-count','1');
-        $this->assertEltByIdHasAttrOfValue('notebook_item_1','data-notebook_id','1004');
+        $this->assertEltByIdHasAttrOfValue('list-of-user-notebooks','data-notebook-count','1');
+        $this->assertEltByIdHasAttrOfValue('notebook-item-1','data-notebook_id','1004');
         $this->assertLink('testnotebook4');
 
     }
