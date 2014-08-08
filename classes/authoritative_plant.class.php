@@ -46,4 +46,40 @@
             $this->extras = Authoritative_Plant_Extra::getAllFromDb(['authoritative_plant_id' => $this->authoritative_plant_id, 'flag_delete' => FALSE], $this->dbConnection);
             usort($this->extras,'Authoritative_Plant_Extra::cmp');
         }
-	}
+
+        public function cacheExtras() {
+            if (! $this->extras) {
+                $this->loadExtras();
+            }
+        }
+        public function renderAsShortText() {
+            $this->cacheExtras();
+            $text = ucfirst(strtolower($this->genus)).' '.strtolower($this->species);
+            if ($this->variety) {
+                $text .= " '".$this->variety."'";
+            }
+            foreach ($this->extras as $extra) {
+                if ($extra->type == 'common name') {
+                    $text .= ' ("'.$extra->value.'")';
+                    break;
+                }
+            }
+            if ($this->catalog_identifier) {
+                $text .= ' ['.$this->catalog_identifier.']';
+            }
+            return $text;
+        }
+
+        public function renderAsListItem($idstr='',$classes_array = [],$other_attribs_hash = []) {
+            global $USER,$ACTIONS;
+            $actions_attribs = '';
+
+            if ($USER->canActOnTarget($ACTIONS['edit'],$this)) {
+                $actions_attribs .= ' data-can-edit="1"';
+            }
+            $li_elt = substr(util_listItemTag($idstr,$classes_array,$other_attribs_hash),0,-1);
+            $li_elt .= ' '.$this->fieldsAsDataAttribs().$actions_attribs.'>';
+            $li_elt .= '<a href="/app_code/authoritative_plant.php?authoritative_plant_id='.$this->authoritative_plant_id.'">'.htmlentities($this->renderAsShortText()).'</a></li>';
+            return $li_elt;
+        }
+    }

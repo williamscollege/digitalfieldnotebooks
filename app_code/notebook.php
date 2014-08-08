@@ -1,7 +1,7 @@
 <?php
-    require_once('app_setup.php');
-	$pageTitle = 'Home';
-    require_once('app_head.php');
+    require_once('../app_setup.php');
+	$pageTitle = 'Notebook';
+	require_once('../app_head.php');
 
     $notebooks = $USER->getAccessibleNotebooks(Action::getOneFromDb(['name'=>'view'],$DB));
     $num_notebooks = count($notebooks);

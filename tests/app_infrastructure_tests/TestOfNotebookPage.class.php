@@ -84,4 +84,14 @@
             $this->assertEqual(1202,$np1->page_fields[2]->notebook_page_field_id);
             $this->assertEqual(1203,$np1->page_fields[3]->notebook_page_field_id);
         }
+
+        function testRenderAsListItem_Owner() {
+            $np = Notebook::getOneFromDb(['notebook_page_id' => 1101], $this->DB);
+
+            global $USER;
+
+            $USER = User::getOneFromDb(['username'=>TESTINGUSER], $this->DB);
+
+            $this->todo();
+        }
     }

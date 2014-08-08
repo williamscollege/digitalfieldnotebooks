@@ -38,10 +38,10 @@
             } elseif ($USER->canActOnTarget($ACTIONS['edit'],$this)) {
                 $actions_attribs .= ' data-can-edit="1"';
             }
-            $tag_start = substr(util_listItemTag($idstr,$classes_array,$other_attribs_hash),0,-1);
-            $tag_start .= ' '.$this->fieldsAsDataAttribs().$actions_attribs.'>';
-            $tag_start .= '<a href="/notebook.php?notebook_id='.$this->notebook_id.'">'.htmlentities($this->name).'</a></li>';
-            return $tag_start;
+            $li_elt = substr(util_listItemTag($idstr,$classes_array,$other_attribs_hash),0,-1);
+            $li_elt .= ' '.$this->fieldsAsDataAttribs().$actions_attribs.'>';
+            $li_elt .= '<a href="/app_code/notebook.php?notebook_id='.$this->notebook_id.'">'.htmlentities($this->name).'</a></li>';
+            return $li_elt;
         }
 
 

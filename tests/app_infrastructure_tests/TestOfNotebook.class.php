@@ -72,27 +72,27 @@
 //            util_prePrintR($USER);
 
             $rendered = $n->renderAsListItem();
-            $canonical = '<li class="owned-object" data-notebook_id="1001" data-created_at="'.$n->created_at.'" data-updated_at="'.$n->updated_at.'" data-user_id="101" data-name="testnotebook1" data-notes="this is testnotebook1, owned by user 101" data-flag_workflow_published="0" data-flag_workflow_validated="0" data-flag_delete="0" data-can-edit="1"><a href="/notebook.php?notebook_id=1001">testnotebook1</a></li>';
+            $canonical = '<li class="owned-object" data-notebook_id="1001" data-created_at="'.$n->created_at.'" data-updated_at="'.$n->updated_at.'" data-user_id="101" data-name="testnotebook1" data-notes="this is testnotebook1, owned by user 101" data-flag_workflow_published="0" data-flag_workflow_validated="0" data-flag_delete="0" data-can-edit="1"><a href="/app_code/notebook.php?notebook_id=1001">testnotebook1</a></li>';
 //            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
             $this->assertEqual($canonical,$rendered);
 
 //            exit;
 
             $rendered = $n->renderAsListItem('testid');
-            $canonical = '<li id="testid" class="owned-object" data-notebook_id="1001" data-created_at="'.$n->created_at.'" data-updated_at="'.$n->updated_at.'" data-user_id="101" data-name="testnotebook1" data-notes="this is testnotebook1, owned by user 101" data-flag_workflow_published="0" data-flag_workflow_validated="0" data-flag_delete="0" data-can-edit="1"><a href="/notebook.php?notebook_id=1001">testnotebook1</a></li>';
+            $canonical = '<li id="testid" class="owned-object" data-notebook_id="1001" data-created_at="'.$n->created_at.'" data-updated_at="'.$n->updated_at.'" data-user_id="101" data-name="testnotebook1" data-notes="this is testnotebook1, owned by user 101" data-flag_workflow_published="0" data-flag_workflow_validated="0" data-flag_delete="0" data-can-edit="1"><a href="/app_code/notebook.php?notebook_id=1001">testnotebook1</a></li>';
             $this->assertEqual($canonical,$rendered);
 
             $rendered = $n->renderAsListItem('',['testclass']);
-            $canonical = '<li class="testclass owned-object" data-notebook_id="1001" data-created_at="'.$n->created_at.'" data-updated_at="'.$n->updated_at.'" data-user_id="101" data-name="testnotebook1" data-notes="this is testnotebook1, owned by user 101" data-flag_workflow_published="0" data-flag_workflow_validated="0" data-flag_delete="0" data-can-edit="1"><a href="/notebook.php?notebook_id=1001">testnotebook1</a></li>';
+            $canonical = '<li class="testclass owned-object" data-notebook_id="1001" data-created_at="'.$n->created_at.'" data-updated_at="'.$n->updated_at.'" data-user_id="101" data-name="testnotebook1" data-notes="this is testnotebook1, owned by user 101" data-flag_workflow_published="0" data-flag_workflow_validated="0" data-flag_delete="0" data-can-edit="1"><a href="/app_code/notebook.php?notebook_id=1001">testnotebook1</a></li>';
             $this->assertEqual($canonical,$rendered);
 
             $rendered = $n->renderAsListItem('',[],['data-first-arbitrary'=>'testarbitrary1','data-second-arbitrary'=>'testarbitrary2']);
-            $canonical = '<li class="owned-object" data-first-arbitrary="testarbitrary1" data-second-arbitrary="testarbitrary2" data-notebook_id="1001" data-created_at="'.$n->created_at.'" data-updated_at="'.$n->updated_at.'" data-user_id="101" data-name="testnotebook1" data-notes="this is testnotebook1, owned by user 101" data-flag_workflow_published="0" data-flag_workflow_validated="0" data-flag_delete="0" data-can-edit="1"><a href="/notebook.php?notebook_id=1001">testnotebook1</a></li>';
+            $canonical = '<li class="owned-object" data-first-arbitrary="testarbitrary1" data-second-arbitrary="testarbitrary2" data-notebook_id="1001" data-created_at="'.$n->created_at.'" data-updated_at="'.$n->updated_at.'" data-user_id="101" data-name="testnotebook1" data-notes="this is testnotebook1, owned by user 101" data-flag_workflow_published="0" data-flag_workflow_validated="0" data-flag_delete="0" data-can-edit="1"><a href="/app_code/notebook.php?notebook_id=1001">testnotebook1</a></li>';
 //            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
             $this->assertEqual($canonical,$rendered);
 
             $rendered = $n->renderAsListItem('',[],['data-second-arbitrary'=>'testarbitrary2','data-first-arbitrary'=>'testarbitrary1']);
-            $canonical = '<li class="owned-object" data-first-arbitrary="testarbitrary1" data-second-arbitrary="testarbitrary2" data-notebook_id="1001" data-created_at="'.$n->created_at.'" data-updated_at="'.$n->updated_at.'" data-user_id="101" data-name="testnotebook1" data-notes="this is testnotebook1, owned by user 101" data-flag_workflow_published="0" data-flag_workflow_validated="0" data-flag_delete="0" data-can-edit="1"><a href="/notebook.php?notebook_id=1001">testnotebook1</a></li>';
+            $canonical = '<li class="owned-object" data-first-arbitrary="testarbitrary1" data-second-arbitrary="testarbitrary2" data-notebook_id="1001" data-created_at="'.$n->created_at.'" data-updated_at="'.$n->updated_at.'" data-user_id="101" data-name="testnotebook1" data-notes="this is testnotebook1, owned by user 101" data-flag_workflow_published="0" data-flag_workflow_validated="0" data-flag_delete="0" data-can-edit="1"><a href="/app_code/notebook.php?notebook_id=1001">testnotebook1</a></li>';
             $this->assertEqual($canonical,$rendered);
 
             unset($USER);
@@ -107,7 +107,7 @@
 //            util_prePrintR($USER);
 
             $rendered = $n->renderAsListItem();
-            $canonical = '<li data-notebook_id="1004" data-created_at="'.$n->created_at.'" data-updated_at="'.$n->updated_at.'" data-user_id="110" data-name="testnotebook4" data-notes="this is generally viewable testnotebook4, owned by user 110" data-flag_workflow_published="1" data-flag_workflow_validated="1" data-flag_delete="0"><a href="/notebook.php?notebook_id=1004">testnotebook4</a></li>';
+            $canonical = '<li data-notebook_id="1004" data-created_at="'.$n->created_at.'" data-updated_at="'.$n->updated_at.'" data-user_id="110" data-name="testnotebook4" data-notes="this is generally viewable testnotebook4, owned by user 110" data-flag_workflow_published="1" data-flag_workflow_validated="1" data-flag_delete="0"><a href="/app_code/notebook.php?notebook_id=1004">testnotebook4</a></li>';
 //            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
             $this->assertEqual($canonical,$rendered);
 
@@ -121,7 +121,7 @@
             $USER = User::getOneFromDb(['username'=>TESTINGUSER], $this->DB);
 
             $rendered = $n->renderAsListItem();
-            $canonical = '<li data-notebook_id="1003" data-created_at="'.$n->created_at.'" data-updated_at="'.$n->updated_at.'" data-user_id="102" data-name="testnotebook3" data-notes="this is testnotebook3, owned by user 102" data-flag_workflow_published="0" data-flag_workflow_validated="0" data-flag_delete="0"><a href="/notebook.php?notebook_id=1003">testnotebook3</a></li>';
+            $canonical = '<li data-notebook_id="1003" data-created_at="'.$n->created_at.'" data-updated_at="'.$n->updated_at.'" data-user_id="102" data-name="testnotebook3" data-notes="this is testnotebook3, owned by user 102" data-flag_workflow_published="0" data-flag_workflow_validated="0" data-flag_delete="0"><a href="/app_code/notebook.php?notebook_id=1003">testnotebook3</a></li>';
 
             $this->assertEqual($canonical,$rendered);
 
@@ -130,7 +130,7 @@
 //            util_prePrintR($USER);
 
             $rendered = $n->renderAsListItem();
-            $canonical = '<li data-notebook_id="1003" data-created_at="'.$n->created_at.'" data-updated_at="'.$n->updated_at.'" data-user_id="102" data-name="testnotebook3" data-notes="this is testnotebook3, owned by user 102" data-flag_workflow_published="0" data-flag_workflow_validated="0" data-flag_delete="0" data-can-edit="1"><a href="/notebook.php?notebook_id=1003">testnotebook3</a></li>';
+            $canonical = '<li data-notebook_id="1003" data-created_at="'.$n->created_at.'" data-updated_at="'.$n->updated_at.'" data-user_id="102" data-name="testnotebook3" data-notes="this is testnotebook3, owned by user 102" data-flag_workflow_published="0" data-flag_workflow_validated="0" data-flag_delete="0" data-can-edit="1"><a href="/app_code/notebook.php?notebook_id=1003">testnotebook3</a></li>';
 
 //            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
 
@@ -146,7 +146,7 @@
             $USER = User::getOneFromDb(['user_id'=>110], $this->DB);
 
             $rendered = $n->renderAsListItem();
-            $canonical = '<li data-notebook_id="1003" data-created_at="'.$n->created_at.'" data-updated_at="'.$n->updated_at.'" data-user_id="102" data-name="testnotebook3" data-notes="this is testnotebook3, owned by user 102" data-flag_workflow_published="0" data-flag_workflow_validated="0" data-flag_delete="0" data-can-edit="1"><a href="/notebook.php?notebook_id=1003">testnotebook3</a></li>';
+            $canonical = '<li data-notebook_id="1003" data-created_at="'.$n->created_at.'" data-updated_at="'.$n->updated_at.'" data-user_id="102" data-name="testnotebook3" data-notes="this is testnotebook3, owned by user 102" data-flag_workflow_published="0" data-flag_workflow_validated="0" data-flag_delete="0" data-can-edit="1"><a href="/app_code/notebook.php?notebook_id=1003">testnotebook3</a></li>';
 
 //            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
 

@@ -55,6 +55,59 @@
 
         //// instance methods - object itself
 
+        function testRenderAsShortText() {
+            $ap = Authoritative_Plant::getOneFromDb(['authoritative_plant_id'=>5001],$this->DB);
+
+            $canonical = "Ap_a_genus ap_a_species 'AP_A_variety' (\"AP_A common y achestnut\") [AP_1_CI]";
+            $rendered = $ap->renderAsShortText();
+
+            $this->assertEqual($canonical,$rendered);
+        }
+
+        function testRenderAsListItem_General() {
+            $ap = Authoritative_Plant::getOneFromDb(['authoritative_plant_id' => 5001], $this->DB);
+
+            global $USER;
+
+            $USER = User::getOneFromDb(['username'=>TESTINGUSER], $this->DB);
+
+            # 'authoritative_plant_id', 'created_at', 'updated_at', 'class', 'order', 'family', 'genus', 'species', 'variety', 'catalog_identifier', 'flag_delete'
+   //         $addTestSql  = "INSERT INTO " . Authoritative_Plant::$dbTable . " VALUES
+     //       (5001,NOW(),NOW(), 'AP_A_class', 'AP_A_order', 'AP_A_family', 'AP_A_genus', 'AP_A_species', 'AP_A_variety', 'AP_1_CI', 0),
+
+            $canonical = '<li data-authoritative_plant_id="5001" data-created_at="'.$ap->created_at.'" data-updated_at="'.$ap->updated_at.'" '.
+                'data-class="AP_A_class" data-order="AP_A_order" data-family="AP_A_family" data-genus="AP_A_genus" data-species="AP_A_species" data-variety="AP_A_variety" data-catalog_identifier="AP_1_CI" data-flag_delete="0"><a href="/app_code/authoritative_plant.php?authoritative_plant_id=5001">'.htmlentities($ap->renderAsShortText()).'</a></li>';
+
+            $rendered = $ap->renderAsListItem();
+//            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
+            $this->assertEqual($canonical,$rendered);
+
+            unset($USER);
+        }
+
+        function testRenderAsListItem_Editable() {
+            $ap = Authoritative_Plant::getOneFromDb(['authoritative_plant_id' => 5001], $this->DB);
+
+            global $USER;
+
+            $USER = User::getOneFromDb(['username'=>TESTINGUSER], $this->DB);
+
+            //$this->todo('make user able to edit the authoritative plant');
+
+            $rat = new Role_Action_Target(['role_action_target_link_id'=>500,'last_user_id'=>0,'role_id'=>3,'action_id'=>2,'target_type'=>'global_plant','target_id'=>0,'DB'=>$this->DB]);
+            $rat->updateDb();
+            $this->assertTrue($rat->matchesDb);
+
+            $canonical = '<li data-authoritative_plant_id="5001" data-created_at="'.$ap->created_at.'" data-updated_at="'.$ap->updated_at.'" '.
+                'data-class="AP_A_class" data-order="AP_A_order" data-family="AP_A_family" data-genus="AP_A_genus" data-species="AP_A_species" data-variety="AP_A_variety" data-catalog_identifier="AP_1_CI" data-flag_delete="0" data-can-edit="1"><a href="/app_code/authoritative_plant.php?authoritative_plant_id=5001">'.htmlentities($ap->renderAsShortText()).'</a></li>';
+            $rendered = $ap->renderAsListItem();
+//            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
+            $this->assertEqual($canonical,$rendered);
+
+            $rat->doDelete();
+            unset($USER);
+        }
+
         //// instance methods - related data
 
         function testLoadExtras() {

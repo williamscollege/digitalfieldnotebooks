@@ -18,8 +18,14 @@ $LANGUAGE['en'] = [
 
     'you_possesive' => 'your',
     'notebooks' => 'notebooks',
+    'notebook' => 'notebook',
     'add_notebook' => '+ Add Notebook +',
+    'add_notebook_page' => '+ Add Page / Entry +',
     'public' => 'public',
+    'private' => 'private',
+    'verified' => 'verified',
+    'not' => 'not',
+    'edit' => 'edit',
 
     '' => ''
 ];
