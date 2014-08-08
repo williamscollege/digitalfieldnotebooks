@@ -117,6 +117,23 @@ class HtmlReporter extends SimpleReporter {
     }
 
     /**
+     *    Paints the test failure with a breadcrumbs
+     *    trail of the nesting test suites below the
+     *    top level test.
+     *    @param string $message    Failure message displayed in
+     *                              the context of the other tests.
+     */
+    function paintTodo($message) {
+        parent::paintTodo($message);
+        print '<span style="background: #9af;"><b>TO DO</b>: ';//.$message.'</span>';
+        //print "<span class=\"fail\">Fail</span>: ";
+        $breadcrumb = $this->getTestList();
+        array_shift($breadcrumb);
+        print implode(" -&gt; ", $breadcrumb);
+        print " -&gt;<br/>\n" . $this->htmlEntities($message) . "</span><br /><br />\n";
+    }
+
+    /**
      *    Paints a PHP error.
      *    @param string $message        Message is ignored.
      *    @access public

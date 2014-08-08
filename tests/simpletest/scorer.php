@@ -148,6 +148,9 @@ class SimpleScorer {
         $this->fails++;
     }
 
+    function paintTodo($message) {
+        $this->fails++;
+    }
     /**
      *    Deals with PHP 4 throwing an error.
      *    @param string $message    Text of error formatted by
@@ -564,6 +567,11 @@ class SimpleReporterDecorator {
     function paintFail($message) {
         $this->reporter->paintFail($message);
     }
+
+    function paintTodo($message) {
+        $this->reporter->paintTodo($message);
+    }
+
 
     /**
      *    Chains to the wrapped reporter.

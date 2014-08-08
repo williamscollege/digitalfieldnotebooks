@@ -71,6 +71,15 @@ class SimpleTestCase {
     function skip() {
     }
 
+    function todo($message = 'yet to be done') {
+        if (! isset($this->reporter)) {
+            trigger_error('Can only make assertions within test methods');
+        }
+        $this->reporter->paintTodo(
+            $message . $this->getAssertionLine());
+        return false;
+    }
+
     /**
      *    Will issue a message to the reporter and tell the test
      *    case to skip if the incoming flag is true.
@@ -328,7 +337,7 @@ class SimpleTestCase {
      *    @access public
      */
     function getAssertionLine() {
-        $trace = new SimpleStackTrace(array('assert', 'expect', 'pass', 'fail', 'skip'));
+        $trace = new SimpleStackTrace(array('assert', 'expect', 'pass', 'fail', 'skip', 'todo'));
         return $trace->traceMethod();
     }
 
