@@ -40,7 +40,7 @@
             }
             $li_elt = substr(util_listItemTag($idstr,$classes_array,$other_attribs_hash),0,-1);
             $li_elt .= ' '.$this->fieldsAsDataAttribs().$actions_attribs.'>';
-            $li_elt .= '<a href="/app_code/notebook.php?notebook_id='.$this->notebook_id.'">'.htmlentities($this->name).'</a></li>';
+            $li_elt .= '<a href="'.APP_FOLDER.'/app_code/notebook.php?notebook_id='.$this->notebook_id.'">'.htmlentities($this->name).'</a></li>';
             return $li_elt;
         }
 
