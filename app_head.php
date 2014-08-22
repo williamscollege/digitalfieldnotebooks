@@ -93,19 +93,13 @@
 <div class="container"> <!--div closed in the footer-->
 	<?php
 		// display screen message?
-		if (isset($_REQUEST["success"]) && (is_numeric($_REQUEST["success"]))) {
-			if (util_displaySuccessMessage($_REQUEST["success"])) {
-				;
-			}
+		if (isset($_REQUEST["success"])) {
+            util_displayMessage('success',$_REQUEST["success"]);
 		}
-		elseif (isset($_REQUEST["failure"]) && (is_numeric($_REQUEST["failure"]))) {
-			if (util_displayFailureMessage($_REQUEST["failure"])) {
-				;
-			}
+		elseif (isset($_REQUEST["failure"])) {
+            util_displayMessage('error',$_REQUEST["failure"]);
 		}
-		elseif (isset($_REQUEST["info"]) && (is_numeric($_REQUEST["info"]))) {
-			if (util_displayInfoMessage($_REQUEST["info"])) {
-				;
-			}
+		elseif (isset($_REQUEST["info"])) {
+            util_displayMessage('info',$_REQUEST["info"]);
 		}
 	?>

@@ -30,25 +30,19 @@
 		return;
 	}
 
-	function util_redirectToAppHome($status = "", $num = 0, $log = 0) {
+	function util_redirectToAppHome($status = "", $msg_key_or_text = '', $log = 0) {
 		// ensure value conforms to expectations
 		if ($status != "success" && $status != "failure" && $status != "info") {
-			# security: ensure status = ""
-			$status = "";
+			# security: ensure status has a valid value
+            header('Location: ' . APP_FOLDER . '/index.php');
+            exit;
 		}
-		if ($num > 0 && $log > 0) {
-			# redirect: log record, display message
-			# TODO: Add database log capability
-			header('Location: ' . APP_FOLDER . '/index.php?' . $status . '=' . $num);
-		}
-		elseif ($num > 0 && $log == 0) {
-			# redirect: display message
-			header('Location: ' . APP_FOLDER . '/index.php?' . $status . '=' . $num);
-		}
-		else {
-			# redirect:
-			header('Location: ' . APP_FOLDER . '/index.php');
-		}
+
+        if ($log > 0) {
+            # TODO: Add database log capability
+        }
+
+    	header('Location: ' . APP_FOLDER . '/index.php?' . $status . '=' . urlencode($msg_key_or_text));
 		exit;
 	}
 
@@ -228,53 +222,28 @@
 		return "$first_part-$second_part";
 	}
 
-    function library_ScreenMessages($num = 0) {
-        $screen_messages = [
-            10   => "Please sign in."
-            , 11 => "Sign in failed."
-            , 60 => "Record does not exist in database"
-            , 61 => "Record already exists in database"
-            #, 100 => "User or LDAP something or other message"
-        ];
-        if (array_key_exists($num, $screen_messages)) {
-            return $screen_messages[$num];
+    function util_displayMessage($type,$key_or_text) {
+        $alert_type = 'alert-info';
+        $alert_title = util_lang('alert_info');
+        if ($type == 'error') {
+            $alert_type = 'alert-error';
+            $alert_title = util_lang('alert_error');
+        } else
+        if ($type == 'success') {
+            $alert_type = 'alert-success';
+            $alert_title = util_lang('alert_success');
         }
-    }
 
-    function util_displaySuccessMessage($num = 0) {
-        $message = library_ScreenMessages($num);
-        if ($message) {
-            // success message
-            echo "<div class=\"alert alert-success\">";
-            echo "<button type=\"button\" class=\"close\" data-dismiss=\"alert\">&times;</button>";
-            echo "<h4>Success!</h4>";
-            echo $message;
-            echo "</div>";
+        $msg_text = util_lang($key_or_text);
+        if (preg_match('/UNKNOWN LANGUAGE LABEL/',$msg_text)) {
+            $msg_text = htmlentities($key_or_text);
         }
-    }
 
-    function util_displayFailureMessage($num = 0) {
-        $message = library_ScreenMessages($num);
-        if ($message) {
-            // failure message
-            echo "<div class=\"alert alert-error\">";
-            echo "<button type=\"button\" class=\"close\" data-dismiss=\"alert\">&times;</button>";
-            echo "<h4>Failed!</h4>";
-            echo $message;
-            echo "</div>";
-        }
-    }
-
-    function util_displayInfoMessage($num = 0) {
-        $message = library_ScreenMessages($num);
-        if ($message) {
-            // info message
-            echo "<div class=\"alert alert-info\">";
-            echo "<button type=\"button\" class=\"close\" data-dismiss=\"alert\">&times;</button>";
-            echo "<h4>Oops!</h4>";
-            echo $message;
-            echo "</div>";
-        }
+        echo "<div class=\"alert $alert_type\">";
+        echo "<button type=\"button\" class=\"close\" data-dismiss=\"alert\">&times;</button>";
+        echo "<h4>$alert_title</h4>";
+        echo $msg_text;
+        echo "</div>";
     }
 
     function util_lang($label) {

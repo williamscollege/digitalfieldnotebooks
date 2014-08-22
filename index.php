@@ -1,6 +1,6 @@
 <?php
     require_once('app_setup.php');
-	$pageTitle = 'Home';
+	$pageTitle =  ucfirst(util_lang('home'));
     require_once('app_head.php');
 
     $notebooks = $USER->getAccessibleNotebooks(Action::getOneFromDb(['name'=>'view'],$DB));

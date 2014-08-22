@@ -35,14 +35,14 @@
 				util_redirectToAppHome();
 			}
 			else {
-				util_redirectToAppHome('failure', 11);
+				util_redirectToAppHome('failure', 'msg_failed_sign_in');
 			}
 		}
 		else {
 			// SECTION: must be signed in to view pages; otherwise, redirect to index splash page
 			if (!strpos(APP_FOLDER . "/index.php", $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'])) {
 				// TODO: add logging?
-				util_redirectToAppHome('info', 10);
+				util_redirectToAppHome('info', 'msg_do_sign_in');
 			}
 		}
 	}
@@ -60,6 +60,7 @@
 	}
 
 	$IS_AUTHENTICATED = util_checkAuthentication();
+
 	if ($IS_AUTHENTICATED) { // SECTION: is signed in
 
 		// now create user object
