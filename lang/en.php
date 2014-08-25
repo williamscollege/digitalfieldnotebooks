@@ -27,18 +27,39 @@ $LANGUAGE['en'] = [
     'password' => 'Password',
 
     'you_possesive' => 'your',
+
+    'created_at' => 'created',
+    'updated_at' => 'last updated',
+
     'notebooks' => 'notebooks',
     'notebook' => 'notebook',
     'add_notebook' => '+ Add Notebook +',
+    'new_notebook_title' => 'New Notebook',
+
+    'pages' => 'pages',
+    'page' => 'page',
     'add_notebook_page' => '+ Add Page / Entry +',
-    'public' => 'public',
-    'private' => 'private',
-    'verified' => 'verified',
+    'zero_pages' => 'no notebook pages',
+
+    'published_true' => 'public',
+    'published_false' => 'private',
+    'verified_true' => 'verified',
+    'verified_false' => 'not verified',
+
     'not' => 'not',
+
+    'view' => 'view',
     'edit' => 'edit',
+    'update' => 'update',
+    'create' => 'create',
+    'delete' => 'delete',
+    'publish' => 'publish',
+    'verify' => 'verify',
 
-    'no_edit_rights' => 'You do not have rights to edit that.',
+    'no_permission' => 'You do not have permissions to do that.',
+    'no_notebook_specified' => 'No notebook was specified.',
+    'no_notebook_found' => 'Could not find that notebook.',
 
-    '' => ''
+    '' => 'EMPTY'
 ];
 

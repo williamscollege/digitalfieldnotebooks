@@ -1,57 +1,62 @@
 <?php
     require_once('../app_setup.php');
-	$pageTitle = 'Notebook';
+	$pageTitle = ucfirst(util_lang('notebook'));
 	require_once('../app_head.php');
 
-    $notebooks = $USER->getAccessibleNotebooks(Action::getOneFromDb(['name'=>'view'],$DB));
-    $num_notebooks = count($notebooks);
+    #############################
+    # 1. figure out what action is being attempted (none/default is view)
+    # 2. figure out which notebook is being acted on (if none specified then redirect to home page)
+    # 3. confirm that the user is allowed to take that action on that object (if not, redirect them to the home page with an appropriate warning)
+    # 4. branch behavior based on the action
+    #############################
 
-	if ($IS_AUTHENTICATED) {
-		// SECTION: authenticated
+    # 1. figure out what action is being attempted (none/default is view)
+    $action = 'view';
+    if (isset($_REQUEST['action']) && in_array($_REQUEST['action'],Action::$VALID_ACTIONS)) {
+        $action = $_REQUEST['action'];
+    }
 
-		echo "<hr />";
-		echo '<h3>'.ucfirst(util_lang('you_possesive')).' '.ucfirst(util_lang('notebooks')).'</h3>';
+    # 2. figure out which notebook is being acted on (if none specified then redirect to home page)
+    $notebook = '';
+    if ($action == 'create') {
+        $notebook = new Notebook(['user_id' => $USER->user_id, 'name'=>util_lang('new_notebook_title').' '.util_currentDateTimeString(),'DB'=>$DB]);
+    } else {
+        if ((! isset($_REQUEST['notebook_id'])) || (! is_numeric($_REQUEST['notebook_id']))) {
+            util_redirectToAppHome('failure',util_lang('no_notebook_specified'));
+        }
+        $notebook = Notebook::getOneFromDb(['notebook_id'=>$_REQUEST['notebook_id']],$DB);
+        if (! $notebook->matchesDb) {
+            util_redirectToAppHome('failure',util_lang('no_notebook_found'));
+        }
+    }
 
-		# is system admin?
-		if ($USER->flag_is_system_admin) {
-            // TODO: show special admin-only stuff
-		}
+    # 3. confirm that the user is allowed to take that action on that object (if not, redirect them to the home page with an appropriate warning)
+    if (! $USER->canActOnTarget($ACTIONS[$action],$notebook)) {
+        util_redirectToAppHome('failure',util_lang('no_permission'));
+    }
+
+
+    # 4. branch behavior based on the action
+    #      update - update the object with the data coming in, then show the object (w/ 'saved' message)
+    #      verify/publish - set the appropriate flag (true or false, depending on data coming in), then show the object (w/ 'saved' message)
+    #      view - show the object
+    #      create/edit - show a form with the object's current values ($action is 'update' on form submit)
+    #      delete - delete the notebook, then go to home page w/ 'deleted' message
+
+    if (($action == 'update') || ($action == 'verify') || ($action == 'publish')) {
+        echo 'TODO: implement update, verify, and publish actions';
+        $action = 'view';
+    }
+
+    if ($action == 'view') {
+        if ($USER->canActOnTarget($ACTIONS['edit'],$notebook)) {
+            echo '<div id="notebook_actions"><a id="btn-edit" href="'.APP_FOLDER.'/app_code/notebook.php?action=edit&notebook_id='.$notebook->notebook_id.'" class="edit_link btn" >'.util_lang('edit').'</a></div>'."\n";
+        }
+        echo $notebook->renderAsView();
     } else
-    {
-        ?>
-        <div class="hero-unit">
-            <h2><?php echo LANG_INSTITUTION_NAME; ?></h2>
-
-            <h1><?php echo LANG_APP_NAME; ?></h1>
-
-            <br />
-
-            <p><?php echo util_lang('app_short_description'); ?></p>
-
-            <p><?php echo util_lang('app_sign_in_msg'); ?></p>
-
-        </div>
-        <?php
-        if ($num_notebooks > 0) {
-            echo "<hr />\n";
-            echo '<h3>'.ucfirst(util_lang('public')).' '.ucfirst(util_lang('notebooks')).'</h3>';
-        }
+    if (($action == 'edit') || ($action == 'create')) {
+    } else
+    if ($action == 'delete') {
     }
-
-    if ($num_notebooks > 0) {
-        $counter = 0;
-        echo "<ul class=\"unstyled\" id=\"list-of-user-notebooks\" data-notebook-count=\"$num_notebooks\">\n";
-        foreach ($notebooks as $notebook) {
-            $counter++;
-            echo $notebook->renderAsListItem('notebook-item-'.$counter)."\n";
-        }
-        echo "</ul>\n";
-    }
-
-    if ($USER->canActOnTarget($ACTIONS['create'],new Notebook(['DB'=>$DB]))) {
-        ?>
-        <input type="button" id="btn-add-notebook" value="<?php echo util_lang('add_notebook'); ?>"/>
-<?php
-    }
-require_once('foot.php');
+require_once('../foot.php');
 ?>

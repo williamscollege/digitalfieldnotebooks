@@ -31,7 +31,50 @@ class NotebookViewTest extends WMSWebTestCase {
     }
 
     function goToNotebookView($notebook_id) {
-        $this->get('http://localhost/digitalfieldnotebooks/app_code/notebook.php?notebook_id='.$notebook_id);
+        $this->get('http://localhost/digitalfieldnotebooks/app_code/notebook.php?action=view&notebook_id='.$notebook_id);
+    }
+
+    //-----------------------------------------------------------------------------------------------------------------
+
+    function testViewIsDefault() {
+        $this->doLoginBasic();
+
+        $this->goToNotebookView(1001);
+
+        $view_content = $this->getBrowser()->getContent();
+
+        $this->get('http://localhost/digitalfieldnotebooks/app_code/notebook.php?notebook_id=1001');
+
+        $no_action_given_content = $this->getBrowser()->getContent();
+
+        $this->assertEqual($view_content,$no_action_given_content);
+    }
+
+    function testMissingNotebookIdRedirectsToAppHome() {
+        $this->doLoginBasic();
+
+        $this->get('http://localhost/digitalfieldnotebooks/app_code/notebook.php?action=view');
+
+        $this->assertEqual(LANG_APP_NAME . ': ' . ucfirst(util_lang('home')) ,$this->getBrowser()->getTitle());
+        $this->assertText(util_lang('no_notebook_specified'));
+    }
+
+    function testNonexistentNotebookRedirectsToAppHome() {
+        $this->doLoginBasic();
+
+        $this->get('http://localhost/digitalfieldnotebooks/app_code/notebook.php?action=view&notebook_id=999');
+
+        $this->assertEqual(LANG_APP_NAME . ': ' . ucfirst(util_lang('home')) ,$this->getBrowser()->getTitle());
+        $this->assertText(util_lang('no_notebook_found'));
+    }
+
+    function testActionNotAllowedRedirectsToAppHome() {
+        $this->doLoginBasic();
+
+        $this->get('http://localhost/digitalfieldnotebooks/app_code/notebook.php?action=edit&notebook_id=1004');
+
+        $this->assertEqual(LANG_APP_NAME . ': ' . ucfirst(util_lang('home')) ,$this->getBrowser()->getTitle());
+        $this->assertText(util_lang('no_permission'));
     }
 
     function testViewEditable() {
@@ -39,12 +82,15 @@ class NotebookViewTest extends WMSWebTestCase {
 
         $this->goToNotebookView(1001);
 
-        echo htmlentities($this->getBrowser()->getContent());
+//        echo htmlentities($this->getBrowser()->getContent());
 
         $this->assertNoPattern('/warning/i');
         $this->assertNoPattern('/error/i');
 
         $n = Notebook::getOneFromDb(['notebook_id'=>1001],$this->DB);
+
+//        util_prePrintR($n);
+
         $ap1 = Authoritative_Plant::getOneFromDb(['authoritative_plant_id'=>5001],$this->DB);
         $ap2 = Authoritative_Plant::getOneFromDb(['authoritative_plant_id'=>5008],$this->DB);
 
@@ -52,13 +98,11 @@ class NotebookViewTest extends WMSWebTestCase {
         $this->assertText(ucfirst(util_lang('notebook')));
 
         $this->assertText($n->name);
-        $this->assertText($n->description);
-
-        $this->assertEltByIdHasAttrOfValue('workflow-status','data-is-published','0');
-        $this->assertEltByIdHasAttrOfValue('workflow-status','data-is-verified','0');
+        $this->assertText($n->notes);
 
         // 'edit' control
-        $this->assertEltByIdHasAttrOfValue('btn-edit','value',util_lang('edit'));
+        $this->assertEltByIdHasAttrOfValue('btn-edit','href',APP_FOLDER.'/app_code/notebook.php?action=edit&notebook_id=1001');
+        $this->assertLink(util_lang('edit'));
 
         // number of notebook pages
         $this->assertEltByIdHasAttrOfValue('list-of-notebook-pages','data-notebook-page-count','2');
@@ -69,6 +113,7 @@ class NotebookViewTest extends WMSWebTestCase {
         $this->assertLink($ap2->renderAsShortText());
 
         // 'add page' control
-        $this->assertEltByIdHasAttrOfValue('btn-add-notebook-page','value',util_lang('add_notebook_page'));
+        $this->assertEltByIdHasAttrOfValue('btn-add-notebook-page','href',APP_FOLDER.'/app_code/notebook_page.php?action=create&notebook_id=1001');
+        $this->assertLink(util_lang('add_notebook_page'));
     }
 }

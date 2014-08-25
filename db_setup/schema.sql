@@ -278,10 +278,11 @@ actions
 VALUES
 (1,'view',1,0),
 (2,'edit',2,0),
-(3,'create',3,0),
-(4,'delete',4,0),
-(5,'publish',5,0),
-(6,'verify',6,0);
+(3,'update',3,0),
+(4,'create',4,0),
+(5,'delete',5,0),
+(6,'publish',6,0),
+(7,'verify',7,0);
 
 # Required constant values for role_action_target_links table (managers can do everything)
 INSERT INTO

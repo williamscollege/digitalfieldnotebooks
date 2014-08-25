@@ -39,7 +39,7 @@ abstract class WMSWebTestCase extends WebTestCase {
         $haystack = $this->getBrowser()->getContent();
 
 //        preg_match('/(\<[^\>]\s+id\s*=\s*"'.$eltId.'"\s+[^\>]*\>)/',$this->getBrowser()->getContent(),$matches);
-        preg_match('/(\<[^\>]*\s+id\s*=\s*"'.$eltId.'"\s+[^\>]*\>)/',$haystack,$matches);
+        preg_match('/(\<[^\>]*\s+id\s*=\s*"'.$eltId.'"\s*[^\>]*\>)/',$haystack,$matches);
 
         //echo $matches[1];
         

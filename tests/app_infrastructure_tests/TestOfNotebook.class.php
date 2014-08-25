@@ -60,6 +60,20 @@
 			$this->assertEqual($n->name, 'testnotebook1');
 		}
 
+        //// instance methods - related data
+
+        function testLoadPages() {
+            $n = Notebook::getOneFromDb(['notebook_id' => 1001], $this->DB);
+
+            $this->assertEqual(0,count($n->pages));
+
+            $n->loadPages();
+
+            $this->assertEqual(2,count($n->pages));
+            $this->assertEqual(1101,$n->pages[0]->notebook_page_id);
+            $this->assertEqual(1102,$n->pages[1]->notebook_page_id);
+        }
+
         //// instance methods - object itself
 
         function testRenderAsListItem_Owner() {
@@ -155,6 +169,69 @@
             unset($USER);
         }
 
-        //// instance methods - related data
+        function testRenderAsViewCanEdit() {
+            $n = Notebook::getOneFromDb(['notebook_id' => 1001], $this->DB);
+            global $USER;
+            $USER = User::getOneFromDb(['username'=>TESTINGUSER], $this->DB);
+
+            $n->loadPages();
+
+            $canonical = '<div id="rendered_notebook_1001" class="rendered_notebook" data-notebook_id="1001" data-created_at="'.$n->created_at.'" data-updated_at="'.$n->updated_at.'" data-user_id="101" data-name="testnotebook1" data-notes="this is testnotebook1, owned by user 101" data-flag_workflow_published="0" data-flag_workflow_validated="0" data-flag_delete="0" data-can-edit="1">
+  <h3 class="notebook_title">testnotebook1</h3>
+  <span class="created_at">'.util_lang('created_at').' '.util_datetimeFormatted($n->created_at).'</span><span class="updated_at">'.util_lang('updated_at').' '.util_datetimeFormatted($n->updated_at).'</span><br/>
+  <span class="owner">'.$USER->screen_name.'</span><br/>
+  <span class="published_state">'.util_lang('published_false').'</span>, <span class="verified_state">'.util_lang('verified_false').'</span><br/>
+  <div class="notebook_notes">this is testnotebook1, owned by user 101</div>
+  <h4>'.util_lang('pages').'</h4>
+  <ul id="list-of-notebook-pages" data-notebook-page-count="2">
+';
+            $page_counter = 0;
+            foreach ($n->pages as $p) {
+                $page_counter++;
+                $canonical .= '    '.$p->renderAsListItem('notebook-page-item-'.$page_counter)."\n";
+            }
+            $canonical .=
+'    <li><a href="'.APP_FOLDER.'/app_code/notebook_page.php?action=create&notebook_id='.$n->notebook_id.'" id="btn-add-notebook-page" class="creation_link btn">'.util_lang('add_notebook_page').'</a></li>
+  </ul>
+</div>';
+            $rendered = $n->renderAsView();
+
+//            echo "<pre>\n".htmlentities($canonical)."\n-----------------\n".htmlentities($rendered)."\n</pre>";
+
+            $this->assertEqual($canonical,$rendered);
+        }
+
+
+        function ASIDE_testRenderAsViewNoEdit() {
+            $n = Notebook::getOneFromDb(['notebook_id' => 1004], $this->DB);
+            global $USER;
+            $USER = User::getOneFromDb(['username'=>TESTINGUSER], $this->DB);
+            $notebook_owner = User::getOneFromDb(['user_id'=>$n->user_id], $this->DB);
+
+            $n->loadPages();
+
+            $canonical = '<div id="rendered_notebook_1004" class="rendered_notebook" data-notebook_id="1004" data-created_at="'.$n->created_at.'" data-updated_at="'.$n->updated_at.'" data-user_id="110" data-name="testnotebook4" data-notes="this is generally viewable testnotebook4, owned by user 110" data-flag_workflow_published="1" data-flag_workflow_validated="1" data-flag_delete="0">
+  <h3 class="notebook_title">testnotebook4</h3>
+  <span class="created_at">'.util_lang('created_at').' '.util_datetimeFormatted($n->created_at).'</span><span class="updated_at">'.util_lang('updated_at').' '.util_datetimeFormatted($n->updated_at).'</span><br/>
+  <span class="owner">'.$notebook_owner->screeqn_name.'</span><br/>
+  <span class="published_state">'.util_lang('published_true').'</span>, <span class="verified_state">'.util_lang('verified_true').'</span><br/>
+  <div class="notebook_notes">this is generally viewable testnotebook4, owned by user 110</div>
+  <h4>'.util_lang('pages').'</h4>
+  <ul id="list-of-notebook-pages" data-notebook-page-count="1">
+';
+            $page_counter = 0;
+            foreach ($n->pages as $p) {
+                $page_counter++;
+                $canonical .= '    '.$p->renderAsListItem('notebook-page-item-'.$page_counter)."\n";
+            }
+            $canonical .=
+'  </ul>
+</div>';
+            $rendered = $n->renderAsView();
+
+//            echo "<pre>\n".htmlentities($canonical)."\n-----------------\n".htmlentities($rendered)."\n</pre>";
+
+            $this->assertEqual($canonical,$rendered);
+        }
 
     }

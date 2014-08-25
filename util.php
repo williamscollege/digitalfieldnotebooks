@@ -114,6 +114,20 @@
 		return TRUE;
 	}
 
+    # returns a string thats the current date and time, in format YYYY/MM/SS HH:MI
+    function util_currentDateTimeString() {
+        return date('Y/m/d H:i');
+    }
+
+    /**
+     * @param $ts a time string of the form YYYY-MM-DD HH:MI:SS (i.e. as it comes from MySQL)
+     * @return that datetime formatted per the application's standard style
+     */
+    function util_datetimeFormatted($ts) {
+        $ts_info = util_processTimeString($ts);
+        return $ts_info['YYYY'].'/'.$ts_info['MM'].'/'.$ts_info['DD'].' '.$ts_info['hh'].':'.$ts_info['mi'];
+    }
+
 	/**
 	 * takes: a time string of the form YYYY-MM-DD HH:MI:SS (i.e. as it comes from MySQL)
 	 * returns: a hash with the following keys-
@@ -128,7 +142,7 @@
 	 * hhap - the 12-clock with 2 characters
 	 * hap - the 12-clock with 1 character if < 10
 	 * ap - AM or PM
-	 * mm - the minutes with 2 characters
+	 * mi - the minutes with 2 characters
 	 * m - the minutes with 1 character if < 10
 	 * ss - the seconds with 2 characters
 	 * s - the seconds with 1 character if < 10

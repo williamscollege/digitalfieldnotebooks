@@ -574,4 +574,11 @@
             return 'MUST BE IMPLEMENTED IN SUB-CLASS!';
         }
 
-	}
+        public function renderAsView() {
+            return 'MUST BE IMPLEMENTED IN SUB-CLASS!';
+        }
+
+        public function renderAsEdit() {
+            return 'MUST BE IMPLEMENTED IN SUB-CLASS!';
+        }
+    }

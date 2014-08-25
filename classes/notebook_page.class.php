@@ -28,6 +28,23 @@
             return Notebook::cmp($a->getNotebook(),$b->getNotebook());
         }
 
+        public function renderAsListItem($idstr='',$classes_array = [],$other_attribs_hash = []) {
+//            global $USER,$ACTIONS;
+//            $actions_attribs = '';
+//
+//            if ($USER->user_id == $this->user_id) {
+//                array_push($classes_array,'owned-object');
+//                $actions_attribs .= ' data-can-edit="1"';
+//            } elseif ($USER->canActOnTarget($ACTIONS['edit'],$this)) {
+//                $actions_attribs .= ' data-can-edit="1"';
+//            }
+//            $li_elt = substr(util_listItemTag($idstr,$classes_array,$other_attribs_hash),0,-1);
+//            $li_elt .= ' '.$this->fieldsAsDataAttribs().$actions_attribs.'>';
+//            $li_elt .= '<a href="'.APP_FOLDER.'/app_code/notebook.php?notebook_id='.$this->notebook_id.'">'.htmlentities($this->name).'</a></li>';
+//            return $li_elt;
+            return 'TO BE IMPLEMENTED!';
+        }
+
         public function loadPageFields() {
             $this->page_fields = Notebook_Page_Field::getAllFromDb(['notebook_page_id' => $this->notebook_page_id,'flag_delete' => FALSE],$this->dbConnection);
             usort($this->page_fields,'Notebook_Page_Field::cmp');
