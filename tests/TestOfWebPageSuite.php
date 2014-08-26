@@ -16,6 +16,7 @@
 			$this->addFile('web_page_tests/IndexPageLoggedInTest.php');
 
             $this->addFile('web_page_tests/NotebookViewTest.php');
+            $this->addFile('web_page_tests/NotebookPageViewTest.php');
 
             # Sound Effect
 			$this->addFile('soundForTesting.php');

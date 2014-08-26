@@ -85,14 +85,14 @@
             $this->cachePages();
 
             $rendered = '<div id="rendered_notebook_'.$this->notebook_id.'" class="rendered_notebook" '.$this->fieldsAsDataAttribs().$actions_attribs.'>'."\n".
-'  <h3 class="notebook_title">'.$this->name.'</h3>'."\n".
+'  <h3 class="notebook_title">'.ucfirst(util_lang('notebook')).': '.$this->name.'</h3>'."\n".
 '  <span class="created_at">'.util_lang('created_at').' '.util_datetimeFormatted($this->created_at).'</span>, <span class="updated_at">'.util_lang('updated_at').' '.util_datetimeFormatted($this->updated_at).'</span><br/>'."\n".
-'  <span class="owner">'.$notebook_owner->screen_name.'</span><br/>'."\n".
+'  <span class="owner">'.util_lang('owned_by').' '.$notebook_owner->screen_name.'</span><br/>'."\n".
 '  <span class="published_state">'.($this->flag_workflow_published ? util_lang('published_true') : util_lang('published_false'))
                 .'</span>, <span class="verified_state">'.($this->flag_workflow_validated ? util_lang('verified_true') : util_lang('verified_false'))
                 .'</span><br/>'."\n".
 '  <div class="notebook_notes">'.htmlentities($this->notes).'</div>'."\n".
-'  <h4>'.util_lang('pages').'</h4>'."\n".
+'  <h4>'.ucfirst(util_lang('pages')).'</h4>'."\n".
 '  <ul id="list-of-notebook-pages" data-notebook-page-count="'.count($this->pages).'">'."\n";
             if (count($this->pages) > 0) {
                 $page_counter = 0;

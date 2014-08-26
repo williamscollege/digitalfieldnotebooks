@@ -1,7 +1,7 @@
 <?php
 require_once dirname(__FILE__) . '/../simpletest/WMS_web_tester.php';
 
-class NotebookViewTest extends WMSWebTestCase {
+class NotebookPageViewTest extends WMSWebTestCase {
 
     function setUp() {
         createAllTestData($this->DB);
@@ -30,8 +30,8 @@ class NotebookViewTest extends WMSWebTestCase {
         $this->doLoginBasic();
     }
 
-    function goToNotebookView($notebook_id) {
-        $this->get('http://localhost/digitalfieldnotebooks/app_code/notebook.php?action=view&notebook_id='.$notebook_id);
+    function goToNotebookPageView($notebook_page_id) {
+        $this->get('http://localhost/digitalfieldnotebooks/app_code/notebook_page.php?action=view&notebook_page_id='.$notebook_page_id);
     }
 
     //-----------------------------------------------------------------------------------------------------------------
@@ -39,85 +39,52 @@ class NotebookViewTest extends WMSWebTestCase {
     function testViewIsDefault() {
         $this->doLoginBasic();
 
-        $this->goToNotebookView(1001);
+        $this->goToNotebookPageView(1101);
 
         $view_content = $this->getBrowser()->getContent();
 
-        $this->get('http://localhost/digitalfieldnotebooks/app_code/notebook.php?notebook_id=1001');
+        $this->get('http://localhost/digitalfieldnotebooks/app_code/notebook_page.php?notebook_page_id=1101');
 
         $no_action_given_content = $this->getBrowser()->getContent();
 
         $this->assertEqual($view_content,$no_action_given_content);
     }
 
-    function testMissingNotebookIdRedirectsToAppHome() {
-        $this->doLoginBasic();
-
-        $this->get('http://localhost/digitalfieldnotebooks/app_code/notebook.php?action=view');
-
-        $this->assertEqual(LANG_APP_NAME . ': ' . ucfirst(util_lang('home')) ,$this->getBrowser()->getTitle());
-        $this->assertText(util_lang('no_notebook_specified'));
-    }
-
-    function testNonexistentNotebookRedirectsToAppHome() {
-        $this->doLoginBasic();
-
-        $this->get('http://localhost/digitalfieldnotebooks/app_code/notebook.php?action=view&notebook_id=999');
-
-        $this->assertEqual(LANG_APP_NAME . ': ' . ucfirst(util_lang('home')) ,$this->getBrowser()->getTitle());
-        $this->assertText(util_lang('no_notebook_found'));
-    }
-
-    function testActionNotAllowedRedirectsToAppHome() {
-        $this->doLoginBasic();
-
-        $this->get('http://localhost/digitalfieldnotebooks/app_code/notebook.php?action=edit&notebook_id=1004');
-
-        $this->assertEqual(LANG_APP_NAME . ': ' . ucfirst(util_lang('home')) ,$this->getBrowser()->getTitle());
-        $this->assertText(util_lang('no_permission'));
-    }
-
     function testViewEditable() {
         $this->doLoginBasic();
 
-        $this->goToNotebookView(1001);
+        $this->goToNotebookView(1101);
 
 //        echo htmlentities($this->getBrowser()->getContent());
 
         $this->assertNoPattern('/warning/i');
         $this->assertNoPattern('/error/i');
 
-        $n = Notebook::getOneFromDb(['notebook_id'=>1001],$this->DB);
+        $n = Notebook::getOneFromDb(['notebook_page_id'=>1101],$this->DB);
 
 //        util_prePrintR($n);
 
         $ap1 = Authoritative_Plant::getOneFromDb(['authoritative_plant_id'=>5001],$this->DB);
-        $ap2 = Authoritative_Plant::getOneFromDb(['authoritative_plant_id'=>5008],$this->DB);
 
         // page heading text
-        $this->assertText(ucfirst(util_lang('notebook')).':');
+        $this->assertText(ucfirst(util_lang('notebook_page')));
 
-        $this->assertText($n->name);
+        $this->assertText($ap1->renderAsShortText());
         $this->assertText($n->notes);
 
         // 'edit' control
-        $this->assertEltByIdHasAttrOfValue('btn-edit','href',APP_ROOT_PATH.'/app_code/notebook.php?action=edit&notebook_id=1001');
+        $this->assertEltByIdHasAttrOfValue('btn-edit','href',APP_ROOT_PATH.'/app_code/notebook_page.php?action=edit&notebook_page=1101');
         $this->assertLink(util_lang('edit'));
 
-        // number of notebook pages
-        $this->assertEltByIdHasAttrOfValue('list-of-notebook-pages','data-notebook-page-count','2');
-        $this->assertEltByIdHasAttrOfValue('notebook-page-item-1','data-notebook_page_id','1101');
-        $this->assertEltByIdHasAttrOfValue('notebook-page-item-2','data-notebook_page_id','1102');
+        // data fields for the page
+        $this->todo();
 
-        $this->assertLink($ap1->renderAsShortText());
-        $this->assertLink($ap2->renderAsShortText());
-
-        // 'add page' control
-        $this->assertEltByIdHasAttrOfValue('btn-add-notebook-page','href',APP_ROOT_PATH.'/app_code/notebook_page.php?action=create&notebook_id=1001');
-        $this->assertLink(util_lang('add_notebook_page'));
+        // 'add field' control
+        $this->assertEltByIdHasAttrOfValue('btn-add-notebook-page-field','id','btn-add-notebook-page-field');
+        $this->assertLink(util_lang('add_notebook_page_field'));
     }
 
-    function testViewNotEditable() {
+    function ASIDE_testViewNotEditable() {
         $this->doLoginBasic();
 
         $this->goToNotebookView(1004);

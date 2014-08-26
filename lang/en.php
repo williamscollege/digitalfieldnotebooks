@@ -27,6 +27,7 @@ $LANGUAGE['en'] = [
     'password' => 'Password',
 
     'you_possesive' => 'your',
+    'owned_by' => 'owned by',
 
     'created_at' => 'created',
     'updated_at' => 'last updated',
