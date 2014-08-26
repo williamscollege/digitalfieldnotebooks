@@ -11,6 +11,7 @@
 
 	# application folder path
 	define('APP_FOLDER',	   'http://localhost/digitalfieldnotebooks');
+	define('APP_ROOT_PATH',       '/digitalfieldnotebooks');
 
 	# database connection
 	define('DB_SERVER',	'yourdbserver'); // e.g. mysql.college.edu
@@ -26,13 +27,14 @@
 
 	# local file paths
 
-	# ***** Bootstrap: http://getbootstrap.com/
-	define('PATH_BOOTSTRAP_JS', 'js/bootstrap.min.js?rel=2.3.2');
-	define('PATH_BOOTSTRAP_CSS', 'css/bootstrap.min.css?rel=2.3.2');
-	define('PATH_BOOTSTRAP_RESPONSIVE_CSS', 'css/bootstrap-responsive.min.css?rel=2.3.2');
+    # ***** Bootstrap: http://getbootstrap.com/
+    define('PATH_BOOTSTRAP_JS', APP_ROOT_PATH.'/js/bootstrap.min.js?rel=2.3.2');
+    define('PATH_BOOTSTRAP_CSS', APP_ROOT_PATH.'/css/bootstrap.min.css?rel=2.3.2');
+    define('PATH_BOOTSTRAP_RESPONSIVE_CSS', APP_ROOT_PATH.'/css/bootstrap-responsive.min.css?rel=2.3.2');
 
     # ***** Bootstrap-Bootbox: http://bootboxjs.com/ (GitHub: https://github.com/makeusabrew/bootbox/releases)
-    define('PATH_BOOTSTRAP_BOOTBOX_JS', 'js/jquery/plugins/bootstrap-bootbox/bootbox.min.js?rel=3.3.0');
+    define('PATH_BOOTSTRAP_BOOTBOX_JS', APP_ROOT_PATH.'/js/jquery/plugins/bootstrap-bootbox/bootbox.min.js?rel=3.3.0');
+
 
 	# these are used in the automated tests.
 	define('TESTING_DB_SERVER',	'localhost'); // e.g. localhost
