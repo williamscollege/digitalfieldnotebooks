@@ -116,4 +116,39 @@ class NotebookViewTest extends WMSWebTestCase {
         $this->assertEltByIdHasAttrOfValue('btn-add-notebook-page','href',APP_FOLDER.'/app_code/notebook_page.php?action=create&notebook_id=1001');
         $this->assertLink(util_lang('add_notebook_page'));
     }
+
+    function testViewNotEditable() {
+        $this->doLoginBasic();
+
+        $this->goToNotebookView(1004);
+
+//        echo htmlentities($this->getBrowser()->getContent());
+
+        $this->assertNoPattern('/warning/i');
+        $this->assertNoPattern('/error/i');
+
+        $n = Notebook::getOneFromDb(['notebook_id'=>1004],$this->DB);
+
+//        util_prePrintR($n);
+
+        $ap1 = Authoritative_Plant::getOneFromDb(['authoritative_plant_id'=>5001],$this->DB);
+
+        // page heading text
+        $this->assertText(ucfirst(util_lang('notebook')));
+
+        $this->assertText($n->name);
+        $this->assertText($n->notes);
+
+        // NO 'edit' control
+        $this->assertNoLink(util_lang('edit'));
+
+        // number of notebook pages
+        $this->assertEltByIdHasAttrOfValue('list-of-notebook-pages','data-notebook-page-count','1');
+        $this->assertEltByIdHasAttrOfValue('notebook-page-item-1','data-notebook_page_id','1104');
+
+        $this->assertLink($ap1->renderAsShortText());
+
+        // 'add page' control
+        $this->assertNoLink(util_lang('add_notebook_page'));
+    }
 }
