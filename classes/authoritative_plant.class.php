@@ -52,6 +52,7 @@
                 $this->loadExtras();
             }
         }
+
         public function renderAsShortText() {
             $this->cacheExtras();
             $text = ucfirst(strtolower($this->genus)).' '.strtolower($this->species);
@@ -81,5 +82,9 @@
             $li_elt .= ' '.$this->fieldsAsDataAttribs().$actions_attribs.'>';
             $li_elt .= '<a href="/app_code/authoritative_plant.php?authoritative_plant_id='.$this->authoritative_plant_id.'">'.htmlentities($this->renderAsShortText()).'</a></li>';
             return $li_elt;
+        }
+
+        public function renderAsViewEmbed() {
+            return 'to be implemented';
         }
     }

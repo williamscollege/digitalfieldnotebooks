@@ -178,6 +178,15 @@
             $this->assertEqual($canonical,$rendered);
         }
 
+        function testRenderAsLink($action='view') {
+            $n = Notebook::getOneFromDb(['notebook_id' => 1001], $this->DB);
+
+            $canonical = '<a href="'.APP_ROOT_PATH.'/app_code/notebook.php?action='.$action.'&notebook_id='.$n->notebook_id.'">'.htmlentities($n->name).'</a>';
+            $rendered = $n->renderAsLink();
+
+            $this->assertEqual($canonical,$rendered);
+        }
+
         function testRenderAsViewCanEdit() {
             $n = Notebook::getOneFromDb(['notebook_id' => 1001], $this->DB);
             global $USER;

@@ -7,6 +7,7 @@
 		public static $dbTable = 'notebook_pages';
 
         public $page_fields;
+        public $specimens;
 
 		public function __construct($initsHash) {
 			parent::__construct($initsHash);
@@ -49,9 +50,50 @@
             return $btn;
         }
 
+        function renderAsView() {
+            $this->loadPageFields();
+            $n = $this->getNotebook();
+            $ap = $this->getAuthoritativePlant();
+
+            global $USER,$ACTIONS;
+
+            $actions_attribs = '';
+            if ($USER->canActOnTarget($ACTIONS['edit'],$this)) {
+                $actions_attribs .= ' data-can-edit="1"';
+            }
+
+            $owner = $USER;
+            if ($n->user_id != $USER->user_id) {
+                $owner = $n->getUser();
+            }
+
+            $rendered = '<div id="rendered_notebook_page_'.$this->notebook_page_id.'"class="rendered_notebook_page" '.$this->fieldsAsDataAttribs().$actions_attribs.">\n".
+'  <h3 class="notebook_page_title">'.$n->renderAsLink().': '.$ap->renderAsShortText."</h3>\n".
+'  <span class="created_at">'.util_lang('created_at').' '.util_datetimeFormatted($this->created_at).'</span>, <span class="updated_at">'.util_lang('updated_at').' '.util_datetimeFormatted($this->updated_at)."</span><br/>\n".
+'  <span class="owner">'.util_lang('owned_by').' '.$owner->screen_name."</span><br/>\n".
+'  <span class="published_state">'.($this->flag_workflow_published ? util_lang('published_true') : util_lang('published_false'))
+    .'</span>, <span class="verified_state">'.($this->flag_workflow_validated ? util_lang('verified_true') : util_lang('verified_false'))
+    .'</span><br/>'."\n".
+'  <div class="notebook_page_notes">'.htmlentities($this->notes)."</div>\n".
+'  <div class="rendered_authoritative_plant">'.$ap->renderAsViewEmbed()."</div>\n".
+'  <div class="notebook_page_fields"></div>'."\n".
+'  <ul class="specimens">'."\n";
+            foreach ($this->specimens as $specimen) {
+                $rendered .= '    '.$specimen->renderAsListItem()."\n";
+            }
+            $rendered .= "  </ul>\n</div>";
+
+            return $rendered;
+        }
+
         public function loadPageFields() {
             $this->page_fields = Notebook_Page_Field::getAllFromDb(['notebook_page_id' => $this->notebook_page_id,'flag_delete' => FALSE],$this->dbConnection);
             usort($this->page_fields,'Notebook_Page_Field::cmp');
+        }
+
+        public function loadSpecimens() {
+            $this->specimens = Specimen::getAllFromDb(['link_to_type'=>'notebook_page','link_to_id' => $this->notebook_page_id,'flag_delete' => FALSE],$this->dbConnection);
+            usort($this->specimens,'Specimen::cmp');
         }
 
         public function getNotebook() {

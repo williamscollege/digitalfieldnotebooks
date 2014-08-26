@@ -28,4 +28,12 @@
             return ($a->ordering < $b->ordering) ? -1 : 1;
 		}
 
+        public static function sanitizeAction($potential_action) {
+            $potential_action = strtolower($potential_action);
+            if (in_array($potential_action,Action::$VALID_ACTIONS)) {
+                return $potential_action;
+            }
+            return 'view';
+        }
+
 	}

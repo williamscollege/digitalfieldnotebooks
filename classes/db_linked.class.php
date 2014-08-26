@@ -581,4 +581,12 @@
         public function renderAsEdit() {
             return 'MUST BE IMPLEMENTED IN SUB-CLASS!';
         }
+
+        function renderAsButtonEdit() {
+            return 'MUST BE IMPLEMENTED IN SUB-CLASS!';
+        }
+
+        function renderAsLink($action='view') {
+            return 'MUST BE IMPLEMENTED IN SUB-CLASS!';
+        }
     }

@@ -108,6 +108,10 @@
             unset($USER);
         }
 
+        function testRenderAsViewEmbed() {
+            $this->todo();
+        }
+
         //// instance methods - related data
 
         function testLoadExtras() {

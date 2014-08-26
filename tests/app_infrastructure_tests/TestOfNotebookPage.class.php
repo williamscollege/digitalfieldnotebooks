@@ -52,6 +52,48 @@
 //            $this->fail("TODO: implement this test");
         }
 
+        //// instance methods - related data
+
+        function testGetNotebook() {
+            $np1 = Notebook_Page::getOneFromDb(['notebook_page_id'=>1101], $this->DB);
+
+            $n = $np1->getNotebook();
+
+            $this->assertEqual(1001,$n->notebook_id);
+        }
+
+        function testGetAuthoritativePlant() {
+            $np1 = Notebook_Page::getOneFromDb(['notebook_page_id'=>1101], $this->DB);
+
+            $p = $np1->getAuthoritativePlant();
+
+            $this->assertEqual(5001,$p->authoritative_plant_id);
+        }
+
+        function testLoadPageFields() {
+            $np1 = Notebook_Page::getOneFromDb(['notebook_page_id'=>1101], $this->DB);
+
+            $np1->loadPageFields();
+
+            $this->assertEqual(4,count($np1->page_fields));
+
+            $this->assertEqual(1204,$np1->page_fields[0]->notebook_page_field_id);
+            $this->assertEqual(1201,$np1->page_fields[1]->notebook_page_field_id);
+            $this->assertEqual(1202,$np1->page_fields[2]->notebook_page_field_id);
+            $this->assertEqual(1203,$np1->page_fields[3]->notebook_page_field_id);
+        }
+
+        function testLoadPageSpecimens() {
+            $np1 = Notebook_Page::getOneFromDb(['notebook_page_id'=>1101], $this->DB);
+
+            $np1->loadSpecimens();
+
+            $this->assertEqual(2,count($np1->specimens));
+
+            $this->assertEqual(8003,$np1->specimens[0]->specimen_id);
+            $this->assertEqual(8002,$np1->specimens[1]->specimen_id);
+        }
+
         //// instance methods - object itself
 
         function testRenderAsListItem_Editor() {
@@ -91,34 +133,41 @@
             $this->assertEqual($canonical,$rendered);
         }
 
-        //// instance methods - related data
+        function testRenderAsViewCanEdit() {
+            $np = Notebook_Page::getOneFromDb(['notebook_page_id' => 1101], $this->DB);
+            $np->loadPageFields();
+            $np->loadSpecimens();
+            $n = $np->getNotebook();
+            $ap = $np->getAuthoritativePlant();
 
-        function testGetNotebook() {
-            $np1 = Notebook_Page::getOneFromDb(['notebook_page_id'=>1101], $this->DB);
+            global $USER;
+            $USER = User::getOneFromDb(['username'=>TESTINGUSER], $this->DB);
 
-            $n = $np1->getNotebook();
+            $canonical = '<div id="rendered_notebook_page_1101"class="rendered_notebook_page" '.$np->fieldsAsDataAttribs().' data-can-edit="1">
+  <h3 class="notebook_page_title">'.$n->renderAsLink().': '.$ap->renderAsShortText.'</h3>
+  <span class="created_at">'.util_lang('created_at').' '.util_datetimeFormatted($np->created_at).'</span>, <span class="updated_at">'.util_lang('updated_at').' '.util_datetimeFormatted($np->updated_at).'</span><br/>
+  <span class="owner">'.util_lang('owned_by').' '.$USER->screen_name.'</span><br/>
+  <span class="published_state">'.util_lang('published_false').'</span>, <span class="verified_state">'.util_lang('verified_false').'</span><br/>
+  <div class="notebook_page_notes">testing notebook page the first in testnotebook1, owned by user 101</div>
+  <div class="rendered_authoritative_plant">'.$ap->renderAsViewEmbed().'</div>
+  <div class="notebook_page_fields"></div>
+  <ul class="specimens">
+';
+            foreach ($np->specimens as $specimen) {
+                $canonical .= '    '.$specimen->renderAsListItem()."\n";
+            }
+            $canonical .= '  </ul>
+</div>';
 
-            $this->assertEqual(1001,$n->notebook_id);
+            $rendered = $np->renderAsView();
+
+            $this->assertEqual($canonical,$rendered);
+
+            $this->todo('handle rendering of page fields!');
         }
 
-        function testGetAuthoritativePlant() {
-            $np1 = Notebook_Page::getOneFromDb(['notebook_page_id'=>1101], $this->DB);
-
-            $p = $np1->getAuthoritativePlant();
-
-            $this->assertEqual(5001,$p->authoritative_plant_id);
+        function testRenderAsViewNoEdit() {
+            $this->todo();
         }
 
-        function testLoadPageFields() {
-            $np1 = Notebook_Page::getOneFromDb(['notebook_page_id'=>1101], $this->DB);
-
-            $np1->loadPageFields();
-
-            $this->assertEqual(4,count($np1->page_fields));
-
-            $this->assertEqual(1204,$np1->page_fields[0]->notebook_page_field_id);
-            $this->assertEqual(1201,$np1->page_fields[1]->notebook_page_field_id);
-            $this->assertEqual(1202,$np1->page_fields[2]->notebook_page_field_id);
-            $this->assertEqual(1203,$np1->page_fields[3]->notebook_page_field_id);
-        }
     }

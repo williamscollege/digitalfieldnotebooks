@@ -53,69 +53,48 @@ class NotebookPageViewTest extends WMSWebTestCase {
     function testViewEditable() {
         $this->doLoginBasic();
 
-        $this->goToNotebookView(1101);
-
-//        echo htmlentities($this->getBrowser()->getContent());
+        $this->goToNotebookPageView(1101);
 
         $this->assertNoPattern('/warning/i');
         $this->assertNoPattern('/error/i');
 
-        $n = Notebook::getOneFromDb(['notebook_page_id'=>1101],$this->DB);
-
-//        util_prePrintR($n);
+        // NOTE: most of the messy details of this are checked in the notebook_page object tests of renderAsView - see app_infrastructure_tests/TestOfNotebookPage.class.php
+        // this just makes sure that the plant lable is actually showing up and that the appropriate edit buttons are there
 
         $ap1 = Authoritative_Plant::getOneFromDb(['authoritative_plant_id'=>5001],$this->DB);
 
         // page heading text
-        $this->assertText(ucfirst(util_lang('notebook_page')));
-
         $this->assertText($ap1->renderAsShortText());
-        $this->assertText($n->notes);
 
         // 'edit' control
         $this->assertEltByIdHasAttrOfValue('btn-edit','href',APP_ROOT_PATH.'/app_code/notebook_page.php?action=edit&notebook_page=1101');
         $this->assertLink(util_lang('edit'));
 
-        // data fields for the page
-        $this->todo();
-
         // 'add field' control
         $this->assertEltByIdHasAttrOfValue('btn-add-notebook-page-field','id','btn-add-notebook-page-field');
-        $this->assertLink(util_lang('add_notebook_page_field'));
+        $this->assertLink(util_lang('add_field'));
     }
 
-    function ASIDE_testViewNotEditable() {
+    function testViewNotEditable() {
         $this->doLoginBasic();
 
-        $this->goToNotebookView(1004);
-
-//        echo htmlentities($this->getBrowser()->getContent());
+        $this->goToNotebookPageView(1104);
 
         $this->assertNoPattern('/warning/i');
         $this->assertNoPattern('/error/i');
 
-        $n = Notebook::getOneFromDb(['notebook_id'=>1004],$this->DB);
-
-//        util_prePrintR($n);
+        // NOTE: most of the messy details of this are checked in the notebook_page object tests of renderAsView - see app_infrastructure_tests/TestOfNotebookPage.class.php
+        // this just makes sure that the plant lable is actually showing up and that the appropriate edit buttons are there
 
         $ap1 = Authoritative_Plant::getOneFromDb(['authoritative_plant_id'=>5001],$this->DB);
 
         // page heading text
-        $this->assertText(ucfirst(util_lang('notebook')));
-
-        $this->assertText($n->name);
-        $this->assertText($n->notes);
+        $this->assertText($ap1->renderAsShortText());
 
         // NO 'edit' control
         $this->assertNoLink(util_lang('edit'));
 
-        // number of notebook pages
-        $this->assertEltByIdHasAttrOfValue('list-of-notebook-pages','data-notebook-page-count','1');
-        $this->assertEltByIdHasAttrOfValue('notebook-page-item-1','data-notebook_page_id','1104');
-
-        $this->assertLink($ap1->renderAsShortText());
-
-        // 'add page' control
-        $this->assertNoLink(util_lang('add_notebook_page'));
+        // NO 'add field' control
+        $this->assertNoLink(util_lang('add_field'));
     }
 }

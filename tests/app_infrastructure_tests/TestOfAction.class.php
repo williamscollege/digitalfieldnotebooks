@@ -43,6 +43,13 @@
             $this->assertEqual('nB',$nar[1]->name);
         }
 
+        function testSanitizeAction() {
+            $this->assertEqual('view',Action::sanitizeAction('view'));
+            $this->assertEqual('view',Action::sanitizeAction(''));
+            $this->assertEqual('view',Action::sanitizeAction('blarg'));
+            $this->assertEqual('edit',Action::sanitizeAction('EDIT'));
+        }
+
         //// instance methods - object itself
 
         //// instance methods - related data

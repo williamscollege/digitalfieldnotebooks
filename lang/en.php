@@ -42,6 +42,11 @@ $LANGUAGE['en'] = [
     'add_notebook_page' => '+ Add Page / Entry +',
     'zero_pages' => 'no notebook pages',
 
+    'fields' => 'fields',
+    'field' => 'field',
+    'add_field' => '+ Add Field +',
+
+
     'published_true' => 'public',
     'published_false' => 'private',
     'verified_true' => 'verified',
@@ -60,6 +65,8 @@ $LANGUAGE['en'] = [
     'no_permission' => 'You do not have permissions to do that.',
     'no_notebook_specified' => 'No notebook was specified.',
     'no_notebook_found' => 'Could not find that notebook.',
+    'no_notebook_page_specified' => 'No notebook page was specified.',
+    'no_notebook_page_found' => 'Could not find that notebook page.',
 
     '' => 'EMPTY'
 ];

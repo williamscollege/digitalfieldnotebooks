@@ -1,11 +1,11 @@
 <?php
     require_once('../app_setup.php');
-	$pageTitle = ucfirst(util_lang('notebook'));
+	$pageTitle = ucfirst(util_lang('page'));
 	require_once('../app_head.php');
 
     #############################
     # 1. figure out what action is being attempted (none/default is view)
-    # 2. figure out which notebook is being acted on (if none specified then redirect to home page)
+    # 2. figure out which notebook page is being acted on (if none specified then redirect to home page)
     # 3. confirm that the user is allowed to take that action on that object (if not, redirect them to the home page with an appropriate warning)
     # 4. branch behavior based on the action
     #############################
@@ -16,22 +16,25 @@
         $action = $_REQUEST['action'];
     }
 
-    # 2. figure out which notebook is being acted on (if none specified then redirect to home page)
-    $notebook = '';
+    # 2. figure out which notebook page is being acted on (if none specified then redirect to home page)
+    $notebook_page = '';
     if ($action == 'create') {
-        $notebook = new Notebook(['user_id' => $USER->user_id, 'name'=>util_lang('new_notebook_title').' '.util_currentDateTimeString(),'DB'=>$DB]);
-    } else {
         if ((! isset($_REQUEST['notebook_id'])) || (! is_numeric($_REQUEST['notebook_id']))) {
             util_redirectToAppHome('failure',util_lang('no_notebook_specified'));
         }
-        $notebook = Notebook::getOneFromDb(['notebook_id'=>$_REQUEST['notebook_id']],$DB);
-        if (! $notebook->matchesDb) {
-            util_redirectToAppHome('failure',util_lang('no_notebook_found'));
+        $notebook_page = new Notebook_Page(['notebook_id' => $_REQUEST['notebook_id'],'DB'=>$DB]);
+    } else {
+        if ((! isset($_REQUEST['notebook_page_id'])) || (! is_numeric($_REQUEST['notebook_page_id']))) {
+            util_redirectToAppHome('failure',util_lang('no_notebook_page_specified'));
+        }
+        $notebook_page = Notebook_Page::getOneFromDb(['notebook_page_id'=>$_REQUEST['notebook_page_id']],$DB);
+        if (! $notebook_page->matchesDb) {
+            util_redirectToAppHome('failure',util_lang('no_notebook_page_found'));
         }
     }
 
     # 3. confirm that the user is allowed to take that action on that object (if not, redirect them to the home page with an appropriate warning)
-    if (! $USER->canActOnTarget($ACTIONS[$action],$notebook)) {
+    if (! $USER->canActOnTarget($ACTIONS[$action],$notebook_page)) {
         util_redirectToAppHome('failure',util_lang('no_permission'));
     }
 
@@ -50,9 +53,9 @@
 
     if ($action == 'view') {
         if ($USER->canActOnTarget($ACTIONS['edit'],$notebook)) {
-            echo '<div id="actions">'.$notebook->renderAsButtonEdit().'</div>'."\n";
+            echo '<div id="actions">'.$notebook_page->renderAsButtonEdit().'</div>'."\n";
         }
-        echo $notebook->renderAsView();
+        echo $notebook_page->renderAsView();
     } else
     if (($action == 'edit') || ($action == 'create')) {
         echo 'TODO: implement edit and create actions';

@@ -67,6 +67,14 @@
             return $btn;
         }
 
+        function renderAsLink($action='view') {
+            $action = Action::sanitizeAction($action);
+
+            $link = '<a href="'.APP_ROOT_PATH.'/app_code/notebook.php?action='.$action.'&notebook_id='.$this->notebook_id.'">'.htmlentities($this->name).'</a>';
+
+            return $link;
+        }
+
         function renderAsView() {
             global $USER,$ACTIONS;
             $actions_attribs = '';
