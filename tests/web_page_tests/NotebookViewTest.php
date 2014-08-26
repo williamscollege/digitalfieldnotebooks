@@ -101,7 +101,7 @@ class NotebookViewTest extends WMSWebTestCase {
         $this->assertText($n->notes);
 
         // 'edit' control
-        $this->assertEltByIdHasAttrOfValue('btn-edit','href',APP_FOLDER.'/app_code/notebook.php?action=edit&notebook_id=1001');
+        $this->assertEltByIdHasAttrOfValue('btn-edit','href',APP_ROOT_PATH.'/app_code/notebook.php?action=edit&notebook_id=1001');
         $this->assertLink(util_lang('edit'));
 
         // number of notebook pages
@@ -113,7 +113,7 @@ class NotebookViewTest extends WMSWebTestCase {
         $this->assertLink($ap2->renderAsShortText());
 
         // 'add page' control
-        $this->assertEltByIdHasAttrOfValue('btn-add-notebook-page','href',APP_FOLDER.'/app_code/notebook_page.php?action=create&notebook_id=1001');
+        $this->assertEltByIdHasAttrOfValue('btn-add-notebook-page','href',APP_ROOT_PATH.'/app_code/notebook_page.php?action=create&notebook_id=1001');
         $this->assertLink(util_lang('add_notebook_page'));
     }
 

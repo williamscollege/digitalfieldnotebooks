@@ -40,7 +40,7 @@
             }
             $li_elt = substr(util_listItemTag($idstr,$classes_array,$other_attribs_hash),0,-1);
             $li_elt .= ' '.$this->fieldsAsDataAttribs().$actions_attribs.'>';
-            $li_elt .= '<a href="'.APP_FOLDER.'/app_code/notebook_page.php?action=view&notebook_page_id='.$this->notebook_page_id.'">'.htmlentities($this->getAuthoritativePlant()->renderAsShortText()).'</a></li>';
+            $li_elt .= '<a href="'.APP_ROOT_PATH.'/app_code/notebook_page.php?action=view&notebook_page_id='.$this->notebook_page_id.'">'.htmlentities($this->getAuthoritativePlant()->renderAsShortText()).'</a></li>';
             return $li_elt;
         }
 

@@ -50,7 +50,7 @@
 
     if ($action == 'view') {
         if ($USER->canActOnTarget($ACTIONS['edit'],$notebook)) {
-            echo '<div id="notebook_actions"><a id="btn-edit" href="'.APP_FOLDER.'/app_code/notebook.php?action=edit&notebook_id='.$notebook->notebook_id.'" class="edit_link btn" >'.util_lang('edit').'</a></div>'."\n";
+            echo '<div id="notebook_actions"><a id="btn-edit" href="'.APP_ROOT_PATH.'/app_code/notebook.php?action=edit&notebook_id='.$notebook->notebook_id.'" class="edit_link btn" >'.util_lang('edit').'</a></div>'."\n";
         }
         echo $notebook->renderAsView();
     } else

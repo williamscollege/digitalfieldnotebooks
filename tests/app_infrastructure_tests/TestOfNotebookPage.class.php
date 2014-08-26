@@ -63,7 +63,7 @@
             $plant = Authoritative_Plant::getOneFromDb(['authoritative_plant_id'=>5001],$this->DB);
 
             $rendered = $np->renderAsListItem();
-            $canonical = '<li data-notebook_page_id="1101" data-created_at="'.$np->created_at.'" data-updated_at="'.$np->updated_at.'" data-notebook_id="1001" data-authoritative_plant_id="5001" data-notes="testing notebook page the first in testnotebook1, owned by user 101" data-flag_workflow_published="0" data-flag_workflow_validated="0" data-flag_delete="0" data-can-edit="1"><a href="'.APP_FOLDER.'/app_code/notebook_page.php?action=view&notebook_page_id=1101">'.htmlentities($plant->renderAsShortText()).'</a></li>';
+            $canonical = '<li data-notebook_page_id="1101" data-created_at="'.$np->created_at.'" data-updated_at="'.$np->updated_at.'" data-notebook_id="1001" data-authoritative_plant_id="5001" data-notes="testing notebook page the first in testnotebook1, owned by user 101" data-flag_workflow_published="0" data-flag_workflow_validated="0" data-flag_delete="0" data-can-edit="1"><a href="'.APP_ROOT_PATH.'/app_code/notebook_page.php?action=view&notebook_page_id=1101">'.htmlentities($plant->renderAsShortText()).'</a></li>';
 //            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
             $this->assertEqual($canonical,$rendered);
         }
@@ -77,7 +77,7 @@
             $plant = Authoritative_Plant::getOneFromDb(['authoritative_plant_id'=>5001],$this->DB);
 
             $rendered = $np->renderAsListItem();
-            $canonical = '<li data-notebook_page_id="1104" data-created_at="'.$np->created_at.'" data-updated_at="'.$np->updated_at.'" data-notebook_id="1004" data-authoritative_plant_id="5001" data-notes="first page of testnotebook4, owned by user 110" data-flag_workflow_published="0" data-flag_workflow_validated="0" data-flag_delete="0"><a href="'.APP_FOLDER.'/app_code/notebook_page.php?action=view&notebook_page_id=1104">'.htmlentities($plant->renderAsShortText()).'</a></li>';
+            $canonical = '<li data-notebook_page_id="1104" data-created_at="'.$np->created_at.'" data-updated_at="'.$np->updated_at.'" data-notebook_id="1004" data-authoritative_plant_id="5001" data-notes="first page of testnotebook4, owned by user 110" data-flag_workflow_published="0" data-flag_workflow_validated="0" data-flag_delete="0"><a href="'.APP_ROOT_PATH.'/app_code/notebook_page.php?action=view&notebook_page_id=1104">'.htmlentities($plant->renderAsShortText()).'</a></li>';
 //            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
             $this->assertEqual($canonical,$rendered);
         }
