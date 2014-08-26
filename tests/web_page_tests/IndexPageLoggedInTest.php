@@ -66,7 +66,7 @@ class IndexPageLoggedInTest extends WMSWebTestCase {
     }
 
     function testIndexBasicNoCreate() {
-        $rat = Role_Action_Target::getOneFromDb(['role_action_target_link_id'=>217],$this->DB);
+        $rat = Role_Action_Target::getOneFromDb(['role_action_target_link_id'=>220],$this->DB);
         $rat->doDelete();
 
         $this->doLoginBasic();

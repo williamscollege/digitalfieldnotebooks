@@ -53,6 +53,9 @@
 //                'specimen'       =>80
 //            ];
 
+
+            //----------------------------------------
+
 //            (201,NOW(),NOW(), 110, 2, 1, 'global_notebook', 0, 0),
 //            (206,NOW(),NOW(), 110, 2, 1, 'global_metadata', 0, 0),
 //            (209,NOW(),NOW(), 110, 2, 1, 'global_plant', 0, 0),
@@ -66,12 +69,16 @@
 //            (214,NOW(),NOW(), 110, 2, 3, 'global_metadata', 0, 0),
 //            (216,NOW(),NOW(), 110, 2, 3, 'global_specimen', 0, 0),
 
+//            (218,NOW(),NOW(), 110, 2, 4, 'global_notebook', 0, 0),
+//            (217,NOW(),NOW(), 110, 2, 4, 'global_metadata', 0, 0),
+//            (219,NOW(),NOW(), 110, 2, 4, 'global_specimen', 0, 0),
+
 //            (207,NOW(),NOW(), 110, 3, 1, 'global_metadata', 0, 0),
 //            (210,NOW(),NOW(), 110, 3, 1, 'global_plant', 0, 0),
 //            (212,NOW(),NOW(), 110, 3, 1, 'notebook', 1004, 0),
 
-//            (217,NOW(),NOW(), 110, 3, 3, 'global_notebook', 0, 0),
-//            (218,NOW(),NOW(), 110, 3, 3, 'global_specimen', 0, 0)
+//            (220,NOW(),NOW(), 110, 3, 4, 'global_notebook', 0, 0),
+//            (221,NOW(),NOW(), 110, 3, 4, 'global_specimen', 0, 0)
 
 //            (208,NOW(),NOW(), 110, 4, 1, 'global_metadata', 0, 0),
 //            (211,NOW(),NOW(), 110, 4, 1, 'global_plant', 0, 0),
@@ -90,16 +97,20 @@
             $this->assertEqual(214, $all[8]->role_action_target_link_id);
             $this->assertEqual(216, $all[9]->role_action_target_link_id);
 
-            $this->assertEqual(207, $all[10]->role_action_target_link_id);
-            $this->assertEqual(210, $all[11]->role_action_target_link_id);
-            $this->assertEqual(212, $all[12]->role_action_target_link_id);
+            $this->assertEqual(218, $all[10]->role_action_target_link_id);
+            $this->assertEqual(217, $all[11]->role_action_target_link_id);
+            $this->assertEqual(219, $all[12]->role_action_target_link_id);
 
-            $this->assertEqual(217, $all[13]->role_action_target_link_id);
-            $this->assertEqual(218, $all[14]->role_action_target_link_id);
+            $this->assertEqual(207, $all[13]->role_action_target_link_id);
+            $this->assertEqual(210, $all[14]->role_action_target_link_id);
+            $this->assertEqual(212, $all[15]->role_action_target_link_id);
 
-            $this->assertEqual(208, $all[15]->role_action_target_link_id);
-            $this->assertEqual(211, $all[16]->role_action_target_link_id);
-            $this->assertEqual(213, $all[17]->role_action_target_link_id);
+            $this->assertEqual(220, $all[16]->role_action_target_link_id);
+            $this->assertEqual(221, $all[17]->role_action_target_link_id);
+
+            $this->assertEqual(208, $all[18]->role_action_target_link_id);
+            $this->assertEqual(211, $all[19]->role_action_target_link_id);
+            $this->assertEqual(213, $all[20]->role_action_target_link_id);
         }
 
         function testGetGlobalTargetTypeForObject() {
