@@ -44,6 +44,11 @@
             return $li_elt;
         }
 
+        public function renderAsButtonEdit() {
+            $btn = '<a id="btn-edit" href="'.APP_ROOT_PATH.'/app_code/notebook_page.php?action=edit&notebook_page_id='.$this->notebook_page_id.'" class="edit_link btn" >'.util_lang('edit').'</a>';
+            return $btn;
+        }
+
         public function loadPageFields() {
             $this->page_fields = Notebook_Page_Field::getAllFromDb(['notebook_page_id' => $this->notebook_page_id,'flag_delete' => FALSE],$this->dbConnection);
             usort($this->page_fields,'Notebook_Page_Field::cmp');

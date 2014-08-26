@@ -62,6 +62,11 @@
             return $li_elt;
         }
 
+        public function renderAsButtonEdit() {
+            $btn = '<a id="btn-edit" href="'.APP_ROOT_PATH.'/app_code/notebook.php?action=edit&notebook_id='.$this->notebook_id.'" class="edit_link btn" >'.util_lang('edit').'</a>';
+            return $btn;
+        }
+
         function renderAsView() {
             global $USER,$ACTIONS;
             $actions_attribs = '';

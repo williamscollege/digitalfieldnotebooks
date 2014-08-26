@@ -82,6 +82,15 @@
             $this->assertEqual($canonical,$rendered);
         }
 
+        function testRenderAsButtonEdit() {
+            $np = Notebook_Page::getOneFromDb(['notebook_page_id' => 1101], $this->DB);
+
+            $canonical = '<a id="btn-edit" href="'.APP_ROOT_PATH.'/app_code/notebook_page.php?action=edit&notebook_page_id='.$np->notebook_page_id.'" class="edit_link btn" >'.util_lang('edit').'</a>';
+            $rendered = $np->renderAsButtonEdit();
+
+            $this->assertEqual($canonical,$rendered);
+        }
+
         //// instance methods - related data
 
         function testGetNotebook() {

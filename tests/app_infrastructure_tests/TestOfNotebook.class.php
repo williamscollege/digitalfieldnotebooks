@@ -169,6 +169,15 @@
             unset($USER);
         }
 
+        function testRenderAsButtonEdit() {
+            $n = Notebook::getOneFromDb(['notebook_id' => 1001], $this->DB);
+
+            $canonical = '<a id="btn-edit" href="'.APP_ROOT_PATH.'/app_code/notebook.php?action=edit&notebook_id='.$n->notebook_id.'" class="edit_link btn" >'.util_lang('edit').'</a>';
+            $rendered = $n->renderAsButtonEdit();
+
+            $this->assertEqual($canonical,$rendered);
+        }
+
         function testRenderAsViewCanEdit() {
             $n = Notebook::getOneFromDb(['notebook_id' => 1001], $this->DB);
             global $USER;
