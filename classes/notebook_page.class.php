@@ -29,20 +29,19 @@
         }
 
         public function renderAsListItem($idstr='',$classes_array = [],$other_attribs_hash = []) {
-//            global $USER,$ACTIONS;
-//            $actions_attribs = '';
+            global $USER,$ACTIONS;
+            $actions_attribs = '';
 //
-//            if ($USER->user_id == $this->user_id) {
-//                array_push($classes_array,'owned-object');
-//                $actions_attribs .= ' data-can-edit="1"';
-//            } elseif ($USER->canActOnTarget($ACTIONS['edit'],$this)) {
-//                $actions_attribs .= ' data-can-edit="1"';
-//            }
-//            $li_elt = substr(util_listItemTag($idstr,$classes_array,$other_attribs_hash),0,-1);
-//            $li_elt .= ' '.$this->fieldsAsDataAttribs().$actions_attribs.'>';
-//            $li_elt .= '<a href="'.APP_FOLDER.'/app_code/notebook.php?notebook_id='.$this->notebook_id.'">'.htmlentities($this->name).'</a></li>';
-//            return $li_elt;
-            return 'TO BE IMPLEMENTED!';
+//            util_prePrintR($USER);
+//            util_prePrintR($ACTIONS);
+
+            if ($USER->canActOnTarget($ACTIONS['edit'],$this)) {
+                $actions_attribs .= ' data-can-edit="1"';
+            }
+            $li_elt = substr(util_listItemTag($idstr,$classes_array,$other_attribs_hash),0,-1);
+            $li_elt .= ' '.$this->fieldsAsDataAttribs().$actions_attribs.'>';
+            $li_elt .= '<a href="'.APP_FOLDER.'/app_code/notebook_page.php?action=view&notebook_page_id='.$this->notebook_page_id.'">'.htmlentities($this->getAuthoritativePlant()->renderAsShortText()).'</a></li>';
+            return $li_elt;
         }
 
         public function loadPageFields() {

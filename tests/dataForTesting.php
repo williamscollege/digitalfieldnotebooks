@@ -261,9 +261,11 @@ function createTestData_XXXX($dbConn) {
                         (214,NOW(),NOW(), 110, 2, 3, 'global_metadata', 0, 0),
                         (215,NOW(),NOW(), 110, 2, 3, 'global_notebook', 0, 0),
                         (216,NOW(),NOW(), 110, 2, 3, 'global_specimen', 0, 0),
-                        (217,NOW(),NOW(), 110, 3, 3, 'global_notebook', 0, 0),
-                        (218,NOW(),NOW(), 110, 3, 3, 'global_specimen', 0, 0)
-
+                        (217,NOW(),NOW(), 110, 2, 4, 'global_metadata', 0, 0),
+                        (218,NOW(),NOW(), 110, 2, 4, 'global_notebook', 0, 0),
+                        (219,NOW(),NOW(), 110, 2, 4, 'global_specimen', 0, 0),
+                        (220,NOW(),NOW(), 110, 3, 4, 'global_notebook', 0, 0),
+                        (221,NOW(),NOW(), 110, 3, 4, 'global_specimen', 0, 0)
                     ";
         $addTestStmt = $dbConn->prepare($addTestSql);
         $addTestStmt->execute();

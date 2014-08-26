@@ -145,16 +145,21 @@
             //      + gets messy
             //   - otherwise -> no
 
+
+            // system admin -> always yes
             if ($this->flag_is_system_admin) {
                 return true;
             }
 
+            // owner of target -> always yes, except for verification
             if ($target->user_id == $this->user_id) {
                 if ($action->name != 'verify') { return true; }
             }
 
+            // all other situatons -> check role action targets
             $this->cacheRoleActionTargets();
 
+            //   - matching globals -> yes
             $target_global_type = Role_Action_Target::getGlobalTargetTypeForObject($target);
             if (in_array($target_global_type,array_keys($this->cached_role_action_targets_hash_by_target_type_by_id))) {
                 foreach ($this->cached_role_action_targets_hash_by_target_type_by_id[$target_global_type] as $glob_rat) {
@@ -163,6 +168,9 @@
                     }
                 }
             }
+
+            //   - specifics
+            //      + gets messy
 
             // if the allowed target types do not contain the specific type of the target in question, then no need to go further
             $target_specific_type = Role_Action_Target::getSpecificTargetTypeForObject($target);
@@ -182,9 +190,8 @@
                     $ids_to_check = array($target->authoritative_plant_id);
                     break;
                 case 'Authoritative_Plant_Extra':
-                    // can edit this if can edit the plant
-                    $p = $target->getAuthoritativePlant();
-                    $ids_to_check = array($p->authoritative_plant_id);
+                    // can act on this if can act on the plant
+                    return $this->canActOnTarget($action,$target->getAuthoritativePlant());
                     break;
                 case 'Metadata_Structure':
                     // can edit this if can edit itself or any parent
@@ -210,23 +217,19 @@
                     $ids_to_check = array($target->notebook_id);
                     break;
                 case 'Notebook_Page':
-                    // can edit if can edit the notebook that contains this page
-                    $n = $target->getNotebook();
-                    $ids_to_check = array($n->notebook_id);
+                    // can act on if can act on the notebook that contains this page
+                    return $this->canActOnTarget($action,$target->getNotebook());
                     break;
                 case 'Notebook_Page_Field':
-                    // can edit if can edit the notebook that contains the notebook page that this page field
-                    $np = $target->getNotebookPage();
-                    $n = $np->getNotebook();
-                    $ids_to_check = array($n->notebook_id);
+                    // can act on if can act on the notebook that contains the notebook page that this page field
+                    $this->canActOnTarget($action,$target->getNotebookPage()->getNotebook());
                     break;
                 case 'Specimen':
                     $ids_to_check = array($target->specimen_id);
                     break;
                 case 'Specimen_Image':
-                    // can edit if can edit the specimen
-                    $s = $target->getSpecimen();
-                    $ids_to_check = array($s->specimen_id);
+                    // can act on if can act on the specimen
+                    return $this->canActOnTarget($action,$target->getSpecimen());
                     break;
                 default:
                     break;

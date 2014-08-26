@@ -161,7 +161,7 @@
             $this->assertTrue(in_array('manager',array_map(function($e){return $e->name;},$r)));
 
             $actions = Action::getAllFromDb([],$this->DB);
-            $this->assertEqual(6,count($actions));
+            $this->assertEqual(7,count($actions));
 
             $all_n = Notebook::getAllFromDb([],$this->DB);
             $num_all_n = count($all_n);
@@ -185,7 +185,7 @@
             $this->assertTrue(in_array('field user',array_map(function($e){return $e->name;},$r)));
 
             $actions = Action::getAllFromDb([],$this->DB);
-            $this->assertEqual(6,count($actions));
+            $this->assertEqual(7,count($actions));
 
             foreach ($actions as $a) {
 
@@ -214,7 +214,7 @@
             $this->assertTrue(in_array('public',array_map(function($e){return $e->name;},$r)));
 
             $actions = Action::getAllFromDb([],$this->DB);
-            $this->assertEqual(6,count($actions));
+            $this->assertEqual(7,count($actions));
 
             foreach ($actions as $a) {
 
@@ -245,8 +245,8 @@
             $this->assertTrue(in_array(207,$rats_ids));
             $this->assertTrue(in_array(210,$rats_ids));
             $this->assertTrue(in_array(212,$rats_ids));
-            $this->assertTrue(in_array(217,$rats_ids));
-            $this->assertTrue(in_array(218,$rats_ids));
+            $this->assertTrue(in_array(220,$rats_ids));
+            $this->assertTrue(in_array(221,$rats_ids));
 
             $rats_targets = array_keys($u->cached_role_action_targets_hash_by_target_type_by_id);
             $this->assertEqual(5,count($rats_targets));
@@ -269,14 +269,15 @@
 
             $rats_create_ids = array_keys($u->cached_role_action_targets_hash_by_action_name_by_id['create']);
             $this->assertEqual(2,count($rats_create_ids));
-            $this->assertTrue(in_array(217,$rats_create_ids));
-            $this->assertTrue(in_array(218,$rats_create_ids));
+            $this->assertTrue(in_array(220,$rats_create_ids));
+            $this->assertTrue(in_array(221,$rats_create_ids));
         }
 
         function testCanActOnTarget() {
             $n1 = Notebook::getOneFromDb(['notebook_id'=>1001],$this->DB); // owned by 101
             $n2 = Notebook::getOneFromDb(['notebook_id'=>1003],$this->DB); // owned by 102
             $n3 = Notebook::getOneFromDb(['notebook_id'=>1004],$this->DB); // owned by 110
+            $np1 = Notebook_Page::getOneFromDb(['notebook_page_id'=>1101],$this->DB); // part of notebook 101
             $s1 = Specimen::getOneFromDb(['specimen_id'=>8001],$this->DB); // owned by 110
             $s2 = Specimen::getOneFromDb(['specimen_id'=>8002],$this->DB); // owned by 101
             $mds = Metadata_Structure::getOneFromDb(['metadata_structure_id'=>6004],$this->DB);
@@ -313,6 +314,14 @@
             $this->assertFalse($u->canActOnTarget($actions['delete'], $n3));
             $this->assertFalse($u->canActOnTarget($actions['publish'],$n3));
             $this->assertFalse($u->canActOnTarget($actions['verify'], $n3));
+
+            $this->assertTrue($u->canActOnTarget($actions['view'],$np1));
+            $this->assertTrue($u->canActOnTarget($actions['edit'],$np1));
+            $this->assertTrue($u->canActOnTarget($actions['create'],$np1));
+            $this->assertTrue($u->canActOnTarget($actions['delete'],$np1));
+            $this->assertTrue($u->canActOnTarget($actions['publish'],$np1));
+            $this->assertFalse($u->canActOnTarget($actions['verify'],$np1));
+
 
             $this->assertFalse($u->canActOnTarget($actions['view'],   $s1));
             $this->assertFalse($u->canActOnTarget($actions['edit'],   $s1));

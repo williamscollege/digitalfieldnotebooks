@@ -54,6 +54,34 @@
 
         //// instance methods - object itself
 
+        function testRenderAsListItem_Editor() {
+            $np = Notebook_Page::getOneFromDb(['notebook_page_id' => 1101], $this->DB);
+
+            global $USER;
+            $USER = User::getOneFromDb(['username'=>TESTINGUSER], $this->DB);
+
+            $plant = Authoritative_Plant::getOneFromDb(['authoritative_plant_id'=>5001],$this->DB);
+
+            $rendered = $np->renderAsListItem();
+            $canonical = '<li data-notebook_page_id="1101" data-created_at="'.$np->created_at.'" data-updated_at="'.$np->updated_at.'" data-notebook_id="1001" data-authoritative_plant_id="5001" data-notes="testing notebook page the first in testnotebook1, owned by user 101" data-flag_workflow_published="0" data-flag_workflow_validated="0" data-flag_delete="0" data-can-edit="1"><a href="'.APP_FOLDER.'/app_code/notebook_page.php?action=view&notebook_page_id=1101">'.htmlentities($plant->renderAsShortText()).'</a></li>';
+//            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
+            $this->assertEqual($canonical,$rendered);
+        }
+
+        function testRenderAsListItem_NonEditor() {
+            $np = Notebook_Page::getOneFromDb(['notebook_page_id' => 1104], $this->DB);
+
+            global $USER;
+            $USER = User::getOneFromDb(['username'=>TESTINGUSER], $this->DB);
+
+            $plant = Authoritative_Plant::getOneFromDb(['authoritative_plant_id'=>5001],$this->DB);
+
+            $rendered = $np->renderAsListItem();
+            $canonical = '<li data-notebook_page_id="1104" data-created_at="'.$np->created_at.'" data-updated_at="'.$np->updated_at.'" data-notebook_id="1004" data-authoritative_plant_id="5001" data-notes="first page of testnotebook4, owned by user 110" data-flag_workflow_published="0" data-flag_workflow_validated="0" data-flag_delete="0"><a href="'.APP_FOLDER.'/app_code/notebook_page.php?action=view&notebook_page_id=1104">'.htmlentities($plant->renderAsShortText()).'</a></li>';
+//            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
+            $this->assertEqual($canonical,$rendered);
+        }
+
         //// instance methods - related data
 
         function testGetNotebook() {
@@ -83,15 +111,5 @@
             $this->assertEqual(1201,$np1->page_fields[1]->notebook_page_field_id);
             $this->assertEqual(1202,$np1->page_fields[2]->notebook_page_field_id);
             $this->assertEqual(1203,$np1->page_fields[3]->notebook_page_field_id);
-        }
-
-        function testRenderAsListItem_Owner() {
-            $np = Notebook::getOneFromDb(['notebook_page_id' => 1101], $this->DB);
-
-            global $USER;
-
-            $USER = User::getOneFromDb(['username'=>TESTINGUSER], $this->DB);
-
-            $this->todo();
         }
     }
