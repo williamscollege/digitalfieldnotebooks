@@ -34,6 +34,35 @@
 
         //------------------------------------------
 
+        public function renderAsListItem($idstr='',$classes_array = [],$other_attribs_hash = []) {
+            $li_elt = substr(util_listItemTag($idstr,$classes_array,$other_attribs_hash),0,-1);
+            $li_elt .= ' '.$this->fieldsAsDataAttribs().'>';
+
+            $mds = $this->getMetadataStructure();
+            $li_elt .= '<span class="notebook-page-field-label" title="'.htmlentities($mds->description).'">'.htmlentities($mds->name).'</span> : ';
+
+            $val_title = '';
+            $val_name = '';
+            $val_open = '';
+            if ($this->value_metadata_term_value_id > 0) {
+                $mdtv = $this->getMetadataTermValue();
+                $val_title = ' title="'.htmlentities($mdtv->description).'"';
+                $val_name = htmlentities($mdtv->name);
+            }
+            if ($this->value_open) {
+                $val_open = '<span class="open-value">'.htmlentities($this->value_open).'</span>';
+                if ($val_name) {
+                    $val_open = '; '.$val_open;
+                }
+            }
+            $li_elt .= '<span class="notebook-page-field-value"'.$val_title.'>'.$val_name.$val_open.'</span>';
+
+            $li_elt .= '</li>';
+            return $li_elt;
+        }
+
+        //------------------------------------------
+
         public function getNotebookPage() {
             return Notebook_Page::getOneFromDb(['notebook_page_id'=>$this->notebook_page_id],$this->dbConnection);
         }

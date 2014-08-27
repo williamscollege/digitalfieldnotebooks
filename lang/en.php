@@ -28,6 +28,7 @@ $LANGUAGE['en'] = [
 
     'you_possesive' => 'your',
     'owned_by' => 'owned by',
+    'public' => 'public',
 
     'created_at' => 'created',
     'updated_at' => 'last updated',
@@ -64,6 +65,14 @@ $LANGUAGE['en'] = [
     'delete' => 'delete',
     'publish' => 'publish',
     'verify' => 'verify',
+
+    'class' => 'class',
+    'order' => 'order',
+    'family' => 'family',
+    'genus' => 'genus',
+    'species' => 'species',
+    'variety' => 'variety',
+    'catalog_identifier' => 'catalog ID',
 
     'no_permission' => 'You do not have permissions to do that.',
     'no_notebook_specified' => 'No notebook was specified.',

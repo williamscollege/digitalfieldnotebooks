@@ -85,6 +85,6 @@
         }
 
         public function renderAsViewEmbed() {
-            return 'to be implemented';
+            return 'TO BE IMPLEMENTED (authoritative_plant renderAsViewEmbed)';
         }
     }

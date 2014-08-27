@@ -40,8 +40,6 @@
             $this->assertEqual(1205,$pfs[4]->notebook_page_field_id);
         }
 
-        //// instance methods - object itself
-
         //// instance methods - related data
 
         function testGetNotebookPage() {
@@ -62,4 +60,69 @@
             $this->assertEqual(6202,$v->metadata_term_value_id);
         }
 
+        //// instance methods - object itself
+
+        function testRenderAsListItemBasic() {
+            $npf = Notebook_Page_Field::getOneFromDb(['notebook_page_field_id'=>1201],$this->DB);
+
+            $mds = Metadata_Structure::getOneFromDb(['metadata_structure_id'=>6002],$this->DB);
+            $mdtv = Metadata_Term_Value::getOneFromDb(['metadata_term_value_id'=>6202],$this->DB);
+
+            global $USER;
+            $USER = User::getOneFromDb(['username'=>TESTINGUSER], $this->DB);
+
+            $canonical = '<li data-notebook_page_field_id="1201" data-created_at="'.$npf->created_at.'" data-updated_at="'.$npf->updated_at.'" data-notebook_page_id="1101" data-label_metadata_structure_id="6002" data-value_metadata_term_value_id="6202" data-value_open="" data-flag_delete="0">'.
+                '<span class="notebook-page-field-label" title="'.htmlentities($mds->description).'">'.htmlentities($mds->name).'</span> : <span class="notebook-page-field-value" title="'.htmlentities($mdtv->description).'">'.htmlentities($mdtv->name).'</span>'.
+                '</li>';
+
+            $rendered = $npf->renderAsListItem();
+
+//            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
+
+            $this->assertEqual($canonical,$rendered);
+            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
+        }
+
+
+        function testRenderAsListItemOpenValue() {
+            $npf = Notebook_Page_Field::getOneFromDb(['notebook_page_field_id'=>1204],$this->DB);
+
+            $mds = Metadata_Structure::getOneFromDb(['metadata_structure_id'=>6004],$this->DB);
+
+            global $USER;
+            $USER = User::getOneFromDb(['username'=>TESTINGUSER], $this->DB);
+
+            $canonical = '<li data-notebook_page_field_id="1204" data-created_at="'.$npf->created_at.'" data-updated_at="'.$npf->updated_at.'" data-notebook_page_id="1101" data-label_metadata_structure_id="6004" data-value_metadata_term_value_id="0" data-value_open="wavy-ish" data-flag_delete="0">'.
+                '<span class="notebook-page-field-label" title="'.htmlentities($mds->description).'">'.htmlentities($mds->name).'</span> : <span class="notebook-page-field-value"><span class="open-value">wavy-ish</span></span>'.
+                '</li>';
+
+            $rendered = $npf->renderAsListItem();
+
+//            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
+
+            $this->assertEqual($canonical,$rendered);
+            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
+        }
+
+
+        function testRenderAsListItemReferencedAndOpenValue() {
+            $npf = Notebook_Page_Field::getOneFromDb(['notebook_page_field_id'=>1205],$this->DB);
+
+            $mds = Metadata_Structure::getOneFromDb(['metadata_structure_id'=>6002],$this->DB);
+            $mdtv = Metadata_Term_Value::getOneFromDb(['metadata_term_value_id'=>6205],$this->DB);
+
+            global $USER;
+            $USER = User::getOneFromDb(['username'=>TESTINGUSER], $this->DB);
+
+            $canonical = '<li data-notebook_page_field_id="1205" data-created_at="'.$npf->created_at.'" data-updated_at="'.$npf->updated_at.'" data-notebook_page_id="1104" data-label_metadata_structure_id="6002" data-value_metadata_term_value_id="6205" data-value_open="rare" data-flag_delete="0">'.
+                '<span class="notebook-page-field-label" title="'.htmlentities($mds->description).'">'.htmlentities($mds->name).'</span> : <span class="notebook-page-field-value" title="'.htmlentities($mdtv->description).'">'.htmlentities($mdtv->name).'; <span class="open-value">rare</span></span>'.
+                '</li>';
+
+            $rendered = $npf->renderAsListItem();
+
+//            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
+
+            $this->assertEqual($canonical,$rendered);
+            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
+        }
     }
