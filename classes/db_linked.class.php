@@ -589,4 +589,9 @@
         function renderAsLink($action='view') {
             return 'MUST BE IMPLEMENTED IN SUB-CLASS!';
         }
+
+        public function renderAsHtml() {
+            return 'MUST BE IMPLEMENTED IN SUB-CLASS!';
+        }
+
     }

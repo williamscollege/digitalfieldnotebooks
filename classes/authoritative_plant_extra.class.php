@@ -30,4 +30,23 @@
         public function getAuthoritativePlant() {
             return Authoritative_Plant::getOneFromDb(['authoritative_plant_id' => $this->authoritative_plant_id, 'flag_delete' => FALSE], $this->dbConnection);
         }
+
+        public function renderAsHtml() {
+            $rendered = 'UNKNOWN TYPE';
+
+            if ($this->type == 'common name') {
+                $rendered = "<span class=\"taxonomy-common-name\">'".htmlentities($this->value)."'</span>";
+            } elseif ($this->type == 'image') {
+                if (preg_match('/^http/i',$this->value)) {
+                    // NOTE: external references are NOT sanitized! That is beyond the security scope of this app (i.e. only pre-trusted users have data entry privs)
+                    $rendered = '<img class="plant-image external-reference" src="'. $this->value.'"/>';
+                } else {
+                    $rendered = '<img class="plant-image" src="'.APP_ROOT_PATH.'/image_data/authoritative/'. util_sanitizeFileReference($this->value).'"/>';
+                }
+            } elseif ($this->type == 'description') {
+                $rendered = "<div class=\"plant-description\">".htmlentities($this->value)."</div>";
+            }
+
+            return $rendered;
+        }
 	}

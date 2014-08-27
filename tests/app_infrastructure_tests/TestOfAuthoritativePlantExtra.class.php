@@ -51,8 +51,6 @@
             $this->assertEqual(5109,$pes[8]->authoritative_plant_extra_id);
         }
 
-        //// instance methods - object itself
-
         //// instance methods - related data
 
 		function testGetAuthoritativePlant() {
@@ -61,6 +59,44 @@
             $ap = $pe1->getAuthoritativePlant();
 
             $this->assertEqual(5001,$ap->authoritative_plant_id);
+        }
+
+        //// instance methods - object itself
+
+        function testRenderAsHtml_common_name() {
+            $pe = Authoritative_Plant_Extra::getOneFromDb(['authoritative_plant_extra_id'=>5101],$this->DB);
+
+            $canonical = "<span class=\"taxonomy-common-name\">'AP_A common z chestnut'</span>";
+            $rendered = $pe->renderAsHtml();
+
+            $this->assertEqual($canonical,$rendered);
+        }
+
+        function testRenderAsHtml_local_image() {
+            $pe = Authoritative_Plant_Extra::getOneFromDb(['authoritative_plant_extra_id'=>5105],$this->DB);
+
+            $canonical = '<img class="plant-image" src="'.APP_ROOT_PATH.'/image_data/authoritative/testing/castanea_dentata.jpg"/>';
+            $rendered = $pe->renderAsHtml();
+
+            $this->assertEqual($canonical,$rendered);
+        }
+
+        function testRenderAsHtml_external_image() {
+            $pe = Authoritative_Plant_Extra::getOneFromDb(['authoritative_plant_extra_id'=>5106],$this->DB);
+
+            $canonical = '<img class="plant-image external-reference" src="https://www.flickr.com/photos/plussed/14761853313"/>';
+            $rendered = $pe->renderAsHtml();
+
+            $this->assertEqual($canonical,$rendered);
+        }
+
+        function testRenderAsHtml_description() {
+            $pe = Authoritative_Plant_Extra::getOneFromDb(['authoritative_plant_extra_id'=>5104],$this->DB);
+
+            $canonical = '<div class="plant-description">description of american chestnut</div>';
+            $rendered = $pe->renderAsHtml();
+
+            $this->assertEqual($canonical,$rendered);
         }
 
     }
