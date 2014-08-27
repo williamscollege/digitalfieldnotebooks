@@ -112,9 +112,11 @@ class NotebookViewTest extends WMSWebTestCase {
         $this->assertLink($ap1->renderAsShortText());
         $this->assertLink($ap2->renderAsShortText());
 
-        // 'add page' control
-        $this->assertEltByIdHasAttrOfValue('btn-add-notebook-page','href',APP_ROOT_PATH.'/app_code/notebook_page.php?action=create&notebook_id=1001');
-        $this->assertLink(util_lang('add_notebook_page'));
+        // NO 'add page' control - only in edit mode!
+//        $this->assertEltByIdHasAttrOfValue('btn-add-notebook-page','href',APP_ROOT_PATH.'/app_code/notebook_page.php?action=create&notebook_id=1001');
+        $this->assertNoLink(util_lang('add_notebook_page'));
+
+        $this->assertNoText('IMPLEMENTED');
     }
 
     function testViewNotEditable() {
@@ -148,7 +150,9 @@ class NotebookViewTest extends WMSWebTestCase {
 
         $this->assertLink($ap1->renderAsShortText());
 
-        // 'add page' control
+        // NO 'add page' control
         $this->assertNoLink(util_lang('add_notebook_page'));
+
+        $this->assertNoText('IMPLEMENTED');
     }
 }

@@ -111,10 +111,10 @@
             } else {
                 $rendered .= '    <li>'.util_lang('zero_pages').'</li>'."\n";
             }
-
-            if ($USER->canActOnTarget($ACTIONS['edit'],$this)) {
-                $rendered .= '    <li><a href="'.APP_ROOT_PATH.'/app_code/notebook_page.php?action=create&notebook_id='.$this->notebook_id.'" id="btn-add-notebook-page" class="creation_link btn">'.util_lang('add_notebook_page').'</a></li>'."\n";
-            }
+// NOTE: add page control only in edit mode, not view mode!
+//            if ($USER->canActOnTarget($ACTIONS['edit'],$this)) {
+//                $rendered .= '    <li><a href="'.APP_ROOT_PATH.'/app_code/notebook_page.php?action=create&notebook_id='.$this->notebook_id.'" id="btn-add-notebook-page" class="creation_link btn">'.util_lang('add_notebook_page').'</a></li>'."\n";
+//            }
             $rendered .=
 '  </ul>'."\n".
 '</div>';

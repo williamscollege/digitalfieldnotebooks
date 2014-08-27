@@ -44,8 +44,11 @@ $LANGUAGE['en'] = [
 
     'fields' => 'fields',
     'field' => 'field',
-    'add_field' => '+ Add Field +',
+    'add_notebook_page_field' => '+ Add Field +',
 
+    'specimens' => 'specimens',
+    'specimen' => 'specimen',
+    'add_specimen' => '+ Add Specimen +',
 
     'published_true' => 'public',
     'published_false' => 'private',

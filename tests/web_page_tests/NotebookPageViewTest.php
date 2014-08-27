@@ -55,6 +55,9 @@ class NotebookPageViewTest extends WMSWebTestCase {
 
         $this->goToNotebookPageView(1101);
 
+//        echo htmlentities($this->getBrowser()->getContent());
+//        echo $this->getBrowser()->getContent();
+
         $this->assertNoPattern('/warning/i');
         $this->assertNoPattern('/error/i');
 
@@ -67,12 +70,16 @@ class NotebookPageViewTest extends WMSWebTestCase {
         $this->assertText($ap1->renderAsShortText());
 
         // 'edit' control
-        $this->assertEltByIdHasAttrOfValue('btn-edit','href',APP_ROOT_PATH.'/app_code/notebook_page.php?action=edit&notebook_page=1101');
+        $this->assertEltByIdHasAttrOfValue('btn-edit','href',APP_ROOT_PATH.'/app_code/notebook_page.php?action=edit&notebook_page_id=1101');
         $this->assertLink(util_lang('edit'));
 
-        // 'add field' control
-        $this->assertEltByIdHasAttrOfValue('btn-add-notebook-page-field','id','btn-add-notebook-page-field');
-        $this->assertLink(util_lang('add_field'));
+        // no 'add field' control - that's only in edit mode, not view mode
+        $this->assertNoLink(util_lang('add_notebook_page_field'));
+
+        // no 'add specimen' control - that's only in edit mode, not view mode
+        $this->assertNoLink(util_lang('add_specimen'));
+
+        $this->assertNoText('IMPLEMENTED');
     }
 
     function testViewNotEditable() {
@@ -95,6 +102,11 @@ class NotebookPageViewTest extends WMSWebTestCase {
         $this->assertNoLink(util_lang('edit'));
 
         // NO 'add field' control
-        $this->assertNoLink(util_lang('add_field'));
+        $this->assertNoLink(util_lang('add_notebook_page_field'));
+
+        // no 'add specimen' control
+        $this->assertNoLink(util_lang('add_specimen'));
+
+        $this->assertNoText('IMPLEMENTED');
     }
 }

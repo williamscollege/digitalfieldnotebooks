@@ -52,14 +52,17 @@
 
         function renderAsView() {
             $this->loadPageFields();
+            $this->loadSpecimens();
             $n = $this->getNotebook();
             $ap = $this->getAuthoritativePlant();
 
             global $USER,$ACTIONS;
 
             $actions_attribs = '';
+//            $add_field_button_li = '';
             if ($USER->canActOnTarget($ACTIONS['edit'],$this)) {
                 $actions_attribs .= ' data-can-edit="1"';
+//                $add_field_button_li = '    <li><a href="" id="btn-add-notebook-page-field" class="creation_link btn">'.util_lang('add_notebook_page_field').'</a></li>'."\n";
             }
 
             $owner = $USER;
@@ -68,7 +71,7 @@
             }
 
             $rendered = '<div id="rendered_notebook_page_'.$this->notebook_page_id.'"class="rendered_notebook_page" '.$this->fieldsAsDataAttribs().$actions_attribs.">\n".
-'  <h3 class="notebook_page_title">'.$n->renderAsLink().': '.$ap->renderAsShortText."</h3>\n".
+'  <h3 class="notebook_page_title">'.$n->renderAsLink().': '.$ap->renderAsShortText()."</h3>\n".
 '  <span class="created_at">'.util_lang('created_at').' '.util_datetimeFormatted($this->created_at).'</span>, <span class="updated_at">'.util_lang('updated_at').' '.util_datetimeFormatted($this->updated_at)."</span><br/>\n".
 '  <span class="owner">'.util_lang('owned_by').' '.$owner->screen_name."</span><br/>\n".
 '  <span class="published_state">'.($this->flag_workflow_published ? util_lang('published_true') : util_lang('published_false'))
@@ -76,7 +79,12 @@
     .'</span><br/>'."\n".
 '  <div class="notebook_page_notes">'.htmlentities($this->notes)."</div>\n".
 '  <div class="rendered_authoritative_plant">'.$ap->renderAsViewEmbed()."</div>\n".
-'  <div class="notebook_page_fields"></div>'."\n".
+'  <ul class="notebook_page_fields">'."\n";
+            foreach ($this->page_fields as $pf) {
+                $rendered .= '    '.$pf->renderAsListItem()."\n";
+            }
+//            $rendered .= $add_field_button_li;
+            $rendered .='  </ul>'."\n".
 '  <ul class="specimens">'."\n";
             foreach ($this->specimens as $specimen) {
                 $rendered .= '    '.$specimen->renderAsListItem()."\n";

@@ -52,7 +52,7 @@
     }
 
     if ($action == 'view') {
-        if ($USER->canActOnTarget($ACTIONS['edit'],$notebook)) {
+        if ($USER->canActOnTarget($ACTIONS['edit'],$notebook_page)) {
             echo '<div id="actions">'.$notebook_page->renderAsButtonEdit().'</div>'."\n";
         }
         echo $notebook_page->renderAsView();

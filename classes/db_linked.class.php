@@ -571,7 +571,7 @@
         }
 
         public function renderAsListItem($idstr='',$classes_array = [],$other_attribs_hash = []) {
-            return 'MUST BE IMPLEMENTED IN SUB-CLASS!';
+            return '<li>MUST BE IMPLEMENTED IN SUB-CLASS!</li>';
         }
 
         public function renderAsView() {

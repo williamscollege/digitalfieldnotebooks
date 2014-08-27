@@ -187,7 +187,7 @@
             $this->assertEqual($canonical,$rendered);
         }
 
-        function testRenderAsViewCanEdit() {
+        function testRenderAsView() {
             $n = Notebook::getOneFromDb(['notebook_id' => 1001], $this->DB);
             global $USER;
             $USER = User::getOneFromDb(['username'=>TESTINGUSER], $this->DB);
@@ -209,40 +209,6 @@
                 $canonical .= '    '.$p->renderAsListItem('notebook-page-item-'.$page_counter)."\n";
             }
             $canonical .=
-'    <li><a href="'.APP_ROOT_PATH.'/app_code/notebook_page.php?action=create&notebook_id='.$n->notebook_id.'" id="btn-add-notebook-page" class="creation_link btn">'.util_lang('add_notebook_page').'</a></li>
-  </ul>
-</div>';
-            $rendered = $n->renderAsView();
-
-//            echo "<pre>\n".htmlentities($canonical)."\n-----------------\n".htmlentities($rendered)."\n</pre>";
-
-            $this->assertEqual($canonical,$rendered);
-        }
-
-
-        function ASIDE_testRenderAsViewNoEdit() {
-            $n = Notebook::getOneFromDb(['notebook_id' => 1004], $this->DB);
-            global $USER;
-            $USER = User::getOneFromDb(['username'=>TESTINGUSER], $this->DB);
-            $notebook_owner = User::getOneFromDb(['user_id'=>$n->user_id], $this->DB);
-
-            $n->loadPages();
-
-            $canonical = '<div id="rendered_notebook_1004" class="rendered_notebook" data-notebook_id="1004" data-created_at="'.$n->created_at.'" data-updated_at="'.$n->updated_at.'" data-user_id="110" data-name="testnotebook4" data-notes="this is generally viewable testnotebook4, owned by user 110" data-flag_workflow_published="1" data-flag_workflow_validated="1" data-flag_delete="0">
-  <h3 class="notebook_title">'.ucfirst(util_lang('notebook')).': testnotebook4</h3>
-  <span class="created_at">'.util_lang('created_at').' '.util_datetimeFormatted($n->created_at).'</span>, <span class="updated_at">'.util_lang('updated_at').' '.util_datetimeFormatted($n->updated_at).'</span><br/>
-  <span class="owner">'.util_lang('owned_by').' '.$notebook_owner->screen_name.'</span><br/>
-  <span class="published_state">'.util_lang('published_true').'</span>, <span class="verified_state">'.util_lang('verified_true').'</span><br/>
-  <div class="notebook_notes">this is generally viewable testnotebook4, owned by user 110</div>
-  <h4>'.ucfirst(util_lang('pages')).'</h4>
-  <ul id="list-of-notebook-pages" data-notebook-page-count="1">
-';
-            $page_counter = 0;
-            foreach ($n->pages as $p) {
-                $page_counter++;
-                $canonical .= '    '.$p->renderAsListItem('notebook-page-item-'.$page_counter)."\n";
-            }
-            $canonical .=
 '  </ul>
 </div>';
             $rendered = $n->renderAsView();
@@ -250,6 +216,9 @@
 //            echo "<pre>\n".htmlentities($canonical)."\n-----------------\n".htmlentities($rendered)."\n</pre>";
 
             $this->assertEqual($canonical,$rendered);
+            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
         }
+
+//    '    <li><a href="'.APP_ROOT_PATH.'/app_code/notebook_page.php?action=create&notebook_id='.$n->notebook_id.'" id="btn-add-notebook-page" class="creation_link btn">'.util_lang('add_notebook_page').'</a></li>
 
     }

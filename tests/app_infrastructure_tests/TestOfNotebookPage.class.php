@@ -133,7 +133,7 @@
             $this->assertEqual($canonical,$rendered);
         }
 
-        function testRenderAsViewCanEdit() {
+        function testRenderAsView() {
             $np = Notebook_Page::getOneFromDb(['notebook_page_id' => 1101], $this->DB);
             $np->loadPageFields();
             $np->loadSpecimens();
@@ -144,13 +144,18 @@
             $USER = User::getOneFromDb(['username'=>TESTINGUSER], $this->DB);
 
             $canonical = '<div id="rendered_notebook_page_1101"class="rendered_notebook_page" '.$np->fieldsAsDataAttribs().' data-can-edit="1">
-  <h3 class="notebook_page_title">'.$n->renderAsLink().': '.$ap->renderAsShortText.'</h3>
+  <h3 class="notebook_page_title">'.$n->renderAsLink().': '.$ap->renderAsShortText().'</h3>
   <span class="created_at">'.util_lang('created_at').' '.util_datetimeFormatted($np->created_at).'</span>, <span class="updated_at">'.util_lang('updated_at').' '.util_datetimeFormatted($np->updated_at).'</span><br/>
   <span class="owner">'.util_lang('owned_by').' '.$USER->screen_name.'</span><br/>
   <span class="published_state">'.util_lang('published_false').'</span>, <span class="verified_state">'.util_lang('verified_false').'</span><br/>
   <div class="notebook_page_notes">testing notebook page the first in testnotebook1, owned by user 101</div>
   <div class="rendered_authoritative_plant">'.$ap->renderAsViewEmbed().'</div>
-  <div class="notebook_page_fields"></div>
+  <ul class="notebook_page_fields">
+';
+            foreach ($np->page_fields as $pf) {
+                $canonical .= '    '.$pf->renderAsListItem()."\n";
+            }
+            $canonical .= '  </ul>
   <ul class="specimens">
 ';
             foreach ($np->specimens as $specimen) {
@@ -161,13 +166,19 @@
 
             $rendered = $np->renderAsView();
 
+//            echo "<pre>
+//-----------
+//".htmlentities($canonical)."
+//-----------
+//".htmlentities($rendered)."
+//-----------
+//</pre>";
+
             $this->assertEqual($canonical,$rendered);
-
-            $this->todo('handle rendering of page fields!');
+            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
         }
 
-        function testRenderAsViewNoEdit() {
-            $this->todo();
-        }
+
+//    $canonical .= '    <li><a href="" id="btn-add-notebook-page-field" class="creation_link btn">'.util_lang('add_notebook_page_field').'</a></li>
 
     }
