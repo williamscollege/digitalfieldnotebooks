@@ -156,6 +156,7 @@
                 $canonical .= '    '.$pf->renderAsListItem()."\n";
             }
             $canonical .= '  </ul>
+  <h4>'.ucfirst(util_lang('specimens')).'</h4>
   <ul class="specimens">
 ';
             foreach ($np->specimens as $specimen) {

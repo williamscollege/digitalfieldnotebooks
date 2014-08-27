@@ -85,6 +85,7 @@
             }
 //            $rendered .= $add_field_button_li;
             $rendered .='  </ul>'."\n".
+'  <h4>'.ucfirst(util_lang('specimens'))."</h4>\n".
 '  <ul class="specimens">'."\n";
             foreach ($this->specimens as $specimen) {
                 $rendered .= '    '.$specimen->renderAsListItem()."\n";
