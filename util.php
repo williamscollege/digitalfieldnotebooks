@@ -291,3 +291,51 @@
         $li .= '>';
         return $li;
     }
+
+    // sanitizes the base name of a file (as opposed to the full path)
+    // only allows alphanumeric, underscore, and non-consecutive .
+    // extra . are stripped out, others are converted to _
+    // NOTE: file names CAN be empty ('')
+    function util_sanitizeFileName($fn) {
+        $allowed_chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890_.';
+
+//        echo "fn=$fn;<br/>\n";
+        while (preg_match('/\\.\\./',$fn)) {
+            $fn = preg_replace('/\\.\\./','',$fn);
+//        echo "fn=$fn;<br/>\n";
+        }
+        if (! $fn) { return ''; }
+
+        $fn_chars = str_split($fn);
+//        util_prePrintR($fn_chars);
+        $cleaned = '';
+        foreach ($fn_chars as $fnc) {
+            if (strpos($allowed_chars,$fnc) === false) {
+                $cleaned .= '_';
+            } else {
+                $cleaned .= $fnc;
+            }
+        }
+
+        return $cleaned;
+    }
+
+    // sanitizes the a file referenced by a path
+    function util_sanitizeFileReference($fr) {
+        while (preg_match('/\\.\\.\\//',$fr)) {
+            $fr = preg_replace('/\\.\\.\\//','',$fr);
+        }
+
+        $fr_parts = explode('/',$fr);
+        $cleaned_fr = '';
+        $part_counter = 0;
+        foreach ($fr_parts as $frp) {
+            if ($part_counter > 0) {
+                $cleaned_fr .= '/';
+            }
+            $cleaned_fr .= util_sanitizeFileName($frp);
+            $part_counter++;
+        }
+
+        return $cleaned_fr;
+    }

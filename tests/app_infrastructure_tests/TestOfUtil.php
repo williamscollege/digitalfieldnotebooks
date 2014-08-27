@@ -117,4 +117,21 @@ class TestOfUtil extends UnitTestCase {
         $this->assertEqual('<li id="idfoo" class="class1foo class2foo" foostatus="statusfoo" typebar="bartype">',util_listItemTag('idfoo',['class1foo','class2foo'],['typebar'=>'bartype','foostatus'=>'statusfoo']));
     }
 
+    function testSanitizeFileName() {
+        $this->assertEqual('filename',util_sanitizeFileName('filename'));
+        $this->assertEqual('filename_',util_sanitizeFileName('filename;'));
+        $this->assertEqual('file_name',util_sanitizeFileName('file name'));
+        $this->assertEqual('_filename',util_sanitizeFileName('../filename'));
+        $this->assertEqual('filename',util_sanitizeFileName('....filename'));
+        $this->assertEqual('.filename',util_sanitizeFileName('.....filename'));
+    }
+
+    function testSanitizeFileReference() {
+        $this->assertEqual('filename',util_sanitizeFileReference('filename'));
+        $this->assertEqual('file_name',util_sanitizeFileReference('file name'));
+        $this->assertEqual('filename',util_sanitizeFileReference('../filename'));
+        $this->assertEqual('foo/filename',util_sanitizeFileReference('../foo/filename'));
+        $this->assertEqual('/foo/filename',util_sanitizeFileReference('/../foo/filename'));
+        $this->assertEqual('__filename',util_sanitizeFileReference('; filename'));
+    }
 }
