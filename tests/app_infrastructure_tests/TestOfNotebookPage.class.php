@@ -149,7 +149,7 @@
   <span class="owner">'.util_lang('owned_by').' '.$USER->screen_name.'</span><br/>
   <span class="published_state">'.util_lang('published_false').'</span>, <span class="verified_state">'.util_lang('verified_false').'</span><br/>
   <div class="notebook_page_notes">testing notebook page the first in testnotebook1, owned by user 101</div>
-  <div class="rendered_authoritative_plant">'.$ap->renderAsViewEmbed().'</div>
+  '.$ap->renderAsViewEmbed().'
   <ul class="notebook_page_fields">
 ';
             foreach ($np->page_fields as $pf) {
@@ -167,13 +167,13 @@
 
             $rendered = $np->renderAsView();
 
-//            echo "<pre>
-//-----------
-//".htmlentities($canonical)."
-//-----------
-//".htmlentities($rendered)."
-//-----------
-//</pre>";
+            echo "<pre>
+-----------
+".htmlentities($canonical)."
+-----------
+".htmlentities($rendered)."
+-----------
+</pre>";
 
             $this->assertEqual($canonical,$rendered);
             $this->assertNoPattern('/IMPLEMENTED/',$rendered);

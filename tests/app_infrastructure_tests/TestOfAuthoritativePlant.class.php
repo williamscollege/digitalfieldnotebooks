@@ -109,7 +109,34 @@
         }
 
         function testRenderAsViewEmbed() {
-            $this->todo();
+            $ap = Authoritative_Plant::getOneFromDb(['authoritative_plant_id' => 5001], $this->DB);
+
+            $ap->cacheExtras();
+
+            $canonical =
+'<div class="authoritative-plant">
+  <h3>'.$ap->renderAsShortText().'</h3>
+  <ul class="base-info">
+    <li><span class="field-label">'.util_lang('class').'</span> : <span class="field-value taxonomy taxonomy-class">'.htmlentities($ap->class).'</span></li>
+    <li><span class="field-label">'.util_lang('order').'</span> : <span class="field-value taxonomy taxonomy-order">'.htmlentities($ap->order).'</span></li>
+    <li><span class="field-label">'.util_lang('family').'</span> : <span class="field-value taxonomy taxonomy-family">'.htmlentities($ap->family).'</span></li>
+    <li><span class="field-label">'.util_lang('genus').'</span> : <span class="field-value taxonomy taxonomy-genus">'.htmlentities($ap->genus).'</span></li>
+    <li><span class="field-label">'.util_lang('species').'</span> : <span class="field-value taxonomy taxonomy-species">'.htmlentities($ap->species).'</span></li>
+    <li><span class="field-label">'.util_lang('variety').'</span> : <span class="field-value taxonomy taxonomy-variety">\''.htmlentities($ap->variety).'\'</span></li>
+    <li><span class="field-label">'.util_lang('catalog_identifier').'</span> : <span class="field-value">'.htmlentities($ap->catalog_identifier).'</span></li>
+  </ul>
+  <ul class="extra-info">
+';
+            foreach ($ap->extras as $extra) {
+                $canonical .='    '.$extra->renderAsListItem()."\n";
+            }
+            $canonical .='  </ul>
+</div>';
+            $rendered = $ap->renderAsViewEmbed();
+
+//            echo "<pre>\n".htmlentities($canonical)."\n------------------\n".htmlentities($rendered)."\n</pre>";
+
+            $this->assertEqual($canonical,$rendered);
         }
 
         //// instance methods - related data

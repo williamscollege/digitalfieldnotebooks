@@ -78,7 +78,7 @@
     .'</span>, <span class="verified_state">'.($this->flag_workflow_validated ? util_lang('verified_true') : util_lang('verified_false'))
     .'</span><br/>'."\n".
 '  <div class="notebook_page_notes">'.htmlentities($this->notes)."</div>\n".
-'  <div class="rendered_authoritative_plant">'.$ap->renderAsViewEmbed()."</div>\n".
+'  '.$ap->renderAsViewEmbed()."\n".
 '  <ul class="notebook_page_fields">'."\n";
             foreach ($this->page_fields as $pf) {
                 $rendered .= '    '.$pf->renderAsListItem()."\n";

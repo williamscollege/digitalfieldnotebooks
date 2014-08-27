@@ -35,7 +35,7 @@
             $rendered = 'UNKNOWN TYPE';
 
             if ($this->type == 'common name') {
-                $rendered = "<span class=\"taxonomy-common-name\">'".htmlentities($this->value)."'</span>";
+                $rendered = "<span class=\"field-value taxonomy taxonomy-common-name\">\"".htmlentities($this->value)."\"</span>";
             } elseif ($this->type == 'image') {
                 if (preg_match('/^http/i',$this->value)) {
                     // NOTE: external references are NOT sanitized! That is beyond the security scope of this app (i.e. only pre-trusted users have data entry privs)
@@ -48,5 +48,13 @@
             }
 
             return $rendered;
+        }
+
+        public function renderAsListItem($idstr='',$classes_array = [],$other_attribs_hash = []) {
+            array_unshift($classes_array,'authoritative-plant-extra');
+            $li_elt = substr(util_listItemTag($idstr,$classes_array,$other_attribs_hash),0,-1);
+            $li_elt .= '>';
+            $li_elt .= $this->renderAsHtml().'</li>';
+            return $li_elt;
         }
 	}

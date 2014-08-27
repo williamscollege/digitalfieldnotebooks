@@ -66,7 +66,7 @@
         function testRenderAsHtml_common_name() {
             $pe = Authoritative_Plant_Extra::getOneFromDb(['authoritative_plant_extra_id'=>5101],$this->DB);
 
-            $canonical = "<span class=\"taxonomy-common-name\">'AP_A common z chestnut'</span>";
+            $canonical = "<span class=\"field-value taxonomy taxonomy-common-name\">\"AP_A common z chestnut\"</span>";
             $rendered = $pe->renderAsHtml();
 
             $this->assertEqual($canonical,$rendered);
@@ -99,4 +99,12 @@
             $this->assertEqual($canonical,$rendered);
         }
 
+        function testRenderAsListItem() {
+            $pe = Authoritative_Plant_Extra::getOneFromDb(['authoritative_plant_extra_id'=>5101],$this->DB);
+
+            $canonical = "<li class=\"authoritative-plant-extra\"><span class=\"field-value taxonomy taxonomy-common-name\">\"AP_A common z chestnut\"</span></li>";
+            $rendered = $pe->renderAsListItem();
+
+            $this->assertEqual($canonical,$rendered);
+        }
     }

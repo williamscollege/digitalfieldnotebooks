@@ -85,6 +85,27 @@
         }
 
         public function renderAsViewEmbed() {
-            return 'TO BE IMPLEMENTED (authoritative_plant renderAsViewEmbed)';
+            $this->cacheExtras();
+
+            $rendered = '<div class="authoritative-plant">
+  <h3>'.$this->renderAsShortText().'</h3>
+  <ul class="base-info">
+    <li><span class="field-label">'.util_lang('class').'</span> : <span class="field-value taxonomy taxonomy-class">'.htmlentities($this->class).'</span></li>
+    <li><span class="field-label">'.util_lang('order').'</span> : <span class="field-value taxonomy taxonomy-order">'.htmlentities($this->order).'</span></li>
+    <li><span class="field-label">'.util_lang('family').'</span> : <span class="field-value taxonomy taxonomy-family">'.htmlentities($this->family).'</span></li>
+    <li><span class="field-label">'.util_lang('genus').'</span> : <span class="field-value taxonomy taxonomy-genus">'.htmlentities($this->genus).'</span></li>
+    <li><span class="field-label">'.util_lang('species').'</span> : <span class="field-value taxonomy taxonomy-species">'.htmlentities($this->species).'</span></li>
+    <li><span class="field-label">'.util_lang('variety').'</span> : <span class="field-value taxonomy taxonomy-variety">\''.htmlentities($this->variety).'\'</span></li>
+    <li><span class="field-label">'.util_lang('catalog_identifier').'</span> : <span class="field-value">'.htmlentities($this->catalog_identifier).'</span></li>
+  </ul>
+  <ul class="extra-info">
+';
+            foreach ($this->extras as $extra) {
+                $rendered .='    '.$extra->renderAsListItem()."\n";
+            }
+            $rendered .='  </ul>
+</div>';
+
+            return $rendered;
         }
     }
