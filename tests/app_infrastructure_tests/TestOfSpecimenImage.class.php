@@ -64,4 +64,38 @@
             $this->assertEqual(8001,$s->specimen_id);
         }
 
+        function testRenderAsHtml_local() {
+            $si = Specimen_Image::getOneFromDb(['specimen_image_id'=>8101],$this->DB);
+
+            $canonical = '<img id="specimen_image_8101" class="plant-image" src="'.APP_ROOT_PATH.'/image_data/specimen/testing/cnh_castanea_dentata.jpg" />';
+            $rendered = $si->renderAsHtml();
+
+//            echo "<pre>\n".htmlentities($canonical)."\n------------------\n".htmlentities($rendered)."\n</pre>";
+
+            $this->assertEqual($canonical,$rendered);
+        }
+
+        function testRenderAsHtml_external() {
+            $si = Specimen_Image::getOneFromDb(['specimen_image_id'=>8102],$this->DB);
+
+            $canonical = '<img id="specimen_image_8102" class="plant-image external-reference" src="https://www.flickr.com/photos/plussed/14761853313" />';
+            $rendered = $si->renderAsHtml();
+
+//            echo "<pre>\n".htmlentities($canonical)."\n------------------\n".htmlentities($rendered)."\n</pre>";
+
+            $this->assertEqual($canonical,$rendered);
+        }
+
+        function testRenderAsListItem() {
+            $si = Specimen_Image::getOneFromDb(['specimen_image_id'=>8101],$this->DB);
+
+            $canonical = '<li class="specimen-image" data-specimen_image_id="8101" data-created_at="'.$si->created_at.'" data-updated_at="'.$si->updated_at.'" data-specimen_id="8001" data-user_id="110" data-image_reference="testing/cnh_castanea_dentata.jpg" data-ordering="1.00000" data-flag_workflow_published="1" data-flag_workflow_validated="1" data-flag_delete="0">'.
+                $si->renderAsHtml().'</li>';
+
+            $rendered = $si->renderAsListItem();
+
+//            echo "<pre>\n".htmlentities($canonical)."\n------------------\n".htmlentities($rendered)."\n</pre>";
+
+            $this->assertEqual($canonical,$rendered);
+        }
     }

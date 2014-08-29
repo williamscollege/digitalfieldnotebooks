@@ -160,20 +160,20 @@
   <ul class="specimens">
 ';
             foreach ($np->specimens as $specimen) {
-                $canonical .= '    '.$specimen->renderAsListItem()."\n";
+                $canonical .= '    <li>'.$specimen->renderAsViewEmbed()."</li>\n";
             }
             $canonical .= '  </ul>
 </div>';
 
             $rendered = $np->renderAsView();
 
-            echo "<pre>
------------
-".htmlentities($canonical)."
------------
-".htmlentities($rendered)."
------------
-</pre>";
+//            echo "<pre>
+//-----------
+//".htmlentities($canonical)."
+//-----------
+//".htmlentities($rendered)."
+//-----------
+//</pre>";
 
             $this->assertEqual($canonical,$rendered);
             $this->assertNoPattern('/IMPLEMENTED/',$rendered);

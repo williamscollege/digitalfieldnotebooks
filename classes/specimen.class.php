@@ -3,7 +3,7 @@
 
 	class Specimen extends Db_Linked {
 		public static $fields = array('specimen_id', 'created_at', 'updated_at', 'user_id', 'link_to_type', 'link_to_id',
-                                      'name', 'gps_x', 'gps_y', 'notes', 'ordering', 'catalog_identifier',
+                                      'name', 'gps_longitude', 'gps_latitude', 'notes', 'ordering', 'catalog_identifier',
                                       'flag_workflow_published', 'flag_workflow_validated', 'flag_delete');
 		public static $primaryKeyField = 'specimen_id';
 		public static $dbTable = 'specimens';
@@ -58,6 +58,11 @@
             usort($this->images,'Specimen_Image::cmp');
         }
 
+        public function cacheImages() {
+            if (! $this->images) {
+                $this->loadImages();
+            }
+        }
 
         public function getUser() {
             return User::getOneFromDb(['user_id'=>$this->user_id],$this->dbConnection);
@@ -74,4 +79,48 @@
 
             return 0;
         }
-	}
+
+        public function renderAsViewEmbed() {
+            $this->cacheImages();
+
+            $rendered = '<div class="specimen">'."\n".
+'  <h3>'.htmlentities($this->name).'</h3>'."\n".
+'  <ul class="base-info">'."\n";
+            if ($this->gps_longitude && $this->gps_latitude) {
+                $rendered .= '    <li><span class="field-label">'.util_lang('coordinates').'</span> : <span class="field-value"><a href="'.util_coordsMapLink($this->gps_longitude,$this->gps_latitude).'">'.htmlentities($this->gps_longitude).','.htmlentities($this->gps_latitude).'</a></span></li>'."\n";
+            }
+            if ($this->notes) {
+                $rendered .= '    <li><span class="field-label">'.util_lang('notes').'</span> : <span class="field-value">'.htmlentities($this->notes).'</span></li>'."\n";
+            }
+            if ($this->catalog_identifier) {
+                $rendered .= '    <li><span class="field-label">'.util_lang('catalog_identifier').'</span> : <span class="field-value">'.htmlentities($this->catalog_identifier).'</span></li>'."\n";
+            }
+            $rendered .= '  </ul>'."\n";
+
+            if (count($this->images) > 0) {
+                $rendered .= '  <ul class="specimen-images">'."\n";
+                foreach ($this->images as $image) {
+                    $rendered .= '    '.$image->renderAsListItem()."\n";
+                }
+
+                $rendered .='  </ul>'."\n";
+            }
+
+            $rendered .= '</div>';
+
+            return $rendered;
+        }
+
+        public function renderAsListItem($idstr='',$classes_array = [],$other_attribs_hash = []) {
+            global $USER,$ACTIONS;
+            $actions_attribs = '';
+
+            if ($USER->canActOnTarget($ACTIONS['edit'],$this)) {
+                $actions_attribs .= ' data-can-edit="1"';
+            }
+            $li_elt = substr(util_listItemTag($idstr,$classes_array,$other_attribs_hash),0,-1);
+            $li_elt .= ' '.$this->fieldsAsDataAttribs().$actions_attribs.'>';
+            $li_elt .= '<a href="/app_code/specimen.php?specimen_id='.$this->specimen_id.'">'.htmlentities($this->name).'</a></li>';
+            return $li_elt;
+        }
+    }

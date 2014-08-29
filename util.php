@@ -339,3 +339,10 @@
 
         return $cleaned_fr;
     }
+
+    function util_coordsMapLink($longitude,$latitude,$zoom=19) {
+        if (! is_numeric($longitude)) { return util_lang('longitude').' '.util_lang('invalid_value'); }
+        if (! is_numeric($latitude)) { return util_lang('latitude').' '.util_lang('invalid_value'); }
+        if (! is_numeric($zoom)) { return util_lang('zoom_level').' '.util_lang('invalid_value'); }
+        return "http://maps.google.com/maps?q=$latitude,$longitude+(point)&z=$zoom&ll=$latitude,$longitude";
+    }

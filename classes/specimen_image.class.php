@@ -36,4 +36,26 @@
             return Specimen::getOneFromDb(['specimen_id' => $this->specimen_id, 'flag_delete' => FALSE],$this->dbConnection);
         }
 
+
+        public function renderAsHtml() {
+            $rendered = '';
+
+            if (preg_match('/^http/i',$this->image_reference)) {
+                // NOTE: external references are NOT sanitized! That is beyond the security scope of this app (i.e. only pre-trusted users have data entry privs)
+                $rendered = '<img id="specimen_image_'.$this->specimen_image_id.'" class="plant-image external-reference" src="'. $this->image_reference.'" />';
+            } else {
+                $rendered = '<img id="specimen_image_'.$this->specimen_image_id.'" class="plant-image" src="'.APP_ROOT_PATH.'/image_data/specimen/'. util_sanitizeFileReference($this->image_reference).'" />';
+            }
+
+            return $rendered;
+        }
+
+        public function renderAsListItem($idstr='',$classes_array = [],$other_attribs_hash = []) {
+            array_unshift($classes_array,'specimen-image');
+            $li_elt = substr(util_listItemTag($idstr,$classes_array,$other_attribs_hash),0,-1);
+            $li_elt .= ' '.$this->fieldsAsDataAttribs().'>';
+            $li_elt .= $this->renderAsHtml().'</li>';
+            return $li_elt;
+        }
+
 	}

@@ -575,23 +575,26 @@
         }
 
         public function renderAsView() {
-            return 'MUST BE IMPLEMENTED IN SUB-CLASS!';
+            return 'renderAsView MUST BE IMPLEMENTED IN SUB-CLASS!';
         }
 
+        public function renderAsViewEmbed() {
+            return 'renderAsViewEmbed MUST BE IMPLEMENTED IN SUB-CLASS!';
+        }
         public function renderAsEdit() {
-            return 'MUST BE IMPLEMENTED IN SUB-CLASS!';
+            return 'renderAsEdit MUST BE IMPLEMENTED IN SUB-CLASS!';
         }
 
         function renderAsButtonEdit() {
-            return 'MUST BE IMPLEMENTED IN SUB-CLASS!';
+            return 'renderAsButtonEdit MUST BE IMPLEMENTED IN SUB-CLASS!';
         }
 
         function renderAsLink($action='view') {
-            return 'MUST BE IMPLEMENTED IN SUB-CLASS!';
+            return 'renderAsLink MUST BE IMPLEMENTED IN SUB-CLASS!';
         }
 
         public function renderAsHtml() {
-            return 'MUST BE IMPLEMENTED IN SUB-CLASS!';
+            return 'renderAsHtml MUST BE IMPLEMENTED IN SUB-CLASS!';
         }
 
     }

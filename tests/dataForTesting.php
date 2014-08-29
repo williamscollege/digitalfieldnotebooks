@@ -280,7 +280,7 @@ function createTestData_XXXX($dbConn) {
 
     function createTestData_Specimens($dbConn) {
         // 8000 series ids
-        # Specimen: 'specimen_id', 'created_at', 'updated_at', 'user_id', 'link_to_type', 'link_to_id', 'name', 'gps_x', 'gps_y', 'notes', 'ordering', 'catalog_identifier', 'flag_workflow_published', 'flag_workflow_validated', 'flag_delete'
+        # Specimen: 'specimen_id', 'created_at', 'updated_at', 'user_id', 'link_to_type', 'link_to_id', 'name', 'gps_longitude', 'gps_latitude', 'notes', 'ordering', 'catalog_identifier', 'flag_workflow_published', 'flag_workflow_validated', 'flag_delete'
         # VALID_LINK_TO_TYPES =  ['authoritative_plant', 'notebook_page'];
         $addTestSql  = "INSERT INTO " . Specimen::$dbTable . " VALUES
             (8001,NOW(),NOW(), 110, 'authoritative_plant', 5001, 'sci quad authoritative', -73.2054918, 42.7118454, 'notes on authoritative specimen', 1, '1a', 1, 1, 0),

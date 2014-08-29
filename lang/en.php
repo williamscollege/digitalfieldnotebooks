@@ -74,11 +74,21 @@ $LANGUAGE['en'] = [
     'variety' => 'variety',
     'catalog_identifier' => 'catalog ID',
 
+
+    'coordinates' => 'coordinates',
+    'longitude' => 'longitude',
+    'latitude' => 'latitude',
+    'zoom_level' => 'zoom level',
+
+    'notes' => 'notes',
+
     'no_permission' => 'You do not have permissions to do that.',
     'no_notebook_specified' => 'No notebook was specified.',
     'no_notebook_found' => 'Could not find that notebook.',
     'no_notebook_page_specified' => 'No notebook page was specified.',
     'no_notebook_page_found' => 'Could not find that notebook page.',
+
+    'invalid_value' => 'invalid value',
 
     '' => 'EMPTY'
 ];
