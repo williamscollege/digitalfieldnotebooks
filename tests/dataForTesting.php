@@ -77,7 +77,7 @@ function createTestData_XXXX($dbConn) {
                 (5103,NOW(),NOW(), 5001, 'common name', 'AP_A common y achestnut', 1, 0),
                 (5104,NOW(),NOW(), 5001, 'description', 'description of american chestnut', 1, 0),
                 (5105,NOW(),NOW(), 5001, 'image', 'testing/castanea_dentata.jpg', 2, 0),
-                (5106,NOW(),NOW(), 5001, 'image', 'https://www.flickr.com/photos/plussed/14761853313', 1, 0),
+                (5106,NOW(),NOW(), 5001, 'image', 'https://farm6.staticflickr.com/5556/14761853313_17d5a31479_z.jpg', 1, 0),
                 (5107,NOW(),NOW(), 5008, 'common name', 'AP_C common beebalm', 5, 0),
                 (5108,NOW(),NOW(), 5008, 'image', 'https://www.flickr.com/photos/plussed/213953635', 1, 0),
                 (5109,NOW(),NOW(), 5008, 'image', 'https://www.flickr.com/photos/plussed/213954024', 1, 0)
@@ -303,7 +303,7 @@ function createTestData_XXXX($dbConn) {
         # Specimen_Image: 'specimen_image_id', 'created_at', 'updated_at', 'specimen_id', 'user_id', 'image_reference', 'ordering', 'flag_workflow_published', 'flag_workflow_validated', 'flag_delete'
         $addTestSql  = "INSERT INTO " . Specimen_Image::$dbTable . " VALUES
             (8101,NOW(),NOW(), 8001, 110, 'testing/cnh_castanea_dentata.jpg', 1, 1, 1, 0),
-            (8102,NOW(),NOW(), 8001, 110, 'https://www.flickr.com/photos/plussed/14761853313', .5, 1, 1, 0),
+            (8102,NOW(),NOW(), 8001, 110, 'https://farm6.staticflickr.com/5556/14761853313_17d5a31479_z.jpg', .5, 1, 1, 0),
             (8103,NOW(),NOW(), 8002, 101, 'testing/USER101_8103_cnh_castanea_dentata.jpg', .75, 0, 1, 0),
             (8104,NOW(),NOW(), 8002, 101, 'testing/USER101_8103_a_nonexistent_file.jpg', .75, 0, 1, 0)
         ";

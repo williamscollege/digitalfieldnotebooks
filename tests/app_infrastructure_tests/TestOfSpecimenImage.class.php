@@ -78,7 +78,7 @@
         function testRenderAsHtml_external() {
             $si = Specimen_Image::getOneFromDb(['specimen_image_id'=>8102],$this->DB);
 
-            $canonical = '<img id="specimen_image_8102" class="plant-image external-reference" src="https://www.flickr.com/photos/plussed/14761853313" />';
+            $canonical = '<img id="specimen_image_8102" class="plant-image external-reference" src="https://farm6.staticflickr.com/5556/14761853313_17d5a31479_z.jpg" />';
             $rendered = $si->renderAsHtml();
 
 //            echo "<pre>\n".htmlentities($canonical)."\n------------------\n".htmlentities($rendered)."\n</pre>";
