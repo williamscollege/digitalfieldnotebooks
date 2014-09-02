@@ -39,4 +39,35 @@
             $this->references = Metadata_Reference::getAllFromDb(['metadata_type'=>'term_value', 'metadata_id' => $this->metadata_term_value_id, 'flag_delete' => FALSE], $this->dbConnection);
             usort($this->references,'Metadata_Reference::cmp');
         }
+
+        public function renderAsHtml() {
+            $rendered = '<span class="term_value" title="'.htmlentities($this->description).'">'.$this->name.'</span>';
+            $this->loadReferences();
+            if (count($this->references) > 0) {
+                $rendered .= '<ul class="metadata_references">';
+                foreach ($this->references as $r) {
+                    $rendered .= '<li>'.$r->renderAsViewEmbed().'</li>';
+                }
+                $rendered .= '</ul>';
+            }
+            return $rendered;
+        }
+
+        public function renderAsListItem($idstr='',$classes_array = [],$other_attribs_hash = []) {
+            $li_elt = substr(util_listItemTag($idstr,$classes_array,$other_attribs_hash),0,-1);
+            $li_elt .= ' '.$this->fieldsAsDataAttribs().'>';
+
+//            $li_elt .= '<span class="term_value" title="'.htmlentities($this->description).'">'.$this->name.'</span>';
+//            $this->loadReferences();
+//            if (count($this->references) > 0) {
+//                $li_elt .= '<ul class="metadata_references">';
+//                foreach ($this->references as $r) {
+//                    $li_elt .= '<li>'.$r->renderAsViewEmbed().'</li>';
+//                }
+//                $li_elt .= '</ul>';
+//            }
+            $li_elt .= $this->renderAsHtml();
+            $li_elt .= '</li>';
+            return $li_elt;
+        }
 	}

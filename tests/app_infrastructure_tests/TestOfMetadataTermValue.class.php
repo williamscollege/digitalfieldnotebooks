@@ -73,7 +73,7 @@
         }
 
         function testLoadReferences() {
-            $mdtv = Metadata_Term_Value::getOneFromDb(['metadata_term_value_id' => 6213],$this->DB);
+            $mdtv = Metadata_Term_Value::getOneFromDb(['metadata_term_value_id' => 6210],$this->DB);
             $this->assertEqual(0,count($mdtv->references));
 
             $mdtv->loadReferences();
@@ -86,22 +86,62 @@
 
         //// instance methods - object itself
 
-        function testRenderAsHtml() {
-            $this->todo();
+        function testRenderAsHtml_no_references() {
+            $mdtv = Metadata_Term_Value::getOneFromDb(['metadata_term_value_id' => 6205],$this->DB);
+            $canonical = '<span class="term_value" title="up to the the length of the back of the hand when a fist is made">6-12 cm</span>';
+
+            $rendered = $mdtv->renderAsHtml();
+
+//            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
+
+            $this->assertEqual($canonical,$rendered);
+            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
+        }
+
+        function testRenderAsHtml_with_references() {
+            $mdtv = Metadata_Term_Value::getOneFromDb(['metadata_term_value_id' => 6210],$this->DB);
+            $mdtv->loadReferences();
+
+            $canonical = '<span class="term_value" title="teeth outward pointing - 1 level / degree of teeth">dentate</span>';
+            $canonical .= '<ul class="metadata_references">';
+            foreach ($mdtv->references as $r) {
+                $canonical .= '<li>'.$r->renderAsViewEmbed().'</li>';
+            }
+            $canonical .= '</ul>';
+            $rendered = $mdtv->renderAsHtml();
+
+//            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
+
+            $this->assertEqual($canonical,$rendered);
+            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
         }
 
         function testRenderAsListItem_no_references() {
-            $this->todo();
-        }
-
-        function testRenderAsListItem_with_references() {
-            $mdtv = Metadata_Term_Value::getOneFromDb(['metadata_term_value_id' => 6213],$this->DB);
+            $mdtv = Metadata_Term_Value::getOneFromDb(['metadata_term_value_id' => 6205],$this->DB);
 
             $mdtv->loadReferences();
 
             // 'metadata_term_set_id', 'name', 'ordering', 'description', 'flag_delete'
-            $canonical = '<li data-metadata_term_value_id="6213" data-created_at="'.$mdtv->created_at.'" data-updated_at="'.$mdtv->updated_at.'" data-metadata_term_set_id="6102" data-name="blue" data-ordering="2" data-description="" data-flag_delete="0">';
-            $canonical .= '<span class="term_value">blue</span>';
+            $canonical = '<li data-metadata_term_value_id="6205" data-created_at="'.$mdtv->created_at.'" data-updated_at="'.$mdtv->updated_at.'" data-metadata_term_set_id="6101" data-name="6-12 cm" data-ordering="5.00000" data-description="up to the the length of the back of the hand when a fist is made" data-flag_delete="0">';
+            $canonical .= '<span class="term_value" title="up to the the length of the back of the hand when a fist is made">6-12 cm</span>';
+            $canonical .= '</li>';
+
+            $rendered = $mdtv->renderAsListItem();
+
+//            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
+
+            $this->assertEqual($canonical,$rendered);
+            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
+        }
+
+        function testRenderAsListItem_with_references() {
+            $mdtv = Metadata_Term_Value::getOneFromDb(['metadata_term_value_id' => 6210],$this->DB);
+
+            $mdtv->loadReferences();
+
+            // 'metadata_term_set_id', 'name', 'ordering', 'description', 'flag_delete'
+            $canonical = '<li data-metadata_term_value_id="6210" data-created_at="'.$mdtv->created_at.'" data-updated_at="'.$mdtv->updated_at.'" data-metadata_term_set_id="6103" data-name="dentate" data-ordering="1.00000" data-description="teeth outward pointing - 1 level / degree of teeth" data-flag_delete="0">';
+            $canonical .= '<span class="term_value" title="teeth outward pointing - 1 level / degree of teeth">dentate</span>';
             $canonical .= '<ul class="metadata_references">';
             foreach ($mdtv->references as $r) {
                 $canonical .= '<li>'.$r->renderAsViewEmbed().'</li>';
@@ -111,11 +151,10 @@
 
             $rendered = $mdtv->renderAsListItem();
 
-//            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
+//            echo "<pre>\n".htmlentities($canonical)."\n-------\n".htmlentities($rendered)."\n</pre>";
 
             $this->assertEqual($canonical,$rendered);
             $this->assertNoPattern('/IMPLEMENTED/',$rendered);
-
         }
 
     }
