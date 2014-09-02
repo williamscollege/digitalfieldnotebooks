@@ -7,6 +7,7 @@
 		public static $dbTable = 'metadata_structures';
 
         public $references;
+        public $term_set;
 
         public function __construct($initsHash) {
             parent::__construct($initsHash);
@@ -16,6 +17,7 @@
             // e.g. automatically load all accessibility info associated with the user
 
             $this->references = array();
+            $this->term_set = '';
         }
 
         public static function cmp($a, $b) {
@@ -93,5 +95,15 @@
 
         public function loadReferences() {
             $this->references = Metadata_Reference::getAllFromDb(['metadata_type'=>'structure', 'metadata_id' => $this->metadata_structure_id, 'flag_delete' => FALSE], $this->dbConnection);
+        }
+
+        public function loadTermSetAndValues() {
+            if (! $this->metadata_term_set_id) {
+                $this->term_set = '';
+                return;
+            }
+
+            $this->term_set = Metadata_Term_Set::getOneFromDb(['metadata_term_set_id'=>$this->metadata_term_set_id],$this->dbConnection);
+            $this->term_set->loadTermValues();
         }
 	}

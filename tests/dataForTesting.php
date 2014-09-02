@@ -97,7 +97,7 @@ function createTestData_XXXX($dbConn) {
         # Metadata_Structure: 'metadata_structure_id', 'created_at', 'updated_at', 'parent_metadata_structure_id', 'name', 'ordering', 'description', 'details', 'metadata_term_set_id', 'flag_delete'
         $addTestSql  = "INSERT INTO " . Metadata_Structure::$dbTable . " VALUES
             (6001,NOW(),NOW(), 0, 'flower', 1, 'info about the flower', '', 0, 0),
-            (6002,NOW(),NOW(), 6001, 'flower size', 0.5, 'the size of the flower in its largest dimension', '', 6101, 0),
+            (6002,NOW(),NOW(), 6001, 'flower size', 0.5, 'the size of the flower in its largest dimension', 'some details', 6101, 0),
             (6003,NOW(),NOW(), 6001, 'flower primary color', .75, 'the primary / dominant color of the flower', '', 6102, 0),
             (6004,NOW(),NOW(), 0, 'leaf', 0.5, 'info about the individual leaves of the plant', 'details', 0, 0)
         ";

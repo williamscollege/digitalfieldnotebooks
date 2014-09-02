@@ -42,4 +42,48 @@
                 return 'UNKNOWN METADATA_TYPE: /'.$this->metadata_type.'/';
             }
 		}
+
+        public function renderAsHtml() {
+            $rendered = '';
+
+            if ($this->type == 'text') {
+                $file_path = $_SERVER["DOCUMENT_ROOT"].APP_ROOT_PATH.'/text_data/'.util_sanitizeFileReference($this->external_reference);
+                $text_data = file_get_contents( $file_path);
+                $text_data = preg_replace('/\\r/',"",$text_data);
+                $rendered = '<div class="text_data" title="'.htmlentities($this->description).'">'.htmlentities($text_data).'</div>';
+            }
+            elseif ($this->type == 'image') {
+                if (preg_match('/^http/i',$this->external_reference)) {
+                    // NOTE: external references are NOT sanitized! That is beyond the security scope of this app (i.e. only pre-trusted users have data entry privs)
+                    $rendered = '<img class="metadata-reference-image external-reference" src="'. $this->external_reference.'" alt="'.htmlentities($this->description).'"/>';
+                } else {
+                    $rendered = '<img class="metadata-reference-image" src="'.APP_ROOT_PATH.'/image_data/reference/'. util_sanitizeFileReference($this->external_reference).'" alt="'.htmlentities($this->description).'"/>';
+                }
+            }
+            elseif ($this->type == 'link') {
+                // NOTE: external references are NOT sanitized! That is beyond the security scope of this app (i.e. only pre-trusted users have data entry privs)
+                $rendered = '<a href="'. $this->external_reference.'" title="'.htmlentities($this->description).'">'.htmlentities($this->description).'</a>';
+            }
+
+            return $rendered;
+        }
+
+        public function renderAsViewEmbed() {
+            $reference_class='';
+
+            if ($this->type == 'text') {
+                $reference_class='rendered_metadata_reference_text';
+            }
+            elseif ($this->type == 'image') {
+                $reference_class='rendered_metadata_reference_image';
+            }
+            elseif ($this->type == 'link') {
+                $reference_class='rendered_metadata_reference_link';
+            } else {
+                return '';
+            }
+
+            $rendered = '<div id="rendered_metadata_reference_'.$this->metadata_reference_id.'" class="rendered_metadata_reference '.$reference_class.'">'.$this->renderAsHtml().'</div>';
+            return $rendered;
+        }
 	}

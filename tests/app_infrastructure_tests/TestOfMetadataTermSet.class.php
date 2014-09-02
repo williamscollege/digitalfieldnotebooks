@@ -39,8 +39,6 @@
             $this->assertEqual(Metadata_Term_Set::cmp($n3, $n1), -1);
         }
 
-        //// instance methods - object itself
-
         //// instance methods - related data
 
         function testGetMetadataStructures() {
@@ -80,5 +78,16 @@
 
             $this->assertEqual(6302,$mdts->references[0]->metadata_reference_id);
         }
+
+        //// instance methods - object itself
+
+        function testRenderAsHtml() {
+            $this->todo();
+        }
+
+        function testRenderAsListItem() {
+            $this->todo();
+        }
+
 
     }

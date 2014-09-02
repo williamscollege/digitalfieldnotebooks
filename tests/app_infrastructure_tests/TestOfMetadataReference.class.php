@@ -51,8 +51,6 @@
             $this->assertEqual(6304,$mdrs[6]->metadata_reference_id);
         }
 
-        //// instance methods - object itself
-
         //// instance methods - related data
 
         function testGetReferrent() {
@@ -70,6 +68,158 @@
             $this->assertEqual(6101,$r2->metadata_term_set_id);
             $this->assertEqual(6209,$r3->metadata_term_value_id);
             $this->assertEqual('UNKNOWN METADATA_TYPE: //',$rX);
+        }
+
+        //// instance methods - object itself
+
+        function testRenderAsHtml_text() {
+            $mdr = Metadata_Reference::getOneFromDb(['metadata_reference_id'=>6302],$this->DB);
+
+            $text = "< 3 mm : less than the thickness of 3 pennies
+3 mm - 1cm : smaller than the smallest thickness of your pinkie finger
+1-3 cm : up to the largest thickness of your thumb
+3-6 cm : up to the thicness of 3 fingers
+6-12 cm : up to the thicness of 2 fists side face to face
+12-20 cm : up to the thicness of 2 fists pinkie to pinkie (palms up)
+20-30 cm : up to the length of your forearm
+> 30 cm : bigger than that";
+//            $text = preg_replace('/\\r/',"",$text);
+
+            $canonical = '<div class="text_data" title="description of the small sizes">'.htmlentities($text).'</div>';
+            $rendered = $mdr->renderAsHtml();
+//            echo "<pre>\n".htmlentities($canonical)."\n-----\n".htmlentities($rendered)."\n</pre>";
+            $this->assertEqual($canonical,$rendered);
+            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
+        }
+
+        function testRenderAsViewEmbed_text() {
+            $mdr = Metadata_Reference::getOneFromDb(['metadata_reference_id'=>6302],$this->DB);
+            $canonical = '<div id="rendered_metadata_reference_6302" class="rendered_metadata_reference rendered_metadata_reference_text">'.$mdr->renderAsHtml().'</div>';
+            $rendered = $mdr->renderAsViewEmbed();
+//            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
+            $this->assertEqual($canonical,$rendered);
+            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
+        }
+
+        function ASIDE_testRenderAsListItem_text() {
+            $this->todo(); return;
+
+            $mdr = Metadata_Reference::getOneFromDb(['metadata_reference_id'=>6301],$this->DB);
+
+            global $USER;
+            $USER = User::getOneFromDb(['username'=>TESTINGUSER], $this->DB);
+
+            $canonical = '<li data-metadata_reference_id="6301" data-created_at="'.$mdr->created_at.'" data-updated_at="'.$mdr->updated_at.'" data-flag_delete="0">'.
+                ''.
+                '</li>';
+
+            $rendered = $mdr->renderAsListItem();
+
+//            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
+
+            $this->assertEqual($canonical,$rendered);
+            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
+        }
+
+        //---------
+
+        function testRenderAsHtml_image() {
+            $mdr = Metadata_Reference::getOneFromDb(['metadata_reference_id'=>6303],$this->DB);
+            $canonical = '<img class="metadata-reference-image" src="'.APP_ROOT_PATH.'/image_data/reference/testing/red.jpg" alt="image of the color red"/>';
+            $rendered = $mdr->renderAsHtml();
+//            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
+            $this->assertEqual($canonical,$rendered);
+            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
+
+            $mdr = Metadata_Reference::getOneFromDb(['metadata_reference_id'=>6305],$this->DB);
+            $canonical = '<img class="metadata-reference-image external-reference" src="http://cf.ydcdn.net/1.0.1.20/images/main/dentate.jpg" alt="picture of dentate"/>';
+            $rendered = $mdr->renderAsHtml();
+//            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
+            $this->assertEqual($canonical,$rendered);
+            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
+        }
+
+        function testRenderAsViewEmbed_image() {
+            $mdr = Metadata_Reference::getOneFromDb(['metadata_reference_id'=>6303],$this->DB);
+            $canonical = '<div id="rendered_metadata_reference_6303" class="rendered_metadata_reference rendered_metadata_reference_image">'.$mdr->renderAsHtml().'</div>';
+            $rendered = $mdr->renderAsViewEmbed();
+//            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
+            $this->assertEqual($canonical,$rendered);
+            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
+
+            $mdr = Metadata_Reference::getOneFromDb(['metadata_reference_id'=>6305],$this->DB);
+            $canonical = '<div id="rendered_metadata_reference_6305" class="rendered_metadata_reference rendered_metadata_reference_image">'.$mdr->renderAsHtml().'</div>';
+            $rendered = $mdr->renderAsViewEmbed();
+//            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
+            $this->assertEqual($canonical,$rendered);
+            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
+        }
+
+        function ASIDE_testRenderAsListItem_image() {
+            $this->todo(); return;
+
+            $mdr = Metadata_Reference::getOneFromDb(['metadata_reference_id'=>6303],$this->DB);
+
+            global $USER;
+            $USER = User::getOneFromDb(['username'=>TESTINGUSER], $this->DB);
+
+            $canonical = '<li data-metadata_reference_id="6303" data-created_at="'.$mdr->created_at.'" data-updated_at="'.$mdr->updated_at.'" data-flag_delete="0">'.
+                ''.
+                '</li>';
+
+            $rendered = $mdr->renderAsListItem();
+
+//            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
+
+            $this->assertEqual($canonical,$rendered);
+            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
+        }
+
+        //---------
+
+        function testRenderAsHtml_link() {
+            $mdr = Metadata_Reference::getOneFromDb(['metadata_reference_id'=>6304],$this->DB);
+            $canonical = '<a href="http://dictionary.reference.com/browse/dentate" title="definition of dentate">definition of dentate</a>';
+            $rendered = $mdr->renderAsHtml();
+//            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
+            $this->assertEqual($canonical,$rendered);
+            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
+        }
+
+        function testRenderAsViewEmbed_link() {
+            $mdr = Metadata_Reference::getOneFromDb(['metadata_reference_id'=>6304],$this->DB);
+
+            global $USER;
+            $USER = User::getOneFromDb(['username'=>TESTINGUSER], $this->DB);
+
+            $canonical = '<div id="rendered_metadata_reference_6304" class="rendered_metadata_reference rendered_metadata_reference_link">'.$mdr->renderAsHtml().'</div>';
+
+            $rendered = $mdr->renderAsViewEmbed();
+
+//            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
+
+            $this->assertEqual($canonical,$rendered);
+            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
+        }
+
+        function ASIDE_testRenderAsListItem_link() {
+            $this->todo(); return;
+
+            $mdr = Metadata_Reference::getOneFromDb(['metadata_reference_id'=>6304],$this->DB);
+
+            global $USER;
+            $USER = User::getOneFromDb(['username'=>TESTINGUSER], $this->DB);
+
+            $canonical = '<li data-metadata_reference_id="6304" data-created_at="'.$mdr->created_at.'" data-updated_at="'.$mdr->updated_at.'" data-flag_delete="0">'.
+                ''.
+                '</li>';
+
+            $rendered = $mdr->renderAsListItem();
+
+//            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
+
+            $this->assertEqual($canonical,$rendered);
+            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
         }
 
     }

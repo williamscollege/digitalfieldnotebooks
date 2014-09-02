@@ -62,8 +62,6 @@
             $this->assertEqual(6209, $all[12]->metadata_term_value_id);
         }
 
-        //// instance methods - object itself
-
         //// instance methods - related data
 
         function testGetMetadataTermSet() {
@@ -84,6 +82,40 @@
 
             $this->assertEqual(6305,$mdtv->references[0]->metadata_reference_id);
             $this->assertEqual(6304,$mdtv->references[1]->metadata_reference_id);
+        }
+
+        //// instance methods - object itself
+
+        function testRenderAsHtml() {
+            $this->todo();
+        }
+
+        function testRenderAsListItem_no_references() {
+            $this->todo();
+        }
+
+        function testRenderAsListItem_with_references() {
+            $mdtv = Metadata_Term_Value::getOneFromDb(['metadata_term_value_id' => 6213],$this->DB);
+
+            $mdtv->loadReferences();
+
+            // 'metadata_term_set_id', 'name', 'ordering', 'description', 'flag_delete'
+            $canonical = '<li data-metadata_term_value_id="6213" data-created_at="'.$mdtv->created_at.'" data-updated_at="'.$mdtv->updated_at.'" data-metadata_term_set_id="6102" data-name="blue" data-ordering="2" data-description="" data-flag_delete="0">';
+            $canonical .= '<span class="term_value">blue</span>';
+            $canonical .= '<ul class="metadata_references">';
+            foreach ($mdtv->references as $r) {
+                $canonical .= '<li>'.$r->renderAsViewEmbed().'</li>';
+            }
+            $canonical .= '</ul>';
+            $canonical .= '</li>';
+
+            $rendered = $mdtv->renderAsListItem();
+
+//            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
+
+            $this->assertEqual($canonical,$rendered);
+            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
+
         }
 
     }
