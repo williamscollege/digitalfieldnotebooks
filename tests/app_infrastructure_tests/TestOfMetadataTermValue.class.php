@@ -103,7 +103,7 @@
             $mdtv->loadReferences();
 
             $canonical = '<span class="term_value" title="teeth outward pointing - 1 level / degree of teeth">dentate</span>';
-            $canonical .= '<ul class="metadata_references">';
+            $canonical .= '<ul class="metadata-references">';
             foreach ($mdtv->references as $r) {
                 $canonical .= '<li>'.$r->renderAsViewEmbed().'</li>';
             }
@@ -115,6 +115,7 @@
             $this->assertEqual($canonical,$rendered);
             $this->assertNoPattern('/IMPLEMENTED/',$rendered);
         }
+
 
         function testRenderAsListItem_no_references() {
             $mdtv = Metadata_Term_Value::getOneFromDb(['metadata_term_value_id' => 6205],$this->DB);
@@ -142,7 +143,7 @@
             // 'metadata_term_set_id', 'name', 'ordering', 'description', 'flag_delete'
             $canonical = '<li data-metadata_term_value_id="6210" data-created_at="'.$mdtv->created_at.'" data-updated_at="'.$mdtv->updated_at.'" data-metadata_term_set_id="6103" data-name="dentate" data-ordering="1.00000" data-description="teeth outward pointing - 1 level / degree of teeth" data-flag_delete="0">';
             $canonical .= '<span class="term_value" title="teeth outward pointing - 1 level / degree of teeth">dentate</span>';
-            $canonical .= '<ul class="metadata_references">';
+            $canonical .= '<ul class="metadata-references">';
             foreach ($mdtv->references as $r) {
                 $canonical .= '<li>'.$r->renderAsViewEmbed().'</li>';
             }
@@ -157,4 +158,21 @@
             $this->assertNoPattern('/IMPLEMENTED/',$rendered);
         }
 
+        function testRenderAsViewEmbed() {
+            $mdtv = Metadata_Term_Value::getOneFromDb(['metadata_term_value_id' => 6210],$this->DB);
+
+            $mdtv->loadReferences();
+
+            // 'metadata_term_set_id', 'name', 'ordering', 'description', 'flag_delete'
+            $canonical = '<div id="rendered_metadata_term_value_6210" class="rendered-metadata-term-value" data-metadata_term_value_id="6210" data-created_at="'.$mdtv->created_at.'" data-updated_at="'.$mdtv->updated_at.'" data-metadata_term_set_id="6103" data-name="dentate" data-ordering="1.00000" data-description="teeth outward pointing - 1 level / degree of teeth" data-flag_delete="0">';
+            $canonical .= $mdtv->renderAsHtml();
+            $canonical .= '</div>';
+
+            $rendered = $mdtv->renderAsViewEmbed();
+
+//            echo "<pre>\n".htmlentities($canonical)."\n-------\n".htmlentities($rendered)."\n</pre>";
+
+            $this->assertEqual($canonical,$rendered);
+            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
+        }
     }

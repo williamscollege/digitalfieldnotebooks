@@ -45,4 +45,32 @@
             usort($this->references,'Metadata_Reference::cmp');
         }
 
+        public function renderAsHtml() {
+            $this->loadReferences();
+            $this->loadTermValues();
+
+            $rendered = '<div class="metadata-term-set-header">'.htmlentities($this->name);
+            $rendered .= '<ul class="metadata-references">';
+            foreach ($this->references as $r) {
+                $rendered .= '<li>'.$r->renderAsViewEmbed().'</li>';
+            }
+            $rendered .= '</ul></div>';
+            $rendered .= '<ul class="metadata-term-values">';
+            foreach ($this->term_values as $tv) {
+                $rendered .= $tv->renderAsListItem();
+            }
+            $rendered .= '</ul>';
+
+            return $rendered;
+
+        }
+
+        public function renderAsListItem($idstr='',$classes_array = [],$other_attribs_hash = []) {
+            $li_elt = substr(util_listItemTag($idstr,$classes_array,$other_attribs_hash),0,-1);
+            $li_elt .= ' '.$this->fieldsAsDataAttribs().'>';
+            $li_elt .= $this->renderAsHtml();
+            $li_elt .= '</li>';
+            return $li_elt;
+        }
+
     }
