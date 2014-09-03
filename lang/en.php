@@ -81,6 +81,7 @@ $LANGUAGE['en'] = [
     'zoom_level' => 'zoom level',
 
     'metadata' => 'metadata',
+    'all_metadata' => 'List of all metadata',
     'metadata_no_children_no_values' => 'This metadata has neither values nor children - it needs to be edited',
 
     'notes' => 'notes',

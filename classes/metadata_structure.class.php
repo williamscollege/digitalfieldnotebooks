@@ -116,14 +116,19 @@
             return $link;
         }
 
+        public function renderAsButtonEdit() {
+            $btn = '<a id="btn-edit" href="'.APP_ROOT_PATH.'/app_code/metadata_structure.php?action=edit&metadata_structure_id='.$this->metadata_structure_id.'" class="edit_link btn" >'.util_lang('edit').'</a>';
+            return $btn;
+        }
+
         public function renderAsView() {
             $this->loadTermSetAndValues();
             $this->loadReferences();
 
             //  '.$mds_parent->renderAsLink().' &gt;
 
-            $rendered = '<div id="rendered_metadata_structure_'.$this->metadata_structure_id.'" class="rendered_metadata_structure">'.$this->fieldsAsDataAttribs().'>
-  <div class="metadata_lineage"><a href="'.APP_ROOT_PATH.'/app_code/metadata_structure.php?action=list">metadata</a> %gt;';
+            $rendered = '<div id="rendered_metadata_structure_'.$this->metadata_structure_id.'" class="rendered_metadata_structure" '.$this->fieldsAsDataAttribs().'>
+  <div class="metadata_lineage"><a href="'.APP_ROOT_PATH.'/app_code/metadata_structure.php?action=list">metadata</a> &gt;';
             $lineage = $this->getLineage();
             foreach ($lineage as $mds_ancestor) {
                 if ($mds_ancestor->metadata_structure_id != $this->metadata_structure_id) {
@@ -131,7 +136,7 @@
                 }
             }
             $rendered .= '</div>'."\n".
-'  <div class="metadata-structure-header">'.htmlentities($this->name);
+'  <div class="metadata-structure-header">'.ucfirst(util_lang('metadata')).' : '.htmlentities($this->name);
             $rendered .= '<ul class="metadata-references">';
             foreach ($this->references as $r) {
                 $rendered .= '<li>'.$r->renderAsViewEmbed().'</li>';

@@ -38,13 +38,14 @@
 				util_redirectToAppHome('failure', 'msg_failed_sign_in');
 			}
 		}
-		else {
-			// SECTION: must be signed in to view pages; otherwise, redirect to index splash page
-			if (!strpos(APP_FOLDER . "/index.php", $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'])) {
-				// TODO: add logging?
-				util_redirectToAppHome('info', 'msg_do_sign_in');
-			}
-		}
+        // NOTE: handling of non-logged-in users is delegated to individual app code pages - the application does NOT automatically require users to be logged in
+//		else {
+//			// SECTION: must be signed in to view pages; otherwise, redirect to index splash page
+//			if (!strpos(APP_FOLDER . "/index.php", $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'])) {
+//				// TODO: add logging?
+//				util_redirectToAppHome('info', 'msg_do_sign_in');
+//			}
+//		}
 	}
 	else { // SECTION: authenticated
 		if ($_SESSION['fingerprint'] != $FINGERPRINT) {

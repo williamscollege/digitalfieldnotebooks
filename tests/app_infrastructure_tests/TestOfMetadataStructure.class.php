@@ -141,11 +141,23 @@
 
         //// instance methods - object itself
 
-        function testRenderAsLink($action='view') {
+        function testRenderAsLink() {
             $mds = Metadata_Structure::getOneFromDb(['metadata_structure_id'=>6001],$this->DB);
 
-            $canonical = '<a href="'.APP_ROOT_PATH.'/app_code/metadata_structure.php?action='.$action.'&metadata_structure_id='.$mds->metadata_structure_id.'">'.htmlentities($mds->name).'</a>';
-            $rendered = $mds->renderAsLink();
+            $canonical = '<a href="'.APP_ROOT_PATH.'/app_code/metadata_structure.php?action=view&metadata_structure_id='.$mds->metadata_structure_id.'">'.htmlentities($mds->name).'</a>';
+            $rendered = $mds->renderAsLink('view');
+
+//            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
+
+            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
+            $this->assertEqual($canonical,$rendered);
+        }
+
+        function testRenderAsButtonEdit() {
+            $mds = Metadata_Structure::getOneFromDb(['metadata_structure_id'=>6001],$this->DB);
+
+            $canonical = '<a id="btn-edit" href="'.APP_ROOT_PATH.'/app_code/metadata_structure.php?action=edit&metadata_structure_id=6001" class="edit_link btn" >'.util_lang('edit').'</a>';
+            $rendered = $mds->renderAsButtonEdit();
 
 //            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
 
@@ -228,9 +240,9 @@
             $mds->loadTermSetAndValues();
             $mds->loadReferences();
 
-            $canonical = '<div id="rendered_metadata_structure_6001" class="rendered_metadata_structure">'.$mds->fieldsAsDataAttribs().'>
-  <div class="metadata_lineage"><a href="'.APP_ROOT_PATH.'/app_code/metadata_structure.php?action=list">metadata</a> %gt;</div>
-  <div class="metadata-structure-header">flower';
+            $canonical = '<div id="rendered_metadata_structure_6001" class="rendered_metadata_structure" '.$mds->fieldsAsDataAttribs().'>
+  <div class="metadata_lineage"><a href="'.APP_ROOT_PATH.'/app_code/metadata_structure.php?action=list">metadata</a> &gt;</div>
+  <div class="metadata-structure-header">'.ucfirst(util_lang('metadata')).' : flower';
             $canonical .= '<ul class="metadata-references">';
             foreach ($mds->references as $r) {
                 $canonical .= '<li>'.$r->renderAsViewEmbed().'</li>';
@@ -252,7 +264,7 @@
 
             $rendered = $mds->renderAsView();
 
-//            echo "<pre>\n".htmlentities($canonical)."\n---------------\n".htmlentities($rendered)."\n</pre>";
+            echo "<pre>\n".htmlentities($canonical)."\n---------------\n".htmlentities($rendered)."\n</pre>";
 
             $this->assertNoPattern('/IMPLEMENTED/',$rendered);
             $this->assertEqual($canonical,$rendered);
@@ -265,9 +277,9 @@
 
             $mds_parent = Metadata_Structure::getOneFromDb(['metadata_structure_id'=>6001],$this->DB);
 
-            $canonical = '<div id="rendered_metadata_structure_6002" class="rendered_metadata_structure">'.$mds->fieldsAsDataAttribs().'>
-  <div class="metadata_lineage"><a href="'.APP_ROOT_PATH.'/app_code/metadata_structure.php?action=list">metadata</a> %gt; '.$mds_parent->renderAsLink().' &gt;</div>
-  <div class="metadata-structure-header">flower size';
+            $canonical = '<div id="rendered_metadata_structure_6002" class="rendered_metadata_structure" '.$mds->fieldsAsDataAttribs().'>
+  <div class="metadata_lineage"><a href="'.APP_ROOT_PATH.'/app_code/metadata_structure.php?action=list">metadata</a> &gt; '.$mds_parent->renderAsLink().' &gt;</div>
+  <div class="metadata-structure-header">'.ucfirst(util_lang('metadata')).' : flower size';
             $canonical .= '<ul class="metadata-references">';
             foreach ($mds->references as $r) {
                 $canonical .= '<li>'.$r->renderAsViewEmbed().'</li>';
