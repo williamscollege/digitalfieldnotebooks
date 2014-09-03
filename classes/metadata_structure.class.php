@@ -106,4 +106,94 @@
             $this->term_set = Metadata_Term_Set::getOneFromDb(['metadata_term_set_id'=>$this->metadata_term_set_id],$this->dbConnection);
             $this->term_set->loadTermValues();
         }
+
+
+        function renderAsLink($action='view') {
+            $action = Action::sanitizeAction($action);
+
+            $link = '<a href="'.APP_ROOT_PATH.'/app_code/metadata_structure.php?action='.$action.'&metadata_structure_id='.$this->metadata_structure_id.'">'.htmlentities($this->name).'</a>';
+
+            return $link;
+        }
+
+        public function renderAsView() {
+            $this->loadTermSetAndValues();
+            $this->loadReferences();
+
+            //  '.$mds_parent->renderAsLink().' &gt;
+
+            $rendered = '<div id="rendered_metadata_structure_'.$this->metadata_structure_id.'" class="rendered_metadata_structure">'.$this->fieldsAsDataAttribs().'>
+  <div class="metadata_lineage"><a href="'.APP_ROOT_PATH.'/app_code/metadata_structure.php?action=list">metadata</a> %gt;';
+            $lineage = $this->getLineage();
+            foreach ($lineage as $mds_ancestor) {
+                if ($mds_ancestor->metadata_structure_id != $this->metadata_structure_id) {
+                    $rendered .= ' '.$mds_ancestor->renderAsLink().' &gt;';
+                }
+            }
+            $rendered .= '</div>'."\n".
+'  <div class="metadata-structure-header">'.htmlentities($this->name);
+            $rendered .= '<ul class="metadata-references">';
+            foreach ($this->references as $r) {
+                $rendered .= '<li>'.$r->renderAsViewEmbed().'</li>';
+            }
+            $rendered .= '</ul></div>'."\n";
+            if ($this->description) {
+                $rendered .= '  <div class="description">'.$this->description.'</div>'."\n";
+            }
+            if ($this->details) {
+                $rendered .= '  <div class="details">'.$this->details.'</div>'."\n";
+            }
+            if ($this->term_set) {
+                $rendered .= '  '.$this->term_set->renderAsViewEmbed();
+            } else {
+                $children = $this->getChildren();
+                if ($children) {
+                    $rendered .= '<ul class="metadata-structure-tree">'."\n";
+                    foreach ($children as $child) {
+                        $rendered .= $child->renderAsListTree();
+                    }
+                    $rendered .= '</ul>';
+                } else {
+                    $rendered .= '<span class="info">'.util_lang('metadata_no_children_no_values').'</span>';
+                }
+            }
+
+            $rendered .= '</div>';
+
+            return $rendered;
+        }
+
+        public function renderAsListItem_Lead($idstr='',$classes_array = [],$other_attribs_hash = []) {
+            $li_elt_start = substr(util_listItemTag($idstr,$classes_array,$other_attribs_hash),0,-1);
+            $li_elt_start .= ' '.$this->fieldsAsDataAttribs().'>';
+            return $li_elt_start;
+        }
+        public function renderAsListItem($idstr='',$classes_array = [],$other_attribs_hash = []) {
+//            $li_elt = substr(util_listItemTag($idstr,$classes_array,$other_attribs_hash),0,-1);
+//            $li_elt .= ' '.$this->fieldsAsDataAttribs().'>';
+            $li_elt = $this->renderAsListItem_Lead($idstr,$classes_array,$other_attribs_hash);
+            $li_elt .= $this->renderAsLink();
+            $li_elt .= '</li>';
+            return $li_elt;
+        }
+
+        public function renderAsListTree() {
+            $children = $this->getChildren();
+            if ($children) {
+                $rendered = $this->renderAsListItem_Lead();
+                $rendered .= $this->renderAsLink();
+
+                $rendered .= '<ul class="metadata-structure-tree">'."\n";
+                foreach ($children as $child) {
+                    $rendered .= $child->renderAsListTree();
+                }
+                $rendered .= '</ul>';
+
+                $rendered .= '</li>';
+                return $rendered;
+            } else {
+                return $this->renderAsListItem();
+            }
+        }
+
 	}

@@ -141,35 +141,44 @@
 
         //// instance methods - object itself
 
-        function testRenderAsHtml() {
-            $this->todo();
-            return;
-
+        function testRenderAsLink($action='view') {
             $mds = Metadata_Structure::getOneFromDb(['metadata_structure_id'=>6001],$this->DB);
 
-            global $USER;
-            $USER = User::getOneFromDb(['username'=>TESTINGUSER], $this->DB);
-
-            $canonical = '';
-
-            $rendered = $mds->renderAsHtml();
+            $canonical = '<a href="'.APP_ROOT_PATH.'/app_code/metadata_structure.php?action='.$action.'&metadata_structure_id='.$mds->metadata_structure_id.'">'.htmlentities($mds->name).'</a>';
+            $rendered = $mds->renderAsLink();
 
 //            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
 
-            $this->assertEqual($canonical,$rendered);
             $this->assertNoPattern('/IMPLEMENTED/',$rendered);
+            $this->assertEqual($canonical,$rendered);
         }
 
+//        function testRenderAsHtml() {
+//            $this->todo();
+//            return;
+//
+//            $mds = Metadata_Structure::getOneFromDb(['metadata_structure_id'=>6001],$this->DB);
+//
+//            global $USER;
+//            $USER = User::getOneFromDb(['username'=>TESTINGUSER], $this->DB);
+//
+//            $canonical = '';
+//
+//            $rendered = $mds->renderAsHtml();
+//
+////            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
+//
+//            $this->assertEqual($canonical,$rendered);
+//            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
+//        }
+
         function testRenderAsListItem() {
-            $this->todo();
-            return;
+//            $this->todo();
+//            return;
 
             $mds = Metadata_Structure::getOneFromDb(['metadata_structure_id'=>6001],$this->DB);
 
-            global $USER;
-            $USER = User::getOneFromDb(['username'=>TESTINGUSER], $this->DB);
-
-            $canonical = '';
+            $canonical = '<li data-metadata_structure_id="6001" data-created_at="'.$mds->created_at.'" data-updated_at="'.$mds->updated_at.'" data-parent_metadata_structure_id="0" data-name="flower" data-ordering="1.00000" data-description="info about the flower" data-details="" data-metadata_term_set_id="0" data-flag_delete="0"><a href="'.APP_ROOT_PATH.'/app_code/metadata_structure.php?action=view&metadata_structure_id=6001">flower</a></li>';
 
             $rendered = $mds->renderAsListItem();
 
@@ -179,75 +188,122 @@
             $this->assertNoPattern('/IMPLEMENTED/',$rendered);
         }
 
-        function testRenderAsView_parent() {
-            $this->todo();
-            return;
+        function testRenderAsListTree_leaf() {
+            $mds = Metadata_Structure::getOneFromDb(['metadata_structure_id'=>6002],$this->DB);
 
-            $mds = Metadata_Structure::getOneFromDb(['metadata_structure_id'=>6001],$this->DB);
+            $canonical = $mds->renderAsListItem();
 
-            global $USER;
-            $USER = User::getOneFromDb(['username'=>TESTINGUSER], $this->DB);
+            $rendered = $mds->renderAsListTree();
 
-            $canonical = '';
-
-            $rendered = $mds->renderAsView();
-
-//            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
+//            echo "<pre>\n".htmlentities($canonical)."\n---------\n".htmlentities($rendered)."\n</pre>";
 
             $this->assertEqual($canonical,$rendered);
             $this->assertNoPattern('/IMPLEMENTED/',$rendered);
+        }
+
+        function testRenderAsListTree_branch() {
+            $mds = Metadata_Structure::getOneFromDb(['metadata_structure_id'=>6001],$this->DB);
+            $mds_c1 = Metadata_Structure::getOneFromDb(['metadata_structure_id'=>6002],$this->DB);
+            $mds_c2 = Metadata_Structure::getOneFromDb(['metadata_structure_id'=>6003],$this->DB);
+
+            $canonical = $mds->renderAsListItem_Lead();
+            $canonical .= $mds->renderAsLink();
+            $canonical .= '<ul class="metadata-structure-tree">'."\n";
+            $canonical .= $mds_c1->renderAsListItem();
+            $canonical .= $mds_c2->renderAsListItem();
+            $canonical .= '</ul>';
+            $canonical .= '</li>';
+
+            $rendered = $mds->renderAsListTree();
+
+//            echo "<pre>\n".htmlentities($canonical)."\n---------\n".htmlentities($rendered)."\n</pre>";
+
+            $this->assertEqual($canonical,$rendered);
+            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
+        }
+
+
+        function testRenderAsView_parent() {
+            $mds = Metadata_Structure::getOneFromDb(['metadata_structure_id'=>6001],$this->DB);
+            $mds->loadTermSetAndValues();
+            $mds->loadReferences();
+
+            $canonical = '<div id="rendered_metadata_structure_6001" class="rendered_metadata_structure">'.$mds->fieldsAsDataAttribs().'>
+  <div class="metadata_lineage"><a href="'.APP_ROOT_PATH.'/app_code/metadata_structure.php?action=list">metadata</a> %gt;</div>
+  <div class="metadata-structure-header">flower';
+            $canonical .= '<ul class="metadata-references">';
+            foreach ($mds->references as $r) {
+                $canonical .= '<li>'.$r->renderAsViewEmbed().'</li>';
+            }
+            $canonical .= '</ul></div>
+  <div class="description">info about the flower</div>'."\n";
+
+            $canonical .= '<ul class="metadata-structure-tree">'."\n";
+            $children = $mds->getChildren();
+
+//            util_prePrintR($children);
+
+            foreach ($children as $mds_child) {
+                $canonical .= $mds_child->renderAsListTree();
+            }
+            $canonical .= '</ul>';
+
+            $canonical .= '</div>';
+
+            $rendered = $mds->renderAsView();
+
+//            echo "<pre>\n".htmlentities($canonical)."\n---------------\n".htmlentities($rendered)."\n</pre>";
+
+            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
+            $this->assertEqual($canonical,$rendered);
         }
 
         function testRenderAsView_child() {
             $mds = Metadata_Structure::getOneFromDb(['metadata_structure_id'=>6002],$this->DB);
+            $mds->loadTermSetAndValues();
+            $mds->loadReferences();
 
-            global $USER;
-            $USER = User::getOneFromDb(['username'=>TESTINGUSER], $this->DB);
-
-//            $mds->
+            $mds_parent = Metadata_Structure::getOneFromDb(['metadata_structure_id'=>6001],$this->DB);
 
             $canonical = '<div id="rendered_metadata_structure_6002" class="rendered_metadata_structure">'.$mds->fieldsAsDataAttribs().'>
-  <div class="metadata_lineage"></div>
-  <h3>flower size</h3>
-  <div class="description"></div>
-  <div class="details"></div>
-  <h5>small lengths</h5>
-  <ul>
-';
-
-            $mds->loadTermSetAndValues();
-            foreach ($mds->term_set->term_values as $tv) {
-                $canonical .= '    '.$tv->renderAsListItem()."\n";
+  <div class="metadata_lineage"><a href="'.APP_ROOT_PATH.'/app_code/metadata_structure.php?action=list">metadata</a> %gt; '.$mds_parent->renderAsLink().' &gt;</div>
+  <div class="metadata-structure-header">flower size';
+            $canonical .= '<ul class="metadata-references">';
+            foreach ($mds->references as $r) {
+                $canonical .= '<li>'.$r->renderAsViewEmbed().'</li>';
             }
-
-            $canonical .= '  </ul>
-</div>';
+            $canonical .= '</ul></div>
+  <div class="description">the size of the flower in its largest dimension</div>
+  <div class="details">some details</div>
+  ';
+            $canonical .= $mds->term_set->renderAsViewEmbed();
+            $canonical .= '</div>';
 
             $rendered = $mds->renderAsView();
 
-//            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
+//            echo "<pre>\n".htmlentities($canonical)."\n---------------\n".htmlentities($rendered)."\n</pre>";
 
-            $this->assertEqual($canonical,$rendered);
             $this->assertNoPattern('/IMPLEMENTED/',$rendered);
+            $this->assertEqual($canonical,$rendered);
         }
 
-        function testRenderAsViewEmbed() {
-            $this->todo();
-            return;
-
-            $mds = Metadata_Structure::getOneFromDb(['metadata_structure_id'=>6001],$this->DB);
-
-            global $USER;
-            $USER = User::getOneFromDb(['username'=>TESTINGUSER], $this->DB);
-
-            $canonical = '';
-
-            $rendered = $mds->renderAsViewEmbed();
-
-//            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
-
-            $this->assertEqual($canonical,$rendered);
-            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
-        }
+//        function testRenderAsViewEmbed() {
+//            $this->todo();
+//            return;
+//
+//            $mds = Metadata_Structure::getOneFromDb(['metadata_structure_id'=>6001],$this->DB);
+//
+//            global $USER;
+//            $USER = User::getOneFromDb(['username'=>TESTINGUSER], $this->DB);
+//
+//            $canonical = '';
+//
+//            $rendered = $mds->renderAsViewEmbed();
+//
+////            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
+//
+//            $this->assertEqual($canonical,$rendered);
+//            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
+//        }
 
     }

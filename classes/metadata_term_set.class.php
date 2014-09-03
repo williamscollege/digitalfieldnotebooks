@@ -73,4 +73,10 @@
             return $li_elt;
         }
 
+        public function renderAsViewEmbed() {
+            $rendered = '<div id="rendered_metadata_term_set_'.$this->metadata_term_set_id.'" class="rendered-metadata-term-set" '.$this->fieldsAsDataAttribs().'>';
+            $rendered .= $this->renderAsHtml();
+            $rendered .= '</div>';
+            return $rendered;
+        }
     }

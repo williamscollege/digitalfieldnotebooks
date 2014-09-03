@@ -80,6 +80,9 @@ $LANGUAGE['en'] = [
     'latitude' => 'latitude',
     'zoom_level' => 'zoom level',
 
+    'metadata' => 'metadata',
+    'metadata_no_children_no_values' => 'This metadata has neither values nor children - it needs to be edited',
+
     'notes' => 'notes',
 
     'no_permission' => 'You do not have permissions to do that.',

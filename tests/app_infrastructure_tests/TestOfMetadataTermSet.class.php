@@ -81,6 +81,17 @@
 
         //// instance methods - object itself
 
+//        function testRenderAsLink() {
+//            $mdts = Metadata_Term_Set::getOneFromDb(['metadata_term_set_id' => 6101],$this->DB);
+//            $canonical = '<div class="metadata-term-set-header">small lengths';
+//
+//            $rendered = $mdts->renderAsLink();
+////            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
+//
+//            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
+//            $this->assertEqual($canonical,$rendered);
+//        }
+
         function testRenderAsHtml() {
             $mdts = Metadata_Term_Set::getOneFromDb(['metadata_term_set_id' => 6101],$this->DB);
             $mdts->loadReferences();
@@ -124,5 +135,22 @@
             $this->assertNoPattern('/IMPLEMENTED/',$rendered);
         }
 
+        function testRenderAsViewEmbed() {
+            $mdts = Metadata_Term_Set::getOneFromDb(['metadata_term_set_id' => 6101],$this->DB);
+            $mdts->loadReferences();
+            $mdts->loadTermValues();
+
+            // 'name', 'ordering', 'description', 'flag_delete'
+            $canonical = '<div id="rendered_metadata_term_set_6101" class="rendered-metadata-term-set" data-metadata_term_set_id="6101" data-created_at="'.$mdts->created_at.'" data-updated_at="'.$mdts->updated_at.'" data-name="small lengths" data-ordering="1.00000" data-description="lengths ranging from 3 mm to 30 cm" data-flag_delete="0">';
+            $canonical .= $mdts->renderAsHtml();
+            $canonical .= '</div>';
+
+            $rendered = $mdts->renderAsViewEmbed();
+
+//            echo "<pre>\n".htmlentities($canonical)."\n-------\n".htmlentities($rendered)."\n</pre>";
+
+            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
+            $this->assertEqual($canonical,$rendered);
+        }
 
     }
