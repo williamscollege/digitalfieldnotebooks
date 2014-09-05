@@ -83,6 +83,11 @@ $LANGUAGE['en'] = [
     'metadata' => 'metadata',
     'all_metadata' => 'List of all metadata',
     'metadata_no_children_no_values' => 'This metadata has neither values nor children - it needs to be edited',
+    'new_metadata_structure' => 'new kind of metadata',
+
+    'all_metadata_term_sets' => 'all metadata value sets',
+    'metadata_term_set' => 'metadata value set',
+    'new_metadata_term_set' => 'new set of metadata values',
 
     'notes' => 'notes',
 

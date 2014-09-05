@@ -97,7 +97,7 @@
             $mdts->loadReferences();
             $mdts->loadTermValues();
 
-            $canonical = '<div class="metadata-term-set-header">small lengths';
+            $canonical = '<div class="metadata-term-set-header"><a class="metadata_term_set_name_link" data-metadata_term_set_id="6101">small lengths</a>';
             $canonical .= '<ul class="metadata-references">';
             foreach ($mdts->references as $r) {
                 $canonical .= '<li>'.$r->renderAsViewEmbed().'</li>';
@@ -111,7 +111,7 @@
 
             $rendered = $mdts->renderAsHtml();
 
-//            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
+//            echo "<pre>\n".htmlentities($canonical)."\n--------------\n".htmlentities($rendered)."\n</pre>";
 
             $this->assertEqual($canonical,$rendered);
             $this->assertNoPattern('/IMPLEMENTED/',$rendered);
@@ -153,4 +153,19 @@
             $this->assertEqual($canonical,$rendered);
         }
 
+
+        function testRenderAsView() {
+            $mdts = Metadata_Term_Set::getOneFromDb(['metadata_term_set_id' => 6101],$this->DB);
+
+            $canonical = '<div class="metadata-term-set-header"><a href="/digitalfieldnotebooks/app_code/metadata_term_set.php?action=list">all metadata value sets</a> &gt; small lengths</div>';
+            $canonical .= $mdts->renderAsHtml_references();
+            $canonical .= $mdts->renderAsHtml_term_values();
+
+            $rendered = $mdts->renderAsView();
+
+//                echo "<pre>\n".htmlentities($canonical)."\n-------\n".htmlentities($rendered)."\n</pre>";
+
+            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
+            $this->assertEqual($canonical,$rendered);
+        }
     }

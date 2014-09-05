@@ -40,22 +40,62 @@
             usort($this->term_values,'Metadata_Term_Value::cmp');
         }
 
+        public function cacheTermValues() {
+            if (! $this->term_values) {
+                $this->loadTermValues();
+            }
+        }
+
         public function loadReferences() {
             $this->references = Metadata_Reference::getAllFromDb(['metadata_type'=>'term_set', 'metadata_id' => $this->metadata_term_set_id, 'flag_delete' => FALSE], $this->dbConnection);
             usort($this->references,'Metadata_Reference::cmp');
         }
 
-        public function renderAsHtml() {
-            $this->loadReferences();
-            $this->loadTermValues();
+        public function cacheReferences() {
+            if (! $this->references) {
+                $this->loadReferences();
+            }
+        }
 
-            $rendered = '<div class="metadata-term-set-header">'.htmlentities($this->name);
-            $rendered .= '<ul class="metadata-references">';
+        public function renderAsHtml() {
+            $this->cacheReferences();
+            $this->cacheTermValues();
+
+            $rendered = '<div class="metadata-term-set-header"><a class="metadata_term_set_name_link" data-metadata_term_set_id="'.$this->metadata_term_set_id.'">'.htmlentities($this->name).'</a>';
+//            $rendered .= '<ul class="metadata-references">';
+//            foreach ($this->references as $r) {
+//                $rendered .= '<li>'.$r->renderAsViewEmbed().'</li>';
+//            }
+//            $rendered .= '</ul></div>';
+//            $rendered .= '<ul class="metadata-term-values">';
+//            foreach ($this->term_values as $tv) {
+//                $rendered .= $tv->renderAsListItem();
+//            }
+//            $rendered .= '</ul>';
+            $rendered .= $this->renderAsHtml_references();
+            $rendered .= '</div>';
+            $rendered .= $this->renderAsHtml_term_values();
+
+            return $rendered;
+
+        }
+
+        public function renderAsHtml_references() {
+            $this->cacheReferences();
+
+            $rendered = '<ul class="metadata-references">';
             foreach ($this->references as $r) {
                 $rendered .= '<li>'.$r->renderAsViewEmbed().'</li>';
             }
-            $rendered .= '</ul></div>';
-            $rendered .= '<ul class="metadata-term-values">';
+            $rendered .= '</ul>';
+
+            return $rendered;
+        }
+
+        public function renderAsHtml_term_values() {
+            $this->cacheTermValues();
+
+            $rendered = '<ul class="metadata-term-values">';
             foreach ($this->term_values as $tv) {
                 $rendered .= $tv->renderAsListItem();
             }
@@ -77,6 +117,17 @@
             $rendered = '<div id="rendered_metadata_term_set_'.$this->metadata_term_set_id.'" class="rendered-metadata-term-set" '.$this->fieldsAsDataAttribs().'>';
             $rendered .= $this->renderAsHtml();
             $rendered .= '</div>';
+            return $rendered;
+        }
+
+        public function renderAsView() {
+            $this->cacheReferences();
+            $this->cacheTermValues();
+
+            $rendered = '<div class="metadata-term-set-header"><a href="'.APP_ROOT_PATH.'/app_code/metadata_term_set.php?action=list">'.util_lang('all_metadata_term_sets').'</a> &gt; '.htmlentities($this->name).'</div>';
+            $rendered .= $this->renderAsHtml_references();
+            $rendered .= $this->renderAsHtml_term_values();
+
             return $rendered;
         }
     }
