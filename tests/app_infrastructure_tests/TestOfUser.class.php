@@ -161,7 +161,7 @@
             $this->assertTrue(in_array('manager',array_map(function($e){return $e->name;},$r)));
 
             $actions = Action::getAllFromDb([],$this->DB);
-            $this->assertEqual(7,count($actions));
+            $this->assertEqual(8,count($actions));
 
             $all_n = Notebook::getAllFromDb([],$this->DB);
             $num_all_n = count($all_n);
@@ -185,7 +185,7 @@
             $this->assertTrue(in_array('field user',array_map(function($e){return $e->name;},$r)));
 
             $actions = Action::getAllFromDb([],$this->DB);
-            $this->assertEqual(7,count($actions));
+            $this->assertEqual(8,count($actions));
 
             foreach ($actions as $a) {
 
@@ -199,7 +199,9 @@
                     $this->assertEqual(3,$num_accessible_n,'mismatch on notebooks accesible for action '.$a->name.": expecting3n, but got $num_accessible_n instead");
                 } elseif ($a->name == 'create') {
                     $this->assertEqual(4,$num_accessible_n,'mismatch on notebooks accesible for action '.$a->name.": expecting 2, but got $num_accessible_n instead");
-                } else {
+                } elseif ($a->name == 'list') {
+                    $this->assertEqual(4,$num_accessible_n,'mismatch on notebooks accesible for action '.$a->name.": expecting 2, but got $num_accessible_n instead");
+                }  else {
                     $this->assertEqual(2,$num_accessible_n,'mismatch on notebooks accesible for action '.$a->name.": expecting 2, but got $num_accessible_n instead");
                 }
             }
@@ -214,7 +216,7 @@
             $this->assertTrue(in_array('public',array_map(function($e){return $e->name;},$r)));
 
             $actions = Action::getAllFromDb([],$this->DB);
-            $this->assertEqual(7,count($actions));
+            $this->assertEqual(8,count($actions));
 
             foreach ($actions as $a) {
 
@@ -225,9 +227,11 @@
 
                 $num_accessible_n = count($accessible_n);
                 if ($a->name == 'view') {
-                    $this->assertEqual(1,$num_accessible_n,'mismatch on notebooks accesible for action '.$a->name.": expecting3n, but got $num_accessible_n instead");
+                    $this->assertEqual(1,$num_accessible_n,'mismatch on notebooks accesible for action '.$a->name.": expecting 1, but got $num_accessible_n instead");
+                } elseif ($a->name == 'list') {
+                    $this->assertEqual(4,$num_accessible_n,'mismatch on notebooks accesible for action '.$a->name.": expecting 4, but got $num_accessible_n instead");
                 } else {
-                    $this->assertEqual(0,$num_accessible_n,'mismatch on notebooks accesible for action '.$a->name.": expecting 2, but got $num_accessible_n instead");
+                    $this->assertEqual(0,$num_accessible_n,'mismatch on notebooks accesible for action '.$a->name.": expecting 0, but got $num_accessible_n instead");
                 }
             }
         }
@@ -241,7 +245,7 @@
             $this->assertEqual('field user',$u->cached_roles[0]->name);
 
             $rats_ids = array_keys($u->cached_role_action_targets_hash_by_id);
-            $this->assertEqual(5,count($rats_ids));
+            $this->assertEqual(9,count($rats_ids));
             $this->assertTrue(in_array(207,$rats_ids));
             $this->assertTrue(in_array(210,$rats_ids));
             $this->assertTrue(in_array(212,$rats_ids));
@@ -257,9 +261,10 @@
             $this->assertTrue(in_array('notebook',$rats_targets));
 
             $rats_actions = array_keys($u->cached_role_action_targets_hash_by_action_name_by_id);
-            $this->assertEqual(2,count($rats_actions));
+            $this->assertEqual(3,count($rats_actions));
             $this->assertTrue(in_array('view',$rats_actions));
             $this->assertTrue(in_array('create',$rats_actions));
+            $this->assertTrue(in_array('list',$rats_actions));
 
             $rats_view_ids = array_keys($u->cached_role_action_targets_hash_by_action_name_by_id['view']);
             $this->assertEqual(3,count($rats_view_ids));

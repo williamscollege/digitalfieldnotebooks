@@ -6,7 +6,7 @@
 		public static $primaryKeyField = 'action_id';
 		public static $dbTable = 'actions';
 
-        public static $VALID_ACTIONS = ['view', 'edit', 'update', 'create', 'delete', 'publish', 'verify'];
+        public static $VALID_ACTIONS = ['view', 'edit', 'update', 'create', 'delete', 'publish', 'verify','list'];
 
 		public function __construct($initsHash) {
 			parent::__construct($initsHash);

@@ -50,6 +50,18 @@
             $this->assertEqual('edit',Action::sanitizeAction('EDIT'));
         }
 
+        function testActionsMatchDatabase() {
+            $all_db_actions = Action::getAllFromDb(['flag_delete' => FALSE],$this->DB);
+            $this->assertEqual(count(Action::$VALID_ACTIONS),count($all_db_actions));
+            $action_db_names = Db_Linked::arrayOfAttrValues($all_db_actions,'name');
+            foreach (Action::$VALID_ACTIONS as $va) {
+                $this->assertTrue(in_array($va,$action_db_names),"'$va' missing from database");
+            }
+            foreach ($action_db_names as $db_a) {
+                $this->assertTrue(in_array($db_a,Action::$VALID_ACTIONS),"'$db_a' missing from VALID_ACTIONS");
+            }
+        }
+
         //// instance methods - object itself
 
         //// instance methods - related data

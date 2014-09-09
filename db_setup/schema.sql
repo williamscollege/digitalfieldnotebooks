@@ -282,9 +282,11 @@ VALUES
 (4,'create',4,0),
 (5,'delete',5,0),
 (6,'publish',6,0),
-(7,'verify',7,0);
+(7,'verify',7,0),
+(8,'list',8,0);
 
 # Required constant values for role_action_target_links table (managers can do everything)
+# 		public static $fields = array('role_action_target_link_id', 'created_at', 'updated_at', 'last_user_id', 'role_id', 'action_id', 'target_type', 'target_id', 'flag_delete');
 INSERT INTO
   role_action_target_links
   VALUES
@@ -315,7 +317,24 @@ INSERT INTO
   (25,NOW(),NOW(),0,1,4,'global_specimen',0,0),
   (26,NOW(),NOW(),0,1,5,'global_specimen',0,0),
   (27,NOW(),NOW(),0,1,6,'global_specimen',0,0),
-  (28,NOW(),NOW(),0,1,7,'global_specimen',0,0);
+  (28,NOW(),NOW(),0,1,7,'global_specimen',0,0),
+  (29,NOW(),NOW(),0,1,8,'global_notebook',0,0),
+  (30,NOW(),NOW(),0,1,8,'global_metadata',0,0),
+  (31,NOW(),NOW(),0,1,8,'global_plant',0,0),
+  (32,NOW(),NOW(),0,1,8,'global_specimen',0,0),
+  (33,NOW(),NOW(),0,2,8,'global_notebook',0,0),
+  (34,NOW(),NOW(),0,2,8,'global_metadata',0,0),
+  (35,NOW(),NOW(),0,2,8,'global_plant',0,0),
+  (36,NOW(),NOW(),0,2,8,'global_specimen',0,0),
+  (37,NOW(),NOW(),0,3,8,'global_notebook',0,0),
+  (38,NOW(),NOW(),0,3,8,'global_metadata',0,0),
+  (39,NOW(),NOW(),0,3,8,'global_plant',0,0),
+  (40,NOW(),NOW(),0,3,8,'global_specimen',0,0),
+  (41,NOW(),NOW(),0,4,8,'global_notebook',0,0),
+  (42,NOW(),NOW(),0,4,8,'global_metadata',0,0),
+  (43,NOW(),NOW(),0,4,8,'global_plant',0,0),
+  (44,NOW(),NOW(),0,4,8,'global_specimen',0,0)
+;
 
 # a canonical public user
 INSERT INTO
