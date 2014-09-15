@@ -8,6 +8,7 @@
 
         public $term_values;
         public $references;
+        public $structures;
 
         public function __construct($initsHash) {
             parent::__construct($initsHash);
@@ -18,6 +19,7 @@
 
             $this->term_values = array();
             $this->references = array();
+            $this->structures = array();
         }
 
         public static function cmp($a, $b) {
@@ -57,6 +59,17 @@
             }
         }
 
+        public function loadStructures() {
+            $this->structures = Metadata_Structure::getAllFromDb(['metadata_term_set_id'=>$this->metadata_term_set_id, 'flag_delete' => FALSE], $this->dbConnection);
+            usort($this->structures,'Metadata_Structure::cmp');
+        }
+
+        public function cacheStructures() {
+            if (! $this->structures) {
+                $this->loadStructures();
+            }
+        }
+
         public function renderAsHtml() {
             $this->cacheReferences();
             $this->cacheTermValues();
@@ -75,6 +88,7 @@
             $rendered .= $this->renderAsHtml_references();
             $rendered .= '</div>';
             $rendered .= $this->renderAsHtml_term_values();
+            $rendered .= $this->renderAsHtml_structures();
 
             return $rendered;
 
@@ -102,7 +116,19 @@
             $rendered .= '</ul>';
 
             return $rendered;
+        }
 
+        public function renderAsHtml_structures() {
+            $this->cacheStructures();
+
+            $rendered = '<div class="metadata-term-set-uses">';
+            $rendered .= '<ul class="metadata-structures">';
+            foreach ($this->structures as $s) {
+                $rendered .= '<li>'.$s->renderAsLink().'</li>';
+            }
+            $rendered .= '</ul></div>';
+
+            return $rendered;
         }
 
         public function renderAsListItem($idstr='',$classes_array = [],$other_attribs_hash = []) {
@@ -127,6 +153,7 @@
             $rendered = '<div class="metadata-term-set-header"><a href="'.APP_ROOT_PATH.'/app_code/metadata_term_set.php?action=list">'.util_lang('all_metadata_term_sets').'</a> &gt; '.htmlentities($this->name).'</div>';
             $rendered .= $this->renderAsHtml_references();
             $rendered .= $this->renderAsHtml_term_values();
+            $rendered .= $this->renderAsHtml_structures();
 
             return $rendered;
         }

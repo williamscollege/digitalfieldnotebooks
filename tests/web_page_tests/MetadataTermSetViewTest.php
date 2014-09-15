@@ -97,6 +97,8 @@ class MetadataTermSetViewTest extends WMSWebTestCase {
 
         $this->goToView(6101);
 
+        $mds = Metadata_Structure::getOneFromDb(['metadata_structure_id'=>6002],$this->DB);
+
 //        echo htmlentities($this->getBrowser()->getContent());
 
         $this->assertNoPattern('/warning/i');
@@ -118,8 +120,7 @@ class MetadataTermSetViewTest extends WMSWebTestCase {
         $this->assertNoLink(util_lang('edit'));
 
         // MORE!!!!
-//        $this->todo('additional metadata view checks/asserts');
-        // term set & values
+        $this->assertLink(htmlentities($mds->name));
 
         $this->assertText('small lengths');
         $this->assertText('3 mm - 1cm');

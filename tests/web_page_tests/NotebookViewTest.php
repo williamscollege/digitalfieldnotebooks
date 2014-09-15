@@ -36,7 +36,7 @@ class NotebookViewTest extends WMSWebTestCase {
 
     //-----------------------------------------------------------------------------------------------------------------
 
-    function testViewIsDefault() {
+    function testViewIsDefaultForANotebook() {
         $this->doLoginBasic();
 
         $this->goToNotebookView(1001);
@@ -50,31 +50,94 @@ class NotebookViewTest extends WMSWebTestCase {
         $this->assertEqual($view_content,$no_action_given_content);
     }
 
-    function testMissingNotebookIdRedirectsToAppHome() {
+    function testMissingNotebookIdShowsNotebookListInstead() {
         $this->doLoginBasic();
 
         $this->get('http://localhost/digitalfieldnotebooks/app_code/notebook.php?action=view');
 
-        $this->assertEqual(LANG_APP_NAME . ': ' . ucfirst(util_lang('home')) ,$this->getBrowser()->getTitle());
+        $this->assertEqual(LANG_APP_NAME . ': ' . ucfirst(util_lang('notebook')) ,$this->getBrowser()->getTitle());
         $this->assertText(util_lang('no_notebook_specified'));
+//        $this->todo();
     }
 
-    function testNonexistentNotebookRedirectsToAppHome() {
+    function testNonexistentNotebookShowsNotebookListInstead() {
         $this->doLoginBasic();
 
         $this->get('http://localhost/digitalfieldnotebooks/app_code/notebook.php?action=view&notebook_id=999');
 
-        $this->assertEqual(LANG_APP_NAME . ': ' . ucfirst(util_lang('home')) ,$this->getBrowser()->getTitle());
+        $this->assertEqual(LANG_APP_NAME . ': ' . ucfirst(util_lang('notebook')) ,$this->getBrowser()->getTitle());
         $this->assertText(util_lang('no_notebook_found'));
+//        $this->todo();
     }
 
-    function testActionNotAllowedRedirectsToAppHome() {
+    function testActionNotAllowedNotebookListInstead() {
         $this->doLoginBasic();
 
         $this->get('http://localhost/digitalfieldnotebooks/app_code/notebook.php?action=edit&notebook_id=1004');
 
-        $this->assertEqual(LANG_APP_NAME . ': ' . ucfirst(util_lang('home')) ,$this->getBrowser()->getTitle());
+        $this->assertEqual(LANG_APP_NAME . ': ' . ucfirst(util_lang('notebook')) ,$this->getBrowser()->getTitle());
         $this->assertText(util_lang('no_permission'));
+//        $this->todo();
+    }
+
+    function testViewList_LoggedIn() {
+        $this->doLoginBasic();
+        $this->get('http://localhost/digitalfieldnotebooks/app_code/notebook.php?action=list');
+
+        $this->assertNoText('IMPLEMENTED');
+        $this->assertNoPattern('/warning/i');
+        $this->assertNoPattern('/error/i');
+
+        // number of notebooks shown
+        $this->assertEltByIdHasAttrOfValue('list-of-user-notebooks','data-notebook-count','3');
+
+        $this->assertEltByIdHasAttrOfValue('notebook-item-1','data-notebook_id','1001');
+        $this->assertEltByIdHasAttrOfValue('notebook-item-2','data-notebook_id','1002');
+        $this->assertEltByIdHasAttrOfValue('notebook-item-3','data-notebook_id','1004');
+
+        $this->assertEltByIdHasAttrOfValue('notebook-item-1','class','owned-object');
+        $this->assertEltByIdHasAttrOfValue('notebook-item-2','class','owned-object');
+        $this->assertEltByIdDoesNotHaveAttr('notebook-item-3','data-can-edit');
+
+
+        $this->assertLink('testnotebook1');
+        $this->assertLink('testnotebook2');
+        $this->assertLink('testnotebook4');
+
+        ///////////////////////////////////////////
+        // 'add notebook' control
+        $this->assertPattern("/btn-add-notebook/");
+        ///////////////////////////////////////////
+    }
+
+    function testViewList_Public() {
+        $this->get('http://localhost/digitalfieldnotebooks/app_code/notebook.php?action=list');
+
+        $this->assertNoText('IMPLEMENTED');
+        $this->assertNoPattern('/warning/i');
+        $this->assertNoPattern('/error/i');
+
+        // number of notebooks shown
+        $this->assertEltByIdHasAttrOfValue('list-of-user-notebooks','data-notebook-count','1');
+
+//        $this->assertEltByIdHasAttrOfValue('notebook-item-1','data-notebook_id','1001');
+//        $this->assertEltByIdHasAttrOfValue('notebook-item-2','data-notebook_id','1002');
+        $this->assertEltByIdHasAttrOfValue('notebook-item-1','data-notebook_id','1004');
+//
+//        $this->assertEltByIdHasAttrOfValue('notebook-item-1','class','owned-object');
+//        $this->assertEltByIdHasAttrOfValue('notebook-item-2','class','owned-object');
+        $this->assertEltByIdDoesNotHaveAttr('notebook-item-1','data-can-edit');
+//        $this->assertEltByIdDoesNotHaveAttr('notebook-item-2','data-can-edit');
+//        $this->assertEltByIdDoesNotHaveAttr('notebook-item-3','data-can-edit');
+
+//        $this->assertLink('testnotebook1');
+//        $this->assertLink('testnotebook2');
+        $this->assertLink('testnotebook4');
+
+        ///////////////////////////////////////////
+        // NO 'add notebook' control
+        $this->assertNoPattern("/btn-add-notebook/");
+        ///////////////////////////////////////////
     }
 
     function testViewEditable() {
@@ -84,6 +147,7 @@ class NotebookViewTest extends WMSWebTestCase {
 
 //        echo htmlentities($this->getBrowser()->getContent());
 
+        $this->assertNoText('IMPLEMENTED');
         $this->assertNoPattern('/warning/i');
         $this->assertNoPattern('/error/i');
 
@@ -115,8 +179,6 @@ class NotebookViewTest extends WMSWebTestCase {
         // NO 'add page' control - only in edit mode!
 //        $this->assertEltByIdHasAttrOfValue('btn-add-notebook-page','href',APP_ROOT_PATH.'/app_code/notebook_page.php?action=create&notebook_id=1001');
         $this->assertNoLink(util_lang('add_notebook_page'));
-
-        $this->assertNoText('IMPLEMENTED');
     }
 
     function testViewNotEditable() {
@@ -126,6 +188,7 @@ class NotebookViewTest extends WMSWebTestCase {
 
 //        echo htmlentities($this->getBrowser()->getContent());
 
+        $this->assertNoText('IMPLEMENTED');
         $this->assertNoPattern('/warning/i');
         $this->assertNoPattern('/error/i');
 
@@ -153,6 +216,6 @@ class NotebookViewTest extends WMSWebTestCase {
         // NO 'add page' control
         $this->assertNoLink(util_lang('add_notebook_page'));
 
-        $this->assertNoText('IMPLEMENTED');
     }
+
 }

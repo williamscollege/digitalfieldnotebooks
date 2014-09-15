@@ -79,6 +79,18 @@
             $this->assertEqual(6302,$mdts->references[0]->metadata_reference_id);
         }
 
+        function testLoadStructures() {
+            $mdts = Metadata_Term_Set::getOneFromDb(['metadata_term_set_id' => 6101],$this->DB);
+            $this->assertEqual(0,count($mdts->structures));
+
+            $mdts->loadStructures();
+
+            $this->assertEqual(1,count($mdts->structures));
+
+            $this->assertEqual(6002,$mdts->structures[0]->metadata_structure_id);
+        }
+
+
         //// instance methods - object itself
 
 //        function testRenderAsLink() {
@@ -92,22 +104,87 @@
 //            $this->assertEqual($canonical,$rendered);
 //        }
 
-        function testRenderAsHtml() {
+        function testRenderAsHtml_references() {
             $mdts = Metadata_Term_Set::getOneFromDb(['metadata_term_set_id' => 6101],$this->DB);
             $mdts->loadReferences();
-            $mdts->loadTermValues();
 
-            $canonical = '<div class="metadata-term-set-header"><a class="metadata_term_set_name_link" data-metadata_term_set_id="6101">small lengths</a>';
-            $canonical .= '<ul class="metadata-references">';
+            $canonical = '<ul class="metadata-references">';
             foreach ($mdts->references as $r) {
                 $canonical .= '<li>'.$r->renderAsViewEmbed().'</li>';
             }
-            $canonical .= '</ul></div>';
-            $canonical .= '<ul class="metadata-term-values">';
+            $canonical .= '</ul>';
+
+            $rendered = $mdts->renderAsHtml_references();
+
+//            echo "<pre>\n".htmlentities($canonical)."\n--------------\n".htmlentities($rendered)."\n</pre>";
+
+            $this->assertEqual($canonical,$rendered);
+            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
+        }
+
+        function testRenderAsHtml_term_values() {
+            $mdts = Metadata_Term_Set::getOneFromDb(['metadata_term_set_id' => 6101],$this->DB);
+            $mdts->loadTermValues();
+
+            $canonical = '<ul class="metadata-term-values">';
             foreach ($mdts->term_values as $tv) {
                 $canonical .= $tv->renderAsListItem();
             }
             $canonical .= '</ul>';
+
+            $rendered = $mdts->renderAsHtml_term_values();
+
+//            echo "<pre>\n".htmlentities($canonical)."\n--------------\n".htmlentities($rendered)."\n</pre>";
+
+            $this->assertEqual($canonical,$rendered);
+            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
+        }
+
+        function testRenderAsHtml_structures() {
+            $mdts = Metadata_Term_Set::getOneFromDb(['metadata_term_set_id' => 6101],$this->DB);
+            $mdts->loadStructures();
+
+            $canonical = '<div class="metadata-term-set-uses">';
+            $canonical .= '<ul class="metadata-structures">';
+            foreach ($mdts->structures as $s) {
+                $canonical .= '<li>'.$s->renderAsLink().'</li>';
+            }
+            $canonical .= '</ul></div>';
+
+            $rendered = $mdts->renderAsHtml_structures();
+
+//            echo "<pre>\n".htmlentities($canonical)."\n--------------\n".htmlentities($rendered)."\n</pre>";
+
+            $this->assertEqual($canonical,$rendered);
+            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
+        }
+
+        function testRenderAsHtml() {
+            $mdts = Metadata_Term_Set::getOneFromDb(['metadata_term_set_id' => 6101],$this->DB);
+            $mdts->loadReferences();
+            $mdts->loadTermValues();
+            $mdts->loadStructures();
+
+            $canonical = '<div class="metadata-term-set-header"><a class="metadata_term_set_name_link" data-metadata_term_set_id="6101">small lengths</a>';
+            $canonical .= $mdts->renderAsHtml_references();
+            $canonical .= '</div>';
+            $canonical .= $mdts->renderAsHtml_term_values();
+//            $canonical .= '<div class="metadata-term-set-uses">';
+            $canonical .= $mdts->renderAsHtml_structures();
+
+//            $canonical .= '<ul class="metadata-references">';
+//            foreach ($mdts->references as $r) {
+//                $canonical .= '<li>'.$r->renderAsViewEmbed().'</li>';
+//            }
+//            $canonical .= '</ul></div>';
+//            $canonical .= '<ul class="metadata-term-values">';
+//            foreach ($mdts->term_values as $tv) {
+//                $canonical .= $tv->renderAsListItem();
+//            }
+//            $canonical .= '</ul>';
+//            $canonical .= '<div class="metadata-term-set-uses">';
+//            $canonical .= $mdts->renderAsHtml_structures();
+//            $canonical .= '</div>';
 
             $rendered = $mdts->renderAsHtml();
 
@@ -116,6 +193,8 @@
             $this->assertEqual($canonical,$rendered);
             $this->assertNoPattern('/IMPLEMENTED/',$rendered);
         }
+
+
 
         function testRenderAsListItem() {
             $mdts = Metadata_Term_Set::getOneFromDb(['metadata_term_set_id' => 6101],$this->DB);
@@ -157,9 +236,14 @@
         function testRenderAsView() {
             $mdts = Metadata_Term_Set::getOneFromDb(['metadata_term_set_id' => 6101],$this->DB);
 
+            $mds = Metadata_Structure::getOneFromDb(['metadata_structure_id' => 6002],$this->DB);
+
             $canonical = '<div class="metadata-term-set-header"><a href="/digitalfieldnotebooks/app_code/metadata_term_set.php?action=list">all metadata value sets</a> &gt; small lengths</div>';
             $canonical .= $mdts->renderAsHtml_references();
             $canonical .= $mdts->renderAsHtml_term_values();
+//            $canonical .= '<div class="metadata-term-set-uses">';
+            $canonical .= $mdts->renderAsHtml_structures();
+//            $canonical .= '</div>';
 
             $rendered = $mdts->renderAsView();
 
@@ -167,5 +251,7 @@
 
             $this->assertNoPattern('/IMPLEMENTED/',$rendered);
             $this->assertEqual($canonical,$rendered);
+
+//            $this->assertPattern('/'.htmlentities($mds->name).'/',$rendered);
         }
     }

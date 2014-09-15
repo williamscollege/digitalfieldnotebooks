@@ -12,7 +12,10 @@ $LANGUAGE['en'] = [
     'app_sign_in_action' => 'Sign in',
     'app_signed_in_status' => 'Signed in',
     'app_sign_in_msg' => 'To sign in, please use your '.LANG_INSTITUTION_NAME.' username and password.',
+
     'home' => 'home',
+    'go_to' => 'go to....',
+    'search' => 'search',
 
     'msg_do_sign_in' => 'Please sign in.',
     'msg_failed_sign_in' => 'Sign in failed.',
@@ -74,6 +77,8 @@ $LANGUAGE['en'] = [
     'variety' => 'variety',
     'catalog_identifier' => 'catalog ID',
 
+    'plants' => 'plants',
+
 
     'coordinates' => 'coordinates',
     'longitude' => 'longitude',
@@ -81,11 +86,11 @@ $LANGUAGE['en'] = [
     'zoom_level' => 'zoom level',
 
     'metadata' => 'metadata',
-    'all_metadata' => 'List of all metadata',
+    'all_metadata' => 'metadata structures',
     'metadata_no_children_no_values' => 'This metadata has neither values nor children - it needs to be edited',
     'new_metadata_structure' => 'new kind of metadata',
 
-    'all_metadata_term_sets' => 'all metadata value sets',
+    'all_metadata_term_sets' => 'metadata value sets',
     'metadata_term_set' => 'metadata value set',
     'new_metadata_term_set' => 'new set of metadata values',
 
@@ -94,6 +99,7 @@ $LANGUAGE['en'] = [
     'no_permission' => 'You do not have permissions to do that.',
     'no_notebook_specified' => 'No notebook was specified.',
     'no_notebook_found' => 'Could not find that notebook.',
+    'no_notebooks_found' => 'Could not find any accessible notebooks.',
     'no_notebook_page_specified' => 'No notebook page was specified.',
     'no_notebook_page_found' => 'Could not find that notebook page.',
 

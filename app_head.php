@@ -38,11 +38,23 @@
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 			</button>
-			<a id="home-link" class="brand" href="<?php echo APP_FOLDER; ?>"><?php echo LANG_APP_NAME; ?></a>
-
 			<div class="nav-collapse collapse">
 				<ul class="nav">
-					<li class="active"><a href="/digitalfieldnotebooks/"><i class="icon-home icon-white"></i> Home</a></li>
+                    <li class="active"><a id="home-link" href="<?php echo APP_ROOT_PATH; ?>"><i class="icon-home icon-white"></i> <b><?php echo LANG_APP_NAME; ?></b></a></li>
+
+
+                    <li class="active dropdown">
+                        <a href="#" data-toggle="dropdown" class="dropdown-toggle"><span class="caret"></span> <b><?php echo ucfirst(util_lang('go_to')); ?></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a id="nav-notebooks" href="<?php echo APP_ROOT_PATH; ?>/app_code/notebook.php?action=list"><?php echo ucfirst(util_lang('notebooks')); ?></a></li>
+                            <li><a id="nav-authoritative-plants" href="<?php echo APP_ROOT_PATH; ?>/app_code/authoritative_plant.php?action=list"><?php echo ucfirst(util_lang('plants')); ?></a></li>
+                            <li><a id="nav-metadata-structures" href="<?php echo APP_ROOT_PATH; ?>/app_code/metadata_structure.php?action=list"><?php echo ucfirst(util_lang('all_metadata')); ?></a></li>
+                            <li><a id="nav-metadata-values" href="<?php echo APP_ROOT_PATH; ?>/app_code/metadata_term_set.php?action=list"><?php echo ucfirst(util_lang('all_metadata_term_sets')); ?></a></li>
+                        </ul>
+                    </li>
+
+                    <li class="active"><a id="search-link" href="<?php echo APP_ROOT_PATH; ?>/app_code/search.php"><i class="icon-search icon-white"></i> <b><?php echo ucfirst(util_lang('search')); ?></b></a></li>
+
 					<?php
 						if ($IS_AUTHENTICATED) {
 							# is system admin?

@@ -13,7 +13,7 @@
 
     $DB = util_createDbConnection();
 
-    $all_actions = Action::getAllFromDb([],$DB);
+    $all_actions = Action::getAllFromDb(['flag_delete'=>false],$DB);
     $ACTIONS = array();
     foreach ($all_actions as $a) {
         $ACTIONS[$a->name] = $a;

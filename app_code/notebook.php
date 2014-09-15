@@ -4,8 +4,8 @@
 	require_once('../app_head.php');
 
     #############################
-    # 1. figure out what action is being attempted (none/default is view)
-    # 2. figure out which notebook is being acted on (if none specified then redirect to home page)
+    # 1. figure out what action is being attempted (none/default is view for a single notebook, list for none specified)
+    # 2. figure out which notebook is being acted on (if none specified then redirect to home page for actions other than list)
     # 3. confirm that the user is allowed to take that action on that object (if not, redirect them to the home page with an appropriate warning)
     # 4. branch behavior based on the action
     #############################
@@ -15,24 +15,37 @@
     if (isset($_REQUEST['action']) && in_array($_REQUEST['action'],Action::$VALID_ACTIONS)) {
         $action = $_REQUEST['action'];
     }
+    if (($action != 'list' ) && ((! isset($_REQUEST['notebook_id'])) || (! is_numeric($_REQUEST['notebook_id'])))) {
+        util_redirectToAppPage('app_code/notebook.php?action=list','failure',util_lang('no_notebook_specified'));
+    }
 
-    # 2. figure out which notebook is being acted on (if none specified then redirect to home page)
+    # 2. figure out which notebook is being acted on (if none specified then redirect to home page for actions other than list)
     $notebook = '';
+    $all_accessible_notebooks = '';
     if ($action == 'create') {
         $notebook = new Notebook(['user_id' => $USER->user_id, 'name'=>util_lang('new_notebook_title').' '.util_currentDateTimeString(),'DB'=>$DB]);
-    } else {
-        if ((! isset($_REQUEST['notebook_id'])) || (! is_numeric($_REQUEST['notebook_id']))) {
-            util_redirectToAppHome('failure',util_lang('no_notebook_specified'));
+    } elseif ($action == 'list') {
+        $all_accessible_notebooks = $USER->getAccessibleNotebooks($ACTIONS['view']);
+        if (count($all_accessible_notebooks) < 1) {
+            util_redirectToAppHome('failure',util_lang('no_notebooks_found'));
         }
+        $notebook = $all_accessible_notebooks[0];
+    } else {
+//        if ((! isset($_REQUEST['notebook_id'])) || (! is_numeric($_REQUEST['notebook_id']))) {
+////            util_redirectToAppHome('failure',util_lang('no_notebook_specified'));
+//            util_redirectToAppPage('app_code/notebook.php?action=list','failure',util_lang('no_notebook_specified'));
+//        }
         $notebook = Notebook::getOneFromDb(['notebook_id'=>$_REQUEST['notebook_id']],$DB);
         if (! $notebook->matchesDb) {
-            util_redirectToAppHome('failure',util_lang('no_notebook_found'));
+//            util_redirectToAppHome('failure',util_lang('no_notebook_found'));
+            util_redirectToAppPage('app_code/notebook.php?action=list','failure',util_lang('no_notebook_found'));
         }
     }
 
     # 3. confirm that the user is allowed to take that action on that object (if not, redirect them to the home page with an appropriate warning)
     if (! $USER->canActOnTarget($ACTIONS[$action],$notebook)) {
-        util_redirectToAppHome('failure',util_lang('no_permission'));
+//        util_redirectToAppHome('failure',util_lang('no_permission'));
+        util_redirectToAppPage('app_code/notebook.php?action=list','failure',util_lang('no_permission'));
     }
 
 
@@ -53,12 +66,24 @@
             echo '<div id="actions">'.$notebook->renderAsButtonEdit().'</div>'."\n";
         }
         echo $notebook->renderAsView();
-    } else
-    if (($action == 'edit') || ($action == 'create')) {
+    } elseif (($action == 'edit') || ($action == 'create')) {
         echo 'TODO: implement edit and create actions';
-    } else
-    if ($action == 'delete') {
+    } elseif ($action == 'delete') {
         echo 'TODO: implement delete action';
+    } elseif ($action == 'list') {
+        $counter = 0;
+        $num_notebooks = count($all_accessible_notebooks);
+        echo '<h2>'.ucfirst(util_lang('notebooks')).'</h2>';
+        echo "<ul id=\"list-of-user-notebooks\" data-notebook-count=\"$num_notebooks\">\n";
+        foreach ($all_accessible_notebooks as $notebook) {
+            $counter++;
+            echo $notebook->renderAsListItem('notebook-item-'.$counter)."\n";
+        }
+        echo "</ul>\n";
+        if ($USER->canActOnTarget($ACTIONS['create'],new Notebook(['DB'=>$DB]))) {
+            ?>
+            <input type="button" id="btn-add-notebook" value="<?php echo util_lang('add_notebook'); ?>"/><?php
+        }
     }
 require_once('../foot.php');
 ?>

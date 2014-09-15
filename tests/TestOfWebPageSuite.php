@@ -10,8 +10,10 @@
 		function TestOfWebSuite() {
 			$this->TestSuite('Web page tests');
 
-			# Tests: Index page
-			$this->addFile('web_page_tests/IndexPageLoadTest.php');
+            $this->addFile('web_page_tests/PublicPagesAccessTest.php');
+
+            # Tests: Index page
+			$this->addFile('web_page_tests/IndexPagePublicTest.php');
 			$this->addFile('web_page_tests/IndexPageAuthTest.php');
 			$this->addFile('web_page_tests/IndexPageLoggedInTest.php');
 

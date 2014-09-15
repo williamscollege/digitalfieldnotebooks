@@ -256,6 +256,11 @@
                 return Notebook::getAllFromDb(['flag_delete' => FALSE],$this->dbConnection);
             }
 
+            if (is_string($for_action)) {
+                global $ACTIONS;
+                $for_action = $ACTIONS[$for_action];
+            }
+
             $accessible_notebooks_ids = array();
             $roles = $this->getRoles();
             if ($debug_flag) {

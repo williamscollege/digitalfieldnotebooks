@@ -46,6 +46,28 @@
 		exit;
 	}
 
+
+    function util_redirectToAppPage($page, $status = "", $msg_key_or_text = '', $log = 0) {
+        // ensure value conforms to expectations
+        if ($status != "success" && $status != "failure" && $status != "info") {
+            # security: ensure status has a valid value
+            header('Location: ' . APP_FOLDER . '/index.php?status=failure');
+            exit;
+        }
+
+        if ($log > 0) {
+            # TODO: Add database log capability
+        }
+
+        $joiner = '?';
+        if (strpos($page,'?') >0) {
+            $joiner = '&';
+        }
+        header('Location: ' . APP_FOLDER . '/' . $page . $joiner . $status . '=' . urlencode($msg_key_or_text));
+        exit;
+    }
+
+
 	function util_redirectToAppHomeWithPrejudice() {
 		util_wipeSession();
 		util_redirectToAppHome();
