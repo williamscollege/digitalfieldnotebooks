@@ -238,7 +238,7 @@
 
             $mds = Metadata_Structure::getOneFromDb(['metadata_structure_id' => 6002],$this->DB);
 
-            $canonical = '<div class="metadata-term-set-header"><a href="/digitalfieldnotebooks/app_code/metadata_term_set.php?action=list">all metadata value sets</a> &gt; small lengths</div>';
+            $canonical = '<div class="metadata-term-set-header"><a href="/digitalfieldnotebooks/app_code/metadata_term_set.php?action=list">'.util_lang('all_metadata_term_sets').'</a> &gt; small lengths</div>';
             $canonical .= $mdts->renderAsHtml_references();
             $canonical .= $mdts->renderAsHtml_term_values();
 //            $canonical .= '<div class="metadata-term-set-uses">';

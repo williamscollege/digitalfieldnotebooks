@@ -572,7 +572,61 @@
             $this->assertTrue($u->canActOnTarget($actions['verify'], $ap));
         }
 
-        //// auth-related tests
+
+        function testCanActOnTarget_Pub_Verify() {
+            $n2 = Notebook::getOneFromDb(['notebook_id'=>1003],$this->DB); // owned by 102
+
+            $actions_list = Action::getAllFromDb([],$this->DB);
+            $actions = [];
+            foreach ($actions_list as $act_elt) {
+                $actions[$act_elt->name] = $act_elt;
+            }
+
+            $rat = new Role_Action_Target(['last_user_id'=>110, 'role_id'=>3, 'action_id'=>1, 'target_type'=>'notebook', 'target_id'=>1003,'DB'=>$this->DB]);
+            $rat->updateDb();
+
+            $this->assertTrue($rat->matchesDb);
+
+            // basic, field user
+            $u = User::getOneFromDb(['user_id' => 101], $this->DB);
+
+            $this->assertFalse($n2->flag_workflow_published);
+            $this->assertFalse($n2->flag_workflow_validated);
+
+            $this->assertFalse($u->canActOnTarget($actions['view'],$n2));
+            $this->assertFalse($u->canActOnTarget($actions['edit'],$n2));
+            $this->assertTrue($u->canActOnTarget($actions['create'],$n2));
+            $this->assertFalse($u->canActOnTarget($actions['delete'],$n2));
+            $this->assertFalse($u->canActOnTarget($actions['publish'],$n2));
+            $this->assertFalse($u->canActOnTarget($actions['verify'],$n2));
+
+            $n2->flag_workflow_published = true;
+            $n2->updateDb();
+            $this->assertTrue($n2->matchesDb);
+            $u->clearCaches();
+
+            $this->assertFalse($u->canActOnTarget($actions['view'],$n2));
+            $this->assertFalse($u->canActOnTarget($actions['edit'],$n2));
+            $this->assertTrue($u->canActOnTarget($actions['create'],$n2));
+            $this->assertFalse($u->canActOnTarget($actions['delete'],$n2));
+            $this->assertFalse($u->canActOnTarget($actions['publish'],$n2));
+            $this->assertFalse($u->canActOnTarget($actions['verify'],$n2));
+
+            $n2->flag_workflow_validated = true;
+            $n2->updateDb();
+            $this->assertTrue($n2->matchesDb);
+            $u->clearCaches();
+
+            $this->assertTrue($u->canActOnTarget($actions['view'],$n2));
+            $this->assertFalse($u->canActOnTarget($actions['edit'],$n2));
+            $this->assertTrue($u->canActOnTarget($actions['create'],$n2));
+            $this->assertFalse($u->canActOnTarget($actions['delete'],$n2));
+            $this->assertFalse($u->canActOnTarget($actions['publish'],$n2));
+            $this->assertFalse($u->canActOnTarget($actions['verify'],$n2));
+
+        }
+
+            //// auth-related tests
 
 		function testUserUpdatesBaseDbWhenValidAuthDataIsDifferent() {
 			$u = User::getOneFromDb(['user_id' => 101], $this->DB);

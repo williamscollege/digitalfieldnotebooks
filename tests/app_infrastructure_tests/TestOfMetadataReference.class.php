@@ -42,13 +42,15 @@
 
             usort($mdrs,'Metadata_Reference::cmp');
 
+//            util_prePrintR($mdrs);
+
             $this->assertEqual(6301,$mdrs[0]->metadata_reference_id);
             $this->assertEqual(6302,$mdrs[1]->metadata_reference_id);
-            $this->assertEqual(6303,$mdrs[2]->metadata_reference_id);
-            $this->assertEqual(6307,$mdrs[3]->metadata_reference_id);
-            $this->assertEqual(6306,$mdrs[4]->metadata_reference_id);
-            $this->assertEqual(6305,$mdrs[5]->metadata_reference_id);
-            $this->assertEqual(6304,$mdrs[6]->metadata_reference_id);
+            $this->assertEqual(6307,$mdrs[2]->metadata_reference_id);
+            $this->assertEqual(6306,$mdrs[3]->metadata_reference_id);
+            $this->assertEqual(6305,$mdrs[4]->metadata_reference_id);
+            $this->assertEqual(6304,$mdrs[5]->metadata_reference_id);
+            $this->assertEqual(6303,$mdrs[6]->metadata_reference_id);
         }
 
         //// instance methods - related data
@@ -66,7 +68,7 @@
 
             $this->assertEqual(6001,$r1->metadata_structure_id);
             $this->assertEqual(6101,$r2->metadata_term_set_id);
-            $this->assertEqual(6209,$r3->metadata_term_value_id);
+            $this->assertEqual(6211,$r3->metadata_term_value_id);
             $this->assertEqual('UNKNOWN METADATA_TYPE: //',$rX);
         }
 

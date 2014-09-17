@@ -20,7 +20,17 @@
 
 			//		$this->flag_is_system_admin = false;
 			//		$this->flag_is_banned = false;
-		}
+            $this->cached_roles = array();
+            $this->cached_role_action_targets_hash_by_id = array();
+            $this->cached_role_action_targets_hash_by_target_type_by_id = array();
+            $this->cached_role_action_targets_hash_by_action_name_by_id = array();		}
+
+        public function clearCaches() {
+            $this->cached_roles = array();
+            $this->cached_role_action_targets_hash_by_id = array();
+            $this->cached_role_action_targets_hash_by_target_type_by_id = array();
+            $this->cached_role_action_targets_hash_by_action_name_by_id = array();
+        }
 
 		public static function cmp($a, $b) {
 			if ($a->username == $b->username) {
@@ -222,7 +232,7 @@
                     break;
                 case 'Notebook_Page_Field':
                     // can act on if can act on the notebook that contains the notebook page that this page field
-                    $this->canActOnTarget($action,$target->getNotebookPage()->getNotebook());
+                    return $this->canActOnTarget($action,$target->getNotebookPage()->getNotebook());
                     break;
                 case 'Specimen':
                     $ids_to_check = array($target->specimen_id);
@@ -239,8 +249,13 @@
 //            util_prePrintR($this->cached_role_action_targets_hash_by_target_type_by_id);
 
             foreach ($this->cached_role_action_targets_hash_by_target_type_by_id[$target_specific_type] as $spec_rat) {
-
                 if (($spec_rat->action_id == $action->action_id) && (in_array($spec_rat->target_id,$ids_to_check))) {
+                    if ($action->name == 'view') {
+                        $actual_target = $spec_rat->getTargets()[0];
+                        if (array_key_exists('flag_workflow_published',$actual_target->fieldValues)) {
+                            return $actual_target->flag_workflow_published && $actual_target->flag_workflow_validated;
+                        }
+                    }
                     return true;
                 }
             }
@@ -267,6 +282,7 @@
                 echo "user roles are<br/>\n";
                 util_prePrintR($roles);
             }
+
             foreach (Db_Linked::arrayOfAttrValues($roles,'role_id') as $role_id) {
                 $global_check = Role_Action_Target::getAllFromDb(['role_id'=>$role_id,'action_id'=>$for_action->action_id,'target_type'=>'global_notebook'],$this->dbConnection);
                 if (count($global_check) > 0) {
