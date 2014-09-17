@@ -64,6 +64,18 @@
             $this->assertEqual($canonical,$rendered);
         }
 
+
+        function testRenderAsLink() {
+            $ap = Authoritative_Plant::getOneFromDb(['authoritative_plant_id'=>5001],$this->DB);
+
+            $canonical = '<a href="'.APP_ROOT_PATH.'/app_code/authoritative_plant.php?action=view&authoritative_plant_id=5001">'.htmlentities("Ap_a_genus ap_a_species 'AP_A_variety' (\"AP_A common y achestnut\") [AP_1_CI]").'</a>';
+            $rendered = $ap->renderAsLink();
+
+//            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
+
+            $this->assertEqual($canonical,$rendered);
+        }
+
         function testRenderAsListItem_General() {
             $ap = Authoritative_Plant::getOneFromDb(['authoritative_plant_id' => 5001], $this->DB);
 
@@ -76,7 +88,7 @@
      //       (5001,NOW(),NOW(), 'AP_A_class', 'AP_A_order', 'AP_A_family', 'AP_A_genus', 'AP_A_species', 'AP_A_variety', 'AP_1_CI', 0),
 
             $canonical = '<li data-authoritative_plant_id="5001" data-created_at="'.$ap->created_at.'" data-updated_at="'.$ap->updated_at.'" '.
-                'data-class="AP_A_class" data-order="AP_A_order" data-family="AP_A_family" data-genus="AP_A_genus" data-species="AP_A_species" data-variety="AP_A_variety" data-catalog_identifier="AP_1_CI" data-flag_delete="0"><a href="/app_code/authoritative_plant.php?authoritative_plant_id=5001">'.htmlentities($ap->renderAsShortText()).'</a></li>';
+                'data-class="AP_A_class" data-order="AP_A_order" data-family="AP_A_family" data-genus="AP_A_genus" data-species="AP_A_species" data-variety="AP_A_variety" data-catalog_identifier="AP_1_CI" data-flag_delete="0"><a href="/digitalfieldnotebooks/app_code/authoritative_plant.php?action=view&authoritative_plant_id=5001">'.htmlentities($ap->renderAsShortText()).'</a></li>';
 
             $rendered = $ap->renderAsListItem();
 //            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
@@ -99,7 +111,7 @@
             $this->assertTrue($rat->matchesDb);
 
             $canonical = '<li data-authoritative_plant_id="5001" data-created_at="'.$ap->created_at.'" data-updated_at="'.$ap->updated_at.'" '.
-                'data-class="AP_A_class" data-order="AP_A_order" data-family="AP_A_family" data-genus="AP_A_genus" data-species="AP_A_species" data-variety="AP_A_variety" data-catalog_identifier="AP_1_CI" data-flag_delete="0" data-can-edit="1"><a href="/app_code/authoritative_plant.php?authoritative_plant_id=5001">'.htmlentities($ap->renderAsShortText()).'</a></li>';
+                'data-class="AP_A_class" data-order="AP_A_order" data-family="AP_A_family" data-genus="AP_A_genus" data-species="AP_A_species" data-variety="AP_A_variety" data-catalog_identifier="AP_1_CI" data-flag_delete="0" data-can-edit="1"><a href="/digitalfieldnotebooks/app_code/authoritative_plant.php?action=view&authoritative_plant_id=5001">'.htmlentities($ap->renderAsShortText()).'</a></li>';
             $rendered = $ap->renderAsListItem();
 //            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
             $this->assertEqual($canonical,$rendered);
@@ -109,13 +121,49 @@
         }
 
         function testRenderAsViewEmbed() {
+        $ap = Authoritative_Plant::getOneFromDb(['authoritative_plant_id' => 5001], $this->DB);
+
+        $ap->cacheExtras();
+
+        $canonical =
+            '<div class="authoritative-plant embedded">
+  <h3>'.$ap->renderAsShortText().'</h3>
+  <ul class="base-info">
+    <li><span class="field-label">'.util_lang('class').'</span> : <span class="field-value taxonomy taxonomy-class">'.htmlentities($ap->class).'</span></li>
+    <li><span class="field-label">'.util_lang('order').'</span> : <span class="field-value taxonomy taxonomy-order">'.htmlentities($ap->order).'</span></li>
+    <li><span class="field-label">'.util_lang('family').'</span> : <span class="field-value taxonomy taxonomy-family">'.htmlentities($ap->family).'</span></li>
+    <li><span class="field-label">'.util_lang('genus').'</span> : <span class="field-value taxonomy taxonomy-genus">'.htmlentities($ap->genus).'</span></li>
+    <li><span class="field-label">'.util_lang('species').'</span> : <span class="field-value taxonomy taxonomy-species">'.htmlentities($ap->species).'</span></li>
+    <li><span class="field-label">'.util_lang('variety').'</span> : <span class="field-value taxonomy taxonomy-variety">\''.htmlentities($ap->variety).'\'</span></li>
+    <li><span class="field-label">'.util_lang('catalog_identifier').'</span> : <span class="field-value">'.htmlentities($ap->catalog_identifier).'</span></li>
+  </ul>
+  <ul class="extra-info">
+';
+        foreach ($ap->extras as $extra) {
+            $canonical .='    '.$extra->renderAsListItem()."\n";
+        }
+        $canonical .='  </ul>
+</div>';
+        $rendered = $ap->renderAsViewEmbed();
+
+//            echo "<pre>\n".htmlentities($canonical)."\n------------------\n".htmlentities($rendered)."\n</pre>";
+
+        $this->assertEqual($canonical,$rendered);
+    }
+
+        function testRenderAsView() {
             $ap = Authoritative_Plant::getOneFromDb(['authoritative_plant_id' => 5001], $this->DB);
 
             $ap->cacheExtras();
+            $ap->cacheNotebookPages();
+
+            global $USER,$ACTIONS;
+
+            $USER = User::getOneFromDb(['username'=>TESTINGUSER], $this->DB);
 
             $canonical =
-'<div class="authoritative-plant">
-  <h3>'.$ap->renderAsShortText().'</h3>
+                '<div class="authoritative-plant">
+  <h3><a href="'.APP_ROOT_PATH.'/app_code/authoritative_plant.php?action=list">'.ucfirst(util_lang('authoritative_plant')).'</a>: '.$ap->renderAsShortText().'</h3>
   <ul class="base-info">
     <li><span class="field-label">'.util_lang('class').'</span> : <span class="field-value taxonomy taxonomy-class">'.htmlentities($ap->class).'</span></li>
     <li><span class="field-label">'.util_lang('order').'</span> : <span class="field-value taxonomy taxonomy-order">'.htmlentities($ap->order).'</span></li>
@@ -131,8 +179,19 @@
                 $canonical .='    '.$extra->renderAsListItem()."\n";
             }
             $canonical .='  </ul>
+  <ul class="notebook-pages">
+';
+            foreach ($ap->notebook_pages as $np) {
+                if ($USER->canActOnTarget($ACTIONS['view'],$np)) {
+                    $canonical .='    '.$np->renderAsListItemForNotebook()."\n";
+                }
+            }
+            $canonical .='  </ul>
 </div>';
-            $rendered = $ap->renderAsViewEmbed();
+
+
+
+            $rendered = $ap->renderAsView();
 
 //            echo "<pre>\n".htmlentities($canonical)."\n------------------\n".htmlentities($rendered)."\n</pre>";
 
@@ -155,6 +214,18 @@
             $this->assertEqual(5106,$ap->extras[3]->authoritative_plant_extra_id);
             $this->assertEqual(5105,$ap->extras[4]->authoritative_plant_extra_id);
             $this->assertEqual(5104,$ap->extras[5]->authoritative_plant_extra_id);
+        }
+
+        function testLoadNotebookPages() {
+            $ap = Authoritative_Plant::getOneFromDb(['authoritative_plant_id' => 5001],$this->DB);
+            $this->assertEqual(0,count($ap->notebook_pages));
+
+            $ap->loadNotebookPages();
+
+            $this->assertEqual(3,count($ap->notebook_pages));
+            $this->assertEqual(1101,$ap->notebook_pages[0]->notebook_page_id);
+            $this->assertEqual(1103,$ap->notebook_pages[1]->notebook_page_id);
+            $this->assertEqual(1104,$ap->notebook_pages[2]->notebook_page_id);
         }
 
     }

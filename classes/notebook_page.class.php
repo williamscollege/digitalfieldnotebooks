@@ -29,19 +29,41 @@
             return Notebook::cmp($a->getNotebook(),$b->getNotebook());
         }
 
-        public function renderAsListItem($idstr='',$classes_array = [],$other_attribs_hash = []) {
+        private function _startRenderedListItem($idstr,$classes_array,$other_attribs_hash) {
             global $USER,$ACTIONS;
             $actions_attribs = '';
-//
-//            util_prePrintR($USER);
-//            util_prePrintR($ACTIONS);
 
             if ($USER->canActOnTarget($ACTIONS['edit'],$this)) {
                 $actions_attribs .= ' data-can-edit="1"';
             }
             $li_elt = substr(util_listItemTag($idstr,$classes_array,$other_attribs_hash),0,-1);
             $li_elt .= ' '.$this->fieldsAsDataAttribs().$actions_attribs.'>';
-            $li_elt .= '<a href="'.APP_ROOT_PATH.'/app_code/notebook_page.php?action=view&notebook_page_id='.$this->notebook_page_id.'">'.htmlentities($this->getAuthoritativePlant()->renderAsShortText()).'</a></li>';
+            $li_elt .= '<a href="'.APP_ROOT_PATH.'/app_code/notebook_page.php?action=view&notebook_page_id='.$this->notebook_page_id.'">';
+            return $li_elt;
+        }
+
+        public function renderAsListItem($idstr='',$classes_array = [],$other_attribs_hash = []) {
+//            global $USER,$ACTIONS;
+//            $actions_attribs = '';
+////
+////            util_prePrintR($USER);
+////            util_prePrintR($ACTIONS);
+//
+//            if ($USER->canActOnTarget($ACTIONS['edit'],$this)) {
+//                $actions_attribs .= ' data-can-edit="1"';
+//            }
+//            $li_elt = substr(util_listItemTag($idstr,$classes_array,$other_attribs_hash),0,-1);
+//            $li_elt .= ' '.$this->fieldsAsDataAttribs().$actions_attribs.'>';
+//            $li_elt .= '<a href="'.APP_ROOT_PATH.'/app_code/notebook_page.php?action=view&notebook_page_id='.$this->notebook_page_id.'">'.htmlentities($this->getAuthoritativePlant()->renderAsShortText()).'</a></li>';
+            $li_elt = $this->_startRenderedListItem($idstr,$classes_array,$other_attribs_hash);
+            $li_elt .= htmlentities($this->getAuthoritativePlant()->renderAsShortText()).'</a></li>';
+            return $li_elt;
+        }
+
+        public function renderAsListItemForNotebook($idstr='',$classes_array = [],$other_attribs_hash = []) {
+            $nb = $this->getNotebook();
+            $li_elt = $this->_startRenderedListItem($idstr,$classes_array,$other_attribs_hash);
+            $li_elt .= util_lang('page_in_notebook').' '.htmlentities($nb->name).'</a></li>';
             return $li_elt;
         }
 

@@ -124,6 +124,20 @@
             $this->assertEqual($canonical,$rendered);
         }
 
+        function testRenderAsListItemForNotebook() {
+            $np = Notebook_Page::getOneFromDb(['notebook_page_id' => 1101], $this->DB);
+
+            global $USER;
+            $USER = User::getOneFromDb(['username'=>TESTINGUSER], $this->DB);
+
+            $nb = Notebook::getOneFromDb(['notebook_id'=>1001],$this->DB);
+
+            $rendered = $np->renderAsListItemForNotebook();
+            $canonical = '<li data-notebook_page_id="1101" data-created_at="'.$np->created_at.'" data-updated_at="'.$np->updated_at.'" data-notebook_id="1001" data-authoritative_plant_id="5001" data-notes="testing notebook page the first in testnotebook1, owned by user 101" data-flag_workflow_published="0" data-flag_workflow_validated="0" data-flag_delete="0" data-can-edit="1"><a href="'.APP_ROOT_PATH.'/app_code/notebook_page.php?action=view&notebook_page_id=1101">'.util_lang('page_in_notebook').' '.htmlentities($nb->name).'</a></li>';
+//            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
+            $this->assertEqual($canonical,$rendered);
+        }
+
         function testRenderAsButtonEdit() {
             $np = Notebook_Page::getOneFromDb(['notebook_page_id' => 1101], $this->DB);
 

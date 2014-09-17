@@ -84,7 +84,7 @@
         function testRenderAsHtml_external_image() {
             $pe = Authoritative_Plant_Extra::getOneFromDb(['authoritative_plant_extra_id'=>5106],$this->DB);
 
-            $canonical = '<img class="plant-image external-reference" src="https://www.flickr.com/photos/plussed/14761853313"/>';
+            $canonical = '<img class="plant-image external-reference" src="https://farm6.staticflickr.com/5556/14761853313_17d5a31479_z.jpg"/>';
             $rendered = $pe->renderAsHtml();
 
             $this->assertEqual($canonical,$rendered);

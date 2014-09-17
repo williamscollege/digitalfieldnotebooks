@@ -45,6 +45,7 @@ $LANGUAGE['en'] = [
     'page' => 'page',
     'add_notebook_page' => '+ Add Page / Entry +',
     'zero_pages' => 'no notebook pages',
+    'page_in_notebook' => 'in notebook',
 
     'fields' => 'fields',
     'field' => 'field',
@@ -79,6 +80,8 @@ $LANGUAGE['en'] = [
 
     'plants' => 'plants',
 
+    'authoritative_plants' => 'authoritative plants',
+    'authoritative_plant' => 'authoritative plant',
 
     'coordinates' => 'coordinates',
     'longitude' => 'longitude',
