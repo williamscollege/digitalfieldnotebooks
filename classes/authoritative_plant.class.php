@@ -10,6 +10,7 @@
 
         public $extras;
         public $notebook_pages;
+        public $specimens;
 
         public function __construct($initsHash) {
             parent::__construct($initsHash);
@@ -20,6 +21,7 @@
 
             $this->extras = array();
             $this->notebook_pages = array();
+            $this->specimens = array();
         }
 
         public static function cmp($a, $b) {
@@ -63,6 +65,17 @@
         public function cacheNotebookPages() {
             if (! $this->notebook_pages) {
                 $this->loadNotebookPages();
+            }
+        }
+
+        public function loadSpecimens() {
+            $this->specimens = Specimen::getAllFromDb(['link_to_type' => 'authoritative_plant', 'link_to_id' => $this->authoritative_plant_id, 'flag_delete' => FALSE], $this->dbConnection);
+            usort($this->specimens,'Specimen::cmp');
+        }
+
+        public function cacheSpecimens() {
+            if (! $this->specimens) {
+                $this->loadSpecimens();
             }
         }
 
@@ -135,9 +148,10 @@
         public function renderAsView() {
             $this->cacheExtras();
             $this->cacheNotebookPages();
+            $this->cacheSpecimens();
 
             $rendered = '<div class="authoritative-plant">
-  <h3><a href="'.APP_ROOT_PATH.'/app_code/authoritative_plant.php?action=list">'.ucfirst(util_lang('authoritative_plant')).'</a>: '.$this->renderAsShortText().'</h3>
+  <h3><a href="'.APP_ROOT_PATH.'/app_code/authoritative_plant.php?action=list">'.util_lang('authoritative_plant','properize').'</a>: '.$this->renderAsShortText().'</h3>
   <ul class="base-info">
     <li><span class="field-label">'.util_lang('class').'</span> : <span class="field-value taxonomy taxonomy-class">'.htmlentities($this->class).'</span></li>
     <li><span class="field-label">'.util_lang('order').'</span> : <span class="field-value taxonomy taxonomy-order">'.htmlentities($this->order).'</span></li>
@@ -147,12 +161,14 @@
     <li><span class="field-label">'.util_lang('variety').'</span> : <span class="field-value taxonomy taxonomy-variety">\''.htmlentities($this->variety).'\'</span></li>
     <li><span class="field-label">'.util_lang('catalog_identifier').'</span> : <span class="field-value">'.htmlentities($this->catalog_identifier).'</span></li>
   </ul>
+  <h4>'.util_lang('details','properize').'</h4>
   <ul class="extra-info">
 ';
             foreach ($this->extras as $extra) {
                 $rendered .='    '.$extra->renderAsListItem()."\n";
             }
             $rendered .='  </ul>
+  <h4>'.util_lang('notebook_pages','properize').'</h4>
   <ul class="notebook-pages">
 ';
             global $USER,$ACTIONS;
@@ -161,6 +177,15 @@
                     $rendered .='    '.$np->renderAsListItemForNotebook()."\n";
                 }
             }
+
+            $rendered .= '  </ul>
+  <h4>'.util_lang('specimens','properize').'</h4>
+  <ul class="specimens">
+';
+            foreach ($this->specimens as $specimen) {
+                $rendered .= '    <li>'.$specimen->renderAsViewEmbed()."</li>\n";
+            }
+
             $rendered .='  </ul>
 </div>';
 

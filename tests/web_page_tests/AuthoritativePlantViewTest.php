@@ -107,7 +107,7 @@ class AuthoritativePlantViewTest extends WMSWebTestCase {
         $this->assertPattern('/'.util_lang('authoritative_plants').'/i');
     }
 
-    function testViewNotEditable() {
+    function testViewNotLoggedIn() {
 //        $this->doLoginBasic();
         $ap = Authoritative_Plant::getOneFromDb(['authoritative_plant_id'=>5001],$this->DB);
 
@@ -121,15 +121,23 @@ class AuthoritativePlantViewTest extends WMSWebTestCase {
 
 
         // page heading
-        $this->assertLink(ucfirst(util_lang('authoritative_plant')));
+        $this->assertLink(ucfirst(util_lang('authoritative_plant','properize')));
 
         // NO 'edit' control
         $this->assertNoLink(util_lang('edit'));
 
         // MORE!!!!
-        $this->todo("check for auth plant info");
+        // NOTE: assuming that if one relevant piece of info shows up then they're all there - detailed testing is handled in the class test suite renderAsViewTest
 
-        $this->todo("check for extras info");
-        $this->todo("check for notebook pages");
+//        $this->todo("check for auth plant info");
+        $this->assertText('AP_A_order');
+
+//        $this->todo("check for extras info");
+        $this->assertText("AP_A common a american chestnut");
+
+//        $this->todo("check for notebook pages");
+        $this->assertLink('in notebook testnotebook4');
+
+
     }
 }

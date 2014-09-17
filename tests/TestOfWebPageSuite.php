@@ -20,6 +20,11 @@
             $this->addFile('web_page_tests/NotebookViewTest.php');
             $this->addFile('web_page_tests/NotebookPageViewTest.php');
 
+            $this->addFile('web_page_tests/MetadataViewTest.php');
+            $this->addFile('web_page_tests/MetadataTermSetViewTest.php');
+
+            $this->addFile('web_page_tests/AuthoritativePlantViewTest.php');
+
             # Sound Effect
 			$this->addFile('soundForTesting.php');
 		}

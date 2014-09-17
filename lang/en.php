@@ -42,6 +42,7 @@ $LANGUAGE['en'] = [
     'new_notebook_title' => 'New Notebook',
 
     'pages' => 'pages',
+    'notebook_pages' => 'notebook pages',
     'page' => 'page',
     'add_notebook_page' => '+ Add Page / Entry +',
     'zero_pages' => 'no notebook pages',
@@ -98,6 +99,7 @@ $LANGUAGE['en'] = [
     'new_metadata_term_set' => 'new set of metadata values',
 
     'notes' => 'notes',
+    'details' => 'details',
 
     'no_permission' => 'You do not have permissions to do that.',
     'no_notebook_specified' => 'No notebook was specified.',

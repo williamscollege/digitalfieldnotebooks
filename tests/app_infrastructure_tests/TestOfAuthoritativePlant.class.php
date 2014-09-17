@@ -156,6 +156,7 @@
 
             $ap->cacheExtras();
             $ap->cacheNotebookPages();
+            $ap->cacheSpecimens();
 
             global $USER,$ACTIONS;
 
@@ -163,7 +164,7 @@
 
             $canonical =
                 '<div class="authoritative-plant">
-  <h3><a href="'.APP_ROOT_PATH.'/app_code/authoritative_plant.php?action=list">'.ucfirst(util_lang('authoritative_plant')).'</a>: '.$ap->renderAsShortText().'</h3>
+  <h3><a href="'.APP_ROOT_PATH.'/app_code/authoritative_plant.php?action=list">'.util_lang('authoritative_plant','properize').'</a>: '.$ap->renderAsShortText().'</h3>
   <ul class="base-info">
     <li><span class="field-label">'.util_lang('class').'</span> : <span class="field-value taxonomy taxonomy-class">'.htmlentities($ap->class).'</span></li>
     <li><span class="field-label">'.util_lang('order').'</span> : <span class="field-value taxonomy taxonomy-order">'.htmlentities($ap->order).'</span></li>
@@ -173,12 +174,14 @@
     <li><span class="field-label">'.util_lang('variety').'</span> : <span class="field-value taxonomy taxonomy-variety">\''.htmlentities($ap->variety).'\'</span></li>
     <li><span class="field-label">'.util_lang('catalog_identifier').'</span> : <span class="field-value">'.htmlentities($ap->catalog_identifier).'</span></li>
   </ul>
+  <h4>'.util_lang('details','properize').'</h4>
   <ul class="extra-info">
 ';
             foreach ($ap->extras as $extra) {
                 $canonical .='    '.$extra->renderAsListItem()."\n";
             }
             $canonical .='  </ul>
+  <h4>'.util_lang('notebook_pages','properize').'</h4>
   <ul class="notebook-pages">
 ';
             foreach ($ap->notebook_pages as $np) {
@@ -186,6 +189,15 @@
                     $canonical .='    '.$np->renderAsListItemForNotebook()."\n";
                 }
             }
+
+            $canonical .= '  </ul>
+  <h4>'.util_lang('specimens','properize').'</h4>
+  <ul class="specimens">
+';
+            foreach ($ap->specimens as $specimen) {
+                $canonical .= '    <li>'.$specimen->renderAsViewEmbed()."</li>\n";
+            }
+
             $canonical .='  </ul>
 </div>';
 
@@ -228,4 +240,13 @@
             $this->assertEqual(1104,$ap->notebook_pages[2]->notebook_page_id);
         }
 
+        function testLoadSpecimens() {
+            $ap = Authoritative_Plant::getOneFromDb(['authoritative_plant_id' => 5001],$this->DB);
+            $this->assertEqual(0,count($ap->specimens));
+
+            $ap->loadSpecimens();
+
+            $this->assertEqual(1,count($ap->specimens));
+            $this->assertEqual(8001,$ap->specimens[0]->specimen_id);
+        }
     }
