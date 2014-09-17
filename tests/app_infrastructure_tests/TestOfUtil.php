@@ -103,8 +103,12 @@ class TestOfUtil extends UnitTestCase {
         global $LANGUAGE, $CUR_LANG_SET;
         $CUR_LANG_SET = 'test';
         $LANGUAGE[$CUR_LANG_SET]['foo'] = 'bar';
+        $LANGUAGE[$CUR_LANG_SET]['baz_maz'] = 'baz maz';
 
         $this->assertEqual(util_lang('foo'),'bar');
+        $this->assertEqual(util_lang('baz_maz'),'baz maz');
+        $this->assertEqual(util_lang('baz_maz','ucfirst'),'Baz maz');
+        $this->assertEqual(util_lang('baz_maz','properize'),'Baz Maz');
     }
 
     function testStartListItem() {
