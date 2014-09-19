@@ -45,6 +45,9 @@
     # 3. confirm that the user is allowed to take that action on that object (if not, redirect them to the home page with an appropriate warning)
     if (! $USER->canActOnTarget($ACTIONS[$action],$notebook)) {
 //        util_redirectToAppHome('failure',util_lang('no_permission'));
+        if ($action == 'edit') {
+            util_redirectToAppPage('app_code/notebook.php?action=view&notebook_id='.$notebook->notebook_id,'failure',util_lang('no_permission'));
+        }
         util_redirectToAppPage('app_code/notebook.php?action=list','failure',util_lang('no_permission'));
     }
 
@@ -57,7 +60,7 @@
     #      delete - delete the notebook, then go to home page w/ 'deleted' message
 
     if (($action == 'update') || ($action == 'verify') || ($action == 'publish')) {
-        echo 'TODO: implement update, verify, and publish actions';
+        echo 'TO BE IMPLEMENTED:: implement update, verify, and publish actions';
         $action = 'view';
     }
 
@@ -67,9 +70,9 @@
         }
         echo $notebook->renderAsView();
     } elseif (($action == 'edit') || ($action == 'create')) {
-        echo 'TODO: implement edit and create actions';
+        echo 'TO BE IMPLEMENTED:: implement edit and create actions';
     } elseif ($action == 'delete') {
-        echo 'TODO: implement delete action';
+        echo 'TO BE IMPLEMENTED:: implement delete action';
     } elseif ($action == 'list') {
         $counter = 0;
         $num_notebooks = count($all_accessible_notebooks);
