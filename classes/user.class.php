@@ -155,6 +155,10 @@
             //      + gets messy
             //   - otherwise -> no
 
+            if (is_string($action)) {
+                global $ACTIONS;
+                $action = $ACTIONS[$action];
+            }
 
             // system admin -> always yes
             if ($this->flag_is_system_admin) {

@@ -90,6 +90,22 @@ abstract class WMSWebTestCase extends WebTestCase {
         }
         return true;
     }
+
+    /**
+     *    Tests for the non-presence of a form field with the given id. Match is
+     *    case insensitive with normalised space.
+     *    @param string/integer $id       ID attribute.
+     *    @param string $message          Message to display. Default
+     *                                    can be embedded with %s.
+     *    @return boolean                 True if link missing.
+     *    @access public
+     */
+    function assertNoFieldById($id, $message = '%s') {
+//        echo "getFieldById($id) result is |".$this->getBrowser()->getFieldById($id)."|\n";
+        return $this->assertTrue(
+            is_null($this->getBrowser()->getFieldById($id)),
+            sprintf($message, "Field [$id] should not exist"));
+    }
 }
 ?>
 

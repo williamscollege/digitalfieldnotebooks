@@ -69,7 +69,9 @@ $LANGUAGE['en'] = [
     'create' => 'create',
     'delete' => 'delete',
     'publish' => 'publish',
+    'published' => 'published',
     'verify' => 'verify',
+    'verified' => 'verified',
 
     'class' => 'class',
     'order' => 'order',

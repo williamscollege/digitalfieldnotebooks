@@ -93,31 +93,82 @@ class NotebookEditTest extends WMSWebTestCase {
     }
 
     function testEditAccessControl_public() {
-        $this->todo('basic public access check - no access defaults to view');
+//        $this->todo('basic public access check - no access defaults to view');
+        $this->get('http://localhost/digitalfieldnotebooks/app_code/notebook.php?action=edit&notebook_id=1004');
+
+        $this->checkBasicAsserts();
+        $this->assertEqual(LANG_APP_NAME . ': ' . ucfirst(util_lang('notebook')) ,$this->getBrowser()->getTitle());
+        $this->assertText(util_lang('no_permission'));
+        $this->assertEltByIdHasAttrOfValue('rendered_notebook_1004','class','rendered_notebook');
     }
 
-    function testEditAccessControl_logged_in() {
-        $this->todo('basic access check as owner - can edit owned notebook');
-        $this->todo('publish option, no verify option');
-        $this->todo('basic access check as owner - no edit notebook owned by another');
+    function testEditAccessControl_owner() {
+//        $this->todo('basic access check as owner - no edit notebook owned by another');
+        // NOTE: this handled by testNoEditPermDefaultsToView
+
+        $this->doLoginBasic();
+
+        $this->get('http://localhost/digitalfieldnotebooks/app_code/notebook.php?action=edit&notebook_id=1001');
+
+        $this->checkBasicAsserts();
+        $this->assertEqual(LANG_APP_NAME . ': ' . ucfirst(util_lang('notebook')) ,$this->getBrowser()->getTitle());
+
+//        $this->todo('basic access check as owner - can edit owned notebook');
+        $this->assertNoText(util_lang('no_permission'));
+
+//        $this->todo('editable fields');
+        $this->assertFieldById('notebook-name');
+        $this->assertFieldById('notebook-notes');
+
+//        $this->todo('publish option, no verify option');
+        $this->assertFieldById('notebook-workflow-publish-control');
+        $this->assertNoFieldById('notebook-workflow-validate-control');
     }
 
     function testEditAccessControl_admin() {
-        $this->todo('basic access check - can edit non-owned notebook');
-        $this->todo('publish option, verify option');
+        $this->doLoginAdmin();
+
+        $this->get('http://localhost/digitalfieldnotebooks/app_code/notebook.php?action=edit&notebook_id=1004');
+
+        $this->checkBasicAsserts();
+        $this->assertEqual(LANG_APP_NAME . ': ' . ucfirst(util_lang('notebook')) ,$this->getBrowser()->getTitle());
+
+//        $this->todo('basic access check as owner - can edit owned notebook');
+        $this->assertNoText(util_lang('no_permission'));
+
+//        $this->todo('editable fields');
+        $this->assertFieldById('notebook-name');
+        $this->assertFieldById('notebook-notes');
+
+//        $this->todo('publish option, no verify option');
+        $this->assertFieldById('notebook-workflow-publish-control');
+        $this->assertFieldById('notebook-workflow-validate-control');
     }
 
-    function testInitialFormValuesFromExistingObject() {
-        $this->todo();
-    }
 //
 //    function testFormFieldLookups() {
 //        $this->todo();
 //    }
 
     function testRelatedDataListing() {
-        $this->todo('owner name has link to user page');
-        $this->todo('notebook pages are listed and linked');
+        $u = User::getOneFromDb(['user_id'=>101],$this->DB);
+        $pages = Notebook_Page::getAllFromDb(['notebook_id'=>1001],$this->DB);
+
+        $this->doLoginBasic();
+
+        $this->get('http://localhost/digitalfieldnotebooks/app_code/notebook.php?action=edit&notebook_id=1001');
+
+        $this->checkBasicAsserts();
+
+//        $this->todo('owner name has link to user page');
+        $this->assertLink(htmlentities($u->screen_name));
+
+//        $this->todo('notebook pages are listed and linked');
+        $this->assertLink($pages[0]->getAuthoritativePlant()->renderAsShortText());
+        $this->assertLink($pages[1]->getAuthoritativePlant()->renderAsShortText());
+
+//        util_prePrintR(htmlentities($this->getBrowser()->getContent()));
+
     }
 
     function testToDo() {
@@ -128,7 +179,7 @@ class NotebookEditTest extends WMSWebTestCase {
 //        $this->todo('test existence of dynamic elements for in-place related data');
 //        $this->todo('  ----------  build in-place editing fragments for related data, and associated tests (not much for this, but gets messy once we get to pages)');
         $this->todo('test updating base data');
-        $this->todo('test updating related data via ajax');
+//        $this->todo('test updating related data via ajax');
     }
 
 }

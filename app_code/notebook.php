@@ -70,9 +70,12 @@
         }
         echo $notebook->renderAsView();
     } elseif (($action == 'edit') || ($action == 'create')) {
-        echo 'TO BE IMPLEMENTED:: implement edit and create actions';
+        //echo 'TO BE IMPLEMENTED:: implement edit and create actions';
+        echo $notebook->renderAsEdit();
     } elseif ($action == 'delete') {
         echo 'TO BE IMPLEMENTED:: implement delete action';
+    } elseif ($action == 'update') {
+        echo 'TO BE IMPLEMENTED:: implement update action';
     } elseif ($action == 'list') {
         $counter = 0;
         $num_notebooks = count($all_accessible_notebooks);
