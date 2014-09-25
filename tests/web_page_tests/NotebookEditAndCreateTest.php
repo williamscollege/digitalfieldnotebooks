@@ -1,7 +1,7 @@
 <?php
 require_once dirname(__FILE__) . '/../simpletest/WMS_web_tester.php';
 
-class NotebookEditTest extends WMSWebTestCase {
+class NotebookEditAndCreateTest extends WMSWebTestCase {
 
     function setUp() {
         createAllTestData($this->DB);
@@ -44,11 +44,6 @@ class NotebookEditTest extends WMSWebTestCase {
         $this->assertNoPattern('/fatal error/i');
     }
 
-    function showContent() {
-        echo "<pre>\n";
-        echo htmlentities($this->getBrowser()->getContent());
-        echo "\n</pre>";
-    }
     //-----------------------------------------------------------------------------------------------------------------
 
     function testMissingNotebookIdShowsNotebookListInstead() {
@@ -123,6 +118,8 @@ class NotebookEditTest extends WMSWebTestCase {
 //        $this->todo('publish option, no verify option');
         $this->assertFieldById('notebook-workflow-publish-control');
         $this->assertNoFieldById('notebook-workflow-validate-control');
+
+        $this->assertEltByIdHasAttrOfValue('edit-submit-control','value',util_lang('update','properize'));
     }
 
     function testEditAccessControl_admin() {
@@ -143,6 +140,8 @@ class NotebookEditTest extends WMSWebTestCase {
 //        $this->todo('publish option, no verify option');
         $this->assertFieldById('notebook-workflow-publish-control');
         $this->assertFieldById('notebook-workflow-validate-control');
+
+        $this->assertEltByIdHasAttrOfValue('edit-submit-control','value',util_lang('update','properize'));
     }
 
 //
@@ -171,6 +170,37 @@ class NotebookEditTest extends WMSWebTestCase {
 
     }
 
+    function testBaseDataUpdate() {
+        $this->doLoginBasic();
+        $this->get('http://localhost/digitalfieldnotebooks/app_code/notebook.php?action=edit&notebook_id=1001');
+
+//      NOTE: the identifier to use for setField is the value of the name attribute of the field
+        $this->setField('name','new name for testnotebook1');
+//        NOTE: the identifier to use for buttons is the value of the value attribute of the button
+        $this->click(util_lang('update','properize'));
+
+
+        $this->checkBasicAsserts();
+        $this->assertText('new name for testnotebook1');
+
+        $n = Notebook::getOneFromDb(['notebook_id'=>1001],$this->DB);
+        $this->assertEqual($n->name,'new name for testnotebook1');
+
+//        util_prePrintR(htmlentities($this->getBrowser()->getContent()));
+
+    }
+
+    function testCreateButton() {
+        $this->doLoginBasic();
+        $this->get('http://localhost/digitalfieldnotebooks/app_code/notebook.php?action=list');
+
+        $this->click(util_lang('add_notebook'));
+
+        $this->checkBasicAsserts();
+        $this->assertText(util_lang('new_notebook_title'));
+
+    }
+
     function testToDo() {
 //        $this->todo('test fall backs and default behaviors');
 //        $this->todo('test access control to edit page');
@@ -178,7 +208,7 @@ class NotebookEditTest extends WMSWebTestCase {
 //        $this->todo('test data pre-population');
 //        $this->todo('test existence of dynamic elements for in-place related data');
 //        $this->todo('  ----------  build in-place editing fragments for related data, and associated tests (not much for this, but gets messy once we get to pages)');
-        $this->todo('test updating base data');
+//        $this->todo('test updating base data');
 //        $this->todo('test updating related data via ajax');
     }
 

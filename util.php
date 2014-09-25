@@ -141,6 +141,10 @@
         return date('Y/m/d H:i');
     }
 
+    function util_currentDateTimeString_asMySQL() {
+        return date('Y-m-d H:i:ss');
+    }
+
     /**
      * @param $ts a time string of the form YYYY-MM-DD HH:MI:SS (i.e. as it comes from MySQL)
      * @return that datetime formatted per the application's standard style

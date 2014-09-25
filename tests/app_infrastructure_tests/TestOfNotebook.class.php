@@ -38,6 +38,23 @@
 		}
 
 
+        function testCreateNewNotebookForUser() {
+            global $USER;
+            $USER = User::getOneFromDb(['username'=>TESTINGUSER], $this->DB);
+
+            $n = Notebook::createNewNotebookForUser($USER->user_id, $this->DB);
+
+            $this->assertEqual('NEW',$n->notebook_id);
+            $this->assertNotEqual('',$n->created_at);
+            $this->assertNotEqual('',$n->updated_at);
+            $this->assertEqual($USER->user_id,$n->user_id);
+            $this->assertPattern('/'.util_lang('new_notebook_title').'/',$n->name);
+            $this->assertEqual('',$n->notes);
+            $this->assertEqual('',$n->flag_workflow_published);
+            $this->assertEqual('',$n->flag_workflow_validated);
+            $this->assertEqual('',$n->flag_delete);
+        }
+
 		//// DB interaction tests
 
 		function testNotebookDBInsert() {
@@ -235,14 +252,17 @@
   <h3 class="notebook_title">'.ucfirst(util_lang('notebook')).': <input id="notebook-name" type="text" name="name" value="testnotebook1"/></h3>
   <span class="created_at">'.util_lang('created_at').' '.util_datetimeFormatted($n->created_at).'</span>, <span class="updated_at">'.util_lang('updated_at').' '.util_datetimeFormatted($n->updated_at).'</span><br/>
   <span class="owner">'.util_lang('owned_by').' <a href="'.APP_ROOT_PATH.'/app_code/user.php?action=view&user_id=101">'.$USER->screen_name.'</a></span><br/>
-  <span class="published_state"><input id="notebook-workflow-publish-control" type="checkbox" name="flag_workflow_published" /> '.util_lang('published').'</span>, <span class="verified_state">'.util_lang('verified_false').'</span><br/>
+  <span class="published_state"><input id="notebook-workflow-publish-control" type="checkbox" name="flag_workflow_published" value="1" /> '.util_lang('published').'</span>, <span class="verified_state">'.util_lang('verified_false').'</span><br/>
   <div class="notebook_notes"><textarea id="notebook-notes" name="notes" rows="4" cols="120">this is testnotebook1, owned by user 101</textarea></div>
+  <input id="edit-submit-control" class="btn" type="submit" name="edit-submit-control" value="'.util_lang('update','properize').'"/>
 </form>
   <h4>'.ucfirst(util_lang('pages')).'</h4>
-  <a href="'.APP_ROOT_PATH.'/app_code/notebook_page.php?action=create&notebook_id=1001" class="btn">'.util_lang('add_notebook_page').'</a>
   <ul id="list-of-notebook-pages" data-notebook-page-count="2">
+    <li><a href="/digitalfieldnotebooks/app_code/notebook_page.php?action=create&notebook_id=1001" id="btn-add-notebook-page" class="creation_link btn">'.util_lang('add_notebook_page').'</a></li>
 ';
-            $page_counter = 0;
+//            <a href="'.APP_ROOT_PATH.'/app_code/notebook_page.php?action=create&notebook_id=1001" class="btn">'.util_lang('add_notebook_page').'</a>
+
+                $page_counter = 0;
             foreach ($n->pages as $p) {
                 $page_counter++;
                 $canonical .= '    '.$p->renderAsListItem('notebook-page-item-'.$page_counter)."\n";
@@ -252,9 +272,39 @@
 </div>';
             $rendered = $n->renderAsEdit();
 
-//            echo "<pre>\n".htmlentities($canonical)."\n-----------------\n".htmlentities($rendered)."\n</pre>";
-
             $this->assertEqual($canonical,$rendered);
             $this->assertNoPattern('/IMPLEMENTED/',$rendered);
+//            echo "<pre>\n".htmlentities($canonical)."\n-----------------\n".htmlentities($rendered)."\n</pre>";
         }
+
+    function testRenderAsEdit_newNotebook() {
+        global $USER;
+        $USER = User::getOneFromDb(['username'=>TESTINGUSER], $this->DB);
+
+        $n = Notebook::createNewNotebookForUser($USER->user_id, $this->DB);
+
+//        $this->fail();
+
+        $canonical = '<div id="edit_rendered_notebook_NEW" class="edit_rendered_notebook" data-notebook_id="NEW" data-created_at="'.$n->created_at.'" data-updated_at="'.$n->updated_at.'" data-user_id="101" data-name="'.htmlentities($n->name).'" data-notes="" data-flag_workflow_published="0" data-flag_workflow_validated="0" data-flag_delete="0" data-can-edit="1">
+<form action="'.APP_ROOT_PATH.'/app_code/notebook.php">
+  <input type="hidden" name="action" value="update"/>
+  <input type="hidden" name="notebook_id" value="NEW"/>
+  <h3 class="notebook_title">'.ucfirst(util_lang('notebook')).': <input id="notebook-name" type="text" name="name" value="'.htmlentities($n->name).'"/></h3>
+  <span class="created_at">'.util_lang('created_at').' '.util_datetimeFormatted($n->created_at).'</span>, <span class="updated_at">'.util_lang('updated_at').' '.util_datetimeFormatted($n->updated_at).'</span><br/>
+  <span class="owner">'.util_lang('owned_by').' <a href="'.APP_ROOT_PATH.'/app_code/user.php?action=view&user_id=101">'.$USER->screen_name.'</a></span><br/>
+  <span class="published_state"><input id="notebook-workflow-publish-control" type="checkbox" name="flag_workflow_published" value="1" /> '.util_lang('published').'</span>, <span class="verified_state">'.util_lang('verified_false').'</span><br/>
+  <div class="notebook_notes"><textarea id="notebook-notes" name="notes" rows="4" cols="120"></textarea></div>
+  <input id="edit-submit-control" class="btn" type="submit" name="edit-submit-control" value="'.util_lang('update','properize').'"/>
+</form>
+  <h4>'.ucfirst(util_lang('pages')).'</h4>
+  '.util_lang('new_notebook_must_be_saved').'
+</div>';
+        $rendered = $n->renderAsEdit();
+
+        $this->assertEqual($canonical,$rendered);
+        $this->assertNoPattern('/IMPLEMENTED/',$rendered);
+
+//        echo "<pre>\n".htmlentities($canonical)."\n-----------------\n".htmlentities($rendered)."\n</pre>";
     }
+
+}

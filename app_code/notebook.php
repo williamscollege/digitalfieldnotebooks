@@ -23,7 +23,9 @@
     $notebook = '';
     $all_accessible_notebooks = '';
     if ($action == 'create') {
-        $notebook = new Notebook(['user_id' => $USER->user_id, 'name'=>util_lang('new_notebook_title').' '.util_currentDateTimeString(),'DB'=>$DB]);
+
+//        $notebook = new Notebook(['user_id' => $USER->user_id, 'name'=>util_lang('new_notebook_title').' '.util_currentDateTimeString(),'DB'=>$DB]);
+        $notebook = Notebook::createNewNotebookForUser($USER->user_id, $DB);
     } elseif ($action == 'list') {
         $all_accessible_notebooks = $USER->getAccessibleNotebooks($ACTIONS['view']);
         if (count($all_accessible_notebooks) < 1) {
@@ -60,7 +62,50 @@
     #      delete - delete the notebook, then go to home page w/ 'deleted' message
 
     if (($action == 'update') || ($action == 'verify') || ($action == 'publish')) {
-        echo 'TO BE IMPLEMENTED:: implement update, verify, and publish actions';
+        //        echo 'TO BE IMPLEMENTED:: implement update action';
+        $changed = false;
+        if ($notebook->name != $_REQUEST['name']) {
+            $changed = true;
+            $notebook->name = $_REQUEST['name']; // NOTE: this seems dangerous, but the data is sanitized on the way back out
+        }
+        if ($notebook->notes != $_REQUEST['notes']) {
+            $changed = true;
+            $notebook->notes = $_REQUEST['notes']; // NOTE: this seems dangerous, but the data is sanitized on the way back out
+        }
+
+        if ($USER->canActOnTarget($ACTIONS['publish'],$notebook)) {
+            if (isset($_REQUEST['flag_workflow_published'])) {
+                if ($_REQUEST['flag_workflow_published'] && ! $notebook->flag_workflow_published) {
+                    $changed = true;
+                    $notebook->flag_workflow_published = true;
+                }
+            } else {
+                if ($notebook->flag_workflow_published) {
+                    $changed = true;
+                    $notebook->flag_workflow_published = false;
+                }
+            }
+        }
+
+        if ($USER->canActOnTarget($ACTIONS['verify'],$notebook)) {
+            if (isset($_REQUEST['flag_workflow_validated'])) {
+                if ($_REQUEST['flag_workflow_validated'] && ! $notebook->flag_workflow_validated) {
+                    $changed = true;
+                    $notebook->flag_workflow_validated = true;
+                }
+            } else {
+                if ($notebook->flag_workflow_validated) {
+                    $changed = true;
+                    $notebook->flag_workflow_validated = false;
+                }
+            }
+        }
+
+        if ($changed) {
+            $notebook->updateDb();
+        }
+
+//        echo $notebook->renderAsEdit();
         $action = 'view';
     }
 
@@ -74,8 +119,6 @@
         echo $notebook->renderAsEdit();
     } elseif ($action == 'delete') {
         echo 'TO BE IMPLEMENTED:: implement delete action';
-    } elseif ($action == 'update') {
-        echo 'TO BE IMPLEMENTED:: implement update action';
     } elseif ($action == 'list') {
         $counter = 0;
         $num_notebooks = count($all_accessible_notebooks);
@@ -88,7 +131,7 @@
         echo "</ul>\n";
         if ($USER->canActOnTarget($ACTIONS['create'],new Notebook(['DB'=>$DB]))) {
             ?>
-            <input type="button" id="btn-add-notebook" value="<?php echo util_lang('add_notebook'); ?>"/><?php
+            <a href="<?php echo APP_ROOT_PATH.'/app_code/notebook.php?action=create'; ?>" class="btn" id="btn-add-notebook"><?php echo util_lang('add_notebook'); ?></a><?php
         }
     }
 require_once('../foot.php');

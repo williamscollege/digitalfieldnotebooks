@@ -106,6 +106,12 @@ abstract class WMSWebTestCase extends WebTestCase {
             is_null($this->getBrowser()->getFieldById($id)),
             sprintf($message, "Field [$id] should not exist"));
     }
+
+    function showContent() {
+        echo "<pre>\n";
+        echo htmlentities($this->getBrowser()->getContent());
+        echo "\n</pre>";
+    }
 }
 ?>
 

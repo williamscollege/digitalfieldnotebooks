@@ -31,6 +31,22 @@
 			return ($a->name < $b->name) ? -1 : 1;
 		}
 
+        public static function createNewNotebookForUser($user_id,$db_connection) {
+            $n = new Notebook([
+                                'notebook_id' => 'NEW',
+                                'created_at' => util_currentDateTimeString_asMySQL(),
+                                'updated_at' => util_currentDateTimeString_asMySQL(),
+                                'user_id' => $user_id,
+                                'name'=>util_lang('new_notebook_title').' '.util_currentDateTimeString(),
+                                'notes' => '',
+                                'flag_workflow_published' => false,
+                                'flag_workflow_validated' => false,
+                                'flag_delete' => false,
+                                'DB'=>$db_connection]);
+            return $n;
+
+        }
+
         public function cachePages() {
             if (! $this->pages) {
                 $this->loadPages();
@@ -137,7 +153,11 @@
                 $notebook_owner = $this->getUser();
             }
 
-            $this->cachePages();
+            if ($this->notebook_id) {
+                $this->cachePages();
+            } else {
+                $this->notebook_id = 'NEW';
+            }
 
             $rendered = '<div id="edit_rendered_notebook_'.$this->notebook_id.'" class="edit_rendered_notebook" '.$this->fieldsAsDataAttribs().$actions_attribs.'>'."\n".
                 '<form action="'.APP_ROOT_PATH.'/app_code/notebook.php">'."\n".
@@ -148,7 +168,7 @@
                 '  <span class="owner">'.util_lang('owned_by').' <a href="'.APP_ROOT_PATH.'/app_code/user.php?action=view&user_id='.$notebook_owner->user_id.'">'.$notebook_owner->screen_name.'</a></span><br/>'."\n";
 
             if ($USER->canActOnTarget('publish',$this)) {
-                $rendered .= '  <span class="published_state"><input id="notebook-workflow-publish-control" type="checkbox" name="flag_workflow_published"'.($this->flag_workflow_published ?  ' checked="checked"' : '').' /> '
+                $rendered .= '  <span class="published_state"><input id="notebook-workflow-publish-control" type="checkbox" name="flag_workflow_published" value="1"'.($this->flag_workflow_published ?  ' checked="checked"' : '').' /> '
                     .util_lang('published').'</span>,';
             } else {
                 $rendered .= '  <span class="published_state">'.($this->flag_workflow_published ? util_lang('published_true') : util_lang('published_false'))
@@ -156,7 +176,7 @@
             }
 
             if ($USER->canActOnTarget('verify',$this)) {
-                $rendered .= '  <span class="verified_state"><input id="notebook-workflow-validate-control" type="checkbox" name="flag_workflow_validated"'.($this->flag_workflow_validated ?  ' checked="checked"' : '').' /> '
+                $rendered .= '  <span class="verified_state"><input id="notebook-workflow-validate-control" type="checkbox" name="flag_workflow_validated" value="1"'.($this->flag_workflow_validated ?  ' checked="checked"' : '').' /> '
                     .util_lang('verified').'</span>,';
             } else {
                 $rendered .= ' <span class="verified_state">'.($this->flag_workflow_validated ? util_lang('verified_true') : util_lang('verified_false'))
@@ -165,26 +185,33 @@
 
             $rendered .= '<br/>'."\n".
                 '  <div class="notebook_notes"><textarea id="notebook-notes" name="notes" rows="4" cols="120">'.htmlentities($this->notes).'</textarea></div>'."\n".
-                '</form>'."\n".
-                '  <h4>'.ucfirst(util_lang('pages')).'</h4>'."\n".
-                '  <a href="'.APP_ROOT_PATH.'/app_code/notebook_page.php?action=create&notebook_id='.$this->notebook_id.'" class="btn">'.util_lang('add_notebook_page').'</a>'."\n".
-
-                '  <ul id="list-of-notebook-pages" data-notebook-page-count="'.count($this->pages).'">'."\n";
-            if (count($this->pages) > 0) {
-                $page_counter = 0;
-                foreach ($this->pages as $p) {
-                    $page_counter++;
-                    $rendered .= '    '.$p->renderAsListItem('notebook-page-item-'.$page_counter)."\n";
-                }
+                '  <input id="edit-submit-control" class="btn" type="submit" name="edit-submit-control" value="'.util_lang('update','properize').'"/>'."\n".
+                '</form>'."\n";
+            if ($this->notebook_id == 'NEW') {
+                $rendered .=  '  <h4>'.ucfirst(util_lang('pages')).'</h4>'."\n".
+                    '  '.util_lang('new_notebook_must_be_saved')."\n";
             } else {
-                $rendered .= '    <li>'.util_lang('zero_pages').'</li>'."\n";
+                $rendered .=  '  <h4>'.ucfirst(util_lang('pages')).'</h4>'."\n".
+//                    '  <a href="'.APP_ROOT_PATH.'/app_code/notebook_page.php?action=create&notebook_id='.$this->notebook_id.'" class="btn">'.util_lang('add_notebook_page').'</a>'."\n".
+
+                    '  <ul id="list-of-notebook-pages" data-notebook-page-count="'.count($this->pages).'">'."\n";
+                // NOTE: add page control only in edit mode, not view mode!
+                if ($USER->canActOnTarget($ACTIONS['edit'],$this)) {
+                    $rendered .= '    <li><a href="'.APP_ROOT_PATH.'/app_code/notebook_page.php?action=create&notebook_id='.$this->notebook_id.'" id="btn-add-notebook-page" class="creation_link btn">'.util_lang('add_notebook_page').'</a></li>'."\n";
+                }
+                if (count($this->pages) > 0) {
+                    $page_counter = 0;
+                    foreach ($this->pages as $p) {
+                        $page_counter++;
+                        $rendered .= '    '.$p->renderAsListItem('notebook-page-item-'.$page_counter)."\n";
+                    }
+                } else {
+                    $rendered .= '    <li>'.util_lang('zero_pages').'</li>'."\n";
+                }
+                $rendered .=
+                    '  </ul>'."\n";
             }
-// NOTE: add page control only in edit mode, not view mode!
-//            if ($USER->canActOnTarget($ACTIONS['edit'],$this)) {
-//                $rendered .= '    <li><a href="'.APP_ROOT_PATH.'/app_code/notebook_page.php?action=create&notebook_id='.$this->notebook_id.'" id="btn-add-notebook-page" class="creation_link btn">'.util_lang('add_notebook_page').'</a></li>'."\n";
-//            }
             $rendered .=
-                '  </ul>'."\n".
                     '</div>';
 
             return $rendered;

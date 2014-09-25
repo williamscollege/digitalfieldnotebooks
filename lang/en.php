@@ -40,6 +40,7 @@ $LANGUAGE['en'] = [
     'notebook' => 'notebook',
     'add_notebook' => '+ Add Notebook +',
     'new_notebook_title' => 'New Notebook',
+    'new_notebook_must_be_saved' => 'New notebook must be saved',
 
     'pages' => 'pages',
     'notebook_pages' => 'notebook pages',
