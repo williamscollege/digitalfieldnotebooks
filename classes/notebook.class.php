@@ -38,7 +38,7 @@
                                 'updated_at' => util_currentDateTimeString_asMySQL(),
                                 'user_id' => $user_id,
                                 'name'=>util_lang('new_notebook_title').' '.util_currentDateTimeString(),
-                                'notes' => '',
+                                'notes' => util_lang('new_notebook_notes'),
                                 'flag_workflow_published' => false,
                                 'flag_workflow_validated' => false,
                                 'flag_delete' => false,
@@ -109,9 +109,9 @@
             $this->cachePages();
 
             $rendered = '<div id="rendered_notebook_'.$this->notebook_id.'" class="rendered_notebook" '.$this->fieldsAsDataAttribs().$actions_attribs.'>'."\n".
-'  <h3 class="notebook_title">'.ucfirst(util_lang('notebook')).': '.$this->name.'</h3>'."\n".
+'  <h3 class="notebook_title"><a href="'.APP_ROOT_PATH.'/app_code/notebook.php?action=list">'.ucfirst(util_lang('notebook')).'</a>: '.$this->name.'</h3>'."\n".
 '  <span class="created_at">'.util_lang('created_at').' '.util_datetimeFormatted($this->created_at).'</span>, <span class="updated_at">'.util_lang('updated_at').' '.util_datetimeFormatted($this->updated_at).'</span><br/>'."\n".
-'  <span class="owner">'.util_lang('owned_by').' '.$notebook_owner->screen_name.'</span><br/>'."\n".
+'  <span class="owner">'.util_lang('owned_by').' <a href="'.APP_ROOT_PATH.'/app_code/user.php?action=view&user_id='.$notebook_owner->user_id.'">'.$notebook_owner->screen_name.'</a></span><br/>'."\n".
 '  <span class="published_state">'.($this->flag_workflow_published ? util_lang('published_true') : util_lang('published_false'))
                 .'</span>, <span class="verified_state">'.($this->flag_workflow_validated ? util_lang('verified_true') : util_lang('verified_false'))
                 .'</span><br/>'."\n".
@@ -167,26 +167,35 @@
                 '  <span class="created_at">'.util_lang('created_at').' '.util_datetimeFormatted($this->created_at).'</span>, <span class="updated_at">'.util_lang('updated_at').' '.util_datetimeFormatted($this->updated_at).'</span><br/>'."\n".
                 '  <span class="owner">'.util_lang('owned_by').' <a href="'.APP_ROOT_PATH.'/app_code/user.php?action=view&user_id='.$notebook_owner->user_id.'">'.$notebook_owner->screen_name.'</a></span><br/>'."\n";
 
-            if ($USER->canActOnTarget('publish',$this)) {
-                $rendered .= '  <span class="published_state"><input id="notebook-workflow-publish-control" type="checkbox" name="flag_workflow_published" value="1"'.($this->flag_workflow_published ?  ' checked="checked"' : '').' /> '
-                    .util_lang('published').'</span>,';
-            } else {
-                $rendered .= '  <span class="published_state">'.($this->flag_workflow_published ? util_lang('published_true') : util_lang('published_false'))
-                    .'</span>,';
+            if ($this->notebook_id != 'NEW') {
+                if ($USER->canActOnTarget('publish',$this)) {
+                    $rendered .= '  <span class="published_state"><input id="notebook-workflow-publish-control" type="checkbox" name="flag_workflow_published" value="1"'.($this->flag_workflow_published ?  ' checked="checked"' : '').' /> '
+                        .util_lang('publish').'</span>,';
+                } else {
+                    $rendered .= '  <span class="published_state">'.($this->flag_workflow_published ? util_lang('published_true') : util_lang('published_false'))
+                        .'</span>,';
+                }
+
+                if ($USER->canActOnTarget('verify',$this)) {
+                    $rendered .= '  <span class="verified_state"><input id="notebook-workflow-validate-control" type="checkbox" name="flag_workflow_validated" value="1"'.($this->flag_workflow_validated ?  ' checked="checked"' : '').' /> '
+                        .util_lang('verify').'</span>,';
+                } else {
+                    $rendered .= ' <span class="verified_state">'.($this->flag_workflow_validated ? util_lang('verified_true') : util_lang('verified_false'))
+                        .'</span>';
+                }
+                $rendered .= '<br/>'."\n";
             }
 
-            if ($USER->canActOnTarget('verify',$this)) {
-                $rendered .= '  <span class="verified_state"><input id="notebook-workflow-validate-control" type="checkbox" name="flag_workflow_validated" value="1"'.($this->flag_workflow_validated ?  ' checked="checked"' : '').' /> '
-                    .util_lang('verified').'</span>,';
-            } else {
-                $rendered .= ' <span class="verified_state">'.($this->flag_workflow_validated ? util_lang('verified_true') : util_lang('verified_false'))
-                    .'</span>';
-            }
+            $rendered .= '  <div class="notebook_notes"><textarea id="notebook-notes" name="notes" rows="4" cols="120">'.htmlentities($this->notes).'</textarea></div>'."\n";
 
-            $rendered .= '<br/>'."\n".
-                '  <div class="notebook_notes"><textarea id="notebook-notes" name="notes" rows="4" cols="120">'.htmlentities($this->notes).'</textarea></div>'."\n".
-                '  <input id="edit-submit-control" class="btn" type="submit" name="edit-submit-control" value="'.util_lang('update','properize').'"/>'."\n".
-                '</form>'."\n";
+            if ($this->notebook_id == 'NEW') {
+                $rendered .= '  <input id="edit-submit-control" class="btn" type="submit" name="edit-submit-control" value="'.util_lang('save','properize').'"/>'."\n";
+                $rendered .= '  <a id="edit-cancel-control" class="btn" href="'.APP_ROOT_PATH.'/app_code/notebook.php?action=list">'.util_lang('cancel','properize').'</a>'."\n";
+            } else {
+                $rendered .= '  <input id="edit-submit-control" class="btn" type="submit" name="edit-submit-control" value="'.util_lang('update','properize').'"/>'."\n";
+                $rendered .= '  <a id="edit-cancel-control" class="btn" href="'.APP_ROOT_PATH.'/app_code/notebook.php?action=view&notebook_id='.$this->notebook_id.'">'.util_lang('cancel','properize').'</a>'."\n";
+            }
+            $rendered .= '</form>'."\n";
             if ($this->notebook_id == 'NEW') {
                 $rendered .=  '  <h4>'.ucfirst(util_lang('pages')).'</h4>'."\n".
                     '  '.util_lang('new_notebook_must_be_saved')."\n";

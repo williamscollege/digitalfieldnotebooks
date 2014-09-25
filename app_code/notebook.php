@@ -10,19 +10,23 @@
     # 4. branch behavior based on the action
     #############################
 
-    # 1. figure out what action is being attempted (none/default is view)
+    # 1. figure out what action is being attempted (none/default is view); also, a bit of param validation
     $action = 'view';
     if (isset($_REQUEST['action']) && in_array($_REQUEST['action'],Action::$VALID_ACTIONS)) {
         $action = $_REQUEST['action'];
     }
-    if (($action != 'list' ) && ((! isset($_REQUEST['notebook_id'])) || (! is_numeric($_REQUEST['notebook_id'])))) {
-        util_redirectToAppPage('app_code/notebook.php?action=list','failure',util_lang('no_notebook_specified'));
+    if ((($action == 'edit') || ($action == 'view')) && ((! isset($_REQUEST['notebook_id'])) || (! is_numeric($_REQUEST['notebook_id'])))) {
+            util_redirectToAppPage('app_code/notebook.php?action=list','failure',util_lang('no_notebook_specified'));
     }
 
     # 2. figure out which notebook is being acted on (if none specified then redirect to home page for actions other than list)
     $notebook = '';
     $all_accessible_notebooks = '';
     if ($action == 'create') {
+
+        if ((! isset($_REQUEST['user_id'])) || (! is_numeric($_REQUEST['user_id']))) {
+            util_redirectToAppPage('app_code/notebook.php?action=list','failure',util_lang('no_user_specified'));
+        }
 
 //        $notebook = new Notebook(['user_id' => $USER->user_id, 'name'=>util_lang('new_notebook_title').' '.util_currentDateTimeString(),'DB'=>$DB]);
         $notebook = Notebook::createNewNotebookForUser($USER->user_id, $DB);
@@ -131,7 +135,7 @@
         echo "</ul>\n";
         if ($USER->canActOnTarget($ACTIONS['create'],new Notebook(['DB'=>$DB]))) {
             ?>
-            <a href="<?php echo APP_ROOT_PATH.'/app_code/notebook.php?action=create'; ?>" class="btn" id="btn-add-notebook"><?php echo util_lang('add_notebook'); ?></a><?php
+            <a href="<?php echo APP_ROOT_PATH.'/app_code/notebook.php?action=create&user_id='.$USER->user_id; ?>" class="btn" id="btn-add-notebook"><?php echo util_lang('add_notebook'); ?></a><?php
         }
     }
 require_once('../foot.php');

@@ -40,6 +40,7 @@ $LANGUAGE['en'] = [
     'notebook' => 'notebook',
     'add_notebook' => '+ Add Notebook +',
     'new_notebook_title' => 'New Notebook',
+    'new_notebook_notes' => 'Notes / description of your notebook - replace or delete this text',
     'new_notebook_must_be_saved' => 'New notebook must be saved',
 
     'pages' => 'pages',
@@ -67,12 +68,14 @@ $LANGUAGE['en'] = [
     'view' => 'view',
     'edit' => 'edit',
     'update' => 'update',
+    'save' => 'save',
     'create' => 'create',
     'delete' => 'delete',
     'publish' => 'publish',
     'published' => 'published',
     'verify' => 'verify',
     'verified' => 'verified',
+    'cancel' => 'cancel',
 
     'class' => 'class',
     'order' => 'order',
@@ -110,6 +113,8 @@ $LANGUAGE['en'] = [
     'no_notebooks_found' => 'Could not find any accessible notebooks.',
     'no_notebook_page_specified' => 'No notebook page was specified.',
     'no_notebook_page_found' => 'Could not find that notebook page.',
+
+    'no_user_specified' => 'No user was specified.',
 
     'invalid_value' => 'invalid value',
 

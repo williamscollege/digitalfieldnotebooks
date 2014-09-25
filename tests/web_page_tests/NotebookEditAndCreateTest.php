@@ -197,8 +197,9 @@ class NotebookEditAndCreateTest extends WMSWebTestCase {
         $this->click(util_lang('add_notebook'));
 
         $this->checkBasicAsserts();
-        $this->assertText(util_lang('new_notebook_title'));
+        $this->assertPattern('/'.util_lang('new_notebook_title').'/');
 
+//        $this->showContent();
     }
 
     function testToDo() {
