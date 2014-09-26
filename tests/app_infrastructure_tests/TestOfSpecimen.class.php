@@ -136,6 +136,38 @@
 //            echo "<pre>\n".htmlentities($canonical)."\n------------------\n".htmlentities($rendered)."\n</pre>";
 
             $this->assertEqual($canonical,$rendered);
+            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
+        }
+
+        function testRenderAsEditEmbed() {
+            $s = Specimen::getOneFromDb(['specimen_id'=>8001],$this->DB);
+            $s->cacheImages();
+
+            $canonical =
+                '<div class="specimen">
+<form id="form-edit-specimen-'.$s->specimen_id.'" class="form-edit-specimen" data-specimen_id="'.$s->specimen_id.'">
+  <h3><input type="text" name="name" id="specimen-name" value="'.htmlentities($s->name).'"/></h3>
+  <ul class="base-info">
+    <li><span class="field-label">'.util_lang('coordinates').'</span> : <input type="text" name="gps_longitude" id="specimen-gps_longitude" value="'.htmlentities($s->gps_longitude).'"/>, <input type="text" name="gps_latitude" id="specimen-gps_latitude" value="'.htmlentities($s->gps_latitude).'"/></li>
+    <li><span class="field-label">'.util_lang('notes').'</span> : <textarea name="notes" id="specimen-notes" row="4" cols="120">'.htmlentities($s->notes).'</textarea></li>
+    <li><span class="field-label">'.util_lang('catalog_identifier').'</span> : <input type="text" name="catalog_identifier" id="specimen-catalog_identifier" value="'.htmlentities($s->catalog_identifier).'"/></li>
+  </ul>
+  <ul class="specimen-images">
+';
+            $canonical .= '  <a href="#" id="control-add-image-for-'.$s->specimen_id.'" class="btn add-specimen-image-button" data-for-specimen="'.$s->specimen_id.'">'.util_lang('add_specimen_image').'</a>
+';
+            foreach ($s->images as $image) {
+                $canonical .='    '.$image->renderAsListItemEdit()."\n";
+            }
+            $canonical .='  </ul>
+</form>
+</div>';
+            $rendered = $s->renderAsEditEmbed();
+
+            echo "<pre>\n".htmlentities($canonical)."\n------------------\n".htmlentities($rendered)."\n</pre>";
+
+            $this->assertEqual($canonical,$rendered);
+            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
         }
 
         function testRenderAsListItem_General() {
@@ -163,7 +195,7 @@
             'flag_delete'0
             */
             $canonical = '<li data-specimen_id="8001" data-created_at="'.$s->created_at.'" data-updated_at="'.$s->updated_at.'" '.
-                'data-user_id="110" data-link_to_type="authoritative_plant" data-link_to_id="5001" data-name="sci quad authoritative" data-gps_longitude="-73.2054918" data-gps_latitude="42.7118454" data-notes="notes on authoritative specimen" data-ordering="1.00000" data-catalog_identifier="1a" data-flag_workflow_published="1" data-flag_workflow_validated="1" data-flag_delete="0"><a href="/app_code/specimen.php?specimen_id=8001">'.
+                'data-user_id="110" data-link_to_type="authoritative_plant" data-link_to_id="5001" data-name="sci quad authoritative" data-gps_longitude="-73.2054918" data-gps_latitude="42.7118454" data-notes="notes on authoritative specimen" data-ordering="1.00000" data-catalog_identifier="1a" data-flag_workflow_published="1" data-flag_workflow_validated="1" data-flag_delete="0"><a href="'.APP_ROOT_PATH.'/app_code/specimen.php?specimen_id=8001">'.
                 htmlentities($s->name).'</a></li>';
 
             $rendered = $s->renderAsListItem();
@@ -171,6 +203,7 @@
 //            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
 
             $this->assertEqual($canonical,$rendered);
+            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
 
             unset($USER);
         }
@@ -200,7 +233,7 @@
             'flag_delete'0
             */
             $canonical = '<li data-specimen_id="8001" data-created_at="'.$s->created_at.'" data-updated_at="'.$s->updated_at.'" '.
-                'data-user_id="110" data-link_to_type="authoritative_plant" data-link_to_id="5001" data-name="sci quad authoritative" data-gps_longitude="-73.2054918" data-gps_latitude="42.7118454" data-notes="notes on authoritative specimen" data-ordering="1.00000" data-catalog_identifier="1a" data-flag_workflow_published="1" data-flag_workflow_validated="1" data-flag_delete="0" data-can-edit="1"><a href="/app_code/specimen.php?specimen_id=8001">'.
+                'data-user_id="110" data-link_to_type="authoritative_plant" data-link_to_id="5001" data-name="sci quad authoritative" data-gps_longitude="-73.2054918" data-gps_latitude="42.7118454" data-notes="notes on authoritative specimen" data-ordering="1.00000" data-catalog_identifier="1a" data-flag_workflow_published="1" data-flag_workflow_validated="1" data-flag_delete="0" data-can-edit="1"><a href="'.APP_ROOT_PATH.'/app_code/specimen.php?specimen_id=8001">'.
                 htmlentities($s->name).'</a></li>';
 
             $rendered = $s->renderAsListItem();
@@ -208,6 +241,7 @@
 //            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
 
             $this->assertEqual($canonical,$rendered);
+            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
 
             unset($USER);
         }

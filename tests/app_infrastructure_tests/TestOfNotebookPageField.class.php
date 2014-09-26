@@ -125,4 +125,8 @@
             $this->assertEqual($canonical,$rendered);
             $this->assertNoPattern('/IMPLEMENTED/',$rendered);
         }
+
+        function testRenderAsListItemEdit() {
+            $this->todo();
+        }
     }

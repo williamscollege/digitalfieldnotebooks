@@ -73,6 +73,7 @@
 //            echo "<pre>\n".htmlentities($canonical)."\n------------------\n".htmlentities($rendered)."\n</pre>";
 
             $this->assertEqual($canonical,$rendered);
+            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
         }
 
         function testRenderAsHtml_external() {
@@ -84,6 +85,7 @@
 //            echo "<pre>\n".htmlentities($canonical)."\n------------------\n".htmlentities($rendered)."\n</pre>";
 
             $this->assertEqual($canonical,$rendered);
+            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
         }
 
         function testRenderAsListItem() {
@@ -97,5 +99,28 @@
 //            echo "<pre>\n".htmlentities($canonical)."\n------------------\n".htmlentities($rendered)."\n</pre>";
 
             $this->assertEqual($canonical,$rendered);
+            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
+        }
+
+        function testRenderAsListItemEdit() {
+            $si = Specimen_Image::getOneFromDb(['specimen_image_id'=>8103],$this->DB);
+            global $USER;
+            $USER = User::getOneFromDb(['username'=>TESTINGUSER], $this->DB);
+            $canonical = '<li class="specimen-image" data-specimen_image_id="8103" data-created_at="'.$si->created_at.'" data-updated_at="'.$si->updated_at.'" data-specimen_id="8002" data-user_id="101" data-image_reference="testing/USER101_8103_cnh_castanea_dentata.jpg" data-ordering="0.75000" data-flag_workflow_published="0" data-flag_workflow_validated="1" data-flag_delete="0">';
+            $canonical .= $si->renderAsHtml();
+            $canonical .= '<div class="controls">';
+            // publish, verify, reordering handle
+            $canonical .= '<span class="control-publish"><input id="flag_workflow_published_8103-control" type="checkbox" name="flag_workflow_published" value="1" /> '.util_lang('publish').'</span>';
+            $canonical .= '<span class="control-verify">'.util_lang('verified').'</span>';
+            $canonical .= '<span class="ordering-handle">&lt; &gt;</span>';
+            $canonical .= '</div>';
+            $canonical .= '</li>';
+
+            $rendered = $si->renderAsListItemEdit();
+
+//            echo "<pre>\n".htmlentities($canonical)."\n------------------\n".htmlentities($rendered)."\n</pre>";
+
+            $this->assertEqual($canonical,$rendered);
+            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
         }
     }

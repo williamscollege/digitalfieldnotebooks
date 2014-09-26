@@ -154,13 +154,17 @@
             $n = $np->getNotebook();
             $ap = $np->getAuthoritativePlant();
 
+
+//            $this->assertEqual(2,count($np->specimens));
+
+
             global $USER;
             $USER = User::getOneFromDb(['username'=>TESTINGUSER], $this->DB);
 
-            $canonical = '<div id="rendered_notebook_page_1101"class="rendered_notebook_page" '.$np->fieldsAsDataAttribs().' data-can-edit="1">
+            $canonical = '<div id="rendered_notebook_page_1101" class="rendered_notebook_page" '.$np->fieldsAsDataAttribs().' data-can-edit="1">
   <h3 class="notebook_page_title">'.$n->renderAsLink().': '.$ap->renderAsShortText().'</h3>
   <span class="created_at">'.util_lang('created_at').' '.util_datetimeFormatted($np->created_at).'</span>, <span class="updated_at">'.util_lang('updated_at').' '.util_datetimeFormatted($np->updated_at).'</span><br/>
-  <span class="owner">'.util_lang('owned_by').' '.$USER->screen_name.'</span><br/>
+  <span class="owner">'.util_lang('owned_by').' <a href="'.APP_ROOT_PATH.'/app_code/user.php?action=view&user_id=101">'.$USER->screen_name.'</a></span><br/>
   <span class="published_state">'.util_lang('published_false').'</span>, <span class="verified_state">'.util_lang('verified_false').'</span><br/>
   <div class="notebook_page_notes">testing notebook page the first in testnotebook1, owned by user 101</div>
   '.$ap->renderAsViewEmbed().'
@@ -193,6 +197,63 @@
             $this->assertNoPattern('/IMPLEMENTED/',$rendered);
         }
 
+        function testRenderAsEdit_owner() {
+//            $this->todo();
+            $np = Notebook_Page::getOneFromDb(['notebook_page_id' => 1101], $this->DB);
+            $np->loadPageFields();
+            $np->loadSpecimens();
+            $n = $np->getNotebook();
+            $ap = $np->getAuthoritativePlant();
+
+            global $USER;
+            $USER = User::getOneFromDb(['username'=>TESTINGUSER], $this->DB);
+
+            $this->todo('add canonical code for how to handle authoritative plant selection');
+
+            $canonical = '<div id="rendered_notebook_page_1101" class="rendered_notebook_page" '.$np->fieldsAsDataAttribs().' data-can-edit="1">
+<form id="form-edit-notebook-page-base-data" action="'.APP_ROOT_PATH.'/app_code/notebook_page.php?action=view&notebook_page_id='.$np->notebook_page_id.'">
+  <h3 class="notebook_page_title">'.$n->renderAsLink().': '.$ap->renderAsShortText().'</h3>
+  <span class="created_at">'.util_lang('created_at').' '.util_datetimeFormatted($np->created_at).'</span>, <span class="updated_at">'.util_lang('updated_at').' '.util_datetimeFormatted($np->updated_at).'</span><br/>
+  <span class="owner">'.util_lang('owned_by').' <a href="'.APP_ROOT_PATH.'/app_code/user.php?action=view&user_id=101">'.$USER->screen_name.'</a></span><br/>
+  <span class="published_state"><input id="notebook-workflow-publish-control" type="checkbox" name="flag_workflow_published" value="1" /> '.util_lang('publish').'</span>, <span class="verified_state">'.util_lang('verified_false').'</span><br/>
+  <div class="notebook_page_notes"><textarea id="notebook-page-notes" name="notes" rows="4" cols="120">testing notebook page the first in testnotebook1, owned by user 101</textarea></div>
+  <input id="edit-submit-control" class="btn" type="submit" name="edit-submit-control" value="'.util_lang('update','properize').'"/>
+  <a id="edit-cancel-control" class="btn" href="'.APP_ROOT_PATH.'/app_code/notebook_page.php?action=view&notebook_page_id='.$np->notebook_page_id.'">'.util_lang('cancel','properize').'</a>
+</form>
+  '.$ap->renderAsViewEmbed().'
+  <ul class="notebook_page_fields">
+';
+            foreach ($np->page_fields as $pf) {
+                $canonical .= '    '.$pf->renderAsListItemEdit()."\n";
+            }
+            $canonical .= '  </ul>
+  <h4>'.ucfirst(util_lang('specimens')).'</h4>
+  <ul class="specimens">
+';
+            $this->todo('add canonical code for new page field button / action');
+            foreach ($np->specimens as $specimen) {
+                $canonical .= '    <li>'.$specimen->renderAsEditEmbed()."</li>\n";
+            }
+            $canonical .= '  </ul>
+</div>';
+
+            $rendered = $np->renderAsEdit();
+
+            $this->assertEqual($canonical,$rendered);
+            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
+
+////            echo "<pre>
+////-----------
+////".htmlentities($canonical)."
+////-----------
+////".htmlentities($rendered)."
+////-----------
+////</pre>";
+        }
+
+        function testRenderAsEdit_newNotebookPage() {
+            $this->todo();
+        }
 
 //    $canonical .= '    <li><a href="" id="btn-add-notebook-page-field" class="creation_link btn">'.util_lang('add_notebook_page_field').'</a></li>
 

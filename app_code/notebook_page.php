@@ -20,22 +20,26 @@
     $notebook_page = '';
     if ($action == 'create') {
         if ((! isset($_REQUEST['notebook_id'])) || (! is_numeric($_REQUEST['notebook_id']))) {
-            util_redirectToAppHome('failure',util_lang('no_notebook_specified'));
+            util_redirectToAppPage('app_code/notebook.php?action=list','failure',util_lang('no_notebook_specified'));
         }
         $notebook_page = new Notebook_Page(['notebook_id' => $_REQUEST['notebook_id'],'DB'=>$DB]);
     } else {
         if ((! isset($_REQUEST['notebook_page_id'])) || (! is_numeric($_REQUEST['notebook_page_id']))) {
-            util_redirectToAppHome('failure',util_lang('no_notebook_page_specified'));
+            util_redirectToAppPage('app_code/notebook.php?action=list','failure',util_lang('no_notebook_page_specified'));
         }
         $notebook_page = Notebook_Page::getOneFromDb(['notebook_page_id'=>$_REQUEST['notebook_page_id']],$DB);
         if (! $notebook_page->matchesDb) {
-            util_redirectToAppHome('failure',util_lang('no_notebook_page_found'));
+            util_redirectToAppPage('app_code/notebook.php?action=list','failure',util_lang('no_notebook_page_found'));
         }
     }
 
     # 3. confirm that the user is allowed to take that action on that object (if not, redirect them to the home page with an appropriate warning)
     if (! $USER->canActOnTarget($ACTIONS[$action],$notebook_page)) {
-        util_redirectToAppHome('failure',util_lang('no_permission'));
+//        util_prePrintR("action is $action");
+        if (($action != 'view') && isset($_REQUEST['notebook_page_id']) && is_numeric($_REQUEST['notebook_page_id'])) {
+            util_redirectToAppPage('app_code/notebook_page.php?action=view&notebook_page_id='.$notebook_page->notebook_page_id,'failure',util_lang('no_permission'));
+        }
+        util_redirectToAppPage('app_code/notebook.php?action=list','failure',util_lang('no_permission'));
     }
 
 

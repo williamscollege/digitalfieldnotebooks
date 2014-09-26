@@ -58,4 +58,42 @@
             return $li_elt;
         }
 
+        public function renderAsListItemEdit($idstr='',$classes_array = [],$other_attribs_hash = []) {
+//            return 'TO BE IMPLEMENTED';
+//
+            global $USER;
+
+            array_unshift($classes_array,'specimen-image');
+            $li_elt = substr(util_listItemTag($idstr,$classes_array,$other_attribs_hash),0,-1);
+            $li_elt .= ' '.$this->fieldsAsDataAttribs().'>';
+            $li_elt .= $this->renderAsHtml();
+
+            $li_elt .= '<div class="controls">';
+            // publish, verify, reordering handle
+            if ($this->specimen_image_id != 'NEW') {
+                if ($USER->canActOnTarget('publish',$this)) {
+                    $li_elt .= '<span class="control-publish"><input id="flag_workflow_published_'.$this->specimen_image_id.'-control" type="checkbox" name="flag_workflow_published" value="1"'.($this->flag_workflow_published ?  ' checked="checked"' : '').' /> '
+                        .util_lang('publish').'</span>';
+                } else {
+                    $li_elt .= '<span class="control-publish">'.($this->flag_workflow_published ? util_lang('published_true') : util_lang('published_false'))
+                        .'</span>';
+                }
+
+                if ($USER->canActOnTarget('verify',$this)) {
+                    $li_elt .= '<span class="control-verify"><input id="flag_workflow_validated_'.$this->specimen_image_id.'-control" type="checkbox" name="flag_workflow_validated" value="1"'.($this->flag_workflow_validated ?  ' checked="checked"' : '').' /> '
+                        .util_lang('verify').'</span>,';
+                } else {
+                    $li_elt .= '<span class="control-verify">'.($this->flag_workflow_validated ? util_lang('verified_true') : util_lang('verified_false'))
+                        .'</span>';
+                }
+            }
+
+            $li_elt .= '<span class="ordering-handle">&lt; &gt;</span>';
+            $li_elt .= '</div>';
+
+            $li_elt .= '</li>';
+
+            return $li_elt;
+        }
+
 	}

@@ -254,11 +254,11 @@
   <span class="published_state"><input id="notebook-workflow-publish-control" type="checkbox" name="flag_workflow_published" value="1" /> '.util_lang('publish').'</span>, <span class="verified_state">'.util_lang('verified_false').'</span><br/>
   <div class="notebook_notes"><textarea id="notebook-notes" name="notes" rows="4" cols="120">this is testnotebook1, owned by user 101</textarea></div>
   <input id="edit-submit-control" class="btn" type="submit" name="edit-submit-control" value="'.util_lang('update','properize').'"/>
-  <a id="edit-cancel-control" class="btn" href="/digitalfieldnotebooks/app_code/notebook.php?action=view&notebook_id=1001">'.util_lang('cancel','properize').'</a>
+  <a id="edit-cancel-control" class="btn" href="'.APP_ROOT_PATH.'/app_code/notebook.php?action=view&notebook_id=1001">'.util_lang('cancel','properize').'</a>
 </form>
   <h4>'.ucfirst(util_lang('pages')).'</h4>
   <ul id="list-of-notebook-pages" data-notebook-page-count="2">
-    <li><a href="/digitalfieldnotebooks/app_code/notebook_page.php?action=create&notebook_id=1001" id="btn-add-notebook-page" class="creation_link btn">'.util_lang('add_notebook_page').'</a></li>
+    <li><a href="'.APP_ROOT_PATH.'/app_code/notebook_page.php?action=create&notebook_id=1001" id="btn-add-notebook-page" class="creation_link btn">'.util_lang('add_notebook_page').'</a></li>
 ';
 //            <a href="'.APP_ROOT_PATH.'/app_code/notebook_page.php?action=create&notebook_id=1001" class="btn">'.util_lang('add_notebook_page').'</a>
 

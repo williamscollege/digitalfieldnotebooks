@@ -46,6 +46,7 @@ $LANGUAGE['en'] = [
     'pages' => 'pages',
     'notebook_pages' => 'notebook pages',
     'page' => 'page',
+    'notebook_page' => 'page',
     'add_notebook_page' => '+ Add Page / Entry +',
     'zero_pages' => 'no notebook pages',
     'page_in_notebook' => 'in notebook',
@@ -57,6 +58,7 @@ $LANGUAGE['en'] = [
     'specimens' => 'specimens',
     'specimen' => 'specimen',
     'add_specimen' => '+ Add Specimen +',
+    'add_specimen_image' => '+ Add Image +',
 
     'published_true' => 'public',
     'published_false' => 'private',

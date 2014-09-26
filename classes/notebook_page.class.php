@@ -92,10 +92,10 @@
                 $owner = $n->getUser();
             }
 
-            $rendered = '<div id="rendered_notebook_page_'.$this->notebook_page_id.'"class="rendered_notebook_page" '.$this->fieldsAsDataAttribs().$actions_attribs.">\n".
+            $rendered = '<div id="rendered_notebook_page_'.$this->notebook_page_id.'" class="rendered_notebook_page" '.$this->fieldsAsDataAttribs().$actions_attribs.">\n".
 '  <h3 class="notebook_page_title">'.$n->renderAsLink().': '.$ap->renderAsShortText()."</h3>\n".
 '  <span class="created_at">'.util_lang('created_at').' '.util_datetimeFormatted($this->created_at).'</span>, <span class="updated_at">'.util_lang('updated_at').' '.util_datetimeFormatted($this->updated_at)."</span><br/>\n".
-'  <span class="owner">'.util_lang('owned_by').' '.$owner->screen_name."</span><br/>\n".
+'  <span class="owner">'.util_lang('owned_by').' <a href="'.APP_ROOT_PATH.'/app_code/user.php?action=view&user_id='.$owner->user_id.'">'.$owner->screen_name.'</a></span><br/>'."\n".
 '  <span class="published_state">'.($this->flag_workflow_published ? util_lang('published_true') : util_lang('published_false'))
     .'</span>, <span class="verified_state">'.($this->flag_workflow_validated ? util_lang('verified_true') : util_lang('verified_false'))
     .'</span><br/>'."\n".
@@ -115,6 +115,10 @@
             $rendered .= "  </ul>\n</div>";
 
             return $rendered;
+        }
+
+        public function renderAsEdit() {
+            return 'TO BE IMPLEMENTED';
         }
 
         public function loadPageFields() {

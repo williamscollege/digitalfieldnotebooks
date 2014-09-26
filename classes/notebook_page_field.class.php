@@ -34,6 +34,20 @@
 
         //------------------------------------------
 
+        public function getNotebookPage() {
+            return Notebook_Page::getOneFromDb(['notebook_page_id'=>$this->notebook_page_id],$this->dbConnection);
+        }
+
+        public function getMetadataStructure() {
+            return Metadata_Structure::getOneFromDb(['metadata_structure_id'=>$this->label_metadata_structure_id],$this->dbConnection);
+        }
+
+        public function getMetadataTermValue() {
+            return Metadata_Term_Value::getOneFromDb(['metadata_term_value_id'=>$this->value_metadata_term_value_id],$this->dbConnection);
+        }
+
+        //------------------------------------------
+
         public function renderAsListItem($idstr='',$classes_array = [],$other_attribs_hash = []) {
             $li_elt = substr(util_listItemTag($idstr,$classes_array,$other_attribs_hash),0,-1);
             $li_elt .= ' '.$this->fieldsAsDataAttribs().'>';
@@ -61,18 +75,8 @@
             return $li_elt;
         }
 
-        //------------------------------------------
-
-        public function getNotebookPage() {
-            return Notebook_Page::getOneFromDb(['notebook_page_id'=>$this->notebook_page_id],$this->dbConnection);
-        }
-
-        public function getMetadataStructure() {
-            return Metadata_Structure::getOneFromDb(['metadata_structure_id'=>$this->label_metadata_structure_id],$this->dbConnection);
-        }
-
-        public function getMetadataTermValue() {
-            return Metadata_Term_Value::getOneFromDb(['metadata_term_value_id'=>$this->value_metadata_term_value_id],$this->dbConnection);
+        public function renderAsListItemEdit() {
+            return 'TO BE IMPLEMENTED';
         }
 
 	}

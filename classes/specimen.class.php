@@ -120,7 +120,11 @@
             }
             $li_elt = substr(util_listItemTag($idstr,$classes_array,$other_attribs_hash),0,-1);
             $li_elt .= ' '.$this->fieldsAsDataAttribs().$actions_attribs.'>';
-            $li_elt .= '<a href="/app_code/specimen.php?specimen_id='.$this->specimen_id.'">'.htmlentities($this->name).'</a></li>';
+            $li_elt .= '<a href="'.APP_ROOT_PATH.'/app_code/specimen.php?specimen_id='.$this->specimen_id.'">'.htmlentities($this->name).'</a></li>';
             return $li_elt;
+        }
+
+        public function renderAsEditEmbed() {
+            return 'TO BE IMPLEMENTED';
         }
     }

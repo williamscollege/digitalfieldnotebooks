@@ -36,6 +36,10 @@ class NotebookPageViewTest extends WMSWebTestCase {
 
     //-----------------------------------------------------------------------------------------------------------------
 
+    function testMissingIdGoesToNotebookList() {
+        $this->todo();
+    }
+
     function testViewIsDefault() {
         $this->doLoginBasic();
 
