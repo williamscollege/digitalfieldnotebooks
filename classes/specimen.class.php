@@ -125,6 +125,30 @@
         }
 
         public function renderAsEditEmbed() {
-            return 'TO BE IMPLEMENTED';
+            $this->cacheImages();
+
+            $rendered = '<div class="specimen">'."\n".
+                '<form id="form-edit-specimen-'.$this->specimen_id.'" class="form-edit-specimen" data-specimen_id="'.$this->specimen_id.'">'."\n".
+                '  <h3><input type="text" name="name" id="specimen-name" value="'.htmlentities($this->name).'"/></h3>'."\n".
+                '  <ul class="base-info">'."\n";
+            $rendered .= '    <li><span class="field-label">'.util_lang('coordinates').'</span> : <input type="text" name="gps_longitude" id="specimen-gps_longitude" value="'.$this->gps_longitude.'"/>, <input type="text" name="gps_latitude" id="specimen-gps_latitude" value="'.$this->gps_latitude.'"/></li>'."\n";
+            $rendered .= '    <li><span class="field-label">'.util_lang('notes').'</span> : <textarea name="notes" id="specimen-notes" row="4" cols="120">'.htmlentities($this->notes).'</textarea></li>'."\n";
+            $rendered .= '    <li><span class="field-label">'.util_lang('catalog_identifier').'</span> : <input type="text" name="catalog_identifier" id="specimen-catalog_identifier" value="'.htmlentities($this->catalog_identifier).'"/></li>'."\n";
+            $rendered .= '  </ul>'."\n";
+
+            if (count($this->images) > 0) {
+                $rendered .= '  <ul class="specimen-images">'."\n";
+                $rendered .= '    <li><a href="#" id="control-add-image-for-'.$this->specimen_id.'" class="btn add-specimen-image-button" data-for-specimen="'.$this->specimen_id.'">'.util_lang('add_specimen_image').'</a></li>'."\n";
+
+                foreach ($this->images as $image) {
+                    $rendered .= '    '.$image->renderAsListItemEdit()."\n";
+                }
+
+                $rendered .='  </ul>'."\n";
+            }
+
+            $rendered .= "</form>\n</div>";
+
+            return $rendered;
         }
     }

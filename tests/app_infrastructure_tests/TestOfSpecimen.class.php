@@ -154,7 +154,7 @@
   </ul>
   <ul class="specimen-images">
 ';
-            $canonical .= '  <a href="#" id="control-add-image-for-'.$s->specimen_id.'" class="btn add-specimen-image-button" data-for-specimen="'.$s->specimen_id.'">'.util_lang('add_specimen_image').'</a>
+            $canonical .= '    <li><a href="#" id="control-add-image-for-'.$s->specimen_id.'" class="btn add-specimen-image-button" data-for-specimen="'.$s->specimen_id.'">'.util_lang('add_specimen_image').'</a></li>
 ';
             foreach ($s->images as $image) {
                 $canonical .='    '.$image->renderAsListItemEdit()."\n";
@@ -164,7 +164,7 @@
 </div>';
             $rendered = $s->renderAsEditEmbed();
 
-            echo "<pre>\n".htmlentities($canonical)."\n------------------\n".htmlentities($rendered)."\n</pre>";
+//            echo "<pre>\n".htmlentities($canonical)."\n------------------\n".htmlentities($rendered)."\n</pre>";
 
             $this->assertEqual($canonical,$rendered);
             $this->assertNoPattern('/IMPLEMENTED/',$rendered);
