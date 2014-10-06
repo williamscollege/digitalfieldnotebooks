@@ -175,4 +175,36 @@
             $this->assertEqual($canonical,$rendered);
             $this->assertNoPattern('/IMPLEMENTED/',$rendered);
         }
+
+        function testRenderAsOption() {
+            // $flag_selected
+//            $this->todo();
+
+            $mdtv = Metadata_Term_Value::getOneFromDb(['metadata_term_value_id' => 6210],$this->DB);
+
+            $mdtv->loadReferences();
+
+            //--------------------------
+
+            $canonical_not_selected = '<option data-metadata_term_value_id="'.$mdtv->metadata_term_value_id.'" data-description="'.htmlentities($mdtv->description).'" data-ARRAY_metadata_reference_ids="'.implode(',',Db_Linked::arrayOfAttrValues($mdtv->references,'metadata_reference_id')).'" value="'.$mdtv->metadata_term_value_id.'">'.htmlentities($mdtv->name).'</option>';
+
+            $rendered = $mdtv->renderAsOption();
+
+//            echo "<pre>\n".htmlentities($canonical_not_selected)."\n-------\n".htmlentities($rendered)."\n</pre>";
+
+            $this->assertEqual($canonical_not_selected,$rendered);
+            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
+
+            //--------------------------
+
+            $canonical_selected = '<option data-metadata_term_value_id="'.$mdtv->metadata_term_value_id.'" data-description="'.htmlentities($mdtv->description).'" data-ARRAY_metadata_reference_ids="'.implode(',',Db_Linked::arrayOfAttrValues($mdtv->references,'metadata_reference_id')).'" value="'.$mdtv->metadata_term_value_id.'" selected="selected">'.htmlentities($mdtv->name).'</option>';
+
+            $rendered = $mdtv->renderAsOption(true);
+
+//            echo "<pre>\n".htmlentities($canonical_selected)."\n-------\n".htmlentities($rendered)."\n</pre>";
+
+            $this->assertEqual($canonical_selected,$rendered);
+            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
+
+        }
     }

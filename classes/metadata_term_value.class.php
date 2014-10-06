@@ -40,9 +40,15 @@
             usort($this->references,'Metadata_Reference::cmp');
         }
 
+        public function cacheReferences() {
+            if (! $this->references) {
+                $this->loadReferences();
+            }
+        }
+
         public function renderAsHtml() {
             $rendered = '<span class="term_value" title="'.htmlentities($this->description).'">'.$this->name.'</span>';
-            $this->loadReferences();
+            $this->cacheReferences();
             if (count($this->references) > 0) {
                 $rendered .= '<ul class="metadata-references">';
                 foreach ($this->references as $r) {
@@ -65,6 +71,14 @@
             $rendered = '<div id="rendered_metadata_term_value_'.$this->metadata_term_value_id.'" class="rendered-metadata-term-value" '.$this->fieldsAsDataAttribs().'>';
             $rendered .= $this->renderAsHtml();
             $rendered .= '</div>';
+            return $rendered;
+        }
+
+        public function renderAsOption($flag_is_selected=false) {
+            $this->cacheReferences();
+
+            $rendered = '<option data-metadata_term_value_id="'.$this->metadata_term_value_id.'" data-description="'.htmlentities($this->description).'" data-ARRAY_metadata_reference_ids="'.implode(',',Db_Linked::arrayOfAttrValues($this->references,'metadata_reference_id')).'" value="'.$this->metadata_term_value_id.'"'.($flag_is_selected ? ' selected="selected"' : '').'>'.htmlentities($this->name).'</option>';
+
             return $rendered;
         }
 	}

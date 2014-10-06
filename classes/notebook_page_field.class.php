@@ -75,8 +75,26 @@
             return $li_elt;
         }
 
-        public function renderAsListItemEdit() {
-            return 'TO BE IMPLEMENTED';
+        public function renderAsListItemEdit($idstr='',$classes_array = [],$other_attribs_hash = []) {
+            $li_elt = substr(util_listItemTag($idstr,$classes_array,$other_attribs_hash),0,-1);
+            $li_elt .= ' '.$this->fieldsAsDataAttribs().'>';
+
+            $mds = $this->getMetadataStructure();
+            $mds->loadTermSetAndValues();
+
+//            util_prePrintR($mds);
+
+            $li_elt .= '<span class="notebook-page-field-label" title="'.htmlentities($mds->description).'">'.htmlentities($mds->name).'</span> : ';
+            if ($mds->term_set) {
+                $li_elt .= $mds->term_set->renderAsSelectControl('page_field_select_'.$this->notebook_page_field_id,$this->value_metadata_term_value_id);
+            }
+            else {
+                $li_elt .= util_lang('metadata_structure_has_no_term_set');
+            }
+            $li_elt .= '; <input type="text" name="page_field_open_value_'.$this->notebook_page_field_id.'" id="page_field_open_value_'.$this->notebook_page_field_id.'" class="page_field_open_value" value="'.htmlentities($this->value_open).'"/>';
+
+            $li_elt .= '</li>';
+            return $li_elt;
         }
 
 	}

@@ -254,4 +254,24 @@
 
 //            $this->assertPattern('/'.htmlentities($mds->name).'/',$rendered);
         }
+
+        function testRenderAsSelectControl() {
+            $mdts = Metadata_Term_Set::getOneFromDb(['metadata_term_set_id' => 6101],$this->DB);
+            $mdtvs = Metadata_Term_Value::getAllFromDb(['metadata_term_set_id' => 6101],$this->DB);
+            usort($mdtvs,'Metadata_Term_Value::cmp');
+
+            $selected_id = 6203;
+
+            $canonical = '<select name="namefoo" id="idfoo" class="metadata_term_value_select_control">'."\n";
+            $canonical .= '  <option value="-1">-- nothing from the list --</option>'."\n";
+            foreach ($mdtvs as $v) {
+                $canonical .= '  '.$v->renderAsOption($v->metadata_term_value_id == $selected_id)."\n";
+            }
+            $canonical .= '</select>';
+
+            $rendered = $mdts->renderAsSelectControl('namefoo','6203','idfoo');
+
+            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
+            $this->assertEqual($canonical,$rendered);
+        }
     }

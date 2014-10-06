@@ -126,7 +126,50 @@
             $this->assertNoPattern('/IMPLEMENTED/',$rendered);
         }
 
-        function testRenderAsListItemEdit() {
-            $this->todo();
+        function testRenderAsListItemEdit_standard() {
+            $npf = Notebook_Page_Field::getOneFromDb(['notebook_page_field_id'=>1205],$this->DB);
+
+            $mds = Metadata_Structure::getOneFromDb(['metadata_structure_id'=>6002],$this->DB);
+            $mdts = Metadata_Term_Set::getOneFromDb(['metadata_term_set_id'=>6101],$this->DB);
+//            $mdtvs = Metadata_Term_Value::getAllFromDb(['metadata_term_set_id'=>6101],$this->DB);
+
+            global $USER;
+            $USER = User::getOneFromDb(['username'=>TESTINGUSER], $this->DB);
+
+            $canonical = '<li data-notebook_page_field_id="1205" data-created_at="'.$npf->created_at.'" data-updated_at="'.$npf->updated_at.'" data-notebook_page_id="1104" data-label_metadata_structure_id="6002" data-value_metadata_term_value_id="6205" data-value_open="rare" data-flag_delete="0">'.
+                '<span class="notebook-page-field-label" title="'.htmlentities($mds->description).'">'.htmlentities($mds->name).'</span> : '.
+                $mdts->renderAsSelectControl('page_field_select_1205',6205).
+                '; <input type="text" name="page_field_open_value_1205" id="page_field_open_value_1205" class="page_field_open_value" value="rare"/>'.
+                '</li>';
+
+            $rendered = $npf->renderAsListItemEdit();
+
+//            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
+
+            $this->assertEqual($canonical,$rendered);
+            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
         }
+
+        function testRenderAsListItemEdit_noTermSet() {
+            $npf = Notebook_Page_Field::getOneFromDb(['notebook_page_field_id'=>1204],$this->DB);
+
+            $mds = Metadata_Structure::getOneFromDb(['metadata_structure_id'=>6004],$this->DB);
+
+            global $USER;
+            $USER = User::getOneFromDb(['username'=>TESTINGUSER], $this->DB);
+
+            $canonical = '<li data-notebook_page_field_id="1204" data-created_at="'.$npf->created_at.'" data-updated_at="'.$npf->updated_at.'" data-notebook_page_id="1101" data-label_metadata_structure_id="6004" data-value_metadata_term_value_id="0" data-value_open="wavy-ish" data-flag_delete="0">'.
+                '<span class="notebook-page-field-label" title="'.htmlentities($mds->description).'">'.htmlentities($mds->name).'</span> : '.
+                util_lang('metadata_structure_has_no_term_set').
+                '; <input type="text" name="page_field_open_value_1204" id="page_field_open_value_1204" class="page_field_open_value" value="wavy-ish"/>'.
+                '</li>';
+
+            $rendered = $npf->renderAsListItemEdit();
+
+//            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
+
+            $this->assertEqual($canonical,$rendered);
+            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
+        }
+
     }

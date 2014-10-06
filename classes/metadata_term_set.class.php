@@ -157,4 +157,24 @@
 
             return $rendered;
         }
+
+        public function renderAsSelectControl($name,$default_checked_value_id=0,$id='') {
+            if (! $name) {
+                $name = 'select_metadata_term_value';
+            }
+            if (! $id) {
+                $id = $name;
+            }
+
+            $this->cacheTermValues();
+
+            $rendered = '<select name="'.$name.'" id="'.$id.'" class="metadata_term_value_select_control">'."\n";
+            $rendered .= '  <option value="-1">-- nothing from the list --</option>'."\n";
+            foreach ($this->term_values as $v) {
+                $rendered .= '  '.$v->renderAsOption($v->metadata_term_value_id == $default_checked_value_id)."\n";
+            }
+            $rendered .= '</select>';
+
+            return $rendered;
+        }
     }
