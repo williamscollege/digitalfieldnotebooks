@@ -126,11 +126,32 @@
 
         public function renderAsEditEmbed() {
             $this->cacheImages();
+            global $USER;
 
             $rendered = '<div class="specimen">'."\n".
                 '<form id="form-edit-specimen-'.$this->specimen_id.'" class="form-edit-specimen" data-specimen_id="'.$this->specimen_id.'">'."\n".
-                '  <h3><input type="text" name="name" id="specimen-name" value="'.htmlentities($this->name).'"/></h3>'."\n".
-                '  <ul class="base-info">'."\n";
+                '  <h3><input type="text" name="name" id="specimen-name" value="'.htmlentities($this->name).'"/></h3>'."\n";
+
+            if ($this->specimen_id != 'NEW') {
+                if ($USER->canActOnTarget('publish',$this)) {
+                    $rendered .= '  <span class="published_state"><input id="specimen-workflow-publish-control" type="checkbox" name="flag_workflow_published" value="1"'.($this->flag_workflow_published ?  ' checked="checked"' : '').' /> '
+                        .util_lang('publish').'</span>,';
+                } else {
+                    $rendered .= '  <span class="published_state">'.($this->flag_workflow_published ? util_lang('published_true') : util_lang('published_false'))
+                        .'</span>,';
+                }
+
+                if ($USER->canActOnTarget('verify',$this)) {
+                    $rendered .= '  <span class="verified_state"><input id="specimen-workflow-validate-control" type="checkbox" name="flag_workflow_validated" value="1"'.($this->flag_workflow_validated ?  ' checked="checked"' : '').' /> '
+                        .util_lang('verify').'</span>';
+                } else {
+                    $rendered .= ' <span class="verified_state">'.($this->flag_workflow_validated ? util_lang('verified_true') : util_lang('verified_false'))
+                        .'</span>';
+                }
+                $rendered .= '<br/>'."\n";
+            }
+
+            $rendered .= '  <ul class="base-info">'."\n";
             $rendered .= '    <li><span class="field-label">'.util_lang('coordinates').'</span> : <input type="text" name="gps_longitude" id="specimen-gps_longitude" value="'.$this->gps_longitude.'"/>, <input type="text" name="gps_latitude" id="specimen-gps_latitude" value="'.$this->gps_latitude.'"/></li>'."\n";
             $rendered .= '    <li><span class="field-label">'.util_lang('notes').'</span> : <textarea name="notes" id="specimen-notes" row="4" cols="120">'.htmlentities($this->notes).'</textarea></li>'."\n";
             $rendered .= '    <li><span class="field-label">'.util_lang('catalog_identifier').'</span> : <input type="text" name="catalog_identifier" id="specimen-catalog_identifier" value="'.htmlentities($this->catalog_identifier).'"/></li>'."\n";

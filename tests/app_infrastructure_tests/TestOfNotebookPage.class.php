@@ -208,14 +208,21 @@
             global $USER;
             $USER = User::getOneFromDb(['username'=>TESTINGUSER], $this->DB);
 
-            $this->todo('add canonical code for how to handle authoritative plant selection');
+            global $DB;
+            $DB = $this->DB;
 
-            $canonical = '<div id="rendered_notebook_page_1101" class="rendered_notebook_page" '.$np->fieldsAsDataAttribs().' data-can-edit="1">
-<form id="form-edit-notebook-page-base-data" action="'.APP_ROOT_PATH.'/app_code/notebook_page.php?action=view&notebook_page_id='.$np->notebook_page_id.'">
+//            $this->todo('add canonical code for how to handle authoritative plant selection');
+
+            $canonical = '<h4>'.util_lang('page_in_notebook','ucfirst').' <a href="'.APP_ROOT_PATH.'/app_code/notebook.php?action=view&notebook_id='.$n->notebook_id.'" id="parent-notebook-link">'.htmlentities($n->name).'</a></h4>
+<div id="rendered_notebook_page_1101" class="rendered_notebook_page" '.$np->fieldsAsDataAttribs().' data-can-edit="1">
+<form id="form-edit-notebook-page-base-data" action="'.APP_ROOT_PATH.'/app_code/notebook_page.php">
+  <input type="hidden" name="action" value="update"/>
+  <input type="hidden" name="notebook_page_id" value="'.$np->notebook_page_id.'"/>
   <h3 class="notebook_page_title">'.$n->renderAsLink().': '.$ap->renderAsShortText().'</h3>
+  <span class="select_new_authoritative_plant">'.Authoritative_Plant::renderControlSelectAllAuthoritativePlants($ap->authoritative_plant_id).'</span>
   <span class="created_at">'.util_lang('created_at').' '.util_datetimeFormatted($np->created_at).'</span>, <span class="updated_at">'.util_lang('updated_at').' '.util_datetimeFormatted($np->updated_at).'</span><br/>
-  <span class="owner">'.util_lang('owned_by').' <a href="'.APP_ROOT_PATH.'/app_code/user.php?action=view&user_id=101">'.$USER->screen_name.'</a></span><br/>
-  <span class="published_state"><input id="notebook-workflow-publish-control" type="checkbox" name="flag_workflow_published" value="1" /> '.util_lang('publish').'</span>, <span class="verified_state">'.util_lang('verified_false').'</span><br/>
+  <span class="owner">'.util_lang('owned_by').' <a href="'.APP_ROOT_PATH.'/app_code/user.php?action=view&user_id=101">'.htmlentities($USER->screen_name).'</a></span><br/>
+  <span class="published_state"><input id="notebook-page-workflow-publish-control" type="checkbox" name="flag_workflow_published" value="1" /> '.util_lang('publish').'</span>, <span class="verified_state">'.util_lang('verified_false').'</span><br/>
   <div class="notebook_page_notes"><textarea id="notebook-page-notes" name="notes" rows="4" cols="120">testing notebook page the first in testnotebook1, owned by user 101</textarea></div>
   <input id="edit-submit-control" class="btn" type="submit" name="edit-submit-control" value="'.util_lang('update','properize').'"/>
   <a id="edit-cancel-control" class="btn" href="'.APP_ROOT_PATH.'/app_code/notebook_page.php?action=view&notebook_page_id='.$np->notebook_page_id.'">'.util_lang('cancel','properize').'</a>
@@ -223,6 +230,8 @@
   '.$ap->renderAsViewEmbed().'
   <ul class="notebook_page_fields">
 ';
+//            $this->todo('refine canonical code for new page field button / action');
+            $canonical .= '    <li><a href="#" id="add_new_notebook_page_field_button" class="btn">'.util_lang('add_notebook_page_field').'</a></li>'."\n";
             foreach ($np->page_fields as $pf) {
                 $canonical .= '    '.$pf->renderAsListItemEdit()."\n";
             }
@@ -230,7 +239,8 @@
   <h4>'.ucfirst(util_lang('specimens')).'</h4>
   <ul class="specimens">
 ';
-            $this->todo('add canonical code for new page field button / action');
+//            $this->todo('refine canonical code for new page specimen');
+            $canonical .= '    <li><a href="#" id="add_new_specimen_button" class="btn">'.util_lang('add_specimen').'</a></li>'."\n";
             foreach ($np->specimens as $specimen) {
                 $canonical .= '    <li>'.$specimen->renderAsEditEmbed()."</li>\n";
             }
@@ -242,13 +252,13 @@
             $this->assertEqual($canonical,$rendered);
             $this->assertNoPattern('/IMPLEMENTED/',$rendered);
 
-////            echo "<pre>
-////-----------
-////".htmlentities($canonical)."
-////-----------
-////".htmlentities($rendered)."
-////-----------
-////</pre>";
+//            echo "<pre>
+//-----------
+//".htmlentities($canonical)."
+//-----------
+//".htmlentities($rendered)."
+//-----------
+//</pre>";
         }
 
         function testRenderAsEdit_newNotebookPage() {

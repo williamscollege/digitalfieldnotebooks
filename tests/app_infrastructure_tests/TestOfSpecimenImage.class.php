@@ -106,7 +106,7 @@
             $si = Specimen_Image::getOneFromDb(['specimen_image_id'=>8103],$this->DB);
             global $USER;
             $USER = User::getOneFromDb(['username'=>TESTINGUSER], $this->DB);
-            $canonical = '<li class="specimen-image" data-specimen_image_id="8103" data-created_at="'.$si->created_at.'" data-updated_at="'.$si->updated_at.'" data-specimen_id="8002" data-user_id="101" data-image_reference="testing/USER101_8103_cnh_castanea_dentata.jpg" data-ordering="0.75000" data-flag_workflow_published="0" data-flag_workflow_validated="1" data-flag_delete="0">';
+            $canonical = '<li id="specimen-image-8103" class="specimen-image" data-specimen_image_id="8103" data-created_at="'.$si->created_at.'" data-updated_at="'.$si->updated_at.'" data-specimen_id="8002" data-user_id="101" data-image_reference="testing/USER101_8103_cnh_castanea_dentata.jpg" data-ordering="0.75000" data-flag_workflow_published="0" data-flag_workflow_validated="1" data-flag_delete="0">';
             $canonical .= $si->renderAsHtml();
             $canonical .= '<div class="controls">';
             // publish, verify, reordering handle

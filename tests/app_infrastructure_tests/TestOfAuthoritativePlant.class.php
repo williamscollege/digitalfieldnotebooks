@@ -53,6 +53,56 @@
             $this->assertEqual('AP_8_CI',$ps[7]->catalog_identifier);
         }
 
+        function testRenderControlSelectAllAuthoritativePlants() {
+            $aps = Authoritative_Plant::getAllFromDb(['flag_delete'=>false],$this->DB);
+            usort($aps,'Authoritative_Plant::cmp');
+
+            $canonical_base = '<select name="authoritative-plant-id" id="authoritative-plant-id">'."\n";
+
+            global $DB;
+            $DB = $this->DB;
+
+            //-------
+            // no default select
+
+            $canonical = $canonical_base;
+            foreach ($aps as $ap) {
+                $canonical .= '  '.$ap->renderAsOption()."\n";
+            }
+            $canonical .= '</select>';
+            $rendered = Authoritative_Plant::renderControlSelectAllAuthoritativePlants();
+
+            $this->assertEqual($canonical,$rendered);
+            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
+
+            //-------
+            // default select using an id number
+
+            $canonical = $canonical_base;
+            foreach ($aps as $ap) {
+                $canonical .= '  '.$ap->renderAsOption($ap->authoritative_plant_id == 5005)."\n";
+            }
+            $canonical .= '</select>';
+            $rendered = Authoritative_Plant::renderControlSelectAllAuthoritativePlants(5005);
+
+            $this->assertEqual($canonical,$rendered);
+            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
+
+            //-------------
+            // default select using an object
+
+            $default_ap = Authoritative_Plant::getOneFromDb(['authoritative_plant_id'=>5003],$this->DB);
+            $canonical = $canonical_base;
+            foreach ($aps as $ap) {
+                $canonical .= '  '.$ap->renderAsOption($ap->authoritative_plant_id == $default_ap->authoritative_plant_id)."\n";
+            }
+            $canonical .= '</select>';
+            $rendered = Authoritative_Plant::renderControlSelectAllAuthoritativePlants($default_ap);
+
+            $this->assertEqual($canonical,$rendered);
+            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
+        }
+
         //// instance methods - object itself
 
         function testRenderAsShortText() {
@@ -121,12 +171,12 @@
         }
 
         function testRenderAsViewEmbed() {
-        $ap = Authoritative_Plant::getOneFromDb(['authoritative_plant_id' => 5001], $this->DB);
+            $ap = Authoritative_Plant::getOneFromDb(['authoritative_plant_id' => 5001], $this->DB);
 
-        $ap->cacheExtras();
+            $ap->cacheExtras();
 
-        $canonical =
-            '<div class="authoritative-plant embedded">
+            $canonical =
+            '<div id="authoritative_plant_embed_5001" class="authoritative-plant embedded" data-authoritative_plant_id="5001">
   <h3>'.$ap->renderAsShortText().'</h3>
   <ul class="base-info">
     <li><span class="field-label">'.util_lang('class').'</span> : <span class="field-value taxonomy taxonomy-class">'.htmlentities($ap->class).'</span></li>
@@ -139,17 +189,17 @@
   </ul>
   <ul class="extra-info">
 ';
-        foreach ($ap->extras as $extra) {
-            $canonical .='    '.$extra->renderAsListItem()."\n";
-        }
-        $canonical .='  </ul>
+            foreach ($ap->extras as $extra) {
+                $canonical .='    '.$extra->renderAsListItem()."\n";
+            }
+            $canonical .='  </ul>
 </div>';
-        $rendered = $ap->renderAsViewEmbed();
+            $rendered = $ap->renderAsViewEmbed();
 
-//            echo "<pre>\n".htmlentities($canonical)."\n------------------\n".htmlentities($rendered)."\n</pre>";
+    //            echo "<pre>\n".htmlentities($canonical)."\n------------------\n".htmlentities($rendered)."\n</pre>";
 
-        $this->assertEqual($canonical,$rendered);
-    }
+            $this->assertEqual($canonical,$rendered);
+        }
 
         function testRenderAsView() {
             $ap = Authoritative_Plant::getOneFromDb(['authoritative_plant_id' => 5001], $this->DB);
@@ -163,7 +213,7 @@
             $USER = User::getOneFromDb(['username'=>TESTINGUSER], $this->DB);
 
             $canonical =
-                '<div class="authoritative-plant">
+                '<div id="authoritative_plant_view_5001" class="authoritative-plant" data-authoritative_plant_id="5001">
   <h3><a href="'.APP_ROOT_PATH.'/app_code/authoritative_plant.php?action=list">'.util_lang('authoritative_plant','properize').'</a>: '.$ap->renderAsShortText().'</h3>
   <ul class="base-info">
     <li><span class="field-label">'.util_lang('class').'</span> : <span class="field-value taxonomy taxonomy-class">'.htmlentities($ap->class).'</span></li>
@@ -208,6 +258,30 @@
 //            echo "<pre>\n".htmlentities($canonical)."\n------------------\n".htmlentities($rendered)."\n</pre>";
 
             $this->assertEqual($canonical,$rendered);
+        }
+
+        function testRenderAsOption() {
+            $ap = Authoritative_Plant::getOneFromDb(['authoritative_plant_id' => 5001],$this->DB);
+
+            $canonical ='<option data-authoritative_plant_id="'.$ap->authoritative_plant_id.'" value="'.$ap->authoritative_plant_id.'">'.$ap->renderAsShortText().'</option>';
+
+            $rendered = $ap->renderAsOption(false);
+
+//            echo "<pre>\n".htmlentities($canonical)."\n------------------\n".htmlentities($rendered)."\n</pre>";
+
+            $this->assertEqual($canonical,$rendered);
+            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
+
+            //---------------------------------
+
+            $canonical ='<option data-authoritative_plant_id="'.$ap->authoritative_plant_id.'" value="'.$ap->authoritative_plant_id.'" selected="selected">'.$ap->renderAsShortText().'</option>';
+
+            $rendered = $ap->renderAsOption(true);
+
+//            echo "<pre>\n".htmlentities($canonical)."\n------------------\n".htmlentities($rendered)."\n</pre>";
+
+            $this->assertEqual($canonical,$rendered);
+            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
         }
 
         //// instance methods - related data

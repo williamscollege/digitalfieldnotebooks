@@ -62,7 +62,10 @@
         echo $notebook_page->renderAsView();
     } else
     if (($action == 'edit') || ($action == 'create')) {
-        echo 'TODO: implement edit and create actions';
+        if ($USER->canActOnTarget($ACTIONS['edit'],$notebook_page)) {
+            echo $notebook_page->renderAsEdit();
+        }
+        //echo 'TODO: implement edit and create actions';
     } else
     if ($action == 'delete') {
         echo 'TODO: implement delete action';

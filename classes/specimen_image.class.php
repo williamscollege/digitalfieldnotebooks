@@ -63,6 +63,10 @@
 //
             global $USER;
 
+            if (! $idstr) {
+                $idstr = 'specimen-image-'.$this->specimen_image_id;
+            }
+
             array_unshift($classes_array,'specimen-image');
             $li_elt = substr(util_listItemTag($idstr,$classes_array,$other_attribs_hash),0,-1);
             $li_elt .= ' '.$this->fieldsAsDataAttribs().'>';
@@ -81,7 +85,7 @@
 
                 if ($USER->canActOnTarget('verify',$this)) {
                     $li_elt .= '<span class="control-verify"><input id="flag_workflow_validated_'.$this->specimen_image_id.'-control" type="checkbox" name="flag_workflow_validated" value="1"'.($this->flag_workflow_validated ?  ' checked="checked"' : '').' /> '
-                        .util_lang('verify').'</span>,';
+                        .util_lang('verify').'</span>';
                 } else {
                     $li_elt .= '<span class="control-verify">'.($this->flag_workflow_validated ? util_lang('verified_true') : util_lang('verified_false'))
                         .'</span>';

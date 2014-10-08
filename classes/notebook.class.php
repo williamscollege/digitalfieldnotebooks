@@ -111,7 +111,7 @@
             $rendered = '<div id="rendered_notebook_'.$this->notebook_id.'" class="rendered_notebook" '.$this->fieldsAsDataAttribs().$actions_attribs.'>'."\n".
 '  <h3 class="notebook_title"><a href="'.APP_ROOT_PATH.'/app_code/notebook.php?action=list">'.ucfirst(util_lang('notebook')).'</a>: '.$this->name.'</h3>'."\n".
 '  <span class="created_at">'.util_lang('created_at').' '.util_datetimeFormatted($this->created_at).'</span>, <span class="updated_at">'.util_lang('updated_at').' '.util_datetimeFormatted($this->updated_at).'</span><br/>'."\n".
-'  <span class="owner">'.util_lang('owned_by').' <a href="'.APP_ROOT_PATH.'/app_code/user.php?action=view&user_id='.$notebook_owner->user_id.'">'.$notebook_owner->screen_name.'</a></span><br/>'."\n".
+'  <span class="owner">'.util_lang('owned_by').' <a href="'.APP_ROOT_PATH.'/app_code/user.php?action=view&user_id='.$notebook_owner->user_id.'">'.htmlentities($notebook_owner->screen_name).'</a></span><br/>'."\n".
 '  <span class="published_state">'.($this->flag_workflow_published ? util_lang('published_true') : util_lang('published_false'))
                 .'</span>, <span class="verified_state">'.($this->flag_workflow_validated ? util_lang('verified_true') : util_lang('verified_false'))
                 .'</span><br/>'."\n".
@@ -165,7 +165,7 @@
                 '  <input type="hidden" name="notebook_id" value="'.$this->notebook_id.'"/>'."\n".
                 '  <h3 class="notebook_title">'.ucfirst(util_lang('notebook')).': <input id="notebook-name" type="text" name="name" value="'.$this->name.'"/></h3>'."\n".
                 '  <span class="created_at">'.util_lang('created_at').' '.util_datetimeFormatted($this->created_at).'</span>, <span class="updated_at">'.util_lang('updated_at').' '.util_datetimeFormatted($this->updated_at).'</span><br/>'."\n".
-                '  <span class="owner">'.util_lang('owned_by').' <a href="'.APP_ROOT_PATH.'/app_code/user.php?action=view&user_id='.$notebook_owner->user_id.'">'.$notebook_owner->screen_name.'</a></span><br/>'."\n";
+                '  <span class="owner">'.util_lang('owned_by').' <a href="'.APP_ROOT_PATH.'/app_code/user.php?action=view&user_id='.$notebook_owner->user_id.'">'.htmlentities($notebook_owner->screen_name).'</a></span><br/>'."\n";
 
             if ($this->notebook_id != 'NEW') {
                 if ($USER->canActOnTarget('publish',$this)) {
@@ -178,7 +178,7 @@
 
                 if ($USER->canActOnTarget('verify',$this)) {
                     $rendered .= '  <span class="verified_state"><input id="notebook-workflow-validate-control" type="checkbox" name="flag_workflow_validated" value="1"'.($this->flag_workflow_validated ?  ' checked="checked"' : '').' /> '
-                        .util_lang('verify').'</span>,';
+                        .util_lang('verify').'</span>';
                 } else {
                     $rendered .= ' <span class="verified_state">'.($this->flag_workflow_validated ? util_lang('verified_true') : util_lang('verified_false'))
                         .'</span>';

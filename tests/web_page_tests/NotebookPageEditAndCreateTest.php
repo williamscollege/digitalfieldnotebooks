@@ -114,33 +114,34 @@ class NotebookPageEditAndCreateTest extends WMSWebTestCase {
         $this->assertFieldById('authoritative-plant-id');
 
 //        $this->todo('publish option, no verify option');
-        $this->assertFieldById('notebook-workflow-publish-control');
-        $this->assertNoFieldById('notebook-workflow-validate-control');
+        $this->assertFieldById('notebook-page-workflow-publish-control');
+        $this->assertNoFieldById('notebook-page-workflow-validate-control');
 
         $this->assertEltByIdHasAttrOfValue('edit-submit-control','value',util_lang('update','properize'));
+
+//        $this->showContent();
     }
 
     function testEditAccessControl_admin() {
-        $this->todo('basic access check as admin');
-//        $this->doLoginAdmin();
-//
-//        $this->get('http://localhost/digitalfieldnotebooks/app_code/notebook.php?action=edit&notebook_id=1004');
-//
-//        $this->checkBasicAsserts();
-//        $this->assertEqual(LANG_APP_NAME . ': ' . ucfirst(util_lang('notebook')) ,$this->getBrowser()->getTitle());
-//
-////        $this->todo('basic access check as owner - can edit owned notebook');
-//        $this->assertNoText(util_lang('no_permission'));
-//
-////        $this->todo('editable fields');
-//        $this->assertFieldById('notebook-name');
-//        $this->assertFieldById('notebook-notes');
-//
-////        $this->todo('publish option, no verify option');
-//        $this->assertFieldById('notebook-workflow-publish-control');
-//        $this->assertFieldById('notebook-workflow-validate-control');
-//
-//        $this->assertEltByIdHasAttrOfValue('edit-submit-control','value',util_lang('update','properize'));
+//        $this->todo('basic access check as admin');
+        $this->doLoginAdmin();
+
+        $this->get('http://localhost/digitalfieldnotebooks/app_code/notebook_page.php?action=edit&notebook_page_id=1104');
+
+        $this->checkBasicAsserts();
+        $this->assertEqual(LANG_APP_NAME . ': ' . ucfirst(util_lang('notebook_page')) ,$this->getBrowser()->getTitle());
+
+//        $this->todo('basic access check as admin - can edit non-owned notebook');
+        $this->assertNoText(util_lang('no_permission'));
+
+//        $this->todo('editable fields exist');
+        $this->assertFieldById('authoritative-plant-id');
+
+//        $this->todo('publish option and verify option');
+        $this->assertFieldById('notebook-page-workflow-publish-control');
+        $this->assertFieldById('notebook-page-workflow-validate-control');
+
+        $this->assertEltByIdHasAttrOfValue('edit-submit-control','value',util_lang('update','properize'));
     }
 
 //
@@ -149,45 +150,67 @@ class NotebookPageEditAndCreateTest extends WMSWebTestCase {
 //    }
 
     function testRelatedDataListing() {
-        $this->todo();
-//        $u = User::getOneFromDb(['user_id'=>101],$this->DB);
-//        $pages = Notebook_Page::getAllFromDb(['notebook_id'=>1001],$this->DB);
-//
-//        $this->doLoginBasic();
-//
-//        $this->get('http://localhost/digitalfieldnotebooks/app_code/notebook.php?action=edit&notebook_id=1001');
-//
-//        $this->checkBasicAsserts();
-//
-////        $this->todo('owner name has link to user page');
-//        $this->assertLink(htmlentities($u->screen_name));
-//
-////        $this->todo('notebook pages are listed and linked');
-//        $this->assertLink($pages[0]->getAuthoritativePlant()->renderAsShortText());
-//        $this->assertLink($pages[1]->getAuthoritativePlant()->renderAsShortText());
-//
-////        util_prePrintR(htmlentities($this->getBrowser()->getContent()));
+        // NOTE: this test is a serious integration test - it checks on a couple of levels down of related data (e.g. that the related specimen has the right related images)
+
+        $np = Notebook_Page::getOneFromDb(['notebook_page_id' => 1101], $this->DB);
+        $np->loadPageFields();
+        $np->loadSpecimens();
+        $n = $np->getNotebook();
+        $ap = $np->getAuthoritativePlant();
+        global $USER, $DB;
+        $USER = User::getOneFromDb(['username'=>TESTINGUSER], $this->DB);
+        $DB = $this->DB;
+
+        $this->doLoginBasic();
+
+        $this->get('http://localhost/digitalfieldnotebooks/app_code/notebook_page.php?action=edit&notebook_page_id=1101');
+
+        $this->checkBasicAsserts();
+
+//        $this->todo('check link to containing notebook');
+        $this->assertLink(htmlentities($n->name));
+
+//        $this->todo('check link to owner');
+        $this->assertLink(htmlentities($USER->screen_name));
+
+//        $this->todo('check authoritative plant info');
+        $this->assertEltByIdHasAttrOfValue('authoritative_plant_embed_5001','data-authoritative_plant_id','5001');
+        $this->assertEltByIdHasAttrOfValue('authoritative_plant_extra_5101','data-authoritative_plant_extra_id','5101');
+
+//        $this->todo('check notebook page fields');
+        $this->assertEltByIdHasAttrOfValue('page_field_select_1201','name','page_field_select_1201');
+        $this->assertEltByIdHasAttrOfValue('page_field_select_1202','name','page_field_select_1202');
+        $this->assertEltByIdHasAttrOfValue('page_field_select_1203','name','page_field_select_1203');
+        $this->assertEltByIdHasAttrOfValue('page_field_open_value_1204','name','page_field_open_value_1204');
+
+//        $this->todo('check specimens');
+        $this->assertEltByIdHasAttrOfValue('form-edit-specimen-8002','class','form-edit-specimen');
+        $this->assertEltByIdHasAttrOfValue('specimen-image-8103','data-specimen_image_id','8103');
+        $this->assertEltByIdHasAttrOfValue('specimen-image-8104','data-specimen_image_id','8104');
+        $this->assertEltByIdHasAttrOfValue('form-edit-specimen-8003','class','form-edit-specimen');
 
     }
 
     function testBaseDataUpdate() {
-//        $this->doLoginBasic();
-//        $this->get('http://localhost/digitalfieldnotebooks/app_code/notebook.php?action=edit&notebook_id=1001');
+        $this->doLoginBasic();
+        $this->get('http://localhost/digitalfieldnotebooks/app_code/notebook_page.php?action=edit&notebook_page_id=1101');
 //
+        $new_notes = 'new notes for the page';
+
 ////      NOTE: the identifier to use for setField is the value of the name attribute of the field
-//        $this->setField('name','new name for testnotebook1');
+        $this->setField('notes',$new_notes);
+
 ////        NOTE: the identifier to use for buttons is the value of the value attribute of the button
-//        $this->click(util_lang('update','properize'));
+        $this->click(util_lang('update','properize'));
 //
 //
-//        $this->checkBasicAsserts();
-//        $this->assertText('new name for testnotebook1');
+        $this->checkBasicAsserts();
+        $this->assertText($new_notes);
 //
-//        $n = Notebook::getOneFromDb(['notebook_id'=>1001],$this->DB);
-//        $this->assertEqual($n->name,'new name for testnotebook1');
+        $np = Notebook_Page::getOneFromDb(['notebook_page_id'=>1101],$this->DB);
+        $this->assertEqual($np->notes,$new_notes);
 
 //        util_prePrintR(htmlentities($this->getBrowser()->getContent()));
-        $this->todo();
     }
 
     function testCreateButton() {

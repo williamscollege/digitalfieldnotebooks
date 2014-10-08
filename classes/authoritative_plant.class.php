@@ -46,6 +46,28 @@
             return ($a->class < $b->class) ? -1 : 1;
         }
 
+
+       public static function renderControlSelectAllAuthoritativePlants($default_selected = 0) {
+           if (is_object($default_selected)) {
+               $default_selected = $default_selected->authoritative_plant_id;
+           }
+
+           global $DB;
+
+           $all_ap = Authoritative_Plant::getAllFromDb(['flag_delete' => FALSE], $DB);
+           usort($all_ap,'Authoritative_Plant::cmp');
+
+           $rendered = '<select name="authoritative-plant-id" id="authoritative-plant-id">'."\n";
+           foreach ($all_ap as $ap) {
+               $rendered .= '  '.$ap->renderAsOption($ap->authoritative_plant_id == $default_selected)."\n";
+           }
+           $rendered .= '</select>';
+
+           return $rendered;
+       }
+
+        //------------------------------------------------------------------------------------
+
         public function loadExtras() {
             $this->extras = Authoritative_Plant_Extra::getAllFromDb(['authoritative_plant_id' => $this->authoritative_plant_id, 'flag_delete' => FALSE], $this->dbConnection);
             usort($this->extras,'Authoritative_Plant_Extra::cmp');
@@ -122,7 +144,7 @@
         public function renderAsViewEmbed() {
             $this->cacheExtras();
 
-            $rendered = '<div class="authoritative-plant embedded">
+            $rendered = '<div id="authoritative_plant_embed_'.$this->authoritative_plant_id.'" class="authoritative-plant embedded" data-authoritative_plant_id="'.$this->authoritative_plant_id.'">
   <h3>'.$this->renderAsShortText().'</h3>
   <ul class="base-info">
     <li><span class="field-label">'.util_lang('class').'</span> : <span class="field-value taxonomy taxonomy-class">'.htmlentities($this->class).'</span></li>
@@ -150,7 +172,7 @@
             $this->cacheNotebookPages();
             $this->cacheSpecimens();
 
-            $rendered = '<div class="authoritative-plant">
+            $rendered = '<div id="authoritative_plant_view_'.$this->authoritative_plant_id.'" class="authoritative-plant" data-authoritative_plant_id="'.$this->authoritative_plant_id.'">
   <h3><a href="'.APP_ROOT_PATH.'/app_code/authoritative_plant.php?action=list">'.util_lang('authoritative_plant','properize').'</a>: '.$this->renderAsShortText().'</h3>
   <ul class="base-info">
     <li><span class="field-label">'.util_lang('class').'</span> : <span class="field-value taxonomy taxonomy-class">'.htmlentities($this->class).'</span></li>
@@ -189,6 +211,11 @@
             $rendered .='  </ul>
 </div>';
 
+            return $rendered;
+        }
+
+        public function renderAsOption($flag_is_selected=false) {
+            $rendered = '<option data-authoritative_plant_id="'.$this->authoritative_plant_id.'" value="'.$this->authoritative_plant_id.'"'.($flag_is_selected ? ' selected="selected"' : '').'>'.$this->renderAsShortText().'</option>';
             return $rendered;
         }
     }

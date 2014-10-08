@@ -52,6 +52,11 @@
 
         public function renderAsListItem($idstr='',$classes_array = [],$other_attribs_hash = []) {
             array_unshift($classes_array,'authoritative-plant-extra');
+//            id=\"authoritative_plant_extra_5101\" data-authoritative_plant_extra_id=\"5101\"
+            if (! $idstr) {
+                $idstr = 'authoritative_plant_extra_'.$this->authoritative_plant_extra_id;
+            }
+            $other_attribs_hash['data-authoritative_plant_extra_id'] = $this->authoritative_plant_extra_id;
             $li_elt = substr(util_listItemTag($idstr,$classes_array,$other_attribs_hash),0,-1);
             $li_elt .= '>';
             $li_elt .= $this->renderAsHtml().'</li>';

@@ -143,10 +143,14 @@
             $s = Specimen::getOneFromDb(['specimen_id'=>8001],$this->DB);
             $s->cacheImages();
 
+            global $USER;
+            $USER = User::getOneFromDb(['user_id'=>110], $this->DB);
+
             $canonical =
                 '<div class="specimen">
 <form id="form-edit-specimen-'.$s->specimen_id.'" class="form-edit-specimen" data-specimen_id="'.$s->specimen_id.'">
   <h3><input type="text" name="name" id="specimen-name" value="'.htmlentities($s->name).'"/></h3>
+  <span class="published_state"><input id="specimen-workflow-publish-control" type="checkbox" name="flag_workflow_published" value="1" checked="checked" /> publish</span>,  <span class="verified_state"><input id="specimen-workflow-validate-control" type="checkbox" name="flag_workflow_validated" value="1" checked="checked" /> verify</span><br/>
   <ul class="base-info">
     <li><span class="field-label">'.util_lang('coordinates').'</span> : <input type="text" name="gps_longitude" id="specimen-gps_longitude" value="'.htmlentities($s->gps_longitude).'"/>, <input type="text" name="gps_latitude" id="specimen-gps_latitude" value="'.htmlentities($s->gps_latitude).'"/></li>
     <li><span class="field-label">'.util_lang('notes').'</span> : <textarea name="notes" id="specimen-notes" row="4" cols="120">'.htmlentities($s->notes).'</textarea></li>
