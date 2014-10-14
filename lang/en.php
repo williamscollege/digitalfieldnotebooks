@@ -48,8 +48,10 @@ $LANGUAGE['en'] = [
     'page' => 'page',
     'notebook_page' => 'page',
     'add_notebook_page' => '+ Add Page / Entry +',
+    'new_notebook_page_notes' => 'Notes / description about this particular page - replace or delete this text',
     'zero_pages' => 'no notebook pages',
     'page_in_notebook' => 'in notebook',
+    'new_notebook_page_label' => 'New Notebook Page (choose a plant and save))',
 
     'fields' => 'fields',
     'field' => 'field',

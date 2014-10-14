@@ -37,7 +37,11 @@ class NotebookPageViewTest extends WMSWebTestCase {
     //-----------------------------------------------------------------------------------------------------------------
 
     function testMissingIdGoesToNotebookList() {
-        $this->todo();
+        $this->doLoginBasic();
+        $this->get('http://localhost/digitalfieldnotebooks/app_code/notebook_page.php?action=view');
+
+        $this->assertEqual(LANG_APP_NAME . ': ' . ucfirst(util_lang('notebook')) ,$this->getBrowser()->getTitle());
+        $this->assertText(util_lang('no_notebook_page_specified'));
     }
 
     function testViewIsDefault() {

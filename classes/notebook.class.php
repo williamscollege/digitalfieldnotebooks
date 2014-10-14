@@ -5,6 +5,7 @@
 		public static $fields = array('notebook_id', 'created_at', 'updated_at', 'user_id', 'name', 'notes', 'flag_workflow_published', 'flag_workflow_validated', 'flag_delete');
 		public static $primaryKeyField = 'notebook_id';
 		public static $dbTable = 'notebooks';
+        public static $entity_type_label = 'notebook';
 
         public $pages;
 
@@ -44,7 +45,6 @@
                                 'flag_delete' => false,
                                 'DB'=>$db_connection]);
             return $n;
-
         }
 
         public function cachePages() {

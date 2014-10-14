@@ -7,6 +7,7 @@
                                       'flag_workflow_published', 'flag_workflow_validated', 'flag_delete');
 		public static $primaryKeyField = 'specimen_id';
 		public static $dbTable = 'specimens';
+        public static $entity_type_label = 'specimen';
 
         public static $VALID_LINK_TO_TYPES =  ['authoritative_plant', 'notebook_page'];
 
@@ -129,12 +130,12 @@
             global $USER;
 
             $rendered = '<div class="specimen">'."\n".
-                '<form id="form-edit-specimen-'.$this->specimen_id.'" class="form-edit-specimen" data-specimen_id="'.$this->specimen_id.'">'."\n".
-                '  <h3><input type="text" name="name" id="specimen-name" value="'.htmlentities($this->name).'"/></h3>'."\n";
+                '<div id="form-edit-specimen-'.$this->specimen_id.'" class="form-edit-specimen" data-specimen_id="'.$this->specimen_id.'">'."\n".
+                '  <h3><input type="text" name="specimen-name_'.$this->specimen_id.'" id="specimen-name_'.$this->specimen_id.'" value="'.htmlentities($this->name).'"/></h3>'."\n";
 
             if ($this->specimen_id != 'NEW') {
                 if ($USER->canActOnTarget('publish',$this)) {
-                    $rendered .= '  <span class="published_state"><input id="specimen-workflow-publish-control" type="checkbox" name="flag_workflow_published" value="1"'.($this->flag_workflow_published ?  ' checked="checked"' : '').' /> '
+                    $rendered .= '  <span class="published_state"><input id="specimen-workflow-publish-control_'.$this->specimen_id.'" type="checkbox" name="specimen-flag_workflow_published_'.$this->specimen_id.'" value="1"'.($this->flag_workflow_published ?  ' checked="checked"' : '').' /> '
                         .util_lang('publish').'</span>,';
                 } else {
                     $rendered .= '  <span class="published_state">'.($this->flag_workflow_published ? util_lang('published_true') : util_lang('published_false'))
@@ -142,7 +143,7 @@
                 }
 
                 if ($USER->canActOnTarget('verify',$this)) {
-                    $rendered .= '  <span class="verified_state"><input id="specimen-workflow-validate-control" type="checkbox" name="flag_workflow_validated" value="1"'.($this->flag_workflow_validated ?  ' checked="checked"' : '').' /> '
+                    $rendered .= '  <span class="verified_state"><input id="specimen-workflow-validate-control_'.$this->specimen_id.'" type="checkbox" name="specimen-flag_workflow_validated_'.$this->specimen_id.'" value="1"'.($this->flag_workflow_validated ?  ' checked="checked"' : '').' /> '
                         .util_lang('verify').'</span>';
                 } else {
                     $rendered .= ' <span class="verified_state">'.($this->flag_workflow_validated ? util_lang('verified_true') : util_lang('verified_false'))
@@ -152,14 +153,14 @@
             }
 
             $rendered .= '  <ul class="base-info">'."\n";
-            $rendered .= '    <li><span class="field-label">'.util_lang('coordinates').'</span> : <input type="text" name="gps_longitude" id="specimen-gps_longitude" value="'.$this->gps_longitude.'"/>, <input type="text" name="gps_latitude" id="specimen-gps_latitude" value="'.$this->gps_latitude.'"/></li>'."\n";
-            $rendered .= '    <li><span class="field-label">'.util_lang('notes').'</span> : <textarea name="notes" id="specimen-notes" row="4" cols="120">'.htmlentities($this->notes).'</textarea></li>'."\n";
-            $rendered .= '    <li><span class="field-label">'.util_lang('catalog_identifier').'</span> : <input type="text" name="catalog_identifier" id="specimen-catalog_identifier" value="'.htmlentities($this->catalog_identifier).'"/></li>'."\n";
+            $rendered .= '    <li><span class="field-label">'.util_lang('coordinates').'</span> : <input type="text" name="specimen-gps_longitude_'.$this->specimen_id.'" id="specimen-gps_longitude_'.$this->specimen_id.'" value="'.$this->gps_longitude.'"/>, <input type="text" name="specimen-gps_latitude_'.$this->specimen_id.'" id="specimen-gps_latitude_'.$this->specimen_id.'" value="'.$this->gps_latitude.'"/></li>'."\n";
+            $rendered .= '    <li><span class="field-label">'.util_lang('notes').'</span> : <textarea name="specimen-notes_'.$this->specimen_id.'" id="specimen-notes_'.$this->specimen_id.'" row="4" cols="120">'.htmlentities($this->notes).'</textarea></li>'."\n";
+            $rendered .= '    <li><span class="field-label">'.util_lang('catalog_identifier').'</span> : <input type="text" name="specimen-catalog_identifier_'.$this->specimen_id.'" id="specimen-catalog_identifier_'.$this->specimen_id.'" value="'.htmlentities($this->catalog_identifier).'"/></li>'."\n";
             $rendered .= '  </ul>'."\n";
 
             if (count($this->images) > 0) {
                 $rendered .= '  <ul class="specimen-images">'."\n";
-                $rendered .= '    <li><a href="#" id="control-add-image-for-'.$this->specimen_id.'" class="btn add-specimen-image-button" data-for-specimen="'.$this->specimen_id.'">'.util_lang('add_specimen_image').'</a></li>'."\n";
+                $rendered .= '    <li><a href="#" id="specimen-control-add-image-for-'.$this->specimen_id.'" class="btn add-specimen-image-button" data-for-specimen="'.$this->specimen_id.'">'.util_lang('add_specimen_image').'</a></li>'."\n";
 
                 foreach ($this->images as $image) {
                     $rendered .= '    '.$image->renderAsListItemEdit()."\n";
@@ -168,8 +169,9 @@
                 $rendered .='  </ul>'."\n";
             }
 
-            $rendered .= "</form>\n</div>";
+            $rendered .= "</div>\n</div>";
 
             return $rendered;
         }
+
     }

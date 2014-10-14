@@ -7,6 +7,7 @@
                                       'flag_workflow_published', 'flag_workflow_validated', 'flag_delete');
 		public static $primaryKeyField = 'specimen_image_id';
 		public static $dbTable = 'specimen_images';
+        public static $entity_type_label = 'specimen_image';
 
         public $images;
 

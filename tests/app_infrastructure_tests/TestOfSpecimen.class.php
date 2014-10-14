@@ -148,23 +148,23 @@
 
             $canonical =
                 '<div class="specimen">
-<form id="form-edit-specimen-'.$s->specimen_id.'" class="form-edit-specimen" data-specimen_id="'.$s->specimen_id.'">
-  <h3><input type="text" name="name" id="specimen-name" value="'.htmlentities($s->name).'"/></h3>
-  <span class="published_state"><input id="specimen-workflow-publish-control" type="checkbox" name="flag_workflow_published" value="1" checked="checked" /> publish</span>,  <span class="verified_state"><input id="specimen-workflow-validate-control" type="checkbox" name="flag_workflow_validated" value="1" checked="checked" /> verify</span><br/>
+<div id="form-edit-specimen-'.$s->specimen_id.'" class="form-edit-specimen" data-specimen_id="'.$s->specimen_id.'">
+  <h3><input type="text" name="specimen-name_'.$s->specimen_id.'" id="specimen-name_'.$s->specimen_id.'" value="'.htmlentities($s->name).'"/></h3>
+  <span class="published_state"><input id="specimen-workflow-publish-control_'.$s->specimen_id.'" type="checkbox" name="specimen-flag_workflow_published_'.$s->specimen_id.'" value="1" checked="checked" /> publish</span>,  <span class="verified_state"><input id="specimen-workflow-validate-control_'.$s->specimen_id.'" type="checkbox" name="specimen-flag_workflow_validated_'.$s->specimen_id.'" value="1" checked="checked" /> verify</span><br/>
   <ul class="base-info">
-    <li><span class="field-label">'.util_lang('coordinates').'</span> : <input type="text" name="gps_longitude" id="specimen-gps_longitude" value="'.htmlentities($s->gps_longitude).'"/>, <input type="text" name="gps_latitude" id="specimen-gps_latitude" value="'.htmlentities($s->gps_latitude).'"/></li>
-    <li><span class="field-label">'.util_lang('notes').'</span> : <textarea name="notes" id="specimen-notes" row="4" cols="120">'.htmlentities($s->notes).'</textarea></li>
-    <li><span class="field-label">'.util_lang('catalog_identifier').'</span> : <input type="text" name="catalog_identifier" id="specimen-catalog_identifier" value="'.htmlentities($s->catalog_identifier).'"/></li>
+    <li><span class="field-label">'.util_lang('coordinates').'</span> : <input type="text" name="specimen-gps_longitude_'.$s->specimen_id.'" id="specimen-gps_longitude_'.$s->specimen_id.'" value="'.htmlentities($s->gps_longitude).'"/>, <input type="text" name="specimen-gps_latitude_'.$s->specimen_id.'" id="specimen-gps_latitude_'.$s->specimen_id.'" value="'.htmlentities($s->gps_latitude).'"/></li>
+    <li><span class="field-label">'.util_lang('notes').'</span> : <textarea name="specimen-notes_'.$s->specimen_id.'" id="specimen-notes_'.$s->specimen_id.'" row="4" cols="120">'.htmlentities($s->notes).'</textarea></li>
+    <li><span class="field-label">'.util_lang('catalog_identifier').'</span> : <input type="text" name="specimen-catalog_identifier_'.$s->specimen_id.'" id="specimen-catalog_identifier_'.$s->specimen_id.'" value="'.htmlentities($s->catalog_identifier).'"/></li>
   </ul>
   <ul class="specimen-images">
 ';
-            $canonical .= '    <li><a href="#" id="control-add-image-for-'.$s->specimen_id.'" class="btn add-specimen-image-button" data-for-specimen="'.$s->specimen_id.'">'.util_lang('add_specimen_image').'</a></li>
+            $canonical .= '    <li><a href="#" id="specimen-control-add-image-for-'.$s->specimen_id.'" class="btn add-specimen-image-button" data-for-specimen="'.$s->specimen_id.'">'.util_lang('add_specimen_image').'</a></li>
 ';
             foreach ($s->images as $image) {
                 $canonical .='    '.$image->renderAsListItemEdit()."\n";
             }
             $canonical .='  </ul>
-</form>
+</div>
 </div>';
             $rendered = $s->renderAsEditEmbed();
 
@@ -248,6 +248,36 @@
             $this->assertNoPattern('/IMPLEMENTED/',$rendered);
 
             unset($USER);
+        }
+
+        function testUpdateFromArray() {
+            $s = Specimen::getOneFromDb(['specimen_id'=>8001],$this->DB);
+
+            $new_vals_ar = [
+                'specimen-name_8001' => 'new name 8001',
+                'specimen-gps_longitude_8001' => '11.1111',
+                'specimen-gps_latitude_8001' => '22.2222',
+                'specimen-notes_8001' => 'new notes 8001',
+                'specimen-ordering_8001' => '19.1',
+                'specimen-catalog_identifier_8001' => 'ABCD',
+                'specimen-flag_workflow_published_8001' => 0,
+                'specimen-flag_workflow_validated_8001' => 0,
+                        ];
+
+            $this->assertEqual('sci quad authoritative',$s->name);
+
+            $s->updateFromArray($new_vals_ar);
+
+            $s2 = Specimen::getOneFromDb(['specimen_id'=>8001],$this->DB);
+
+            $this->assertEqual($new_vals_ar['specimen-name_8001'],$s->name);
+            $this->assertEqual($new_vals_ar['specimen-gps_longitude_8001'],$s->gps_longitude);
+            $this->assertEqual($new_vals_ar['specimen-gps_latitude_8001'],$s->gps_latitude);
+            $this->assertEqual($new_vals_ar['specimen-notes_8001'],$s->notes);
+            $this->assertEqual($new_vals_ar['specimen-ordering_8001'],$s->ordering);
+            $this->assertEqual($new_vals_ar['specimen-catalog_identifier_8001'],$s->catalog_identifier);
+            $this->assertEqual($new_vals_ar['specimen-flag_workflow_published_8001'],$s->flag_workflow_published);
+            $this->assertEqual($new_vals_ar['specimen-flag_workflow_validated_8001'],$s->flag_workflow_validated);
         }
 
     }

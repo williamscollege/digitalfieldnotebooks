@@ -5,6 +5,7 @@
 		public static $fields = array('user_id', 'created_at', 'updated_at', 'username', 'screen_name', 'flag_is_system_admin', 'flag_is_banned', 'flag_delete');
 		public static $primaryKeyField = 'user_id';
 		public static $dbTable = 'users';
+        public static $entity_type_label = 'user';
 
         public $cached_roles;
         public $cached_role_action_targets_hash_by_id;

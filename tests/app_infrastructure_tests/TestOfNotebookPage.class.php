@@ -48,8 +48,20 @@
             $this->assertEqual(1102,$nps[1]->notebook_page_id);
             $this->assertEqual(1103,$nps[2]->notebook_page_id);
             $this->assertEqual(1104,$nps[3]->notebook_page_id);
-//
-//            $this->fail("TODO: implement this test");
+        }
+
+        function testCreateNewNotebookPageForNotebook() {
+            $np = Notebook_Page::createNewNotebookPageForNotebook(1001,$this->DB);
+
+            $this->assertEqual('NEW',$np->notebook_page_id);
+            $this->assertNotEqual('',$np->created_at);
+            $this->assertNotEqual('',$np->updated_at);
+            $this->assertEqual(1001, $np->notebook_id);
+            $this->assertEqual('0',$np->authoritative_plant_id);
+            $this->assertEqual(util_lang('new_notebook_page_notes'),$np->notes);
+            $this->assertEqual('',$np->flag_workflow_published);
+            $this->assertEqual('',$np->flag_workflow_validated);
+            $this->assertEqual('',$np->flag_delete);
         }
 
         //// instance methods - related data
@@ -68,6 +80,14 @@
             $p = $np1->getAuthoritativePlant();
 
             $this->assertEqual(5001,$p->authoritative_plant_id);
+        }
+
+        function testGetAuthoritativePlant_newNotebook() {
+            $np = Notebook_Page::createNewNotebookPageForNotebook(1001,$this->DB);
+
+            $ap = $np->getAuthoritativePlant();
+
+            $this->assertEqual(false,$ap);
         }
 
         function testLoadPageFields() {
@@ -205,10 +225,8 @@
             $n = $np->getNotebook();
             $ap = $np->getAuthoritativePlant();
 
-            global $USER;
+            global $USER,$DB;
             $USER = User::getOneFromDb(['username'=>TESTINGUSER], $this->DB);
-
-            global $DB;
             $DB = $this->DB;
 
 //            $this->todo('add canonical code for how to handle authoritative plant selection');
@@ -226,7 +244,6 @@
   <div class="notebook_page_notes"><textarea id="notebook-page-notes" name="notes" rows="4" cols="120">testing notebook page the first in testnotebook1, owned by user 101</textarea></div>
   <input id="edit-submit-control" class="btn" type="submit" name="edit-submit-control" value="'.util_lang('update','properize').'"/>
   <a id="edit-cancel-control" class="btn" href="'.APP_ROOT_PATH.'/app_code/notebook_page.php?action=view&notebook_page_id='.$np->notebook_page_id.'">'.util_lang('cancel','properize').'</a>
-</form>
   '.$ap->renderAsViewEmbed().'
   <ul class="notebook_page_fields">
 ';
@@ -244,7 +261,16 @@
             foreach ($np->specimens as $specimen) {
                 $canonical .= '    <li>'.$specimen->renderAsEditEmbed()."</li>\n";
             }
-            $canonical .= '  </ul>
+            $canonical .= '  </ul>'."\n";
+
+            $canonical .= '<input type="hidden" id="initial_page_field_ids" name="initial_page_field_ids" value="'.implode(',', Db_Linked::arrayOfAttrValues($np->page_fields,'notebook_page_field_id') ).'"/>'."\n";
+            $canonical .= '<input type="hidden" id="created_page_field_ids" name="created_page_field_ids" value=""/>'."\n";
+            $canonical .= '<input type="hidden" id="deleted_page_field_ids" name="deleted_page_field_ids" value=""/>'."\n";
+            $canonical .= '<input type="hidden" id="initial_specimen_ids" name="initial_specimen_ids" value="'.implode(',', Db_Linked::arrayOfAttrValues($np->specimens,'specimen_id') ).'"/>'."\n";
+            $canonical .= '<input type="hidden" id="created_specimen_ids" name="created_specimen_ids" value=""/>'."\n";
+            $canonical .= '<input type="hidden" id="deleted_specimen_ids" name="deleted_specimen_ids" value=""/>'."\n";
+
+            $canonical .= '</form>
 </div>';
 
             $rendered = $np->renderAsEdit();
@@ -262,7 +288,41 @@
         }
 
         function testRenderAsEdit_newNotebookPage() {
-            $this->todo();
+            $np = Notebook_Page::createNewNotebookPageForNotebook(1001,$this->DB);
+            $n = $np->getNotebook();
+
+            global $USER,$DB;
+            $USER = User::getOneFromDb(['username'=>TESTINGUSER], $this->DB);
+            $DB = $this->DB;
+
+            $canonical = '<h4>'.util_lang('page_in_notebook','ucfirst').' <a href="'.APP_ROOT_PATH.'/app_code/notebook.php?action=view&notebook_id='.$n->notebook_id.'" id="parent-notebook-link">'.htmlentities($n->name).'</a></h4>
+<div id="rendered_notebook_page_NEW" class="rendered_notebook_page" '.$np->fieldsAsDataAttribs().' data-can-edit="1">
+<form id="form-edit-notebook-page-base-data" action="'.APP_ROOT_PATH.'/app_code/notebook_page.php">
+  <input type="hidden" name="action" value="update"/>
+  <input type="hidden" name="notebook_page_id" value="NEW"/>
+  <h3 class="notebook_page_title">'.$n->renderAsLink().': '.util_lang('new_notebook_page_label').'</h3>
+  <span class="select_new_authoritative_plant">'.Authoritative_Plant::renderControlSelectAllAuthoritativePlants().'</span>
+  <span class="created_at">'.util_lang('created_at').' '.util_datetimeFormatted($np->created_at).'</span>, <span class="updated_at">'.util_lang('updated_at').' '.util_datetimeFormatted($np->updated_at).'</span><br/>
+  <span class="owner">'.util_lang('owned_by').' <a href="'.APP_ROOT_PATH.'/app_code/user.php?action=view&user_id=101">'.htmlentities($USER->screen_name).'</a></span><br/>
+  <span class="published_state">'.util_lang('published_false').'</span>, <span class="verified_state">'.util_lang('verified_false').'</span><br/>
+  <div class="notebook_page_notes"><textarea id="notebook-page-notes" name="notes" rows="4" cols="120">'.util_lang('new_notebook_page_notes').'</textarea></div>
+  <input id="edit-submit-control" class="btn" type="submit" name="edit-submit-control" value="'.util_lang('save','properize').'"/>
+  <a id="edit-cancel-control" class="btn" href="'.APP_ROOT_PATH.'/app_code/notebook_page.php?action=view&notebook_page_id='.$np->notebook_page_id.'">'.util_lang('cancel','properize').'</a>
+</form>
+</div>';
+
+            $rendered = $np->renderAsEdit();
+
+            $this->assertEqual($canonical,$rendered);
+            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
+
+//            echo "<pre>
+//-----------
+//".htmlentities($canonical)."
+//-----------
+//".htmlentities($rendered)."
+//-----------
+//</pre>";
         }
 
 //    $canonical .= '    <li><a href="" id="btn-add-notebook-page-field" class="creation_link btn">'.util_lang('add_notebook_page_field').'</a></li>

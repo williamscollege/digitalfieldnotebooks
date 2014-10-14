@@ -183,11 +183,19 @@ class NotebookPageEditAndCreateTest extends WMSWebTestCase {
         $this->assertEltByIdHasAttrOfValue('page_field_select_1203','name','page_field_select_1203');
         $this->assertEltByIdHasAttrOfValue('page_field_open_value_1204','name','page_field_open_value_1204');
 
+        $this->assertEltByIdHasAttrOfValue('initial_page_field_ids','value','1204,1201,1202,1203');
+        $this->assertEltByIdHasAttrOfValue('created_page_field_ids','value','');
+        $this->assertEltByIdHasAttrOfValue('deleted_page_field_ids','value','');
+
 //        $this->todo('check specimens');
         $this->assertEltByIdHasAttrOfValue('form-edit-specimen-8002','class','form-edit-specimen');
         $this->assertEltByIdHasAttrOfValue('specimen-image-8103','data-specimen_image_id','8103');
         $this->assertEltByIdHasAttrOfValue('specimen-image-8104','data-specimen_image_id','8104');
         $this->assertEltByIdHasAttrOfValue('form-edit-specimen-8003','class','form-edit-specimen');
+
+        $this->assertEltByIdHasAttrOfValue('initial_specimen_ids','value','8003,8002');
+        $this->assertEltByIdHasAttrOfValue('created_specimen_ids','value','');
+        $this->assertEltByIdHasAttrOfValue('deleted_specimen_ids','value','');
 
     }
 
@@ -196,13 +204,31 @@ class NotebookPageEditAndCreateTest extends WMSWebTestCase {
         $this->get('http://localhost/digitalfieldnotebooks/app_code/notebook_page.php?action=edit&notebook_page_id=1101');
 //
         $new_notes = 'new notes for the page';
+        $new_specimen_notes = 'new notes for the specimen';
 
 ////      NOTE: the identifier to use for setField is the value of the name attribute of the field
         $this->setField('notes',$new_notes);
 
+        // page field alteration
+        $this->assertTrue($this->setField('page_field_select_1201','6204'));
+        $this->assertTrue($this->setField('page_field_open_value_1204','new open value'));
+
+        // page field addition
+//        $this->todo('figure out how to do page field addition');
+//        $this->todo('figure out how to do page deletion');
+
+        // specimen alteration
+        $this->assertTrue($this->setField('specimen-notes_8002',$new_specimen_notes));
+
+//        $this->todo('figure out how to do specimen addition');
+//        $this->todo('figure out how to do specimen deletion');
+
+//        $this->showContent();
+
 ////        NOTE: the identifier to use for buttons is the value of the value attribute of the button
         $this->click(util_lang('update','properize'));
 //
+//        $this->showContent();
 //
         $this->checkBasicAsserts();
         $this->assertText($new_notes);
@@ -210,18 +236,55 @@ class NotebookPageEditAndCreateTest extends WMSWebTestCase {
         $np = Notebook_Page::getOneFromDb(['notebook_page_id'=>1101],$this->DB);
         $this->assertEqual($np->notes,$new_notes);
 
+//        $this->todo('check page field alteration on 1201');
+        $npf = Notebook_Page_Field::getOneFromDb(['notebook_page_field_id'=>1201],$this->DB);
+        $this->assertEqual($npf->value_metadata_term_value_id,6204);
+        $npf = Notebook_Page_Field::getOneFromDb(['notebook_page_field_id'=>1204],$this->DB);
+        $this->assertEqual($npf->value_open,'new open value');
+
+//        $this->todo('check page field addition');
+//        $this->todo('check page field deletion');
+
+//        $this->todo('check specimen alteration on 8002');
+        $s = Specimen::getOneFromDb(['specimen_id'=>8002],$this->DB);
+        $this->assertEqual($s->notes,$new_specimen_notes);
+
+//        $this->todo('check specimen addition');
+//        $this->todo('check specimen deletion');
 //        util_prePrintR(htmlentities($this->getBrowser()->getContent()));
+
+        echo "<br><b>NOTE: skipping create and delete tests for pagefields and specimens because that requires javascript interaction</b><br/>\n";
+
     }
 
     function testCreateButton() {
-        $this->todo();
-//        $this->doLoginBasic();
-//        $this->get('http://localhost/digitalfieldnotebooks/app_code/notebook.php?action=list');
-//
-//        $this->click(util_lang('add_notebook'));
-//
-//        $this->checkBasicAsserts();
-//        $this->assertPattern('/'.util_lang('new_notebook_title').'/');
+        $n = Notebook::getOneFromDb(['notebook_id' => 1001], $this->DB);
+
+        $this->doLoginBasic();
+        $this->get('http://localhost/digitalfieldnotebooks/app_code/notebook.php?action=edit&notebook_id=1001');
+
+
+        $this->click(util_lang('add_notebook_page'));
+
+        $this->checkBasicAsserts();
+        $this->assertTitle(LANG_APP_NAME . ': ' . ucfirst(util_lang('page')));
+        $this->assertLink(htmlentities($n->name));
+        $this->assertEltByIdHasAttrOfValue('rendered_notebook_page_NEW','class','rendered_notebook_page');
+
+//        $this->showContent();
+    }
+
+
+    function testNewNotebookPage() {
+        $n = Notebook::getOneFromDb(['notebook_id' => 1001], $this->DB);
+
+        $this->doLoginBasic();
+        $this->get('http://localhost/digitalfieldnotebooks/app_code/notebook.php?action=edit&notebook_id=1001');
+        $this->click(util_lang('add_notebook_page'));
+
+        $this->checkBasicAsserts();
+
+        $this->assertEltByIdHasAttrOfValue('form-edit-notebook-page-base-data','action',APP_ROOT_PATH.'/app_code/notebook_page.php');
 
 //        $this->showContent();
     }

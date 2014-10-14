@@ -7,6 +7,7 @@
                                       'catalog_identifier', 'flag_delete');
 		public static $primaryKeyField = 'authoritative_plant_id';
 		public static $dbTable = 'authoritative_plants';
+        public static $entity_type_label = 'authoritative_plant';
 
         public $extras;
         public $notebook_pages;
@@ -57,7 +58,7 @@
            $all_ap = Authoritative_Plant::getAllFromDb(['flag_delete' => FALSE], $DB);
            usort($all_ap,'Authoritative_Plant::cmp');
 
-           $rendered = '<select name="authoritative-plant-id" id="authoritative-plant-id">'."\n";
+           $rendered = '<select name="authoritative_plant_id" id="authoritative-plant-id">'."\n";
            foreach ($all_ap as $ap) {
                $rendered .= '  '.$ap->renderAsOption($ap->authoritative_plant_id == $default_selected)."\n";
            }

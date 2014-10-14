@@ -6,6 +6,7 @@
 		public static $fields = array('role_id', 'priority', 'name', 'flag_delete');
 		public static $primaryKeyField = 'role_id';
 		public static $dbTable = 'roles';
+        public static $entity_type_label = 'role';
 
         public static $VALID_ROLE_NAMES = ['manager','assistant','field user','public'];
         public static $SORT_BY_ROLE_NAMES = ['manager'=>10,'assistant'=>20,'field user'=>30,'public'=>100];

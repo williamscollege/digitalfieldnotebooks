@@ -6,6 +6,7 @@
                                       'flag_delete');
 		public static $primaryKeyField = 'authoritative_plant_extra_id';
 		public static $dbTable = 'authoritative_plant_extras';
+        public static $entity_type_label = 'authoritative_plant_extra';
 
         public static $VALID_TYPES = ['common name', 'description', 'image'];
 

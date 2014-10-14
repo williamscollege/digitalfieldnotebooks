@@ -6,6 +6,7 @@
                                       'notebook_page_id', 'label_metadata_structure_id', 'value_metadata_term_value_id', 'value_open', 'flag_delete');
 		public static $primaryKeyField = 'notebook_page_field_id';
 		public static $dbTable = 'notebook_page_fields';
+        public static $entity_type_label = 'notebook_page_field';
 
 		public function __construct($initsHash) {
 			parent::__construct($initsHash);

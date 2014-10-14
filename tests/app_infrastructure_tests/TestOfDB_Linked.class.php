@@ -6,18 +6,21 @@ class Trial_Db_Linked extends Db_Linked {
     public static $fields = array('dblinktest_id','charfield','intfield','flagfield');
     public static $primaryKeyField = 'dblinktest_id';
     public static $dbTable = 'dblinktest';
+    public static $entity_type_label = 'dblinktest';
 }
 
 class Trial_Bad_Db_Linked_No_PK extends Db_Linked {
     public static $fields = array('dblinktest_id','charfield','intfield','flagfield');
     public static $primaryKeyField = '';
     public static $dbTable = 'dblinktest';
+    public static $entity_type_label = 'dblinktest';
 }
 
 class Trial_Bad_Db_Linked_No_Table extends Db_Linked {
 	public static $fields = array('dblinktest_id','charfield','intfield','flagfield');
 	public static $primaryKeyField = 'dblinktest_id';
 	public static $dbTable = '';
+    public static $entity_type_label = 'dblinktest';
 }
 
 	class TestOfDB_Linked extends WMSUnitTestCaseDB {
@@ -288,7 +291,36 @@ class Trial_Bad_Db_Linked_No_Table extends Db_Linked {
             $this->assertPattern('/:intfield__2/',$fetchSql);
         }
 
-    # BELOW: TESTS FOR STATIC METHODS
+    function testID() {
+        $this->_dbClear();
+        $this->_dbInsertTestRecord();
+
+        $testObj = Trial_Db_Linked::getOneFromDb( ['dblinktest_id'=>'5'],$this->DB);
+        $this->assertEqual(5,$testObj->ID());
+    }
+
+    function testUpdateFromArray() {
+        $this->_dbClear();
+        $this->_dbInsertTestRecord();
+
+        $testObj = Trial_Db_Linked::getOneFromDb( ['dblinktest_id'=>'5'],$this->DB);
+
+        $new_vals_ar = [
+            'dblinktest-charfield_5' => 'new char data',
+            'dblinktest-intfield_5' => '22',
+            'dblinktest-flagfield_5' => '1'
+        ];
+
+        $testObj->updateFromArray($new_vals_ar);
+
+        $newTestObj = Trial_Db_Linked::getOneFromDb( ['dblinktest_id'=>'5'],$this->DB);
+
+        $this->assertEqual('new char data',$newTestObj->charfield);
+        $this->assertEqual('22',$newTestObj->intfield);
+        $this->assertEqual('1',$newTestObj->flagfield);
+    }
+
+        # BELOW: TESTS FOR STATIC METHODS
 
     function testCheckStatementError() {
         $badSql = "INSERT INTO dblinktest VALUES ('a')";

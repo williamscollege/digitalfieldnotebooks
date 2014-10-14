@@ -5,6 +5,7 @@
 		public static $fields = array('metadata_reference_id', 'created_at', 'updated_at', 'metadata_type', 'metadata_id', 'type', 'external_reference', 'description', 'ordering', 'flag_delete');
 		public static $primaryKeyField = 'metadata_reference_id';
 		public static $dbTable = 'metadata_references';
+        public static $entity_type_label = 'metadata_reference';
 
         public static $VALID_METADATA_TYPES = ['structure', 'term_set', 'term_value'];
         public static $VALID_TYPES = ['text', 'image', 'link'];

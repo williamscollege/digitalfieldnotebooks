@@ -5,6 +5,7 @@
 		public static $fields = array('notebook_page_id', 'created_at', 'updated_at', 'notebook_id', 'authoritative_plant_id', 'notes', 'flag_workflow_published', 'flag_workflow_validated', 'flag_delete');
 		public static $primaryKeyField = 'notebook_page_id';
 		public static $dbTable = 'notebook_pages';
+        public static $entity_type_label = 'notebook_page';
 
         public $page_fields;
         public $specimens;
@@ -27,6 +28,21 @@
             }
 //            echo "notebook cmp";
             return Notebook::cmp($a->getNotebook(),$b->getNotebook());
+        }
+
+        public static function createNewNotebookPageForNotebook($notebook_id,$db_connection) {
+            $n = new Notebook_Page([
+                'notebook_page_id' => 'NEW',
+                'created_at' => util_currentDateTimeString_asMySQL(),
+                'updated_at' => util_currentDateTimeString_asMySQL(),
+                'notebook_id' => $notebook_id,
+                'authoritative_plant_id' => 0,
+                'notes' => util_lang('new_notebook_page_notes'),
+                'flag_workflow_published' => false,
+                'flag_workflow_validated' => false,
+                'flag_delete' => false,
+                'DB'=>$db_connection]);
+            return $n;
         }
 
         private function _startRenderedListItem($idstr,$classes_array,$other_attribs_hash) {
@@ -121,7 +137,12 @@
             $this->loadPageFields();
             $this->loadSpecimens();
             $n = $this->getNotebook();
-            $ap = $this->getAuthoritativePlant();
+            $ap = '';
+            if ($this->notebook_page_id != 'NEW') {
+                $ap = $this->getAuthoritativePlant();
+            }
+
+//            util_prePrintR('TO BE IMPLEMENTED: handle auth plant for new pages (i.e. where auth plant id == 0)');
 
             global $USER,$ACTIONS;
 
@@ -143,8 +164,8 @@
                 '  <input type="hidden" name="action" value="update"/>'."\n".
                 '  <input type="hidden" name="notebook_page_id" value="'.$this->notebook_page_id.'"/>'."\n".
 
-                '  <h3 class="notebook_page_title">'.$n->renderAsLink().': '.$ap->renderAsShortText()."</h3>\n".
-                '  <span class="select_new_authoritative_plant">'.Authoritative_Plant::renderControlSelectAllAuthoritativePlants($ap->authoritative_plant_id).'</span>'."\n".
+                '  <h3 class="notebook_page_title">'.$n->renderAsLink().': '.(($this->notebook_page_id != 'NEW') ? $ap->renderAsShortText() : util_lang('new_notebook_page_label'))."</h3>\n".
+                '  <span class="select_new_authoritative_plant">'.Authoritative_Plant::renderControlSelectAllAuthoritativePlants((($this->notebook_page_id != 'NEW') ? $ap->authoritative_plant_id : 0)).'</span>'."\n".
 
                 '  <span class="created_at">'.util_lang('created_at').' '.util_datetimeFormatted($this->created_at).'</span>, <span class="updated_at">'.util_lang('updated_at').' '.util_datetimeFormatted($this->updated_at)."</span><br/>\n".
                 '  <span class="owner">'.util_lang('owned_by').' <a href="'.APP_ROOT_PATH.'/app_code/user.php?action=view&user_id='.$owner->user_id.'">'.htmlentities($owner->screen_name).'</a></span><br/>'."\n";
@@ -166,33 +187,45 @@
                         .'</span>';
                 }
                 $rendered .= '<br/>'."\n";
+            } else {
+                $rendered .= '  <span class="published_state">'.($this->flag_workflow_published ? util_lang('published_true') : util_lang('published_false'))
+                    .'</span>,';
+                $rendered .= ' <span class="verified_state">'.($this->flag_workflow_validated ? util_lang('verified_true') : util_lang('verified_false'))
+                    .'</span>';
+                $rendered .= '<br/>'."\n";
             }
-
-
-//            $rendered .= '  <div class="notebook_page_notes">'.htmlentities($this->notes)."</div>\n";
 
             $rendered .= '  <div class="notebook_page_notes"><textarea id="notebook-page-notes" name="notes" rows="4" cols="120">'.htmlentities($this->notes).'</textarea></div>'."\n".
-                '  <input id="edit-submit-control" class="btn" type="submit" name="edit-submit-control" value="'.util_lang('update','properize').'"/>'."\n".
-                '  <a id="edit-cancel-control" class="btn" href="'.APP_ROOT_PATH.'/app_code/notebook_page.php?action=view&notebook_page_id='.$this->notebook_page_id.'">'.util_lang('cancel','properize').'</a>'."\n".
-                '</form>'."\n";
+                '  <input id="edit-submit-control" class="btn" type="submit" name="edit-submit-control" value="'.util_lang((($this->notebook_page_id != 'NEW') ? 'update' : 'save'),'properize').'"/>'."\n".
+                '  <a id="edit-cancel-control" class="btn" href="'.APP_ROOT_PATH.'/app_code/notebook_page.php?action=view&notebook_page_id='.$this->notebook_page_id.'">'.util_lang('cancel','properize').'</a>'."\n";
 
+            if ($this->notebook_page_id != 'NEW') {
+                $rendered .= '  '.$ap->renderAsViewEmbed()."\n";
 
-            $rendered .= '  '.$ap->renderAsViewEmbed()."\n".
-                '  <ul class="notebook_page_fields">'."\n";
-//            $rendered .= $add_field_button_li;
+                $rendered .= '  <ul class="notebook_page_fields">'."\n";
+    //            $rendered .= $add_field_button_li;
 
-            $rendered .= '    <li><a href="#" id="add_new_notebook_page_field_button" class="btn">'.util_lang('add_notebook_page_field').'</a></li>'."\n";
-            foreach ($this->page_fields as $pf) {
-                $rendered .= '    '.$pf->renderAsListItemEdit()."\n";
+                $rendered .= '    <li><a href="#" id="add_new_notebook_page_field_button" class="btn">'.util_lang('add_notebook_page_field').'</a></li>'."\n";
+                foreach ($this->page_fields as $pf) {
+                    $rendered .= '    '.$pf->renderAsListItemEdit()."\n";
+                }
+                $rendered .='  </ul>'."\n".
+                    '  <h4>'.ucfirst(util_lang('specimens'))."</h4>\n".
+                    '  <ul class="specimens">'."\n";
+                $rendered .= '    <li><a href="#" id="add_new_specimen_button" class="btn">'.util_lang('add_specimen').'</a></li>'."\n";
+                foreach ($this->specimens as $specimen) {
+                    $rendered .= '    <li>'.$specimen->renderAsEditEmbed()."</li>\n";
+                }
+                $rendered .= "  </ul>\n";
+                $rendered .= '<input type="hidden" id="initial_page_field_ids" name="initial_page_field_ids" value="'.implode(',', Db_Linked::arrayOfAttrValues($this->page_fields,'notebook_page_field_id') ).'"/>'."\n";
+                $rendered .= '<input type="hidden" id="created_page_field_ids" name="created_page_field_ids" value=""/>'."\n";
+                $rendered .= '<input type="hidden" id="deleted_page_field_ids" name="deleted_page_field_ids" value=""/>'."\n";
+                $rendered .= '<input type="hidden" id="initial_specimen_ids" name="initial_specimen_ids" value="'.implode(',', Db_Linked::arrayOfAttrValues($this->specimens,'specimen_id') ).'"/>'."\n";
+                $rendered .= '<input type="hidden" id="created_specimen_ids" name="created_specimen_ids" value=""/>'."\n";
+                $rendered .= '<input type="hidden" id="deleted_specimen_ids" name="deleted_specimen_ids" value=""/>'."\n";
             }
-            $rendered .='  </ul>'."\n".
-                '  <h4>'.ucfirst(util_lang('specimens'))."</h4>\n".
-                '  <ul class="specimens">'."\n";
-            $rendered .= '    <li><a href="#" id="add_new_specimen_button" class="btn">'.util_lang('add_specimen').'</a></li>'."\n";
-            foreach ($this->specimens as $specimen) {
-                $rendered .= '    <li>'.$specimen->renderAsEditEmbed()."</li>\n";
-            }
-            $rendered .= "  </ul>\n</div>";
+            $rendered .= '</form>'."\n";
+            $rendered .= "</div>";
 
             return $rendered;
         }
@@ -214,6 +247,9 @@
         }
 
         public function getAuthoritativePlant() {
+            if ($this->notebook_page_id == 'NEW') {
+                return '';
+            }
             return Authoritative_Plant::getOneFromDb(['authoritative_plant_id'=>$this->authoritative_plant_id],$this->dbConnection);
         }
 

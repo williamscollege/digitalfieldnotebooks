@@ -5,6 +5,7 @@
 		public static $fields = array('metadata_structure_id', 'created_at', 'updated_at', 'parent_metadata_structure_id', 'name', 'ordering', 'description', 'details', 'metadata_term_set_id', 'flag_delete');
 		public static $primaryKeyField = 'metadata_structure_id';
 		public static $dbTable = 'metadata_structures';
+        public static $entity_type_label = 'metadata_structure';
 
         public $references;
         public $term_set;

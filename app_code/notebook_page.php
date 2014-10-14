@@ -23,6 +23,7 @@
             util_redirectToAppPage('app_code/notebook.php?action=list','failure',util_lang('no_notebook_specified'));
         }
         $notebook_page = new Notebook_Page(['notebook_id' => $_REQUEST['notebook_id'],'DB'=>$DB]);
+        $notebook_page->notebook_page_id = 'NEW';
     } else {
         if ((! isset($_REQUEST['notebook_page_id'])) || (! is_numeric($_REQUEST['notebook_page_id']))) {
             util_redirectToAppPage('app_code/notebook.php?action=list','failure',util_lang('no_notebook_page_specified'));
@@ -51,7 +52,108 @@
     #      delete - delete the notebook, then go to home page w/ 'deleted' message
 
     if (($action == 'update') || ($action == 'verify') || ($action == 'publish')) {
-        echo 'TODO: implement update, verify, and publish actions';
+        $changed = false;
+        if ($notebook_page->authoritative_plant_id != $_REQUEST['authoritative_plant_id']) {
+            $changed = true;
+            $notebook_page->authoritative_plant_id = $_REQUEST['authoritative_plant_id']; // NOTE: this seems dangerous, but the data is sanitized on the way back out
+        }
+        if ($notebook_page->notes != $_REQUEST['notes']) {
+            $changed = true;
+            $notebook_page->notes = $_REQUEST['notes']; // NOTE: this seems dangerous, but the data is sanitized on the way back out
+        }
+
+        if ($USER->canActOnTarget($ACTIONS['publish'],$notebook_page)) {
+            if (isset($_REQUEST['flag_workflow_published'])) {
+                if ($_REQUEST['flag_workflow_published'] && ! $notebook_page->flag_workflow_published) {
+                    $changed = true;
+                    $notebook_page->flag_workflow_published = true;
+                }
+            } else {
+                if ($notebook_page->flag_workflow_published) {
+                    $changed = true;
+                    $notebook_page->flag_workflow_published = false;
+                }
+            }
+        }
+
+        if ($USER->canActOnTarget($ACTIONS['verify'],$notebook_page)) {
+            if (isset($_REQUEST['flag_workflow_validated'])) {
+                if ($_REQUEST['flag_workflow_validated'] && ! $notebook_page->flag_workflow_validated) {
+                    $changed = true;
+                    $notebook_page->flag_workflow_validated = true;
+                }
+            } else {
+                if ($notebook_page->flag_workflow_validated) {
+                    $changed = true;
+                    $notebook_page->flag_workflow_validated = false;
+                }
+            }
+        }
+
+        if ($changed) {
+            $notebook_page->updateDb();
+        }
+
+//        echo 'TO BE IMPLEMENTED: figure out how to handle all the related data updates (via ajax instead of here? tricky because it breaks the implied contract of the update button)';
+
+        $deleted_notebook_page_field_ids = explode(',',$_REQUEST['deleted_page_field_ids']);
+//        util_prePrintR($deleted_notebook_page_field_ids);
+        if ($deleted_notebook_page_field_ids) {
+            foreach ($deleted_notebook_page_field_ids as $deleted_notebook_page_fied_id) {
+                $del_npf = Notebook_Page_Field::getOneFromDb(['notebook_page_field_id'=>$deleted_notebook_page_fied_id],$DB);
+                if ($del_npf->matchedDb) {
+                    $del_npf->doDelete();
+                }
+            }
+        }
+
+        $intitial_notebook_page_field_ids = explode(',',$_REQUEST['initial_page_field_ids']);
+        foreach ($intitial_notebook_page_field_ids as $notebook_page_field_id) {
+            if (! in_array($notebook_page_field_id,$deleted_notebook_page_field_ids)) {
+                $npf = Notebook_Page_Field::getOneFromDb(['notebook_page_field_id'=>$notebook_page_field_id],$DB);
+                if ($npf->matchesDb) {
+                    $new_npf_vals = [
+                        'notebook_page_field-value_metadata_term_value_id_'.$notebook_page_field_id =>$_REQUEST['page_field_select_'.$notebook_page_field_id],
+                        'notebook_page_field-value_open_'.$notebook_page_field_id =>$_REQUEST['page_field_open_value_'.$notebook_page_field_id]
+                    ];
+                    $npf->updateFromArray($new_npf_vals);
+                }
+            }
+        }
+
+        $created_notebook_page_field_ids = explode(',',$_REQUEST['created_page_field_ids']);
+        foreach ($created_notebook_page_field_ids as $created_page_field_id) {
+            echo "TO BE IMPLEMENTED: handle creation of new notebook page fields";
+//            if ($created_page_field_id) {
+//                $new_npf = Notebook_Page_Field::
+//            }
+        }
+
+
+        $deleted_specimen_ids = explode(',',$_REQUEST['deleted_specimen_ids']);
+        if ($deleted_specimen_ids) {
+            foreach ($deleted_specimen_ids as $deleted_specimen_id) {
+                $del_s = Specimen::getOneFromDb(['specimen_id'=>$deleted_specimen_id],$DB);
+                if ($del_s->matchedDb) {
+                    $del_s->doDelete();
+                }
+            }
+        }
+
+        $intitial_specimen_ids = explode(',',$_REQUEST['initial_specimen_ids']);
+        foreach ($intitial_specimen_ids as $specimen_id) {
+            if (! in_array($specimen_id,$deleted_specimen_ids)) {
+                $s = Specimen::getOneFromDb(['specimen_id'=>$specimen_id],$DB);
+                if ($s->matchesDb) {
+                    $s->updateFromArray($_REQUEST);
+                }
+            }
+        }
+
+        $created_specimen_ids = explode(',',$_REQUEST['created_specimen_ids']);
+        foreach ($created_notebook_page_field_ids as $created_page_fied_id) {
+            echo "TO BE IMPLEMENTED: handle creation of specimens";
+        }
         $action = 'view';
     }
 

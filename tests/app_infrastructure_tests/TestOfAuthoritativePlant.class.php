@@ -57,7 +57,7 @@
             $aps = Authoritative_Plant::getAllFromDb(['flag_delete'=>false],$this->DB);
             usort($aps,'Authoritative_Plant::cmp');
 
-            $canonical_base = '<select name="authoritative-plant-id" id="authoritative-plant-id">'."\n";
+            $canonical_base = '<select name="authoritative_plant_id" id="authoritative-plant-id">'."\n";
 
             global $DB;
             $DB = $this->DB;

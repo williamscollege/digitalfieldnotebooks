@@ -5,6 +5,7 @@
 		public static $fields = array('user_role_link_id', 'created_at', 'updated_at', 'last_user_id', 'user_id', 'role_id');
 		public static $primaryKeyField = 'user_role_link_id';
 		public static $dbTable = 'user_role_links';
+        public static $entity_type_label = 'user_role';
 
 		// instance attributes
         public $role = '';
