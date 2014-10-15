@@ -263,7 +263,7 @@
             $selected_id = 6203;
 
             $canonical = '<select name="namefoo" id="idfoo" class="metadata_term_value_select_control">'."\n";
-            $canonical .= '  <option value="-1">-- nothing from the list --</option>'."\n";
+            $canonical .= '  <option value="-1">-- '.util_lang('nothing_from_the_list').' --</option>'."\n";
             foreach ($mdtvs as $v) {
                 $canonical .= '  '.$v->renderAsOption($v->metadata_term_value_id == $selected_id)."\n";
             }
@@ -273,5 +273,7 @@
 
             $this->assertNoPattern('/IMPLEMENTED/',$rendered);
             $this->assertEqual($canonical,$rendered);
+
+//                echo "<pre>\n".htmlentities($canonical)."\n-------\n".htmlentities($rendered)."\n</pre>";
         }
     }

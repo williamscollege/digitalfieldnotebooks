@@ -61,13 +61,13 @@
             return Metadata_Structure::cmp($lineageA[0],$lineageB[0]);
         }
 
-        public static function renderControlSelectAllMetadataStructures($unique_prefix='',$default_selected = 0) {
+        public static function renderControlSelectAllMetadataStructures($unique_id,$default_selected = 0) {
             if (is_object($default_selected)) {
                 $default_selected = $default_selected->metadata_structure_id;
             }
 
-            if ($unique_prefix) {
-                $unique_prefix .= '_';
+            if (! $unique_id) {
+                $unique_id = 'metadata_structure_id';
             }
 
             global $DB;
@@ -75,9 +75,9 @@
             $all_mds = Metadata_Structure::getAllFromDb(['parent_metadata_structure_id'=>0,'flag_delete' => FALSE], $DB);
             usort($all_mds,'Metadata_Structure::cmp');
 
-            $rendered = '<select name="'.$unique_prefix.'metadata_structure_id" id="'.$unique_prefix.'metadata_structure_id" class="metadata_structure_selector">'."\n";
+            $rendered = '<select name="'.$unique_id.'" id="'.$unique_id.'" class="metadata_structure_selector">'."\n";
             foreach ($all_mds as $mds) {
-                $rendered .= $mds->renderAsOptionTree('');
+                $rendered .= $mds->renderAsOptionTree('',$default_selected);
             }
             $rendered .= '</select>';
 
@@ -147,8 +147,12 @@
             return $btn;
         }
 
-        public function renderAsOption($display_prefix='') {
-            $opt = '<option value="'.$this->metadata_structure_id.'" title="'.htmlentities($this->description).'" data-details="'.htmlentities($this->details).'">'.$display_prefix.htmlentities($this->name).'</option>';
+        public function renderAsOption($display_prefix='',$default_selected=0) {
+            $opt = '<option value="'.$this->metadata_structure_id.'" title="'.htmlentities($this->description).'" data-details="'.htmlentities($this->details).'"';
+            if ($this->metadata_structure_id == $default_selected) {
+                $opt .= ' selected="selected"';
+            }
+            $opt .= '>'.$display_prefix.htmlentities($this->name).'</option>';
             return $opt;
         }
 
@@ -232,16 +236,16 @@
             }
         }
 
-        public function renderAsOptionTree($display_prefix='') {
+        public function renderAsOptionTree($display_prefix='',$default_selected=0) {
             $children = $this->getChildren();
             if ($children) {
-                $rendered = $this->renderAsOption($display_prefix)."\n";
+                $rendered = $this->renderAsOption($display_prefix,$default_selected)."\n";
                 foreach ($children as $child) {
-                    $rendered .= $child->renderAsOptionTree($display_prefix.'- ');
+                    $rendered .= $child->renderAsOptionTree($display_prefix.'- ',$default_selected);
                 }
                 return $rendered;
             } else {
-                return $this->renderAsOption($display_prefix)."\n";
+                return $this->renderAsOption($display_prefix,$default_selected)."\n";
             }
         }
 	}

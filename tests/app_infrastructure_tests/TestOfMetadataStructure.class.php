@@ -57,6 +57,7 @@
             global $DB;
             $DB = $this->DB;
 
+            // no default selected
             $canonical = '<select name="ABC123_metadata_structure_id" id="ABC123_metadata_structure_id" class="metadata_structure_selector">'."\n";
             $canonical .= '<option value="6004" title="info about the individual leaves of the plant" data-details="details">leaf</option>'."\n";
             $canonical .= '<option value="6001" title="info about the flower" data-details="">flower</option>'."\n";
@@ -64,12 +65,28 @@
             $canonical .= '<option value="6003" title="the primary / dominant color of the flower" data-details="">- flower primary color</option>'."\n";
             $canonical .= '</select>';
 
-            $rendered = Metadata_Structure::renderControlSelectAllMetadataStructures('ABC123');
+            $rendered = Metadata_Structure::renderControlSelectAllMetadataStructures('ABC123_metadata_structure_id');
 
             $this->assertNoPattern('/IMPLEMENTED/',$rendered);
             $this->assertEqual($canonical,$rendered);
 
 //            echo "<pre>\n".htmlentities($canonical)."\n---------------\n".htmlentities($rendered)."\n</pre>";
+
+            // default selected
+            $canonical = '<select name="ABC123_metadata_structure_id" id="ABC123_metadata_structure_id" class="metadata_structure_selector">'."\n";
+            $canonical .= '<option value="6004" title="info about the individual leaves of the plant" data-details="details">leaf</option>'."\n";
+            $canonical .= '<option value="6001" title="info about the flower" data-details="">flower</option>'."\n";
+            $canonical .= '<option value="6002" title="the size of the flower in its largest dimension" data-details="some details" selected="selected">- flower size</option>'."\n";
+            $canonical .= '<option value="6003" title="the primary / dominant color of the flower" data-details="">- flower primary color</option>'."\n";
+            $canonical .= '</select>';
+
+            $rendered = Metadata_Structure::renderControlSelectAllMetadataStructures('ABC123_metadata_structure_id',6002);
+
+            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
+            $this->assertEqual($canonical,$rendered);
+
+//            echo "<pre>\n".htmlentities($canonical)."\n---------------\n".htmlentities($rendered)."\n</pre>";
+
         }
 
         //// instance methods - related data

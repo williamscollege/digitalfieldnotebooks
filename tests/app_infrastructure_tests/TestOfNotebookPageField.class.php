@@ -53,6 +53,39 @@
             $this->assertEqual(false,$npf->flag_delete);
         }
 
+        function testRenderFormInteriorForNewNotebookPageField() {
+            global $DB;
+            $DB = $this->DB;
+
+            $canonical = '';
+
+            $canonical .= '<div class="notebook_page_field-label_metadata">';
+            $canonical .= '<span class="form-field-label">'.util_lang('metadata','properize').'</span>';
+            $canonical .= Metadata_Structure::renderControlSelectAllMetadataStructures('notebook_page_field-label_metadata_structure_id_ABC')."\n";
+            $canonical .= '</div>';
+
+            $canonical .= '<div class="notebook_page_field-value_specific_metadata">';
+            $canonical .= '<span class="form-field-label">'.util_lang('metadata_specific_value','properize').'</span>';
+            $canonical .= '<select name="notebook_page_field-value_metadata_term_value_id_ABC" id="notebook_page_field-value_metadata_term_value_id_ABC" class="metadata_term_value_select_control">'."\n";
+            $canonical .= '  <option value="-1">-- '.util_lang('nothing_from_the_list').' --</option>'."\n";
+            $canonical .= '</select>'."\n";
+            $canonical .= '</div>';
+
+            $canonical .= '<div class="notebook_page_field-value_open_metadata">';
+            $canonical .= '<span class="form-field-label">'.util_lang('metadata_open_value','properize').'</span>';
+            $canonical .= '<input type="text" name="notebook_page_field-value_open_ABC" id="notebook_page_field-value_open_ABC" class="page_field_open_value" value=""/>'."\n";
+            $canonical .= '</div>';
+
+
+            $rendered = Notebook_Page_Field::renderFormInteriorForNewNotebookPageField('ABC');
+
+
+            $this->assertEqual($canonical,$rendered);
+            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
+
+//            echo "<pre>\n".htmlentities($canonical)."\n------------------\n".htmlentities($rendered)."\n</pre>";
+        }
+
         //// instance methods - related data
 
         function testGetNotebookPage() {

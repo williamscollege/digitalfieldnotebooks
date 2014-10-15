@@ -46,6 +46,30 @@
                 'DB'=>$db_connection]);
             return $npf;
         }
+
+        public static function renderFormInteriorForNewNotebookPageField($unique_string) {
+            $rendered = '';
+
+            $rendered .= '<div class="notebook_page_field-label_metadata">';
+            $rendered .= '<span class="form-field-label">'.util_lang('metadata','properize').'</span>';
+            $rendered .= Metadata_Structure::renderControlSelectAllMetadataStructures('notebook_page_field-label_metadata_structure_id_'.$unique_string)."\n";
+            $rendered .= '</div>';
+
+            $rendered .= '<div class="notebook_page_field-value_specific_metadata">';
+            $rendered .= '<span class="form-field-label">'.util_lang('metadata_specific_value','properize').'</span>';
+            $rendered .= '<select name="notebook_page_field-value_metadata_term_value_id_'.$unique_string.'" id="notebook_page_field-value_metadata_term_value_id_'.$unique_string.'" class="metadata_term_value_select_control">'."\n";
+            $rendered .= '  <option value="-1">-- '.util_lang('nothing_from_the_list').' --</option>'."\n";
+            $rendered .= '</select>'."\n";
+            $rendered .= '</div>';
+
+            $rendered .= '<div class="notebook_page_field-value_open_metadata">';
+            $rendered .= '<span class="form-field-label">'.util_lang('metadata_open_value','properize').'</span>';
+            $rendered .= '<input type="text" name="notebook_page_field-value_open_'.$unique_string.'" id="notebook_page_field-value_open_'.$unique_string.'" class="page_field_open_value" value=""/>'."\n";
+            $rendered .= '</div>';
+
+            return $rendered;
+        }
+
         //------------------------------------------
 
         public function getNotebookPage() {

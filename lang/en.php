@@ -111,6 +111,9 @@ $LANGUAGE['en'] = [
     'metadata_term_set' => 'metadata value set',
     'new_metadata_term_set' => 'new set of metadata values',
 
+    'metadata_specific_value' => 'specific value',
+    'metadata_open_value' => 'open value',
+
     'notes' => 'notes',
     'details' => 'details',
 
@@ -124,6 +127,8 @@ $LANGUAGE['en'] = [
     'no_user_specified' => 'No user was specified.',
 
     'invalid_value' => 'invalid value',
+
+    'nothing_from_the_list' => 'nothing in the list',
 
     '' => 'EMPTY'
 ];
