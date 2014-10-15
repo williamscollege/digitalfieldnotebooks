@@ -123,12 +123,15 @@ $LANGUAGE['en'] = [
     'no_notebooks_found' => 'Could not find any accessible notebooks.',
     'no_notebook_page_specified' => 'No notebook page was specified.',
     'no_notebook_page_found' => 'Could not find that notebook page.',
+    'not_supported' => 'That is not supported',
 
     'no_user_specified' => 'No user was specified.',
 
     'invalid_value' => 'invalid value',
 
     'nothing_from_the_list' => 'nothing in the list',
+
+    'invalid_string_base_chars_only' => 'only A-Z, a-z, and 0-9 allowed',
 
     '' => 'EMPTY'
 ];
