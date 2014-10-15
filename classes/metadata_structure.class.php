@@ -61,6 +61,31 @@
             return Metadata_Structure::cmp($lineageA[0],$lineageB[0]);
         }
 
+        public static function renderControlSelectAllMetadataStructures($unique_prefix='',$default_selected = 0) {
+            if (is_object($default_selected)) {
+                $default_selected = $default_selected->metadata_structure_id;
+            }
+
+            if ($unique_prefix) {
+                $unique_prefix .= '_';
+            }
+
+            global $DB;
+
+            $all_mds = Metadata_Structure::getAllFromDb(['parent_metadata_structure_id'=>0,'flag_delete' => FALSE], $DB);
+            usort($all_mds,'Metadata_Structure::cmp');
+
+            $rendered = '<select name="'.$unique_prefix.'metadata_structure_id" id="'.$unique_prefix.'metadata_structure_id" class="metadata_structure_selector">'."\n";
+            foreach ($all_mds as $mds) {
+                $rendered .= $mds->renderAsOptionTree('');
+            }
+            $rendered .= '</select>';
+
+            return $rendered;
+        }
+
+        //-----------------------------------------------------------
+
         //  NOTE: returns 0 if there is no parent
 		public function getParent() {
             if ($this->parent_metadata_structure_id > 0) {
@@ -120,6 +145,11 @@
         public function renderAsButtonEdit() {
             $btn = '<a id="btn-edit" href="'.APP_ROOT_PATH.'/app_code/metadata_structure.php?action=edit&metadata_structure_id='.$this->metadata_structure_id.'" class="edit_link btn" >'.util_lang('edit').'</a>';
             return $btn;
+        }
+
+        public function renderAsOption($display_prefix='') {
+            $opt = '<option value="'.$this->metadata_structure_id.'" title="'.htmlentities($this->description).'" data-details="'.htmlentities($this->details).'">'.$display_prefix.htmlentities($this->name).'</option>';
+            return $opt;
         }
 
         public function renderAsView() {
@@ -202,4 +232,16 @@
             }
         }
 
+        public function renderAsOptionTree($display_prefix='') {
+            $children = $this->getChildren();
+            if ($children) {
+                $rendered = $this->renderAsOption($display_prefix)."\n";
+                foreach ($children as $child) {
+                    $rendered .= $child->renderAsOptionTree($display_prefix.'- ');
+                }
+                return $rendered;
+            } else {
+                return $this->renderAsOption($display_prefix)."\n";
+            }
+        }
 	}

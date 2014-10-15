@@ -202,6 +202,12 @@ class NotebookEditAndCreateTest extends WMSWebTestCase {
 //        $this->showContent();
     }
 
+    function testDeleteNotebook() {
+        $this->doLoginBasic();
+        $this->get('http://localhost/digitalfieldnotebooks/app_code/notebook.php?action=edit&notebook_id=1001');
+
+        $this->todo();
+    }
     function testToDo() {
 //        $this->todo('test fall backs and default behaviors');
 //        $this->todo('test access control to edit page');

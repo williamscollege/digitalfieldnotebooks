@@ -289,7 +289,14 @@ class NotebookPageEditAndCreateTest extends WMSWebTestCase {
 //        $this->showContent();
     }
 
-    function testToDo() {
+    function testDeleteNotebookPage() {
+        $this->doLoginBasic();
+        $this->get('http://localhost/digitalfieldnotebooks/app_code/notebook_page.php?action=edit&notebook_page_id=1101');
+
+        $this->todo();
+    }
+
+        function testToDo() {
 //        $this->todo('test fall backs and default behaviors');
 //        $this->todo('test access control to edit page');
 // NOTE: nothing here for notebooks       $this->todo('test look-up data form fields (not much for this, but gets messy once we get to pages)');

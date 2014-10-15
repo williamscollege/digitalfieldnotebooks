@@ -52,6 +52,26 @@
             $this->assertEqual('flower',$mds[1]->name);
         }
 
+
+        function testRenderControlSelectAllMetadataStructures() {
+            global $DB;
+            $DB = $this->DB;
+
+            $canonical = '<select name="ABC123_metadata_structure_id" id="ABC123_metadata_structure_id" class="metadata_structure_selector">'."\n";
+            $canonical .= '<option value="6004" title="info about the individual leaves of the plant" data-details="details">leaf</option>'."\n";
+            $canonical .= '<option value="6001" title="info about the flower" data-details="">flower</option>'."\n";
+            $canonical .= '<option value="6002" title="the size of the flower in its largest dimension" data-details="some details">- flower size</option>'."\n";
+            $canonical .= '<option value="6003" title="the primary / dominant color of the flower" data-details="">- flower primary color</option>'."\n";
+            $canonical .= '</select>';
+
+            $rendered = Metadata_Structure::renderControlSelectAllMetadataStructures('ABC123');
+
+            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
+            $this->assertEqual($canonical,$rendered);
+
+//            echo "<pre>\n".htmlentities($canonical)."\n---------------\n".htmlentities($rendered)."\n</pre>";
+        }
+
         //// instance methods - related data
 
         function testGetParent() {
@@ -165,6 +185,18 @@
             $this->assertEqual($canonical,$rendered);
         }
 
+        function testRenderAsOption() {
+            $mds = Metadata_Structure::getOneFromDb(['metadata_structure_id'=>6001],$this->DB);
+            $display_prefix = '-- ';
+            $canonical = '<option value="'.$mds->metadata_structure_id.'" title="'.htmlentities($mds->description).'" data-details="'.htmlentities($mds->details).'">'.$display_prefix.htmlentities($mds->name).'</option>';
+            $rendered = $mds->renderAsOption($display_prefix);
+
+            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
+            $this->assertEqual($canonical,$rendered);
+
+//            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
+        }
+
 //        function testRenderAsHtml() {
 //            $this->todo();
 //            return;
@@ -230,10 +262,24 @@
 
 //            echo "<pre>\n".htmlentities($canonical)."\n---------\n".htmlentities($rendered)."\n</pre>";
 
-            $this->assertEqual($canonical,$rendered);
             $this->assertNoPattern('/IMPLEMENTED/',$rendered);
+            $this->assertEqual($canonical,$rendered);
         }
 
+        function testRenderAsOptionTree() {
+            $mds = Metadata_Structure::getOneFromDb(['metadata_structure_id'=>6001],$this->DB);
+
+            $canonical = '<option value="6001" title="info about the flower" data-details="">flower</option>'."\n";
+            $canonical .= '<option value="6002" title="the size of the flower in its largest dimension" data-details="some details">- flower size</option>'."\n";
+            $canonical .= '<option value="6003" title="the primary / dominant color of the flower" data-details="">- flower primary color</option>'."\n";
+
+            $rendered = $mds->renderAsOptionTree();
+
+            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
+            $this->assertEqual($canonical,$rendered);
+
+//            echo "<pre>\n".htmlentities($canonical)."\n---------\n".htmlentities($rendered)."\n</pre>";
+        }
 
         function testRenderAsView_parent() {
             $mds = Metadata_Structure::getOneFromDb(['metadata_structure_id'=>6001],$this->DB);
