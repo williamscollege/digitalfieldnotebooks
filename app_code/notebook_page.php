@@ -116,17 +116,24 @@
                         'notebook_page_field-value_metadata_term_value_id_'.$notebook_page_field_id =>$_REQUEST['page_field_select_'.$notebook_page_field_id],
                         'notebook_page_field-value_open_'.$notebook_page_field_id =>$_REQUEST['page_field_open_value_'.$notebook_page_field_id]
                     ];
-                    $npf->updateFromArray($new_npf_vals);
+                    $npf->setFromArray($new_npf_vals);
+                    $npf->updateDb();
                 }
             }
         }
 
         $created_notebook_page_field_ids = explode(',',$_REQUEST['created_page_field_ids']);
         foreach ($created_notebook_page_field_ids as $created_page_field_id) {
-            echo "TO BE IMPLEMENTED: handle creation of new notebook page fields";
-//            if ($created_page_field_id) {
-//                $new_npf = Notebook_Page_Field::
-//            }
+//            echo "TO BE IMPLEMENTED: handle creation of new notebook page fields";
+            if ($created_page_field_id) {
+                $new_npf = Notebook_Page_Field::createNewNotebookPageFieldForNotebookPage($notebook_page->notebook_page_id,$DB);
+                $new_npf->notebook_page_id = $created_page_field_id;
+                $new_npf->setFromArray($_REQUEST);
+                if ($new_npf->label_metadata_structure_id != 0) {
+                    $new_npf->notebook_page_id = 'NEW';
+                    $new_npf->updateDb();
+                }
+            }
         }
 
 
@@ -145,15 +152,26 @@
             if (! in_array($specimen_id,$deleted_specimen_ids)) {
                 $s = Specimen::getOneFromDb(['specimen_id'=>$specimen_id],$DB);
                 if ($s->matchesDb) {
-                    $s->updateFromArray($_REQUEST);
+                    $s->setFromArray($_REQUEST);
+                    $s->updateDb();
                 }
             }
         }
 
         $created_specimen_ids = explode(',',$_REQUEST['created_specimen_ids']);
-        foreach ($created_notebook_page_field_ids as $created_page_fied_id) {
-            echo "TO BE IMPLEMENTED: handle creation of specimens";
+        foreach ($created_specimen_ids as $created_specimen_id) {
+//            echo "TO BE IMPLEMENTED: handle creation of specimens";
+            if ($created_specimen_id) {
+                $new_s = Specimen::createNewSpecimenForNotebookPage($notebook_page->notebook_page_id,$DB);
+                $new_s->specimen_id = $created_specimen_id;
+                $new_s->setFromArray($_REQUEST);
+                if ($new_s->name != util_lang('new_specimen_name')) {
+                    $new_s->specimen_id = 'NEW';
+                    $new_s->updateDb();
+                }
+            }
         }
+
         $action = 'view';
     }
 

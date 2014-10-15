@@ -61,6 +61,8 @@ $LANGUAGE['en'] = [
     'specimen' => 'specimen',
     'add_specimen' => '+ Add Specimen +',
     'add_specimen_image' => '+ Add Image +',
+    'new_specimen_name' => 'specimen name here - replace this',
+    'new_specimen_notes' => 'Notes / description of the specimen - replace or delete this text',
 
     'published_true' => 'public',
     'published_false' => 'private',

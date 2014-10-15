@@ -53,6 +53,51 @@
             return (Specimen::$SORT_PRIORITIES_FOR_LINK_TO_TYPES[$a->link_to_type] < Specimen::$SORT_PRIORITIES_FOR_LINK_TO_TYPES[$b->link_to_type]) ? -1 : 1;
 		}
 
+        public static function createNewSpecimenForNotebookPage($notebook_page_id,$db_connection) {
+            global $USER;
+            $s = new Specimen([
+                'specimen_id' => 'NEW',
+                'created_at' => util_currentDateTimeString_asMySQL(),
+                'updated_at' => util_currentDateTimeString_asMySQL(),
+                'user_id' => $USER->user_id,
+                'link_to_type' => 'notebook_page',
+                'link_to_id' => $notebook_page_id,
+                'name' => util_lang('new_specimen_name'),
+                'gps_longitude' => 0,
+                'gps_latitude' => 0,
+                'notes' => util_lang('new_specimen_notes'),
+                'ordering' => 0,
+                'catalog_identifier' => '',
+                'flag_workflow_published' => false,
+                'flag_workflow_validated' => false,
+                'flag_delete' => false,
+                'DB'=>$db_connection]);
+            return $s;
+        }
+
+        public static function createNewSpecimenForAuthoritativePlant($authoritative_plant_id,$db_connection) {
+            global $USER;
+            $s = new Specimen([
+                'specimen_id' => 'NEW',
+                'created_at' => util_currentDateTimeString_asMySQL(),
+                'updated_at' => util_currentDateTimeString_asMySQL(),
+                'user_id' => $USER->user_id,
+                'link_to_type' => 'authoritative_plant',
+                'link_to_id' => $authoritative_plant_id,
+                'name' => util_lang('new_specimen_name'),
+                'gps_longitude' => 0,
+                'gps_latitude' => 0,
+                'notes' => util_lang('new_specimen_notes'),
+                'ordering' => 0,
+                'catalog_identifier' => '',
+                'flag_workflow_published' => false,
+                'flag_workflow_validated' => false,
+                'flag_delete' => false,
+                'DB'=>$db_connection]);
+            return $s;
+        }
+
+        //---------------
 
         public function loadImages() {
             $this->images = Specimen_Image::getAllFromDb(['specimen_id' => $this->specimen_id, 'flag_delete' => FALSE],$this->dbConnection);

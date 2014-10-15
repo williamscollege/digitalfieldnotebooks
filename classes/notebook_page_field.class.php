@@ -33,6 +33,19 @@
             return Notebook_Page::cmp($a->getNotebookPage(),$b->getNotebookPage());
         }
 
+        public static function createNewNotebookPageFieldForNotebookPage($notebook_page_id,$db_connection) {
+            $npf = new Notebook_Page_Field([
+                'notebook_page_field_id' => 'NEW',
+                'created_at' => util_currentDateTimeString_asMySQL(),
+                'updated_at' => util_currentDateTimeString_asMySQL(),
+                'notebook_page_id' => $notebook_page_id,
+                'label_metadata_structure_id' => 0,
+                'value_metadata_term_value_id' => 0,
+                'value_open' => '',
+                'flag_delete' => false,
+                'DB'=>$db_connection]);
+            return $npf;
+        }
         //------------------------------------------
 
         public function getNotebookPage() {

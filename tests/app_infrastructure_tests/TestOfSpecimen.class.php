@@ -23,7 +23,6 @@
             $this->assertTrue(in_array('user_id', Specimen::$fields));
             $this->assertTrue(in_array('link_to_type', Specimen::$fields));
             $this->assertTrue(in_array('link_to_id', Specimen::$fields));
-            $this->assertTrue(in_array('user_id', Specimen::$fields));
             $this->assertTrue(in_array('name', Specimen::$fields));
             $this->assertTrue(in_array('gps_longitude', Specimen::$fields));
             $this->assertTrue(in_array('gps_latitude', Specimen::$fields));
@@ -57,6 +56,52 @@
             $this->assertEqual(8003,$sall[1]->specimen_id);
             $this->assertEqual(8002,$sall[2]->specimen_id);
             $this->assertEqual(8004,$sall[3]->specimen_id);
+        }
+
+        function testCreateNewSpecimenForNotebookPage() {
+            global $USER;
+            $USER = User::getOneFromDb(['username'=>TESTINGUSER], $this->DB);
+
+            $s = Specimen::createNewSpecimenForNotebookPage(1101,$this->DB);
+
+            $this->assertEqual('NEW',$s->specimen_id);
+            $this->assertNotEqual('',$s->created_at);
+            $this->assertNotEqual('',$s->updated_at);
+            $this->assertEqual($USER->user_id,$s->user_id);
+            $this->assertEqual('notebook_page',$s->link_to_type);
+            $this->assertEqual(1101,$s->link_to_id);
+            $this->assertEqual(util_lang('new_specimen_name'),$s->name);
+            $this->assertEqual(0,$s->gps_longitude);
+            $this->assertEqual(0,$s->gps_latitude);
+            $this->assertEqual(util_lang('new_specimen_notes'),$s->notes);
+            $this->assertEqual(0,$s->ordering);
+            $this->assertEqual('',$s->catalog_identifier);
+            $this->assertEqual(0,$s->flag_workflow_published);
+            $this->assertEqual(0,$s->flag_workflow_validated);
+            $this->assertEqual(false,$s->flag_delete);
+        }
+
+        function testCreateNewSpecimenForAuthoritativePlant() {
+            global $USER;
+            $USER = User::getOneFromDb(['username'=>TESTINGUSER], $this->DB);
+
+            $s = Specimen::createNewSpecimenForAuthoritativePlant(5001,$this->DB);
+
+            $this->assertEqual('NEW',$s->specimen_id);
+            $this->assertNotEqual('',$s->created_at);
+            $this->assertNotEqual('',$s->updated_at);
+            $this->assertEqual($USER->user_id,$s->user_id);
+            $this->assertEqual('authoritative_plant',$s->link_to_type);
+            $this->assertEqual(5001,$s->link_to_id);
+            $this->assertEqual(util_lang('new_specimen_name'),$s->name);
+            $this->assertEqual(0,$s->gps_longitude);
+            $this->assertEqual(0,$s->gps_latitude);
+            $this->assertEqual(util_lang('new_specimen_notes'),$s->notes);
+            $this->assertEqual(0,$s->ordering);
+            $this->assertEqual('',$s->catalog_identifier);
+            $this->assertEqual(0,$s->flag_workflow_published);
+            $this->assertEqual(0,$s->flag_workflow_validated);
+            $this->assertEqual(false,$s->flag_delete);
         }
 
         //// instance methods - object itself
@@ -266,7 +311,8 @@
 
             $this->assertEqual('sci quad authoritative',$s->name);
 
-            $s->updateFromArray($new_vals_ar);
+            $s->setFromArray($new_vals_ar);
+            $s->updateDb();
 
             $s2 = Specimen::getOneFromDb(['specimen_id'=>8001],$this->DB);
 

@@ -557,7 +557,7 @@
             return $this->fieldValues[static::$primaryKeyField];
         }
 
-        public function updateFromArray($vals_ar) {
+        public function setFromArray($vals_ar) {
 //            util_prePrintR($vals_ar);
 
             foreach (static::$fields as $field_name) {
@@ -574,7 +574,7 @@
                 }
             }
 
-            $this->updateDb();
+//            $this->updateDb();
 //            util_prePrintR('DB updated');
         }
 

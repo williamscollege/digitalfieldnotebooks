@@ -40,6 +40,19 @@
             $this->assertEqual(1205,$pfs[4]->notebook_page_field_id);
         }
 
+        function testCreateNewNotebookPageFieldForNotebookPage() {
+            $npf = Notebook_Page_Field::createNewNotebookPageFieldForNotebookPage(1101,$this->DB);
+
+            $this->assertEqual('NEW',$npf->notebook_page_field_id);
+            $this->assertNotEqual('',$npf->created_at);
+            $this->assertNotEqual('',$npf->updated_at);
+            $this->assertEqual(1101,$npf->notebook_page_id);
+            $this->assertEqual(0,$npf->label_metadata_structure_id);
+            $this->assertEqual(0,$npf->value_metadata_term_value_id);
+            $this->assertEqual('',$npf->value_open);
+            $this->assertEqual(false,$npf->flag_delete);
+        }
+
         //// instance methods - related data
 
         function testGetNotebookPage() {
