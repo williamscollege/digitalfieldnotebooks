@@ -188,6 +188,7 @@
   <span class="published_state">'.util_lang('published_false').'</span>, <span class="verified_state">'.util_lang('verified_false').'</span><br/>
   <div class="notebook_page_notes">testing notebook page the first in testnotebook1, owned by user 101</div>
   '.$ap->renderAsViewEmbed().'
+  <h4>'.ucfirst(util_lang('metadata')).'</h4>
   <ul class="notebook_page_fields">
 ';
             foreach ($np->page_fields as $pf) {
@@ -231,12 +232,14 @@
 
 //            $this->todo('add canonical code for how to handle authoritative plant selection');
 
-            $canonical = '<h4>'.util_lang('page_in_notebook','ucfirst').' <a href="'.APP_ROOT_PATH.'/app_code/notebook.php?action=view&notebook_id='.$n->notebook_id.'" id="parent-notebook-link">'.htmlentities($n->name).'</a></h4>
+//            <h3 class="notebook_page_title">'.$n->renderAsLink().': '.$ap->renderAsShortText().'</h3>
+
+                $canonical = '<h4>'.util_lang('page_in_notebook','ucfirst').' <a href="'.APP_ROOT_PATH.'/app_code/notebook.php?action=view&notebook_id='.$n->notebook_id.'" id="parent-notebook-link">'.htmlentities($n->name).'</a></h4>
 <div id="rendered_notebook_page_1101" class="rendered_notebook_page" '.$np->fieldsAsDataAttribs().' data-can-edit="1">
 <form id="form-edit-notebook-page-base-data" action="'.APP_ROOT_PATH.'/app_code/notebook_page.php">
   <input type="hidden" name="action" value="update"/>
   <input type="hidden" name="notebook_page_id" value="'.$np->notebook_page_id.'"/>
-  <h3 class="notebook_page_title">'.$n->renderAsLink().': '.$ap->renderAsShortText().'</h3>
+  <h3 class="notebook_page_title">'.$ap->renderAsShortText().'</h3>
   <span class="select_new_authoritative_plant">'.Authoritative_Plant::renderControlSelectAllAuthoritativePlants($ap->authoritative_plant_id).'</span>
   <span class="created_at">'.util_lang('created_at').' '.util_datetimeFormatted($np->created_at).'</span>, <span class="updated_at">'.util_lang('updated_at').' '.util_datetimeFormatted($np->updated_at).'</span><br/>
   <span class="owner">'.util_lang('owned_by').' <a href="'.APP_ROOT_PATH.'/app_code/user.php?action=view&user_id=101">'.htmlentities($USER->screen_name).'</a></span><br/>
@@ -245,6 +248,7 @@
   <input id="edit-submit-control" class="btn" type="submit" name="edit-submit-control" value="'.util_lang('update','properize').'"/>
   <a id="edit-cancel-control" class="btn" href="'.APP_ROOT_PATH.'/app_code/notebook_page.php?action=view&notebook_page_id='.$np->notebook_page_id.'">'.util_lang('cancel','properize').'</a>
   '.$ap->renderAsViewEmbed().'
+  <h4>'.ucfirst(util_lang('metadata')).'</h4>
   <ul class="notebook_page_fields">
 ';
 //            $this->todo('refine canonical code for new page field button / action');

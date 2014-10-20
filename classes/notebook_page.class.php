@@ -117,6 +117,7 @@
     .'</span><br/>'."\n".
 '  <div class="notebook_page_notes">'.htmlentities($this->notes)."</div>\n".
 '  '.$ap->renderAsViewEmbed()."\n".
+'  <h4>'.ucfirst(util_lang('metadata'))."</h4>\n".
 '  <ul class="notebook_page_fields">'."\n";
             foreach ($this->page_fields as $pf) {
                 $rendered .= '    '.$pf->renderAsListItem()."\n";
@@ -164,7 +165,8 @@
                 '  <input type="hidden" name="action" value="update"/>'."\n".
                 '  <input type="hidden" name="notebook_page_id" value="'.$this->notebook_page_id.'"/>'."\n".
 
-                '  <h3 class="notebook_page_title">'.$n->renderAsLink().': '.(($this->notebook_page_id != 'NEW') ? $ap->renderAsShortText() : util_lang('new_notebook_page_label'))."</h3>\n".
+//                '  <h3 class="notebook_page_title">'.$n->renderAsLink().': '.(($this->notebook_page_id != 'NEW') ? $ap->renderAsShortText() : util_lang('new_notebook_page_label'))."</h3>\n".
+                '  <h3 class="notebook_page_title">'.(($this->notebook_page_id != 'NEW') ? $ap->renderAsShortText() : util_lang('new_notebook_page_label'))."</h3>\n".
                 '  <span class="select_new_authoritative_plant">'.Authoritative_Plant::renderControlSelectAllAuthoritativePlants((($this->notebook_page_id != 'NEW') ? $ap->authoritative_plant_id : 0)).'</span>'."\n".
 
                 '  <span class="created_at">'.util_lang('created_at').' '.util_datetimeFormatted($this->created_at).'</span>, <span class="updated_at">'.util_lang('updated_at').' '.util_datetimeFormatted($this->updated_at)."</span><br/>\n".
@@ -202,6 +204,7 @@
             if ($this->notebook_page_id != 'NEW') {
                 $rendered .= '  '.$ap->renderAsViewEmbed()."\n";
 
+                $rendered .= '  <h4>'.ucfirst(util_lang('metadata'))."</h4>\n";
                 $rendered .= '  <ul class="notebook_page_fields">'."\n";
     //            $rendered .= $add_field_button_li;
 

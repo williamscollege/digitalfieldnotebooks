@@ -13,11 +13,34 @@ $(document).ready(function () {
         var base_id = $(this).attr("id");
 //        alert("'called metadataStructureSelectionHandler on " + base_id);
         var target_id = base_id.replace("label_metadata_structure_id","value_metadata_term_value_id");
-        $("#"+target_id).css("background","#f00");
 
         var structure_id = $(this).val();
 
-        alert("TODO: update options for "+target_id+" based on structure "+structure_id);
+        $("#"+target_id).prop("disabled", true);
+
+        $.ajax({
+            url: appRootPath()+"/ajax_actions/metadata_structure.php",
+            data: {
+                "action": "value_options",
+                "metadata_structure_id": structure_id
+            },
+            dataType: "json",
+            error: function(req,textStatus,err){
+                alert("error making ajax request: "+err.toString());
+                console.dir(req);
+            },
+            success: function(data,textStatus,req) {
+//               alert("ajax success: "+data.html_output);
+                if (data.status == 'success') {
+                    $("#"+target_id).html(data.html_output);
+                } else {
+                    dfnUtil_setTransientAlert("error",data.status+": "+data.note,$(this));
+                }
+            },
+            complete: function(req,textStatus) {
+                $("#"+target_id).prop("disabled", false);
+            }
+        });
     }
 
     $("#add_new_notebook_page_field_button").click(function(evt) {

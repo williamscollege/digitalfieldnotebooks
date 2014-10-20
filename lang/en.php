@@ -106,7 +106,8 @@ $LANGUAGE['en'] = [
     'all_metadata' => 'metadata structures',
     'metadata_no_children_no_values' => 'This metadata has neither values nor children - it needs to be edited',
     'new_metadata_structure' => 'new kind of metadata',
-    'metadata_structure_has_no_term_set' => 'This metadata has no terms - free/open text only',
+    'metadata_structure_has_no_term_set' => 'No specific terms - free/open text only',
+    'msg_missing_metadata_structure' => 'The metadata structure is missing',
 
     'all_metadata_term_sets' => 'metadata value sets',
     'metadata_term_set' => 'metadata value set',

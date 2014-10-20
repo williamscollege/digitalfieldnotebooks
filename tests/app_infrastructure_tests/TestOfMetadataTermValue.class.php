@@ -186,7 +186,7 @@
 
             //--------------------------
 
-            $canonical_not_selected = '<option data-metadata_term_value_id="'.$mdtv->metadata_term_value_id.'" data-description="'.htmlentities($mdtv->description).'" data-ARRAY_metadata_reference_ids="'.implode(',',Db_Linked::arrayOfAttrValues($mdtv->references,'metadata_reference_id')).'" value="'.$mdtv->metadata_term_value_id.'">'.htmlentities($mdtv->name).'</option>';
+            $canonical_not_selected = '<option data-metadata_term_value_id="'.$mdtv->metadata_term_value_id.'" data-description="'.htmlentities($mdtv->description).'" data-ARRAY_metadata_reference_ids="'.implode(',',Db_Linked::arrayOfAttrValues($mdtv->references,'metadata_reference_id')).'" title="'.htmlentities($mdtv->description).'" value="'.$mdtv->metadata_term_value_id.'">'.htmlentities($mdtv->name).'</option>';
 
             $rendered = $mdtv->renderAsOption();
 
@@ -197,7 +197,7 @@
 
             //--------------------------
 
-            $canonical_selected = '<option data-metadata_term_value_id="'.$mdtv->metadata_term_value_id.'" data-description="'.htmlentities($mdtv->description).'" data-ARRAY_metadata_reference_ids="'.implode(',',Db_Linked::arrayOfAttrValues($mdtv->references,'metadata_reference_id')).'" value="'.$mdtv->metadata_term_value_id.'" selected="selected">'.htmlentities($mdtv->name).'</option>';
+            $canonical_selected = '<option data-metadata_term_value_id="'.$mdtv->metadata_term_value_id.'" data-description="'.htmlentities($mdtv->description).'" data-ARRAY_metadata_reference_ids="'.implode(',',Db_Linked::arrayOfAttrValues($mdtv->references,'metadata_reference_id')).'" title="'.htmlentities($mdtv->description).'" value="'.$mdtv->metadata_term_value_id.'" selected="selected">'.htmlentities($mdtv->name).'</option>';
 
             $rendered = $mdtv->renderAsOption(true);
 

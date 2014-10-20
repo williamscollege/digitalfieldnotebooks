@@ -78,7 +78,7 @@
         public function renderAsOption($flag_is_selected=false) {
             $this->cacheReferences();
 
-            $rendered = '<option data-metadata_term_value_id="'.$this->metadata_term_value_id.'" data-description="'.htmlentities($this->description).'" data-ARRAY_metadata_reference_ids="'.implode(',',Db_Linked::arrayOfAttrValues($this->references,'metadata_reference_id')).'" value="'.$this->metadata_term_value_id.'"'.($flag_is_selected ? ' selected="selected"' : '').'>'.htmlentities($this->name).'</option>';
+            $rendered = '<option data-metadata_term_value_id="'.$this->metadata_term_value_id.'" data-description="'.htmlentities($this->description).'" data-ARRAY_metadata_reference_ids="'.implode(',',Db_Linked::arrayOfAttrValues($this->references,'metadata_reference_id')).'" title="'.htmlentities($this->description).'" value="'.$this->metadata_term_value_id.'"'.($flag_is_selected ? ' selected="selected"' : '').'>'.htmlentities($this->name).'</option>';
 
             return $rendered;
         }
