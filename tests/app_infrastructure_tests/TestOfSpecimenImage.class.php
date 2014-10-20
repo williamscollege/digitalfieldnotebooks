@@ -110,7 +110,7 @@
             $canonical .= $si->renderAsHtml();
             $canonical .= '<div class="controls">';
             // publish, verify, reordering handle
-            $canonical .= '<span class="control-publish"><input id="specimen_image-flag_workflow_published_8103-control" type="checkbox" name="specimen_image-flag_workflow_published_8103" value="1" /> '.util_lang('publish').'</span>';
+            $canonical .= '<span class="control-publish"><input id="specimen_image-flag_workflow_published_8103-control" type="checkbox" name="specimen_image-flag_workflow_published_8103" value="1" /> '.util_lang('publish').'</span>, ';
             $canonical .= '<span class="control-verify">'.util_lang('verified').'</span>';
             $canonical .= '<span class="ordering-handle">&lt; &gt;</span>';
             $canonical .= '</div>';

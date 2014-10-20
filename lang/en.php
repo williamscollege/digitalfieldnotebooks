@@ -16,6 +16,7 @@ $LANGUAGE['en'] = [
     'home' => 'home',
     'go_to' => 'go to....',
     'search' => 'search',
+    'prompt_select' => '-- choose from the list --',
 
     'msg_do_sign_in' => 'Please sign in.',
     'msg_failed_sign_in' => 'Sign in failed.',

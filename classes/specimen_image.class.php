@@ -78,10 +78,10 @@
             if ($this->specimen_image_id != 'NEW') {
                 if ($USER->canActOnTarget('publish',$this)) {
                     $li_elt .= '<span class="control-publish"><input id="flag_workflow_published_'.$this->specimen_image_id.'-control" type="checkbox" name="flag_workflow_published" value="1"'.($this->flag_workflow_published ?  ' checked="checked"' : '').' /> '
-                        .util_lang('publish').'</span>';
+                        .util_lang('publish').'</span>, ';
                 } else {
                     $li_elt .= '<span class="control-publish">'.($this->flag_workflow_published ? util_lang('published_true') : util_lang('published_false'))
-                        .'</span>';
+                        .'</span>, ';
                 }
 
                 if ($USER->canActOnTarget('verify',$this)) {

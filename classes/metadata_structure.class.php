@@ -76,6 +76,7 @@
             usort($all_mds,'Metadata_Structure::cmp');
 
             $rendered = '<select name="'.$unique_id.'" id="'.$unique_id.'" class="metadata_structure_selector">'."\n";
+            $rendered .= '<option value="-1">'.util_lang('prompt_select').'</option>'."\n";
             foreach ($all_mds as $mds) {
                 $rendered .= $mds->renderAsOptionTree('',$default_selected);
             }

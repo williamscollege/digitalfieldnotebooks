@@ -18,7 +18,7 @@
 	<!-- <link rel="stylesheet" href="--><?php //echo PATH_BOOTSTRAP_RESPONSIVE_CSS; ?><!--" type="text/css"> -->
 	<!-- CSS: Plugins -->
 	<link rel="stylesheet" href="<?php echo PATH_JQUERYUI_CSS; ?>" />
-	<link rel="stylesheet" href="css/WMS_bootstrap_PATCH.css" type="text/css" media="all">
+	<link rel="stylesheet" href="<?php echo APP_ROOT_PATH; ?>/css/WMS_bootstrap_PATCH.css" type="text/css" media="all">
 	<!-- jQuery: Framework -->
 	<script src="<?php echo PATH_JQUERY_JS; ?>"></script>
 	<script src="<?php echo PATH_JQUERYUI_JS; ?>"></script>
@@ -26,7 +26,7 @@
 	<script src="<?php echo PATH_BOOTSTRAP_JS; ?>"></script>
 	<script src="<?php echo PATH_BOOTSTRAP_BOOTBOX_JS; ?>"></script>
 	<!-- local JS -->
-	<script src="js/digitalfieldnotebooks_util.js"></script>
+	<script src="/digitalfieldnotebooks/js/digitalfieldnotebooks_util.js"></script>
 </head>
 <body>
 

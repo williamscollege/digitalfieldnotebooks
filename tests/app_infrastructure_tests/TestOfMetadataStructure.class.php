@@ -59,6 +59,7 @@
 
             // no default selected
             $canonical = '<select name="ABC123_metadata_structure_id" id="ABC123_metadata_structure_id" class="metadata_structure_selector">'."\n";
+            $canonical .= '<option value="-1">'.util_lang('prompt_select').'</option>'."\n";
             $canonical .= '<option value="6004" title="info about the individual leaves of the plant" data-details="details">leaf</option>'."\n";
             $canonical .= '<option value="6001" title="info about the flower" data-details="">flower</option>'."\n";
             $canonical .= '<option value="6002" title="the size of the flower in its largest dimension" data-details="some details">- flower size</option>'."\n";
@@ -74,6 +75,7 @@
 
             // default selected
             $canonical = '<select name="ABC123_metadata_structure_id" id="ABC123_metadata_structure_id" class="metadata_structure_selector">'."\n";
+            $canonical .= '<option value="-1">'.util_lang('prompt_select').'</option>'."\n";
             $canonical .= '<option value="6004" title="info about the individual leaves of the plant" data-details="details">leaf</option>'."\n";
             $canonical .= '<option value="6001" title="info about the flower" data-details="">flower</option>'."\n";
             $canonical .= '<option value="6002" title="the size of the flower in its largest dimension" data-details="some details" selected="selected">- flower size</option>'."\n";

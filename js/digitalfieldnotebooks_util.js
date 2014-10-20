@@ -1,7 +1,12 @@
 /* This function causes an alert to be displayed on the page. If the alert is of type success or error then it will fade away in a few seconds
 REQUIRES: a div of id page_alert
  */
-function eqrUtil_setTransientAlert(alertType,alertMessage,optionalReferenceElt) {
+
+function appRootPath() {
+    return "/digitalfieldnotebooks";
+}
+
+function dfnUtil_setTransientAlert(alertType,alertMessage,optionalReferenceElt) {
     if (optionalReferenceElt !== undefined) {
         $('#page_alert').css('top', optionalReferenceElt.position().top);
         $('#page_alert').css('left', optionalReferenceElt.position().left*1 + optionalReferenceElt.css('width')*1 + 100);
@@ -30,6 +35,7 @@ function eqrUtil_setTransientAlert(alertType,alertMessage,optionalReferenceElt) 
         //alert('success ta');
     }
     else if (alertType == 'error') {
+//        console.log("alert position top is "+$('#page_alert').css("top"));
         $('#page_alert').css("display",'block');
         $('#page_alert').html('<i class="icon-exclamation-sign"></i> '+alertMessage);
         $('#page_alert').addClass("error_alert");
@@ -44,7 +50,7 @@ $(document).ready(function () {
 });
 
 
-function eqrUtil_launchConfirm(msg,handler) {
+function dfnUtil_launchConfirm(msg,handler) {
     $('#confirmModal .modal-body').html(msg);
 //    $('#confirmModal').modal({show:'true', backdrop:'static'});
     $('#confirmModal').modal({show:'true'});
