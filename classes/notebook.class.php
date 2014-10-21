@@ -210,7 +210,7 @@
                         .'</span>';
                 }
             }
-            $rendered .= '</div>';
+            $rendered .= "</div>\n";
 
             $rendered .= '  <div class="notebook_notes"><textarea id="notebook-notes" name="notes" rows="4" cols="120">'.htmlentities($this->notes).'</textarea></div>'."\n";
 

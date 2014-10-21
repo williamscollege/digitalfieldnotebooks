@@ -71,7 +71,7 @@ $(document).ready(function () {
            success: function(data,textStatus,req) {
 //               alert("ajax success: "+data.html_output);
                 if (data.status == 'success') {
-                    var new_li = '<li>'+data.html_output+'</li>';
+                    var new_li = '<li class="list-item-new-page-field">'+data.html_output+'</li>';
                     $("#add_new_notebook_page_field_button").parent().after(new_li);
                     var created_ids = $("#created_page_field_ids").attr("value");
                     if (created_ids.length > 0) {

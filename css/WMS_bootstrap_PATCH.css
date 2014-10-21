@@ -105,6 +105,16 @@ a.show-hide-control {
     font-size: 18px;
     line-height: 30px;
 }
+.embedded h3 input {
+    margin-bottom: 0 !important;
+    font-size: 18px !important;
+    height: 30px !important;
+    width: 300px;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    margin-top: -2px !important;
+}
+
 
 .embedded img {
     max-width: 180px;
@@ -198,6 +208,18 @@ h3 input {
     display: inline-block;
 }
 
+.field-value select,
+.field-value input {
+    margin-bottom: 0 !important;
+    margin-top: -2px !important;
+}
+
+.field-value textarea {
+    margin-bottom: 0 !important;
+    margin-top: -2px !important;
+    vertical-align: top !important;
+}
+
 /***********************************************************************************/
 /* notebooks */
 
@@ -229,21 +251,92 @@ ul#list-of-user-notebooks li {
 /***********************************************************************************/
 /* notebook pages */
 
-.notebook-page-notes {
+.rendered_notebook_page .notebook-page-notes {
     margin-top: 10px;
     margin-bottom: 20px;
 }
 
-.notebook-page-fields {
+.rendered_notebook_page .notebook-page-fields {
     margin-top: 10px;
     list-style-type: none;
+    margin-bottom: 20px;
 }
 
-.notebook-page-fields li.spacing-list-item {
+.rendered_notebook_page .notebook-page-fields li {
+    min-height: 25px;
+}
+
+.rendered_notebook_page .notebook-page-fields li.spacing-list-item {
     margin-top: 4px;
 }
-.notebook-page-fields li .open-value {
+
+.rendered_notebook_page .notebook-page-fields li .open-value {
     font-style: italic;
+}
+
+.rendered_notebook_page .specimens,
+.rendered_notebook_page .specimens .base-info,
+.rendered_notebook_page .specimens .specimen-images {
+    list-style-type: none;
+    margin-bottom: 10px;
+}
+
+.edit_rendered_notebook_page .specimens .specimen-images li:first-of-type {
+    vertical-align: top;
+}
+
+.rendered_notebook_page .specimens .base-info li {
+    margin-top: 4px;
+    margin-bottom: 2px;
+}
+
+.rendered_notebook_page .specimens {
+    margin-top: 12px;
+}
+
+.rendered_notebook_page .select_new_authoritative_plant {
+    display: none;
+}
+
+.edit_rendered_notebook_page #notebook-page-notes {
+    width: 540px;
+}
+
+.edit_rendered_notebook_page .notebook-page-fields li {
+    min-height: 35px;
+}
+
+.edit_rendered_notebook_page .notebook-page-fields li.spacing-list-item {
+    margin-top: 8px;
+}
+
+.edit_rendered_notebook_page .specimens .base-info li {
+    margin-bottom: 6px;
+}
+
+.edit_rendered_notebook_page .specimens .base-info li .specimen-notes {
+    width: 434px;
+}
+
+.edit_rendered_notebook_page li.list-item-new-page-field {
+    margin-top: 6px;
+    margin-bottom: 10px;
+}
+
+.edit_rendered_notebook_page .list-item-new-page-field {
+    display: inline-block;
+    margin-right: 6px;
+}
+
+.edit_rendered_notebook_page .new-notebook-field-data {
+    display: inline-block;
+    margin-right: 6px;
+}
+
+.edit_rendered_notebook_page .new-notebook-field-data .form-field-label {
+    font-size: 12px;
+    font-weight: bold;
+    margin-left: 2px;
 }
 
 /***********************************************************************************/

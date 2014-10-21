@@ -100,6 +100,7 @@ $LANGUAGE['en'] = [
     'authoritative_plants' => 'authoritative plants',
     'authoritative_plant' => 'authoritative plant',
     'extra_info' => 'additional information',
+    'change_authoritative_plant' => 'select or change the plant',
 
     'coordinates' => 'coordinates',
     'longitude' => 'longitude',

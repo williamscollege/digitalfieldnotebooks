@@ -93,7 +93,7 @@
                 }
             }
 
-            $li_elt .= '<span class="ordering-handle">&lt; &gt;</span>';
+//            $li_elt .= '<span class="ordering-handle">&lt; &gt;</span>';
             $li_elt .= '</div>';
 
             $li_elt .= '</li>';
