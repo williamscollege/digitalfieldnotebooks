@@ -44,18 +44,24 @@
 		}
 
         // returns: a very basic HTML representation of the user
-        public function renderMinimal() {
-            return '<div class="rendered-object user-render user-render-minimal user-render-'.$this->user_id.'" data-for-user="'.$this->user_id.'">'.$this->screen_name.'</div>';
+        public function renderMinimal($flag_linked=false) {
+
+            $enclosed = htmlentities($this->screen_name);
+            if ($flag_linked) {
+                $enclosed = '<a href="'.APP_ROOT_PATH.'/app_code/user.php?user_id='.$this->user_id.'">'.$enclosed.'</a>';
+            }
+
+            return '<div class="rendered-object user-render user-render-minimal user-render-'.$this->user_id.'" data-for-user="'.$this->user_id.'" data-user_screen_name="'.htmlentities($this->screen_name).'">'.$enclosed.'</div>';
         }
 
         // returns: an HTML representation of the user with a little extra info available as a mouse-over
-        public function render() {
-            return '<div class="rendered-object user-render user-render-minimal user-render-'.$this->user_id.'" data-for-user="'.$this->user_id.'">'.$this->screen_name.'</div>';
+        public function render($flag_linked=false) {
+            return '<div class="rendered-object user-render user-render-minimal user-render-'.$this->user_id.'" data-for-user="'.$this->user_id.'" data-user_screen_name="'.htmlentities($this->screen_name).'">'.$this->screen_name.'</div>';
         }
 
         // returns: an HTML representation of the user with detailed extra info available in a subsidiary div (so it can be controlled via css
-        public function renderRich() {
-            $info = '<div class="rendered-object user-render user-render-minimal user-render-'.$this->user_id.'" data-for-user="'.$this->user_id.'">'.$this->screen_name.'</div>';
+        public function renderRich($flag_linked=false) {
+            $info = '<div class="rendered-object user-render user-render-minimal user-render-'.$this->user_id.'" data-for-user="'.$this->user_id.'" data-user_screen_name="'.htmlentities($this->screen_name).'">'.$this->screen_name.'</div>';
 
             return $info;
         }

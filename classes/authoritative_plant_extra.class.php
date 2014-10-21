@@ -36,7 +36,7 @@
             $rendered = 'UNKNOWN TYPE';
 
             if ($this->type == 'common name') {
-                $rendered = "<span class=\"field-value taxonomy taxonomy-common-name\">\"".htmlentities($this->value)."\"</span>";
+                $rendered = "<div class=\"field-label\">".util_lang('common_name')." : </div><div class=\"field-value taxonomy taxonomy-common-name\">\"".htmlentities($this->value)."\"</div>";
             } elseif ($this->type == 'image') {
                 if (preg_match('/^http/i',$this->value)) {
                     // NOTE: external references are NOT sanitized! That is beyond the security scope of this app (i.e. only pre-trusted users have data entry privs)

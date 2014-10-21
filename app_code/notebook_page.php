@@ -113,9 +113,17 @@
                 $npf = Notebook_Page_Field::getOneFromDb(['notebook_page_field_id'=>$notebook_page_field_id],$DB);
                 if ($npf->matchesDb) {
                     $new_npf_vals = [
-                        'notebook_page_field-value_metadata_term_value_id_'.$notebook_page_field_id =>$_REQUEST['page_field_select_'.$notebook_page_field_id],
                         'notebook_page_field-value_open_'.$notebook_page_field_id =>$_REQUEST['page_field_open_value_'.$notebook_page_field_id]
                     ];
+                    if (isset($_REQUEST['page_field_select_'.$notebook_page_field_id])) {
+                        $new_term_value_id = $_REQUEST['page_field_select_'.$notebook_page_field_id];
+                        if ($new_term_value_id < 1) {
+                            $new_term_value_id = 0;
+                        }
+                        $new_npf_vals = [
+                            'notebook_page_field-value_metadata_term_value_id_'.$notebook_page_field_id =>$new_term_value_id,
+                        ];
+                    }
                     $npf->setFromArray($new_npf_vals);
                     $npf->updateDb();
                 }
@@ -126,11 +134,13 @@
         foreach ($created_notebook_page_field_ids as $created_page_field_id) {
 //            echo "TO BE IMPLEMENTED: handle creation of new notebook page fields";
             if ($created_page_field_id) {
+//                echo "handling page field creation for $created_page_field_id<br/>\n";
+//                util_prePrintR($_REQUEST);
                 $new_npf = Notebook_Page_Field::createNewNotebookPageFieldForNotebookPage($notebook_page->notebook_page_id,$DB);
-                $new_npf->notebook_page_id = $created_page_field_id;
+                $new_npf->notebook_page_field_id = $created_page_field_id;
                 $new_npf->setFromArray($_REQUEST);
                 if ($new_npf->label_metadata_structure_id != 0) {
-                    $new_npf->notebook_page_id = 'NEW';
+                    $new_npf->notebook_page_field_id = 'NEW';
                     $new_npf->updateDb();
                 }
             }

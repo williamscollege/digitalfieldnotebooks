@@ -65,21 +65,35 @@
         public function renderAsListItem($idstr='',$classes_array = [],$other_attribs_hash = []) {
             global $USER,$ACTIONS;
             $actions_attribs = '';
+            $is_editable = false;
+
+            $owner = $USER;
 
             if ($USER->user_id == $this->user_id) {
                 array_push($classes_array,'owned-object');
                 $actions_attribs .= ' data-can-edit="1"';
+                $is_editable = true;
             } elseif ($USER->canActOnTarget($ACTIONS['edit'],$this)) {
+                array_push($classes_array,'editable-object');
                 $actions_attribs .= ' data-can-edit="1"';
+                $owner = $this->getUser();
+                $is_editable = true;
+            } else {
+                $owner = $this->getUser();
             }
             $li_elt = substr(util_listItemTag($idstr,$classes_array,$other_attribs_hash),0,-1);
             $li_elt .= ' '.$this->fieldsAsDataAttribs().$actions_attribs.'>';
-            $li_elt .= '<a href="'.APP_ROOT_PATH.'/app_code/notebook.php?notebook_id='.$this->notebook_id.'">'.htmlentities($this->name).'</a></li>';
+            $li_elt .= '<a href="'.APP_ROOT_PATH.'/app_code/notebook.php?notebook_id='.$this->notebook_id.'">'.htmlentities($this->name).'</a>';
+            if ($is_editable) {
+                $li_elt .= '<span class="icon-pencil"></span>';
+            }
+            $li_elt .= ' '.util_lang('attribution').' '.$owner->renderMinimal(true);
+            $li_elt .= '</li>';
             return $li_elt;
         }
 
         public function renderAsButtonEdit() {
-            $btn = '<a id="btn-edit" href="'.APP_ROOT_PATH.'/app_code/notebook.php?action=edit&notebook_id='.$this->notebook_id.'" class="edit_link btn" >'.util_lang('edit').'</a>';
+            $btn = '<a id="notebook-btn-edit-'.$this->notebook_id.'" href="'.APP_ROOT_PATH.'/app_code/notebook.php?action=edit&notebook_id='.$this->notebook_id.'" class="edit_link btn"><i class="icon-edit"></i> '.util_lang('edit').'</a>';
             return $btn;
         }
 
@@ -110,12 +124,12 @@
 
             $rendered = '<div id="rendered_notebook_'.$this->notebook_id.'" class="rendered_notebook" '.$this->fieldsAsDataAttribs().$actions_attribs.'>'."\n".
 '  <h3 class="notebook_title"><a href="'.APP_ROOT_PATH.'/app_code/notebook.php?action=list">'.ucfirst(util_lang('notebook')).'</a>: '.$this->name.'</h3>'."\n".
-'  <span class="created_at">'.util_lang('created_at').' '.util_datetimeFormatted($this->created_at).'</span>, <span class="updated_at">'.util_lang('updated_at').' '.util_datetimeFormatted($this->updated_at).'</span><br/>'."\n".
-'  <span class="owner">'.util_lang('owned_by').' <a href="'.APP_ROOT_PATH.'/app_code/user.php?action=view&user_id='.$notebook_owner->user_id.'">'.htmlentities($notebook_owner->screen_name).'</a></span><br/>'."\n".
-'  <span class="published_state">'.($this->flag_workflow_published ? util_lang('published_true') : util_lang('published_false'))
+'  <div class="info-timestamps"><span class="created_at">'.util_lang('created_at').' '.util_datetimeFormatted($this->created_at).'</span>, <span class="updated_at">'.util_lang('updated_at').' '.util_datetimeFormatted($this->updated_at).'</span></div>'."\n".
+'  <div class="info-owner">'.util_lang('owned_by').' <a href="'.APP_ROOT_PATH.'/app_code/user.php?action=view&user_id='.$notebook_owner->user_id.'">'.htmlentities($notebook_owner->screen_name).'</a></div>'."\n".
+'  <div class="info-workflow"><span class="published_state">'.($this->flag_workflow_published ? util_lang('published_true') : util_lang('published_false'))
                 .'</span>, <span class="verified_state">'.($this->flag_workflow_validated ? util_lang('verified_true') : util_lang('verified_false'))
-                .'</span><br/>'."\n".
-'  <div class="notebook_notes">'.htmlentities($this->notes).'</div>'."\n".
+                .'</span></div>'."\n".
+'  <div class="notebook-notes">'.htmlentities($this->notes).'</div>'."\n".
 '  <h4>'.ucfirst(util_lang('pages')).'</h4>'."\n".
 '  <ul id="list-of-notebook-pages" data-notebook-page-count="'.count($this->pages).'">'."\n";
             if (count($this->pages) > 0) {
@@ -160,41 +174,46 @@
             }
 
             $rendered = '<div id="edit_rendered_notebook_'.$this->notebook_id.'" class="edit_rendered_notebook" '.$this->fieldsAsDataAttribs().$actions_attribs.'>'."\n".
-                '<form action="'.APP_ROOT_PATH.'/app_code/notebook.php">'."\n".
-                '  <input type="hidden" name="action" value="update"/>'."\n".
+                '<form action="'.APP_ROOT_PATH.'/app_code/notebook.php">'."\n";
+
+            $rendered .= '<div id="actions">';
+            if ($this->notebook_id == 'NEW') {
+//                $rendered .= '  <input id="edit-submit-control" class="btn" type="submit" name="edit-submit-control" value="'.util_lang('save','properize').'"/>'."\n";
+                $rendered .= '  <button id="edit-submit-control" class="btn btn-success" type="submit" name="edit-submit-control"><i class="icon-ok-sign icon-white"></i> '.util_lang('save','properize').'</button>'."\n";
+                $rendered .= '  <a id="edit-cancel-control" class="btn" href="'.APP_ROOT_PATH.'/app_code/notebook.php?action=list"><i class="icon-remove"></i> '.util_lang('cancel','properize').'</a>'."\n";
+            } else {
+//                $rendered .= '  <input id="edit-submit-control" class="btn" type="submit" name="edit-submit-control" value="'.util_lang('update','properize').'"/>'."\n";
+                $rendered .= '  <button id="edit-submit-control" class="btn btn-success" type="submit" name="edit-submit-control"><i class="icon-ok-sign icon-white"></i> '.util_lang('update','properize').'</button>'."\n";
+                $rendered .= '  <a id="edit-cancel-control" class="btn" href="'.APP_ROOT_PATH.'/app_code/notebook.php?action=view&notebook_id='.$this->notebook_id.'"><i class="icon-remove"></i> '.util_lang('cancel','properize').'</a>'."\n";
+            }
+            $rendered .= '</div>';
+            $rendered .= '  <input type="hidden" name="action" value="update"/>'."\n".
                 '  <input type="hidden" name="notebook_id" value="'.$this->notebook_id.'"/>'."\n".
                 '  <h3 class="notebook_title">'.ucfirst(util_lang('notebook')).': <input id="notebook-name" type="text" name="name" value="'.$this->name.'"/></h3>'."\n".
-                '  <span class="created_at">'.util_lang('created_at').' '.util_datetimeFormatted($this->created_at).'</span>, <span class="updated_at">'.util_lang('updated_at').' '.util_datetimeFormatted($this->updated_at).'</span><br/>'."\n".
-                '  <span class="owner">'.util_lang('owned_by').' <a href="'.APP_ROOT_PATH.'/app_code/user.php?action=view&user_id='.$notebook_owner->user_id.'">'.htmlentities($notebook_owner->screen_name).'</a></span><br/>'."\n";
-
+                '  <div class="info-timestamps"><span class="created_at">'.util_lang('created_at').' '.util_datetimeFormatted($this->created_at).'</span>, <span class="updated_at">'.util_lang('updated_at').' '.util_datetimeFormatted($this->updated_at).'</span></div>'."\n".
+                '  <div class="info-owner">'.util_lang('owned_by').' <a href="'.APP_ROOT_PATH.'/app_code/user.php?action=view&user_id='.$notebook_owner->user_id.'">'.htmlentities($notebook_owner->screen_name).'</a></div>'."\n";
+            $rendered .= '<div class="control-workflows">';
             if ($this->notebook_id != 'NEW') {
                 if ($USER->canActOnTarget('publish',$this)) {
-                    $rendered .= '  <span class="published_state"><input id="notebook-workflow-publish-control" type="checkbox" name="flag_workflow_published" value="1"'.($this->flag_workflow_published ?  ' checked="checked"' : '').' /> '
+                    $rendered .= '  <span class="published_state workflow-control"><input id="notebook-workflow-publish-control" type="checkbox" name="flag_workflow_published" value="1"'.($this->flag_workflow_published ?  ' checked="checked"' : '').' /> '
                         .util_lang('publish').'</span>,';
                 } else {
-                    $rendered .= '  <span class="published_state">'.($this->flag_workflow_published ? util_lang('published_true') : util_lang('published_false'))
+                    $rendered .= '  <span class="published_state workflow-info">'.($this->flag_workflow_published ? util_lang('published_true') : util_lang('published_false'))
                         .'</span>,';
                 }
 
                 if ($USER->canActOnTarget('verify',$this)) {
-                    $rendered .= '  <span class="verified_state"><input id="notebook-workflow-validate-control" type="checkbox" name="flag_workflow_validated" value="1"'.($this->flag_workflow_validated ?  ' checked="checked"' : '').' /> '
+                    $rendered .= '  <span class="verified_state workflow-control"><input id="notebook-workflow-validate-control" type="checkbox" name="flag_workflow_validated" value="1"'.($this->flag_workflow_validated ?  ' checked="checked"' : '').' /> '
                         .util_lang('verify').'</span>';
                 } else {
-                    $rendered .= ' <span class="verified_state">'.($this->flag_workflow_validated ? util_lang('verified_true') : util_lang('verified_false'))
+                    $rendered .= ' <span class="verified_state workflow-info">'.($this->flag_workflow_validated ? util_lang('verified_true') : util_lang('verified_false'))
                         .'</span>';
                 }
-                $rendered .= '<br/>'."\n";
             }
+            $rendered .= '</div>';
 
             $rendered .= '  <div class="notebook_notes"><textarea id="notebook-notes" name="notes" rows="4" cols="120">'.htmlentities($this->notes).'</textarea></div>'."\n";
 
-            if ($this->notebook_id == 'NEW') {
-                $rendered .= '  <input id="edit-submit-control" class="btn" type="submit" name="edit-submit-control" value="'.util_lang('save','properize').'"/>'."\n";
-                $rendered .= '  <a id="edit-cancel-control" class="btn" href="'.APP_ROOT_PATH.'/app_code/notebook.php?action=list">'.util_lang('cancel','properize').'</a>'."\n";
-            } else {
-                $rendered .= '  <input id="edit-submit-control" class="btn" type="submit" name="edit-submit-control" value="'.util_lang('update','properize').'"/>'."\n";
-                $rendered .= '  <a id="edit-cancel-control" class="btn" href="'.APP_ROOT_PATH.'/app_code/notebook.php?action=view&notebook_id='.$this->notebook_id.'">'.util_lang('cancel','properize').'</a>'."\n";
-            }
             $rendered .= '</form>'."\n";
             if ($this->notebook_id == 'NEW') {
                 $rendered .=  '  <h4>'.ucfirst(util_lang('pages')).'</h4>'."\n".

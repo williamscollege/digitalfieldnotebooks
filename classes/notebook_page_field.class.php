@@ -21,14 +21,26 @@
 
 		public static function cmp($a, $b) {
             if ($a->notebook_page_id == $b->notebook_page_id) {
+
                 if ($a->label_metadata_structure_id == $b->label_metadata_structure_id) {
-                    if ($a-> value_metadata_term_value_id && $b->value_metadata_term_value_id) {
-                        return Metadata_Structure::cmp($a->getMetadataTermValue(),$b->getMetadataTermValue());
-                    } else {
+
+                    if (($a->value_metadata_term_value_id == 0) && ($b->value_metadata_term_value_id == 0)) {
                         return strcmp($a->value_open,$b->value_open);
                     }
+
+                    if ($a->value_metadata_term_value_id == 0) {
+                        return 1;
+                    }
+
+                    if ($b->value_metadata_term_value_id == 0) {
+                        return -1;
+                    }
+
+                    return Metadata_Structure::cmp($a->getMetadataTermValue(),$b->getMetadataTermValue());
                 }
+
                 return Metadata_Structure::cmp($a->getMetadataStructure(),$b->getMetadataStructure());
+
             }
             return Notebook_Page::cmp($a->getNotebookPage(),$b->getNotebookPage());
         }
@@ -91,7 +103,7 @@
             $li_elt .= ' '.$this->fieldsAsDataAttribs().'>';
 
             $mds = $this->getMetadataStructure();
-            $li_elt .= '<span class="notebook-page-field-label" title="'.htmlentities($mds->description).'">'.htmlentities($mds->name).'</span> : ';
+            $li_elt .= '<div class="notebook-page-field-label field-label" title="'.htmlentities($mds->description).'">'.htmlentities($mds->name).'</div> : ';
 
             $val_title = '';
             $val_name = '';
@@ -107,7 +119,7 @@
                     $val_open = '; '.$val_open;
                 }
             }
-            $li_elt .= '<span class="notebook-page-field-value"'.$val_title.'>'.$val_name.$val_open.'</span>';
+            $li_elt .= '<div class="notebook-page-field-value field-value"'.$val_title.'>'.$val_name.$val_open.'</div>';
 
             $li_elt .= '</li>';
             return $li_elt;

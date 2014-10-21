@@ -47,6 +47,11 @@ function dfnUtil_setTransientAlert(alertType,alertMessage,optionalReferenceElt) 
 // NOTE: could put this directly in the HTML or in a footer file or some such, but doing it here consolidates the code
 $(document).ready(function () {
     $('body').append('<div id="page_alert" class="transient_alert in_progress_alert hide alert">Saved</div>');
+
+    $('.show-hide-control').click(function() {
+        var target_id = $(this).attr("data-for_elt_id");
+        $("#"+target_id).toggle('display');
+    });
 });
 
 

@@ -377,3 +377,19 @@
         if (! is_numeric($zoom)) { return util_lang('zoom_level').' '.util_lang('invalid_value'); }
         return "http://maps.google.com/maps?q=$latitude,$longitude+(point)&z=$zoom&ll=$latitude,$longitude";
     }
+
+    function util_startsWith($haystack, $needle)
+    {
+        $length = strlen($needle);
+        return (substr($haystack, 0, $length) === $needle);
+    }
+
+    function util_endsWith($haystack, $needle)
+    {
+        $length = strlen($needle);
+        if ($length == 0) {
+            return true;
+        }
+
+        return (substr($haystack, -$length) === $needle);
+    }

@@ -566,8 +566,14 @@
 
                 if (array_key_exists($new_val_key,$vals_ar)) {
 //                    util_prePrintR('matched');
-                    if ($this->fieldValues[$field_name] != $vals_ar[$new_val_key]) {
-                        $this->fieldValues[$field_name] = $vals_ar[$new_val_key];
+                    $new_val = $vals_ar[$new_val_key];
+                    if (util_endsWith($field_name,"_id")) {
+                        if ($new_val < 1) {
+                            $new_val = 0;
+                        }
+                    }
+                    if ($this->fieldValues[$field_name] != $new_val) {
+                        $this->fieldValues[$field_name] = $new_val;
                         $this->matchesDb = FALSE;
 //                        util_prePrintR('object updated');
                     }

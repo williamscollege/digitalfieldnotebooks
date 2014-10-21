@@ -53,11 +53,11 @@
 <!--        <input type="button" id="btn-add-notebook" value="<?php echo util_lang('add_notebook'); ?>"/>--><?php
 //    }
 ?><hr/>
-    <ul class="splash-links">
-        <li><a id="notebooks-splash-link" class="splash-link btn" href="<?php echo APP_ROOT_PATH; ?>/app_code/notebook.php?action=list"><?php echo ucfirst(util_lang('notebooks')); ?></a></li>
-        <li><a id="plants-splash-link" class="splash-link btn" href="<?php echo APP_ROOT_PATH; ?>/app_code/authoritative_plant.php?action=list"><?php echo ucfirst(util_lang('plants')); ?></a></li>
-        <li><a id="metadata-structures-splash-link" class="splash-link btn" href="<?php echo APP_ROOT_PATH; ?>/app_code/metadata_structure.php?action=list"><?php echo ucfirst(util_lang('all_metadata')); ?></a></li>
-        <li><a id="metadata-term-sets-splash-link" class="splash-link btn" href="<?php echo APP_ROOT_PATH; ?>/app_code/metadata_term_set.php?action=list"><?php echo ucfirst(util_lang('all_metadata_term_sets')); ?></a></li>
+    <ul class="splash-links inline">
+        <li><a id="notebooks-splash-link" class="splash-link" href="<?php echo APP_ROOT_PATH; ?>/app_code/notebook.php?action=list"><?php echo ucfirst(util_lang('notebooks')); ?></a></li>
+        <li><a id="plants-splash-link" class="splash-link" href="<?php echo APP_ROOT_PATH; ?>/app_code/authoritative_plant.php?action=list"><?php echo ucfirst(util_lang('plants')); ?></a></li>
+        <li><a id="metadata-structures-splash-link" class="splash-link" href="<?php echo APP_ROOT_PATH; ?>/app_code/metadata_structure.php?action=list"><?php echo ucfirst(util_lang('all_metadata')); ?></a></li>
+        <li><a id="metadata-term-sets-splash-link" class="splash-link" href="<?php echo APP_ROOT_PATH; ?>/app_code/metadata_term_set.php?action=list"><?php echo ucfirst(util_lang('all_metadata_term_sets')); ?></a></li>
     </ul>
 <?php
 require_once('foot.php');

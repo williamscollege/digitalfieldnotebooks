@@ -84,7 +84,7 @@
         }
 
         public function renderAsButtonEdit() {
-            $btn = '<a id="btn-edit" href="'.APP_ROOT_PATH.'/app_code/notebook_page.php?action=edit&notebook_page_id='.$this->notebook_page_id.'" class="edit_link btn" >'.util_lang('edit').'</a>';
+            $btn = '<a id="btn-edit" href="'.APP_ROOT_PATH.'/app_code/notebook_page.php?action=edit&notebook_page_id='.$this->notebook_page_id.'" class="edit_link btn" ><i class="icon-edit"></i> '.util_lang('edit').'</a>';
             return $btn;
         }
 
@@ -109,18 +109,24 @@
             }
 
             $rendered = '<div id="rendered_notebook_page_'.$this->notebook_page_id.'" class="rendered_notebook_page" '.$this->fieldsAsDataAttribs().$actions_attribs.">\n".
-'  <h3 class="notebook_page_title">'.$n->renderAsLink().': '.$ap->renderAsShortText()."</h3>\n".
-'  <span class="created_at">'.util_lang('created_at').' '.util_datetimeFormatted($this->created_at).'</span>, <span class="updated_at">'.util_lang('updated_at').' '.util_datetimeFormatted($this->updated_at)."</span><br/>\n".
-'  <span class="owner">'.util_lang('owned_by').' <a href="'.APP_ROOT_PATH.'/app_code/user.php?action=view&user_id='.$owner->user_id.'">'.htmlentities($owner->screen_name).'</a></span><br/>'."\n".
-'  <span class="published_state">'.($this->flag_workflow_published ? util_lang('published_true') : util_lang('published_false'))
-    .'</span>, <span class="verified_state">'.($this->flag_workflow_validated ? util_lang('verified_true') : util_lang('verified_false'))
-    .'</span><br/>'."\n".
-'  <div class="notebook_page_notes">'.htmlentities($this->notes)."</div>\n".
+'  <h3 class="notebook_page_title">'.$n->renderAsLink().":</h3>\n".
 '  '.$ap->renderAsViewEmbed()."\n".
+'  <div class="info-timestamps"><span class="created_at">'.util_lang('created_at').' '.util_datetimeFormatted($this->created_at).'</span>, <span class="updated_at">'.util_lang('updated_at').' '.util_datetimeFormatted($this->updated_at)."</span></div>\n".
+'  <div class="info-owner">'.util_lang('owned_by').' <a href="'.APP_ROOT_PATH.'/app_code/user.php?action=view&user_id='.$owner->user_id.'">'.htmlentities($owner->screen_name).'</a></div>'."\n".
+'  <div class="info-workflow"><span class="published_state">'.($this->flag_workflow_published ? util_lang('published_true') : util_lang('published_false'))
+    .'</span>, <span class="verified_state">'.($this->flag_workflow_validated ? util_lang('verified_true') : util_lang('verified_false'))
+    .'</span></div>'."\n".
+'  <div class="notebook-page-notes">'.htmlentities($this->notes)."</div>\n".
 '  <h4>'.ucfirst(util_lang('metadata'))."</h4>\n".
-'  <ul class="notebook_page_fields">'."\n";
+'  <ul class="notebook-page-fields">'."\n";
+            $prev_pf_structure_id = $this->page_fields[0]->label_metadata_structure_id;
             foreach ($this->page_fields as $pf) {
-                $rendered .= '    '.$pf->renderAsListItem()."\n";
+                $spacer_class = '';
+                if ($pf->label_metadata_structure_id != $prev_pf_structure_id) {
+                    $spacer_class = 'spacing-list-item';
+                }
+                $rendered .= '    '.$pf->renderAsListItem('list_item-notebook_page_field_'.$pf->notebook_page_field_id,[$spacer_class])."\n";
+                $prev_pf_structure_id = $pf->label_metadata_structure_id;
             }
 //            $rendered .= $add_field_button_li;
             $rendered .='  </ul>'."\n".

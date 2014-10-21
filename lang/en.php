@@ -17,6 +17,7 @@ $LANGUAGE['en'] = [
     'go_to' => 'go to....',
     'search' => 'search',
     'prompt_select' => '-- choose from the list --',
+    'show_hide' => 'show/hide',
 
     'msg_do_sign_in' => 'Please sign in.',
     'msg_failed_sign_in' => 'Sign in failed.',
@@ -32,6 +33,7 @@ $LANGUAGE['en'] = [
 
     'you_possesive' => 'your',
     'owned_by' => 'owned by',
+    'attribution' => 'by',
     'public' => 'public',
 
     'created_at' => 'created',
@@ -91,11 +93,13 @@ $LANGUAGE['en'] = [
     'species' => 'species',
     'variety' => 'variety',
     'catalog_identifier' => 'catalog ID',
+    'common_name' => 'common name',
 
     'plants' => 'plants',
 
     'authoritative_plants' => 'authoritative plants',
     'authoritative_plant' => 'authoritative plant',
+    'extra_info' => 'additional information',
 
     'coordinates' => 'coordinates',
     'longitude' => 'longitude',

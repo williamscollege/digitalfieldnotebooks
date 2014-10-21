@@ -305,6 +305,12 @@ class NotebookPageEditAndCreateTest extends WMSWebTestCase {
 //        $this->todo('  ----------  build in-place editing fragments for related data, and associated tests (not much for this, but gets messy once we get to pages)');
 //        $this->todo('test updating base data');
 //        $this->todo('test updating related data via ajax');
+            $this->todo('test updating/saving new page fields - basic');
+            $this->todo('test updating/saving new page fields - with duplicate structures and differing values (do it)');
+            $this->todo('test updating/saving new page fields - with duplicate structures and same values (skip it)');
+            $this->todo('add deletion controls for page fields');
+            $this->todo('test delete fields on save/update');
+            $this->todo('front end implementation of deletion controls (grey out w/ "delete pending" note, have to click update to do actual delete)');
     }
 
 }

@@ -129,7 +129,7 @@
         public function renderAsViewEmbed() {
             $this->cacheImages();
 
-            $rendered = '<div class="specimen">'."\n".
+            $rendered = '<div class="specimen embedded">'."\n".
 '  <h3>'.htmlentities($this->name).'</h3>'."\n".
 '  <ul class="base-info">'."\n";
             if ($this->gps_longitude && $this->gps_latitude) {
