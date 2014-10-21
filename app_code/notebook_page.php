@@ -94,8 +94,6 @@
             $notebook_page->updateDb();
         }
 
-//        echo 'TO BE IMPLEMENTED: figure out how to handle all the related data updates (via ajax instead of here? tricky because it breaks the implied contract of the update button)';
-
         $deleted_notebook_page_field_ids = explode(',',$_REQUEST['deleted_page_field_ids']);
 //        util_prePrintR($deleted_notebook_page_field_ids);
         if ($deleted_notebook_page_field_ids) {
@@ -120,9 +118,7 @@
                         if ($new_term_value_id < 1) {
                             $new_term_value_id = 0;
                         }
-                        $new_npf_vals = [
-                            'notebook_page_field-value_metadata_term_value_id_'.$notebook_page_field_id =>$new_term_value_id,
-                        ];
+                        $new_npf_vals['notebook_page_field-value_metadata_term_value_id_'.$notebook_page_field_id] = $new_term_value_id;
                     }
                     $npf->setFromArray($new_npf_vals);
                     $npf->updateDb();
