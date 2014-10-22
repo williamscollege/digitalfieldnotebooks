@@ -18,6 +18,8 @@ $LANGUAGE['en'] = [
     'search' => 'search',
     'prompt_select' => '-- choose from the list --',
     'show_hide' => 'show/hide',
+    'mark_for_delete' => 'mark this for removal - the actual removal occurs on update',
+    'unmark_for_delete' => 'remove the mark for removal',
 
     'msg_do_sign_in' => 'Please sign in.',
     'msg_failed_sign_in' => 'Sign in failed.',
@@ -55,6 +57,7 @@ $LANGUAGE['en'] = [
     'zero_pages' => 'no notebook pages',
     'page_in_notebook' => 'in notebook',
     'new_notebook_page_label' => 'New Notebook Page (choose a plant and save))',
+    'no_metadata' => 'no metadata yet',
 
     'fields' => 'fields',
     'field' => 'field',
@@ -66,6 +69,7 @@ $LANGUAGE['en'] = [
     'add_specimen_image' => '+ Add Image +',
     'new_specimen_name' => 'specimen name here - replace this',
     'new_specimen_notes' => 'Notes / description of the specimen - replace or delete this text',
+    'no_specimens' => 'no specimens yet',
 
     'published_true' => 'public',
     'published_false' => 'private',

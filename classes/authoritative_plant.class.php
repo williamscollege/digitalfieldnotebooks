@@ -144,6 +144,7 @@
 
         public function renderAsViewEmbed() {
             $this->cacheExtras();
+            $this->cacheSpecimens();
 
             $canonical_image = '';
             foreach ($this->extras as $extra) {
@@ -165,13 +166,25 @@
     <li><div class="field-label">'.util_lang('variety').' : </div><div class="field-value taxonomy taxonomy-variety">\''.htmlentities($this->variety).'\'</div></li>
     <li><div class="field-label">'.util_lang('catalog_identifier').' : </div><div class="field-value">'.htmlentities($this->catalog_identifier).'</div></li>
   </ul><br/>
-  <a class="show-hide-control" href="#" data-for_elt_id="authoritative_plant-extra_info_'.$this->authoritative_plant_id.'">'.util_lang('show_hide').' '.util_lang('extra_info').'</a>
+  <a class="show-hide-control" href="#" data-for_elt_id="authoritative_plant-details_'.$this->authoritative_plant_id.'">'.util_lang('show_hide').' '.util_lang('extra_info').'</a>
+  <div class="details-info" id="authoritative_plant-details_'.$this->authoritative_plant_id.'">
   <ul class="extra-info" id="authoritative_plant-extra_info_'.$this->authoritative_plant_id.'">
 ';
             foreach ($this->extras as $extra) {
                 $rendered .='    '.$extra->renderAsListItem()."\n";
             }
+            $rendered .='  </ul>';
+
+            $rendered .= '  </ul>
+  <h4>'.util_lang('specimens','properize').'</h4>
+  <ul class="specimens">
+';
+            foreach ($this->specimens as $specimen) {
+                $rendered .= '    <li>'.$specimen->renderAsViewEmbed()."</li>\n";
+            }
+
             $rendered .='  </ul>
+</div>
 </div>';
 
             return $rendered;

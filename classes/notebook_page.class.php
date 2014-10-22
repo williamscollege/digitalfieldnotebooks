@@ -117,24 +117,36 @@
     .'</span>, <span class="verified_state">'.($this->flag_workflow_validated ? util_lang('verified_true') : util_lang('verified_false'))
     .'</span></div>'."\n".
 '  <div class="notebook-page-notes">'.htmlentities($this->notes)."</div>\n".
-'  <h4>'.ucfirst(util_lang('metadata'))."</h4>\n".
-'  <ul class="notebook-page-fields">'."\n";
-            $prev_pf_structure_id = $this->page_fields[0]->label_metadata_structure_id;
-            foreach ($this->page_fields as $pf) {
-                $spacer_class = '';
-                if ($pf->label_metadata_structure_id != $prev_pf_structure_id) {
-                    $spacer_class = 'spacing-list-item';
+'  <h4>'.ucfirst(util_lang('metadata'))."</h4>\n";
+            $rendered .= '  <ul class="notebook-page-fields">'."\n";
+
+            if ($this->page_fields) {
+                $prev_pf_structure_id = $this->page_fields[0]->label_metadata_structure_id;
+                foreach ($this->page_fields as $pf) {
+                    $spacer_class = '';
+                    if ($pf->label_metadata_structure_id != $prev_pf_structure_id) {
+                        $spacer_class = 'spacing-list-item';
+                    }
+                    $rendered .= '    '.$pf->renderAsListItem('list_item-notebook_page_field_'.$pf->notebook_page_field_id,[$spacer_class])."\n";
+                    $prev_pf_structure_id = $pf->label_metadata_structure_id;
                 }
-                $rendered .= '    '.$pf->renderAsListItem('list_item-notebook_page_field_'.$pf->notebook_page_field_id,[$spacer_class])."\n";
-                $prev_pf_structure_id = $pf->label_metadata_structure_id;
+    //            $rendered .= $add_field_button_li;
+            } else {
+                $rendered .= '<li>'.util_lang('no_metadata','ucfirst').'</li>'."\n";
             }
-//            $rendered .= $add_field_button_li;
-            $rendered .='  </ul>'."\n".
-'  <h4>'.ucfirst(util_lang('specimens'))."</h4>\n".
-'  <ul class="specimens">'."\n";
-            foreach ($this->specimens as $specimen) {
-                $rendered .= '    <li>'.$specimen->renderAsViewEmbed()."</li>\n";
+            $rendered .='  </ul>'."\n";
+
+            $rendered .= '  <h4>'.ucfirst(util_lang('specimens'))."</h4>\n";
+            $rendered .= '  <ul class="specimens">'."\n";
+
+            if ($this->specimens) {
+                foreach ($this->specimens as $specimen) {
+                    $rendered .= '    <li>'.$specimen->renderAsViewEmbed()."</li>\n";
+                }
+            } else {
+                $rendered .= '<li>'.util_lang('no_specimens','ucfirst').'</li>'."\n";
             }
+
             $rendered .= "  </ul>\n</div>";
 
             return $rendered;
@@ -176,8 +188,13 @@
 //            $rendered .= '  <a id="edit-cancel-control" class="btn" href="'.APP_ROOT_PATH.'/app_code/notebook_page.php?action=view&notebook_page_id='.$this->notebook_page_id.'">'.util_lang('cancel','properize').'</a>';
 //            $rendered .= '</div>'."\n";
             $rendered .= '  <div id="actions">';
-            $rendered .= '<button id="edit-submit-control" class="btn btn-success" type="submit" name="edit-submit-control"><i class="icon-ok-sign icon-white"></i> '.util_lang((($this->notebook_page_id != 'NEW') ? 'update' : 'save'),'properize').'</button>'."\n";
+            $rendered .= '<button id="edit-submit-control" class="btn btn-success" type="submit" name="edit-submit-control" value="update"><i class="icon-ok-sign icon-white"></i> '.util_lang((($this->notebook_page_id != 'NEW') ? 'update' : 'save'),'properize').'</button>'."\n";
             $rendered .= '  <a id="edit-cancel-control" class="btn" href="'.APP_ROOT_PATH.'/app_code/notebook_page.php?action=view&notebook_page_id='.$this->notebook_page_id.'"><i class="icon-remove"></i> '.util_lang('cancel','properize').'</a>';
+            if ($this->notebook_page_id != 'NEW') {
+
+//                    $rendered .= '  <button id="edit-delete-notebook-page-control" class="btn btn-danger" type="submit" name="edit-submit-control" value="delete"><i class="icon-trash icon-white"></i> '.util_lang('delete','properize').'</button>';
+                $rendered .= '  <a id="edit-delete-notebook-page-control" class="btn btn-danger" href="'.APP_ROOT_PATH.'/app_code/notebook_page.php?action=delete&notebook_page_id='.$this->notebook_page_id.'"><i class="icon-trash icon-white"></i> '.util_lang('delete','properize').'</a>';
+            }
             $rendered .= '</div>'."\n";
 /*
             $rendered .= '<div id="actions">';
@@ -238,39 +255,34 @@
 
                 $rendered .= '  <h4>'.ucfirst(util_lang('metadata'))."</h4>\n";
                 $rendered .= '  <ul class="notebook-page-fields">'."\n";
-    //            $rendered .= $add_field_button_li;
-
                 $rendered .= '    <li><a href="#" id="add_new_notebook_page_field_button" class="btn">'.util_lang('add_notebook_page_field').'</a></li>'."\n";
-
-                /*
-            $prev_pf_structure_id = $this->page_fields[0]->label_metadata_structure_id;
-            foreach ($this->page_fields as $pf) {
-                $spacer_class = '';
-                if ($pf->label_metadata_structure_id != $prev_pf_structure_id) {
-                    $spacer_class = 'spacing-list-item';
-                }
-                $rendered .= '    '.$pf->renderAsListItem('list_item-notebook_page_field_'.$pf->notebook_page_field_id,[$spacer_class])."\n";
-                $prev_pf_structure_id = $pf->label_metadata_structure_id;
-            }
-                 */
-                $prev_pf_structure_id = $this->page_fields[0]->label_metadata_structure_id;
-                foreach ($this->page_fields as $pf) {
-                    $spacer_class = '';
-                    if ($pf->label_metadata_structure_id != $prev_pf_structure_id) {
-                        $spacer_class = 'spacing-list-item';
+                if ($this->page_fields) {
+                    $prev_pf_structure_id = $this->page_fields[0]->label_metadata_structure_id;
+                    foreach ($this->page_fields as $pf) {
+                        $spacer_class = '';
+                        if ($pf->label_metadata_structure_id != $prev_pf_structure_id) {
+                            $spacer_class = 'spacing-list-item';
+                        }
+                        $rendered .= '    '.$pf->renderAsListItemEdit('list_item-notebook_page_field_'.$pf->notebook_page_field_id,[$spacer_class])."\n";
+                        $prev_pf_structure_id = $pf->label_metadata_structure_id;
                     }
-                    $rendered .= '    '.$pf->renderAsListItemEdit('list_item-notebook_page_field_'.$pf->notebook_page_field_id,[$spacer_class])."\n";
-                    $prev_pf_structure_id = $pf->label_metadata_structure_id;
+                } else {
+                    $rendered .= '<li>'.util_lang('no_metadata','ucfirst').'</li>'."\n";
                 }
                 $rendered .= '  </ul>'."\n";
 
                 $rendered .= '  <h4>'.ucfirst(util_lang('specimens'))."</h4>\n".
                     '  <ul class="specimens">'."\n";
                 $rendered .= '    <li><a href="#" id="add_new_specimen_button" class="btn">'.util_lang('add_specimen').'</a></li>'."\n";
-                foreach ($this->specimens as $specimen) {
-                    $rendered .= '    <li>'.$specimen->renderAsEditEmbed()."</li>\n";
+                if ($this->specimens) {
+                    foreach ($this->specimens as $specimen) {
+                        $rendered .= '    <li>'.$specimen->renderAsEditEmbed()."</li>\n";
+                    }
+                } else {
+                    $rendered .= '<li>'.util_lang('no_metadata','ucfirst').'</li>'."\n";
                 }
                 $rendered .= "  </ul>\n";
+
                 $rendered .= '<input type="hidden" id="initial_page_field_ids" name="initial_page_field_ids" value="'.implode(',', Db_Linked::arrayOfAttrValues($this->page_fields,'notebook_page_field_id') ).'"/>'."\n";
                 $rendered .= '<input type="hidden" id="created_page_field_ids" name="created_page_field_ids" value=""/>'."\n";
                 $rendered .= '<input type="hidden" id="deleted_page_field_ids" name="deleted_page_field_ids" value=""/>'."\n";

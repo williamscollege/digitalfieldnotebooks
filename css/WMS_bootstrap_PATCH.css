@@ -121,7 +121,7 @@ a.show-hide-control {
     max-height: 180px;
 }
 
-.embedded .extra-info {
+.embedded .details-info {
     display: none;
 }
 
@@ -220,6 +220,11 @@ h3 input {
     vertical-align: top !important;
 }
 
+.delete-marked {
+    background-color: #edc;
+    color: #888;
+}
+
 /***********************************************************************************/
 /* notebooks */
 
@@ -304,6 +309,7 @@ ul#list-of-user-notebooks li {
 
 .edit_rendered_notebook_page .notebook-page-fields li {
     min-height: 35px;
+    padding-top: 8px;
 }
 
 .edit_rendered_notebook_page .notebook-page-fields li.spacing-list-item {
@@ -337,6 +343,10 @@ ul#list-of-user-notebooks li {
     font-size: 12px;
     font-weight: bold;
     margin-left: 2px;
+}
+
+.edit_rendered_notebook_page .button-mark-pagefield-for-delete {
+    margin-top: -3px;
 }
 
 /***********************************************************************************/
@@ -453,6 +463,8 @@ confirmation dialog*/
 {
 	border-width: 3px;
 	background-color: #FEB;
+    padding-bottom: 8px;
+    font-weight: bold;
 }
 .confirmationDialog .modal-header
 {

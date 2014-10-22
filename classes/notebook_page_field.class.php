@@ -126,6 +126,10 @@
         }
 
         public function renderAsListItemEdit($idstr='',$classes_array = [],$other_attribs_hash = []) {
+            if (! $idstr) {
+                $idstr = 'list_item-notebook_page_field_'.$this->notebook_page_field_id;
+            }
+
             $li_elt = substr(util_listItemTag($idstr,$classes_array,$other_attribs_hash),0,-1);
             $li_elt .= ' '.$this->fieldsAsDataAttribs().'>';
 
@@ -143,7 +147,7 @@
             }
             $li_elt .= '; <input type="text" name="page_field_open_value_'.$this->notebook_page_field_id.'" id="page_field_open_value_'.$this->notebook_page_field_id.'" class="page_field_open_value" value="'.htmlentities($this->value_open).'"/>';
 
-            $li_elt .= '</div></li>';
+            $li_elt .= '</div> <button class="btn btn-danger button-mark-pagefield-for-delete" title="'.util_lang('mark_for_delete','ucfirst').'" data-do-mark-title="'.util_lang('mark_for_delete','ucfirst').'" data-remove-mark-title="'.util_lang('unmark_for_delete','ucfirst').'" data-for_dom_id="'.$idstr.'" data-notebook_page_field_id="'.$this->notebook_page_field_id.'"><i class="icon-remove-sign icon-white"></i></button></li>';
             return $li_elt;
         }
 

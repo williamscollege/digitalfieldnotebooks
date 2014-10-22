@@ -98,9 +98,11 @@
 //        util_prePrintR($deleted_notebook_page_field_ids);
         if ($deleted_notebook_page_field_ids) {
             foreach ($deleted_notebook_page_field_ids as $deleted_notebook_page_fied_id) {
-                $del_npf = Notebook_Page_Field::getOneFromDb(['notebook_page_field_id'=>$deleted_notebook_page_fied_id],$DB);
-                if ($del_npf->matchedDb) {
-                    $del_npf->doDelete();
+                if ($deleted_notebook_page_fied_id) {
+                    $del_npf = Notebook_Page_Field::getOneFromDb(['notebook_page_field_id'=>$deleted_notebook_page_fied_id],$DB);
+                    if ($del_npf->matchesDb) {
+                        $del_npf->doDelete();
+                    }
                 }
             }
         }
