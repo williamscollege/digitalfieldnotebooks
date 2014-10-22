@@ -170,17 +170,25 @@
   <div class="details-info" id="authoritative_plant-details_'.$this->authoritative_plant_id.'">
   <ul class="extra-info" id="authoritative_plant-extra_info_'.$this->authoritative_plant_id.'">
 ';
-            foreach ($this->extras as $extra) {
-                $rendered .='    '.$extra->renderAsListItem()."\n";
+            if ($this->extras) {
+                foreach ($this->extras as $extra) {
+                    $rendered .='    '.$extra->renderAsListItem()."\n";
+                }
+            } else {
+                $rendered .='    <li>'.util_lang('no_authoritative_plant_extra_info','ucfirst').'</li>'."\n";
             }
             $rendered .='  </ul>';
 
-            $rendered .= '  </ul>
-  <h4>'.util_lang('specimens','properize').'</h4>
+            $rendered .= '  </ul>';
+$rendered .= '  <h4>'.util_lang('specimens','properize').'</h4>
   <ul class="specimens">
 ';
-            foreach ($this->specimens as $specimen) {
-                $rendered .= '    <li>'.$specimen->renderAsViewEmbed()."</li>\n";
+            if ($this->specimens) {
+                foreach ($this->specimens as $specimen) {
+                    $rendered .= '    <li>'.$specimen->renderAsViewEmbed()."</li>\n";
+                }
+            } else {
+                $rendered .='    <li>'.util_lang('no_authoritative_plant_specimens','ucfirst').'</li>'."\n";
             }
 
             $rendered .='  </ul>
@@ -210,26 +218,38 @@
   <h4>'.util_lang('details','properize').'</h4>
   <ul class="extra-info">
 ';
-            foreach ($this->extras as $extra) {
-                $rendered .='    '.$extra->renderAsListItem()."\n";
+            if ($this->extras) {
+                foreach ($this->extras as $extra) {
+                    $rendered .='    '.$extra->renderAsListItem()."\n";
+                }
+            } else {
+                $rendered .='    <li>'.util_lang('no_authoritative_plant_extra_info','ucfirst').'</li>'."\n";
             }
             $rendered .='  </ul>
   <h4>'.util_lang('notebook_pages','properize').'</h4>
   <ul class="notebook-pages">
 ';
             global $USER,$ACTIONS;
-            foreach ($this->notebook_pages as $np) {
-                if ($USER->canActOnTarget($ACTIONS['view'],$np)) {
-                    $rendered .='    '.$np->renderAsListItemForNotebook()."\n";
+            if ($this->notebook_pages) {
+                foreach ($this->notebook_pages as $np) {
+                    if ($USER->canActOnTarget($ACTIONS['view'],$np)) {
+                        $rendered .='    '.$np->renderAsListItemForNotebook()."\n";
+                    }
                 }
+            } else {
+                $rendered .='    <li>'.util_lang('no_authoritative_plant_notebook_pages','ucfirst').'</li>'."\n";
             }
 
             $rendered .= '  </ul>
   <h4>'.util_lang('specimens','properize').'</h4>
   <ul class="specimens">
 ';
-            foreach ($this->specimens as $specimen) {
-                $rendered .= '    <li>'.$specimen->renderAsViewEmbed()."</li>\n";
+            if ($this->specimens) {
+                foreach ($this->specimens as $specimen) {
+                    $rendered .= '    <li>'.$specimen->renderAsViewEmbed()."</li>\n";
+                }
+            } else {
+                $rendered .='    <li>'.util_lang('no_authoritative_plant_specimens','ucfirst').'</li>'."\n";
             }
 
             $rendered .='  </ul>
