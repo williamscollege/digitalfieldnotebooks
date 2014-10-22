@@ -220,4 +220,12 @@
             return $rendered;
         }
 
+        // extend/override parent class functionality to handle data relationships
+        function doDelete($debug = 0) {
+            $this->cacheImages();
+            foreach ($this->images as $img) {
+                $img->doDelete($debug);
+            }
+            parent::doDelete($debug);
+        }
     }

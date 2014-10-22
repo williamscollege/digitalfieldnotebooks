@@ -328,4 +328,22 @@
             $this->assertEqual($new_vals_ar['specimen-flag_workflow_validated_8001'],$s->flag_workflow_validated);
         }
 
+        function testDoDelete() {
+            $s = Specimen::getOneFromDb(['specimen_id'=>8001],$this->DB);
+            $s->cacheImages();
+            $this->assertTrue($s->matchesDb);
+            $this->assertTrue($s->images[0]->matchesDb);
+            $this->assertTrue($s->images[1]->matchesDb);
+
+            $s->doDelete();
+
+            $s2 = Specimen::getOneFromDb(['specimen_id'=>8001],$this->DB);
+            $this->assertFalse($s2->matchesDb);
+
+            $siA = Specimen_Image::getOneFromDb(['specimen_image_id'=>8101],$this->DB);
+            $this->assertFalse($siA->matchesDb);
+
+            $siB = Specimen_Image::getOneFromDb(['specimen_image_id'=>8102],$this->DB);
+            $this->assertFalse($siB->matchesDb);
+        }
     }
