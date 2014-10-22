@@ -359,6 +359,52 @@
             $this->assertNoPattern('/IMPLEMENTED/',$rendered);
         }
 
-//    $canonical .= '    <li><a href="" id="btn-add-notebook-page-field" class="creation_link btn">'.util_lang('add_notebook_page_field').'</a></li>
+        function testDoDelete() {
+            $np = Notebook_Page::getOneFromDb(['notebook_page_id' => 1101], $this->DB);
+            $np->loadSpecimens();
+            $np->loadPageFields();
+
+            $this->assertTrue($np->matchesDb);
+            $this->assertTrue($np->page_fields[0]->matchesDb);
+            $this->assertTrue($np->page_fields[1]->matchesDb);
+            $this->assertTrue($np->page_fields[2]->matchesDb);
+            $this->assertTrue($np->page_fields[3]->matchesDb);
+            $this->assertTrue($np->specimens[0]->matchesDb);
+            $this->assertTrue($np->specimens[1]->matchesDb);
+
+            //***********
+            $np->doDelete();
+            //***********
+
+            $np2 = Notebook_Page::createNewNotebookPageForNotebook(1001,$this->DB);
+            $this->assertFalse($np2->matchesDb);
+
+
+            $npf = Notebook_Page_Field::getOneFromDb(['notebook_page_field_id'=>1201],$this->DB);
+            $this->assertFalse($npf->matchesDb);
+
+            $npf = Notebook_Page_Field::getOneFromDb(['notebook_page_field_id'=>1202],$this->DB);
+            $this->assertFalse($npf->matchesDb);
+
+            $npf = Notebook_Page_Field::getOneFromDb(['notebook_page_field_id'=>1203],$this->DB);
+            $this->assertFalse($npf->matchesDb);
+
+            $npf = Notebook_Page_Field::getOneFromDb(['notebook_page_field_id'=>1204],$this->DB);
+            $this->assertFalse($npf->matchesDb);
+
+
+            $s = Specimen::getOneFromDb(['specimen_id'=>8002],$this->DB);
+            $this->assertFalse($s->matchesDb);
+
+            $s = Specimen::getOneFromDb(['specimen_id'=>8003],$this->DB);
+            $this->assertFalse($s->matchesDb);
+
+
+            $si = Specimen_Image::getOneFromDb(['specimen_image_id'=>8103],$this->DB);
+            $this->assertFalse($si->matchesDb);
+
+            $si = Specimen_Image::getOneFromDb(['specimen_image_id'=>8104],$this->DB);
+            $this->assertFalse($si->matchesDb);
+        }
 
     }

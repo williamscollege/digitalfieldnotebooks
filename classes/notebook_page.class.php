@@ -282,6 +282,21 @@
 
         //---------------------------------------
 
+        public function doDelete($debug = 0) {
+            $this->loadPageFields();
+            $this->loadSpecimens();
+
+            foreach ($this->page_fields as $pf) {
+                $pf->doDelete($debug);
+            }
+
+            foreach ($this->specimens as $s) {
+                $s->doDelete($debug);
+            }
+
+            parent::doDelete($debug);
+        }
+
         public function loadPageFields() {
             $this->page_fields = Notebook_Page_Field::getAllFromDb(['notebook_page_id' => $this->notebook_page_id,'flag_delete' => FALSE],$this->dbConnection);
             usort($this->page_fields,'Notebook_Page_Field::cmp');
