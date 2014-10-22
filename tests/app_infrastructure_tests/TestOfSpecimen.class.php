@@ -162,14 +162,14 @@
             # VALID_LINK_TO_TYPES =  ['authoritative_plant', 'notebook_page'];
             */
             $canonical =
-                '<div class="specimen">
+                '<div class="specimen embedded">
   <h3>'.htmlentities($s->name).'</h3>
   <ul class="base-info">
     <li><span class="field-label">'.util_lang('coordinates').'</span> : <span class="field-value"><a href="'.util_coordsMapLink($s->gps_longitude,$s->gps_latitude).'">'.htmlentities($s->gps_longitude).','.htmlentities($s->gps_latitude).'</a></span></li>
     <li><span class="field-label">'.util_lang('notes').'</span> : <span class="field-value">'.htmlentities($s->notes).'</span></li>
     <li><span class="field-label">'.util_lang('catalog_identifier').'</span> : <span class="field-value">'.htmlentities($s->catalog_identifier).'</span></li>
   </ul>
-  <ul class="specimen-images">
+  <ul class="specimen-images inline">
 ';
             foreach ($s->images as $image) {
                 $canonical .='    '.$image->renderAsListItem()."\n";
@@ -191,17 +191,19 @@
             global $USER;
             $USER = User::getOneFromDb(['user_id'=>110], $this->DB);
 
+//   <span class="published_state"><input id="specimen-workflow-publish-control_'.$s->specimen_id.'" type="checkbox" name="specimen-flag_workflow_published_'.$s->specimen_id.'" value="1" checked="checked" /> publish</span>,  <span class="verified_state"><input id="specimen-workflow-validate-control_'.$s->specimen_id.'" type="checkbox" name="specimen-flag_workflow_validated_'.$s->specimen_id.'" value="1" checked="checked" /> verify</span><br/>
+
             $canonical =
-                '<div class="specimen">
+                '<div class="specimen embedded">
 <div id="form-edit-specimen-'.$s->specimen_id.'" class="form-edit-specimen" data-specimen_id="'.$s->specimen_id.'">
   <h3><input type="text" name="specimen-name_'.$s->specimen_id.'" id="specimen-name_'.$s->specimen_id.'" value="'.htmlentities($s->name).'"/></h3>
-  <span class="published_state"><input id="specimen-workflow-publish-control_'.$s->specimen_id.'" type="checkbox" name="specimen-flag_workflow_published_'.$s->specimen_id.'" value="1" checked="checked" /> publish</span>,  <span class="verified_state"><input id="specimen-workflow-validate-control_'.$s->specimen_id.'" type="checkbox" name="specimen-flag_workflow_validated_'.$s->specimen_id.'" value="1" checked="checked" /> verify</span><br/>
+  <div class="control-workflows">  <span class="published_state workflow-control"><input id="specimen-workflow-publish-control_'.$s->specimen_id.'" type="checkbox" name="specimen-flag_workflow_published_'.$s->specimen_id.'" value="1" checked="checked" /> publish</span>,  <span class="verified_state workflow-control"><input id="specimen-workflow-validate-control_'.$s->specimen_id.'" type="checkbox" name="specimen-flag_workflow_validated_'.$s->specimen_id.'" value="1" checked="checked" /> verify</span></div>
   <ul class="base-info">
-    <li><span class="field-label">'.util_lang('coordinates').'</span> : <input type="text" name="specimen-gps_longitude_'.$s->specimen_id.'" id="specimen-gps_longitude_'.$s->specimen_id.'" value="'.htmlentities($s->gps_longitude).'"/>, <input type="text" name="specimen-gps_latitude_'.$s->specimen_id.'" id="specimen-gps_latitude_'.$s->specimen_id.'" value="'.htmlentities($s->gps_latitude).'"/></li>
-    <li><span class="field-label">'.util_lang('notes').'</span> : <textarea name="specimen-notes_'.$s->specimen_id.'" id="specimen-notes_'.$s->specimen_id.'" row="4" cols="120">'.htmlentities($s->notes).'</textarea></li>
-    <li><span class="field-label">'.util_lang('catalog_identifier').'</span> : <input type="text" name="specimen-catalog_identifier_'.$s->specimen_id.'" id="specimen-catalog_identifier_'.$s->specimen_id.'" value="'.htmlentities($s->catalog_identifier).'"/></li>
+    <li><div class="field-label">'.util_lang('coordinates').'</div> : <div class="field-value"><input type="text" name="specimen-gps_longitude_'.$s->specimen_id.'" id="specimen-gps_longitude_'.$s->specimen_id.'" value="'.htmlentities($s->gps_longitude).'"/>, <input type="text" name="specimen-gps_latitude_'.$s->specimen_id.'" id="specimen-gps_latitude_'.$s->specimen_id.'" value="'.htmlentities($s->gps_latitude).'"/></div></li>
+    <li><div class="field-label">'.util_lang('notes').'</div> : <div class="field-value"><textarea name="specimen-notes_'.$s->specimen_id.'" id="specimen-notes_'.$s->specimen_id.'" class="specimen-notes" row="4" cols="120">'.htmlentities($s->notes).'</textarea></div></li>
+    <li><div class="field-label">'.util_lang('catalog_identifier').'</div> : <div class="field-value"><input type="text" name="specimen-catalog_identifier_'.$s->specimen_id.'" id="specimen-catalog_identifier_'.$s->specimen_id.'" value="'.htmlentities($s->catalog_identifier).'"/></div></li>
   </ul>
-  <ul class="specimen-images">
+  <ul class="specimen-images inline">
 ';
             $canonical .= '    <li><a href="#" id="specimen-control-add-image-for-'.$s->specimen_id.'" class="btn add-specimen-image-button" data-for-specimen="'.$s->specimen_id.'">'.util_lang('add_specimen_image').'</a></li>
 ';

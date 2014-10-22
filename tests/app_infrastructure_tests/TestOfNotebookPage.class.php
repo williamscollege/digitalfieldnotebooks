@@ -154,15 +154,17 @@
 
             $rendered = $np->renderAsListItemForNotebook();
             $canonical = '<li data-notebook_page_id="1101" data-created_at="'.$np->created_at.'" data-updated_at="'.$np->updated_at.'" data-notebook_id="1001" data-authoritative_plant_id="5001" data-notes="testing notebook page the first in testnotebook1, owned by user 101" data-flag_workflow_published="0" data-flag_workflow_validated="0" data-flag_delete="0" data-can-edit="1"><a href="'.APP_ROOT_PATH.'/app_code/notebook_page.php?action=view&notebook_page_id=1101">'.util_lang('page_in_notebook').' '.htmlentities($nb->name).'</a></li>';
-//            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
+//            echo "<pre>\n".htmlentities($canonical)."\n--------------\n".htmlentities($rendered)."\n</pre>";
             $this->assertEqual($canonical,$rendered);
         }
 
         function testRenderAsButtonEdit() {
             $np = Notebook_Page::getOneFromDb(['notebook_page_id' => 1101], $this->DB);
 
-            $canonical = '<a id="btn-edit" href="'.APP_ROOT_PATH.'/app_code/notebook_page.php?action=edit&notebook_page_id='.$np->notebook_page_id.'" class="edit_link btn" >'.util_lang('edit').'</a>';
+            $canonical = '<a id="btn-edit" href="'.APP_ROOT_PATH.'/app_code/notebook_page.php?action=edit&notebook_page_id='.$np->notebook_page_id.'" class="edit_link btn" ><i class="icon-edit"></i> '.util_lang('edit').'</a>';
             $rendered = $np->renderAsButtonEdit();
+
+//            echo "<pre>\n".htmlentities($canonical)."\n--------------\n".htmlentities($rendered)."\n</pre>";
 
             $this->assertEqual($canonical,$rendered);
         }
@@ -182,20 +184,38 @@
             $USER = User::getOneFromDb(['username'=>TESTINGUSER], $this->DB);
 
             $canonical = '<div id="rendered_notebook_page_1101" class="rendered_notebook_page" '.$np->fieldsAsDataAttribs().' data-can-edit="1">
-  <h3 class="notebook_page_title">'.$n->renderAsLink().': '.$ap->renderAsShortText().'</h3>
-  <span class="created_at">'.util_lang('created_at').' '.util_datetimeFormatted($np->created_at).'</span>, <span class="updated_at">'.util_lang('updated_at').' '.util_datetimeFormatted($np->updated_at).'</span><br/>
-  <span class="owner">'.util_lang('owned_by').' <a href="'.APP_ROOT_PATH.'/app_code/user.php?action=view&user_id=101">'.$USER->screen_name.'</a></span><br/>
-  <span class="published_state">'.util_lang('published_false').'</span>, <span class="verified_state">'.util_lang('verified_false').'</span><br/>
-  <div class="notebook_page_notes">testing notebook page the first in testnotebook1, owned by user 101</div>
+  <h3 class="notebook_page_title">'.$n->renderAsLink().':</h3>
   '.$ap->renderAsViewEmbed().'
-  <h4>'.ucfirst(util_lang('metadata')).'</h4>
-  <ul class="notebook_page_fields">
-';
-            foreach ($np->page_fields as $pf) {
-                $canonical .= '    '.$pf->renderAsListItem()."\n";
+  <div class="info-timestamps"><span class="created_at">'.util_lang('created_at').' '.util_datetimeFormatted($np->created_at).'</span>, <span class="updated_at">'.util_lang('updated_at').' '.util_datetimeFormatted($np->updated_at).'</span></div>
+  <div class="info-owner">'.util_lang('owned_by').' <a href="'.APP_ROOT_PATH.'/app_code/user.php?action=view&user_id=101">'.$USER->screen_name.'</a></div>
+  <div class="info-workflow"><span class="published_state">'.util_lang('published_false').'</span>, <span class="verified_state">'.util_lang('verified_false').'</span></div>
+  <div class="notebook-page-notes">testing notebook page the first in testnotebook1, owned by user 101</div>
+  <h4>'.ucfirst(util_lang('metadata')).'</h4>'."\n";
+
+            $canonical .= '  <ul class="notebook-page-fields">'."\n";
+            if ($np->page_fields) {
+                $prev_pf_structure_id = $np->page_fields[0]->label_metadata_structure_id;
+                foreach ($np->page_fields as $pf) {
+                    $spacer_class = '';
+                    if ($pf->label_metadata_structure_id != $prev_pf_structure_id) {
+                        $spacer_class = 'spacing-list-item';
+                    }
+                    $canonical .= '    '.$pf->renderAsListItem('list_item-notebook_page_field_'.$pf->notebook_page_field_id,[$spacer_class])."\n";
+                    $prev_pf_structure_id = $pf->label_metadata_structure_id;
+                }
+                //            $rendered .= $add_field_button_li;
+            } else {
+                $canonical .= '<li>'.util_lang('no_metadata','ucfirst').'</li>'."\n";
             }
-            $canonical .= '  </ul>
-  <h4>'.ucfirst(util_lang('specimens')).'</h4>
+            $canonical .='  </ul>'."\n";
+
+//            $canonical .= '  <ul class="notebook-page-fields">
+//    <li id="list_item-notebook_page_field_1204" class="" data-notebook_page_field_id="1204" data-created_at="2014-10-22 12:41:08" data-updated_at="2014-10-22 12:41:08" data-notebook_page_id="1101" data-label_metadata_structure_id="6004" data-value_metadata_term_value_id="0" data-value_open="wavy-ish" data-flag_delete="0"><div class="notebook-page-field-label field-label" title="info about the individual leaves of the plant">leaf</div> : <div class="notebook-page-field-value field-value"><span class="open-value">wavy-ish</span></div></li>
+//    <li id="list_item-notebook_page_field_1201" class="spacing-list-item" data-notebook_page_field_id="1201" data-created_at="2014-10-22 12:41:08" data-updated_at="2014-10-22 12:41:08" data-notebook_page_id="1101" data-label_metadata_structure_id="6002" data-value_metadata_term_value_id="6202" data-value_open="" data-flag_delete="0"><div class="notebook-page-field-label field-label" title="the size of the flower in its largest dimension">flower size</div> : <div class="notebook-page-field-value field-value" title="smaller than the smallest thickness of your pinkie finger">3 mm - 1cm</div></li>
+//    <li id="list_item-notebook_page_field_1202" class="" data-notebook_page_field_id="1202" data-created_at="2014-10-22 12:41:08" data-updated_at="2014-10-22 12:41:08" data-notebook_page_id="1101" data-label_metadata_structure_id="6002" data-value_metadata_term_value_id="6203" data-value_open="" data-flag_delete="0"><div class="notebook-page-field-label field-label" title="the size of the flower in its largest dimension">flower size</div> : <div class="notebook-page-field-value field-value" title="up to the largest thickness of your thumb">1-3 cm</div></li>
+//    <li id="list_item-notebook_page_field_1203" class="spacing-list-item" data-notebook_page_field_id="1203" data-created_at="2014-10-22 12:41:08" data-updated_at="2014-10-22 12:41:08" data-notebook_page_id="1101" data-label_metadata_structure_id="6003" data-value_metadata_term_value_id="6211" data-value_open="" data-flag_delete="0"><div class="notebook-page-field-label field-label" title="the primary / dominant color of the flower">flower primary color</div> : <div class="notebook-page-field-value field-value" title="">red</div></li>
+//  </ul>';
+            $canonical .= '  <h4>'.ucfirst(util_lang('specimens')).'</h4>
   <ul class="specimens">
 ';
             foreach ($np->specimens as $specimen) {
@@ -234,28 +254,41 @@
 
 //            <h3 class="notebook_page_title">'.$n->renderAsLink().': '.$ap->renderAsShortText().'</h3>
 
-                $canonical = '<h4>'.util_lang('page_in_notebook','ucfirst').' <a href="'.APP_ROOT_PATH.'/app_code/notebook.php?action=view&notebook_id='.$n->notebook_id.'" id="parent-notebook-link">'.htmlentities($n->name).'</a></h4>
-<div id="rendered_notebook_page_1101" class="rendered_notebook_page" '.$np->fieldsAsDataAttribs().' data-can-edit="1">
+                $canonical = '<div id="rendered_notebook_page_1101" class="rendered_notebook_page edit_rendered_notebook_page" '.$np->fieldsAsDataAttribs().' data-can-edit="1">
 <form id="form-edit-notebook-page-base-data" action="'.APP_ROOT_PATH.'/app_code/notebook_page.php">
   <input type="hidden" name="action" value="update"/>
   <input type="hidden" name="notebook_page_id" value="'.$np->notebook_page_id.'"/>
-  <h3 class="notebook_page_title">'.$ap->renderAsShortText().'</h3>
-  <span class="select_new_authoritative_plant">'.Authoritative_Plant::renderControlSelectAllAuthoritativePlants($ap->authoritative_plant_id).'</span>
-  <span class="created_at">'.util_lang('created_at').' '.util_datetimeFormatted($np->created_at).'</span>, <span class="updated_at">'.util_lang('updated_at').' '.util_datetimeFormatted($np->updated_at).'</span><br/>
-  <span class="owner">'.util_lang('owned_by').' <a href="'.APP_ROOT_PATH.'/app_code/user.php?action=view&user_id=101">'.htmlentities($USER->screen_name).'</a></span><br/>
-  <span class="published_state"><input id="notebook-page-workflow-publish-control" type="checkbox" name="flag_workflow_published" value="1" /> '.util_lang('publish').'</span>, <span class="verified_state">'.util_lang('verified_false').'</span><br/>
-  <div class="notebook_page_notes"><textarea id="notebook-page-notes" name="notes" rows="4" cols="120">testing notebook page the first in testnotebook1, owned by user 101</textarea></div>
-  <input id="edit-submit-control" class="btn" type="submit" name="edit-submit-control" value="'.util_lang('update','properize').'"/>
-  <a id="edit-cancel-control" class="btn" href="'.APP_ROOT_PATH.'/app_code/notebook_page.php?action=view&notebook_page_id='.$np->notebook_page_id.'">'.util_lang('cancel','properize').'</a>
+  <input type="hidden" name="notebook_id" value="1001"/>
+  <div id="actions"><button id="edit-submit-control" class="btn btn-success" type="submit" name="edit-submit-control" value="update"><i class="icon-ok-sign icon-white"></i> Update</button>
+  <a id="edit-cancel-control" class="btn" href="/digitalfieldnotebooks/app_code/notebook_page.php?action=view&notebook_page_id=1101"><i class="icon-remove"></i> Cancel</a>  <a id="edit-delete-notebook-page-control" class="btn btn-danger" href="/digitalfieldnotebooks/app_code/notebook_page.php?action=delete&notebook_page_id=1101"><i class="icon-trash icon-white"></i> Delete</a></div>
+<h4>'.util_lang('page_in_notebook','ucfirst').' <a href="'.APP_ROOT_PATH.'/app_code/notebook.php?action=view&notebook_id='.$n->notebook_id.'" id="parent-notebook-link">'.htmlentities($n->name).'</a></h4>
+<a class="show-hide-control" href="#" data-for_elt_id="select_new_authoritative_plant_1101">select or change the plant</a>  <div id="select_new_authoritative_plant_1101" class="select_new_authoritative_plant">'.Authoritative_Plant::renderControlSelectAllAuthoritativePlants($ap->authoritative_plant_id).'</div>
   '.$ap->renderAsViewEmbed().'
+  <div class="info-timestamps"><span class="created_at">'.util_lang('created_at').' '.util_datetimeFormatted($np->created_at).'</span>, <span class="updated_at">'.util_lang('updated_at').' '.util_datetimeFormatted($np->updated_at).'</span></div>
+  <div class="info-owner">'.util_lang('owned_by').' <a href="'.APP_ROOT_PATH.'/app_code/user.php?action=view&user_id=101">'.htmlentities($USER->screen_name).'</a></div>
+<div class="control-workflows">  <span class="published_state workflow-control"><input id="notebook-page-workflow-publish-control" type="checkbox" name="flag_workflow_published" value="1" /> '.util_lang('publish').'</span>, <span class="verified_state workflow-info">'.util_lang('verified_false').'</span><br/>
+</div>
+  <div class="notebook_page_notes"><textarea id="notebook-page-notes" name="notes" rows="4" cols="120">testing notebook page the first in testnotebook1, owned by user 101</textarea></div>
   <h4>'.ucfirst(util_lang('metadata')).'</h4>
-  <ul class="notebook_page_fields">
+  <ul class="notebook-page-fields">
 ';
-//            $this->todo('refine canonical code for new page field button / action');
+
             $canonical .= '    <li><a href="#" id="add_new_notebook_page_field_button" class="btn">'.util_lang('add_notebook_page_field').'</a></li>'."\n";
-            foreach ($np->page_fields as $pf) {
-                $canonical .= '    '.$pf->renderAsListItemEdit()."\n";
+            if ($np->page_fields) {
+                $prev_pf_structure_id = $np->page_fields[0]->label_metadata_structure_id;
+                foreach ($np->page_fields as $pf) {
+                    $spacer_class = '';
+                    if ($pf->label_metadata_structure_id != $prev_pf_structure_id) {
+                        $spacer_class = 'spacing-list-item';
+                    }
+                    $canonical .= '    '.$pf->renderAsListItemEdit('list_item-notebook_page_field_'.$pf->notebook_page_field_id,[$spacer_class])."\n";
+                    $prev_pf_structure_id = $pf->label_metadata_structure_id;
+                }
+            } else {
+                $canonical .= '<li>'.util_lang('no_metadata','ucfirst').'</li>'."\n";
             }
+
+
             $canonical .= '  </ul>
   <h4>'.ucfirst(util_lang('specimens')).'</h4>
   <ul class="specimens">
@@ -279,9 +312,6 @@
 
             $rendered = $np->renderAsEdit();
 
-            $this->assertEqual($canonical,$rendered);
-            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
-
 //            echo "<pre>
 //-----------
 //".htmlentities($canonical)."
@@ -289,6 +319,8 @@
 //".htmlentities($rendered)."
 //-----------
 //</pre>";
+            $this->assertEqual($canonical,$rendered);
+            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
         }
 
         function testRenderAsEdit_newNotebookPage() {
@@ -299,26 +331,22 @@
             $USER = User::getOneFromDb(['username'=>TESTINGUSER], $this->DB);
             $DB = $this->DB;
 
-            $canonical = '<h4>'.util_lang('page_in_notebook','ucfirst').' <a href="'.APP_ROOT_PATH.'/app_code/notebook.php?action=view&notebook_id='.$n->notebook_id.'" id="parent-notebook-link">'.htmlentities($n->name).'</a></h4>
-<div id="rendered_notebook_page_NEW" class="rendered_notebook_page" '.$np->fieldsAsDataAttribs().' data-can-edit="1">
+            $canonical = '<div id="rendered_notebook_page_NEW" class="rendered_notebook_page edit_rendered_notebook_page" '.$np->fieldsAsDataAttribs().' data-can-edit="1">
 <form id="form-edit-notebook-page-base-data" action="'.APP_ROOT_PATH.'/app_code/notebook_page.php">
   <input type="hidden" name="action" value="update"/>
   <input type="hidden" name="notebook_page_id" value="NEW"/>
-  <h3 class="notebook_page_title">'.$n->renderAsLink().': '.util_lang('new_notebook_page_label').'</h3>
-  <span class="select_new_authoritative_plant">'.Authoritative_Plant::renderControlSelectAllAuthoritativePlants().'</span>
-  <span class="created_at">'.util_lang('created_at').' '.util_datetimeFormatted($np->created_at).'</span>, <span class="updated_at">'.util_lang('updated_at').' '.util_datetimeFormatted($np->updated_at).'</span><br/>
-  <span class="owner">'.util_lang('owned_by').' <a href="'.APP_ROOT_PATH.'/app_code/user.php?action=view&user_id=101">'.htmlentities($USER->screen_name).'</a></span><br/>
-  <span class="published_state">'.util_lang('published_false').'</span>, <span class="verified_state">'.util_lang('verified_false').'</span><br/>
+  <input type="hidden" name="notebook_id" value="1001"/>
+  <div id="actions"><button id="edit-submit-control" class="btn btn-success" type="submit" name="edit-submit-control" value="update"><i class="icon-ok-sign icon-white"></i> Save</button>
+  <a id="edit-cancel-control" class="btn" href="'.APP_ROOT_PATH.'/app_code/notebook.php?action=edit&notebook_id=1001"><i class="icon-remove"></i> Cancel</a></div>
+<h4>In notebook <a href="'.APP_ROOT_PATH.'/app_code/notebook.php?action=view&notebook_id=1001" id="parent-notebook-link">testnotebook1</a></h4>
+  <div id="select_new_authoritative_plant_NEW" class="NEW_select_new_authoritative_plant">'.Authoritative_Plant::renderControlSelectAllAuthoritativePlants().'</div>
+  <div class="info-timestamps"><span class="created_at">'.util_lang('created_at').' '.util_datetimeFormatted($np->created_at).'</span>, <span class="updated_at">'.util_lang('updated_at').' '.util_datetimeFormatted($np->updated_at).'</span></div>
+  <div class="info-owner">owned by <a href="'.APP_ROOT_PATH.'/app_code/user.php?action=view&user_id=101">'.htmlentities($USER->screen_name).'</a></div>
+<div class="control-workflows">  <span class="published_state workflow-info">'.util_lang('published_false').'</span>, <span class="verified_state workflow-info">'.util_lang('verified_false').'</span></div>
   <div class="notebook_page_notes"><textarea id="notebook-page-notes" name="notes" rows="4" cols="120">'.util_lang('new_notebook_page_notes').'</textarea></div>
-  <input id="edit-submit-control" class="btn" type="submit" name="edit-submit-control" value="'.util_lang('save','properize').'"/>
-  <a id="edit-cancel-control" class="btn" href="'.APP_ROOT_PATH.'/app_code/notebook_page.php?action=view&notebook_page_id='.$np->notebook_page_id.'">'.util_lang('cancel','properize').'</a>
 </form>
 </div>';
-
             $rendered = $np->renderAsEdit();
-
-            $this->assertEqual($canonical,$rendered);
-            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
 
 //            echo "<pre>
 //-----------
@@ -327,6 +355,8 @@
 //".htmlentities($rendered)."
 //-----------
 //</pre>";
+            $this->assertEqual($canonical,$rendered);
+            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
         }
 
 //    $canonical .= '    <li><a href="" id="btn-add-notebook-page-field" class="creation_link btn">'.util_lang('add_notebook_page_field').'</a></li>

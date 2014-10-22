@@ -59,31 +59,31 @@
 
             $canonical = '';
 
-            $canonical .= '<div class="notebook_page_field-label_metadata">';
-            $canonical .= '<span class="form-field-label">'.util_lang('metadata','properize').'</span>';
+            $canonical .= '<div class="notebook_page_field-label_metadata new-notebook-field-data">';
+            $canonical .= '<div class="form-field-label">'.util_lang('metadata','properize').'</div>';
             $canonical .= Metadata_Structure::renderControlSelectAllMetadataStructures('notebook_page_field-label_metadata_structure_id_ABC')."\n";
             $canonical .= '</div>';
 
-            $canonical .= '<div class="notebook_page_field-value_specific_metadata">';
-            $canonical .= '<span class="form-field-label">'.util_lang('metadata_specific_value','properize').'</span>';
+            $canonical .= '<div class="notebook_page_field-value_specific_metadata new-notebook-field-data">';
+            $canonical .= '<div class="form-field-label">'.util_lang('metadata_specific_value','properize').'</div>';
             $canonical .= '<select name="notebook_page_field-value_metadata_term_value_id_ABC" id="notebook_page_field-value_metadata_term_value_id_ABC" class="metadata_term_value_select_control">'."\n";
             $canonical .= '  <option value="-1">-- '.util_lang('nothing_from_the_list').' --</option>'."\n";
             $canonical .= '</select>'."\n";
             $canonical .= '</div>';
 
-            $canonical .= '<div class="notebook_page_field-value_open_metadata">';
-            $canonical .= '<span class="form-field-label">'.util_lang('metadata_open_value','properize').'</span>';
+            $canonical .= '<div class="notebook_page_field-value_open_metadata new-notebook-field-data">';
+            $canonical .= '<div class="form-field-label">'.util_lang('metadata_open_value','properize').'</div>';
             $canonical .= '<input type="text" name="notebook_page_field-value_open_ABC" id="notebook_page_field-value_open_ABC" class="page_field_open_value" value=""/>'."\n";
             $canonical .= '</div>';
 
 
             $rendered = Notebook_Page_Field::renderFormInteriorForNewNotebookPageField('ABC');
 
+//            echo "<pre>\n".htmlentities($canonical)."\n------------------\n".htmlentities($rendered)."\n</pre>";
 
             $this->assertEqual($canonical,$rendered);
             $this->assertNoPattern('/IMPLEMENTED/',$rendered);
 
-//            echo "<pre>\n".htmlentities($canonical)."\n------------------\n".htmlentities($rendered)."\n</pre>";
         }
 
         //// instance methods - related data
@@ -118,7 +118,7 @@
             $USER = User::getOneFromDb(['username'=>TESTINGUSER], $this->DB);
 
             $canonical = '<li data-notebook_page_field_id="1201" data-created_at="'.$npf->created_at.'" data-updated_at="'.$npf->updated_at.'" data-notebook_page_id="1101" data-label_metadata_structure_id="6002" data-value_metadata_term_value_id="6202" data-value_open="" data-flag_delete="0">'.
-                '<span class="notebook-page-field-label" title="'.htmlentities($mds->description).'">'.htmlentities($mds->name).'</span> : <span class="notebook-page-field-value" title="'.htmlentities($mdtv->description).'">'.htmlentities($mdtv->name).'</span>'.
+                '<div class="notebook-page-field-label field-label" title="'.htmlentities($mds->description).'">'.htmlentities($mds->name).'</div> : <div class="notebook-page-field-value field-value" title="'.htmlentities($mdtv->description).'">'.htmlentities($mdtv->name).'</div>'.
                 '</li>';
 
             $rendered = $npf->renderAsListItem();
@@ -139,7 +139,7 @@
             $USER = User::getOneFromDb(['username'=>TESTINGUSER], $this->DB);
 
             $canonical = '<li data-notebook_page_field_id="1204" data-created_at="'.$npf->created_at.'" data-updated_at="'.$npf->updated_at.'" data-notebook_page_id="1101" data-label_metadata_structure_id="6004" data-value_metadata_term_value_id="0" data-value_open="wavy-ish" data-flag_delete="0">'.
-                '<span class="notebook-page-field-label" title="'.htmlentities($mds->description).'">'.htmlentities($mds->name).'</span> : <span class="notebook-page-field-value"><span class="open-value">wavy-ish</span></span>'.
+                '<div class="notebook-page-field-label field-label" title="'.htmlentities($mds->description).'">'.htmlentities($mds->name).'</div> : <div class="notebook-page-field-value field-value"><span class="open-value">wavy-ish</span></div>'.
                 '</li>';
 
             $rendered = $npf->renderAsListItem();
@@ -161,7 +161,7 @@
             $USER = User::getOneFromDb(['username'=>TESTINGUSER], $this->DB);
 
             $canonical = '<li data-notebook_page_field_id="1205" data-created_at="'.$npf->created_at.'" data-updated_at="'.$npf->updated_at.'" data-notebook_page_id="1104" data-label_metadata_structure_id="6002" data-value_metadata_term_value_id="6205" data-value_open="rare" data-flag_delete="0">'.
-                '<span class="notebook-page-field-label" title="'.htmlentities($mds->description).'">'.htmlentities($mds->name).'</span> : <span class="notebook-page-field-value" title="'.htmlentities($mdtv->description).'">'.htmlentities($mdtv->name).'; <span class="open-value">rare</span></span>'.
+                '<div class="notebook-page-field-label field-label" title="'.htmlentities($mds->description).'">'.htmlentities($mds->name).'</div> : <div class="notebook-page-field-value field-value" title="'.htmlentities($mdtv->description).'">'.htmlentities($mdtv->name).'; <span class="open-value">rare</span></div>'.
                 '</li>';
 
             $rendered = $npf->renderAsListItem();
@@ -182,15 +182,15 @@
             global $USER;
             $USER = User::getOneFromDb(['username'=>TESTINGUSER], $this->DB);
 
-            $canonical = '<li data-notebook_page_field_id="1205" data-created_at="'.$npf->created_at.'" data-updated_at="'.$npf->updated_at.'" data-notebook_page_id="1104" data-label_metadata_structure_id="6002" data-value_metadata_term_value_id="6205" data-value_open="rare" data-flag_delete="0">'.
-                '<span class="notebook-page-field-label" title="'.htmlentities($mds->description).'">'.htmlentities($mds->name).'</span> : '.
+            $canonical = '<li id="list_item-notebook_page_field_1205" data-notebook_page_field_id="1205" data-created_at="'.$npf->created_at.'" data-updated_at="'.$npf->updated_at.'" data-notebook_page_id="1104" data-label_metadata_structure_id="6002" data-value_metadata_term_value_id="6205" data-value_open="rare" data-flag_delete="0">'.
+                '<div class="notebook-page-field-label field-label" title="'.htmlentities($mds->description).'">'.htmlentities($mds->name).'</div> : <div class="notebook-page-field-value field-value">'.
                 $mdts->renderAsSelectControl('page_field_select_1205',6205).
                 '; <input type="text" name="page_field_open_value_1205" id="page_field_open_value_1205" class="page_field_open_value" value="rare"/>'.
-                '</li>';
+                '</div> <button class="btn btn-danger button-mark-pagefield-for-delete" title="Mark this for removal - the actual removal occurs on update" data-do-mark-title="Mark this for removal - the actual removal occurs on update" data-remove-mark-title="Remove the mark for removal" data-for_dom_id="list_item-notebook_page_field_1205" data-notebook_page_field_id="1205"><i class="icon-remove-sign icon-white"></i></button></li>';
 
             $rendered = $npf->renderAsListItemEdit();
 
-//            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
+//            echo "<pre>\n".htmlentities($canonical)."\n--------\n".htmlentities($rendered)."\n</pre>";
 
             $this->assertEqual($canonical,$rendered);
             $this->assertNoPattern('/IMPLEMENTED/',$rendered);
@@ -204,15 +204,15 @@
             global $USER;
             $USER = User::getOneFromDb(['username'=>TESTINGUSER], $this->DB);
 
-            $canonical = '<li data-notebook_page_field_id="1204" data-created_at="'.$npf->created_at.'" data-updated_at="'.$npf->updated_at.'" data-notebook_page_id="1101" data-label_metadata_structure_id="6004" data-value_metadata_term_value_id="0" data-value_open="wavy-ish" data-flag_delete="0">'.
-                '<span class="notebook-page-field-label" title="'.htmlentities($mds->description).'">'.htmlentities($mds->name).'</span> : '.
+            $canonical = '<li id="list_item-notebook_page_field_1204" data-notebook_page_field_id="1204" data-created_at="'.$npf->created_at.'" data-updated_at="'.$npf->updated_at.'" data-notebook_page_id="1101" data-label_metadata_structure_id="6004" data-value_metadata_term_value_id="0" data-value_open="wavy-ish" data-flag_delete="0">'.
+                '<div class="notebook-page-field-label field-label" title="'.htmlentities($mds->description).'">'.htmlentities($mds->name).'</div> : <div class="notebook-page-field-value field-value">'.
                 util_lang('metadata_structure_has_no_term_set').
                 '; <input type="text" name="page_field_open_value_1204" id="page_field_open_value_1204" class="page_field_open_value" value="wavy-ish"/>'.
-                '</li>';
+                '</div> <button class="btn btn-danger button-mark-pagefield-for-delete" title="Mark this for removal - the actual removal occurs on update" data-do-mark-title="Mark this for removal - the actual removal occurs on update" data-remove-mark-title="Remove the mark for removal" data-for_dom_id="list_item-notebook_page_field_1204" data-notebook_page_field_id="1204"><i class="icon-remove-sign icon-white"></i></button></li>';
 
             $rendered = $npf->renderAsListItemEdit();
 
-//            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
+//            echo "<pre>\n".htmlentities($canonical)."\n--------\n".htmlentities($rendered)."\n</pre>";
 
             $this->assertEqual($canonical,$rendered);
             $this->assertNoPattern('/IMPLEMENTED/',$rendered);

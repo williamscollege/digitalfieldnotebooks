@@ -22,15 +22,22 @@
         if ((! isset($_REQUEST['notebook_id'])) || (! is_numeric($_REQUEST['notebook_id']))) {
             util_redirectToAppPage('app_code/notebook.php?action=list','failure',util_lang('no_notebook_specified'));
         }
-        $notebook_page = new Notebook_Page(['notebook_id' => $_REQUEST['notebook_id'],'DB'=>$DB]);
-        $notebook_page->notebook_page_id = 'NEW';
+//        $notebook_page = new Notebook_Page(['notebook_id' => $_REQUEST['notebook_id'],'DB'=>$DB]);
+//        $notebook_page->notebook_page_id = 'NEW';
+//
+        $notebook_page = Notebook_Page::createNewNotebookPageForNotebook($_REQUEST['notebook_id'],$DB);
+
     } else {
-        if ((! isset($_REQUEST['notebook_page_id'])) || (! is_numeric($_REQUEST['notebook_page_id']))) {
-            util_redirectToAppPage('app_code/notebook.php?action=list','failure',util_lang('no_notebook_page_specified'));
-        }
-        $notebook_page = Notebook_Page::getOneFromDb(['notebook_page_id'=>$_REQUEST['notebook_page_id']],$DB);
-        if (! $notebook_page->matchesDb) {
-            util_redirectToAppPage('app_code/notebook.php?action=list','failure',util_lang('no_notebook_page_found'));
+        if ($_REQUEST['notebook_page_id'] == 'NEW') {
+            $notebook_page = Notebook_Page::createNewNotebookPageForNotebook($_REQUEST['notebook_id'],$DB);
+        } else {
+            if ((! isset($_REQUEST['notebook_page_id'])) || (! is_numeric($_REQUEST['notebook_page_id']))) {
+                util_redirectToAppPage('app_code/notebook.php?action=list','failure',util_lang('no_notebook_page_specified'));
+            }
+            $notebook_page = Notebook_Page::getOneFromDb(['notebook_page_id'=>$_REQUEST['notebook_page_id']],$DB);
+            if (! $notebook_page->matchesDb) {
+                util_redirectToAppPage('app_code/notebook.php?action=list','failure',util_lang('no_notebook_page_found'));
+            }
         }
     }
 
@@ -94,88 +101,90 @@
             $notebook_page->updateDb();
         }
 
-        $deleted_notebook_page_field_ids = explode(',',$_REQUEST['deleted_page_field_ids']);
-//        util_prePrintR($deleted_notebook_page_field_ids);
-        if ($deleted_notebook_page_field_ids) {
-            foreach ($deleted_notebook_page_field_ids as $deleted_notebook_page_fied_id) {
-                if ($deleted_notebook_page_fied_id) {
-                    $del_npf = Notebook_Page_Field::getOneFromDb(['notebook_page_field_id'=>$deleted_notebook_page_fied_id],$DB);
-                    if ($del_npf->matchesDb) {
-                        $del_npf->doDelete();
-                    }
-                }
-            }
-        }
-
-        $intitial_notebook_page_field_ids = explode(',',$_REQUEST['initial_page_field_ids']);
-        foreach ($intitial_notebook_page_field_ids as $notebook_page_field_id) {
-            if (! in_array($notebook_page_field_id,$deleted_notebook_page_field_ids)) {
-                $npf = Notebook_Page_Field::getOneFromDb(['notebook_page_field_id'=>$notebook_page_field_id],$DB);
-                if ($npf->matchesDb) {
-                    $new_npf_vals = [
-                        'notebook_page_field-value_open_'.$notebook_page_field_id =>$_REQUEST['page_field_open_value_'.$notebook_page_field_id]
-                    ];
-                    if (isset($_REQUEST['page_field_select_'.$notebook_page_field_id])) {
-                        $new_term_value_id = $_REQUEST['page_field_select_'.$notebook_page_field_id];
-                        if ($new_term_value_id < 1) {
-                            $new_term_value_id = 0;
+        if ($_REQUEST['notebook_page_id'] != 'NEW') {
+            $deleted_notebook_page_field_ids = explode(',',$_REQUEST['deleted_page_field_ids']);
+    //        util_prePrintR($deleted_notebook_page_field_ids);
+            if ($deleted_notebook_page_field_ids) {
+                foreach ($deleted_notebook_page_field_ids as $deleted_notebook_page_fied_id) {
+                    if ($deleted_notebook_page_fied_id) {
+                        $del_npf = Notebook_Page_Field::getOneFromDb(['notebook_page_field_id'=>$deleted_notebook_page_fied_id],$DB);
+                        if ($del_npf->matchesDb) {
+                            $del_npf->doDelete();
                         }
-                        $new_npf_vals['notebook_page_field-value_metadata_term_value_id_'.$notebook_page_field_id] = $new_term_value_id;
                     }
-                    $npf->setFromArray($new_npf_vals);
-                    $npf->updateDb();
                 }
             }
-        }
 
-        $created_notebook_page_field_ids = explode(',',$_REQUEST['created_page_field_ids']);
-        foreach ($created_notebook_page_field_ids as $created_page_field_id) {
-//            echo "TO BE IMPLEMENTED: handle creation of new notebook page fields";
-            if ($created_page_field_id) {
-//                echo "handling page field creation for $created_page_field_id<br/>\n";
-//                util_prePrintR($_REQUEST);
-                $new_npf = Notebook_Page_Field::createNewNotebookPageFieldForNotebookPage($notebook_page->notebook_page_id,$DB);
-                $new_npf->notebook_page_field_id = $created_page_field_id;
-                $new_npf->setFromArray($_REQUEST);
-                if ($new_npf->label_metadata_structure_id != 0) {
-                    $new_npf->notebook_page_field_id = 'NEW';
-                    $new_npf->updateDb();
+            $intitial_notebook_page_field_ids = explode(',',$_REQUEST['initial_page_field_ids']);
+            foreach ($intitial_notebook_page_field_ids as $notebook_page_field_id) {
+                if (! in_array($notebook_page_field_id,$deleted_notebook_page_field_ids)) {
+                    $npf = Notebook_Page_Field::getOneFromDb(['notebook_page_field_id'=>$notebook_page_field_id],$DB);
+                    if ($npf->matchesDb) {
+                        $new_npf_vals = [
+                            'notebook_page_field-value_open_'.$notebook_page_field_id =>$_REQUEST['page_field_open_value_'.$notebook_page_field_id]
+                        ];
+                        if (isset($_REQUEST['page_field_select_'.$notebook_page_field_id])) {
+                            $new_term_value_id = $_REQUEST['page_field_select_'.$notebook_page_field_id];
+                            if ($new_term_value_id < 1) {
+                                $new_term_value_id = 0;
+                            }
+                            $new_npf_vals['notebook_page_field-value_metadata_term_value_id_'.$notebook_page_field_id] = $new_term_value_id;
+                        }
+                        $npf->setFromArray($new_npf_vals);
+                        $npf->updateDb();
+                    }
                 }
             }
-        }
 
-
-        $deleted_specimen_ids = explode(',',$_REQUEST['deleted_specimen_ids']);
-        if ($deleted_specimen_ids) {
-            foreach ($deleted_specimen_ids as $deleted_specimen_id) {
-                $del_s = Specimen::getOneFromDb(['specimen_id'=>$deleted_specimen_id],$DB);
-                if ($del_s->matchedDb) {
-                    $del_s->doDelete();
+            $created_notebook_page_field_ids = explode(',',$_REQUEST['created_page_field_ids']);
+            foreach ($created_notebook_page_field_ids as $created_page_field_id) {
+    //            echo "TO BE IMPLEMENTED: handle creation of new notebook page fields";
+                if ($created_page_field_id) {
+    //                echo "handling page field creation for $created_page_field_id<br/>\n";
+    //                util_prePrintR($_REQUEST);
+                    $new_npf = Notebook_Page_Field::createNewNotebookPageFieldForNotebookPage($notebook_page->notebook_page_id,$DB);
+                    $new_npf->notebook_page_field_id = $created_page_field_id;
+                    $new_npf->setFromArray($_REQUEST);
+                    if ($new_npf->label_metadata_structure_id != 0) {
+                        $new_npf->notebook_page_field_id = 'NEW';
+                        $new_npf->updateDb();
+                    }
                 }
             }
-        }
 
-        $intitial_specimen_ids = explode(',',$_REQUEST['initial_specimen_ids']);
-        foreach ($intitial_specimen_ids as $specimen_id) {
-            if (! in_array($specimen_id,$deleted_specimen_ids)) {
-                $s = Specimen::getOneFromDb(['specimen_id'=>$specimen_id],$DB);
-                if ($s->matchesDb) {
-                    $s->setFromArray($_REQUEST);
-                    $s->updateDb();
+
+            $deleted_specimen_ids = explode(',',$_REQUEST['deleted_specimen_ids']);
+            if ($deleted_specimen_ids) {
+                foreach ($deleted_specimen_ids as $deleted_specimen_id) {
+                    $del_s = Specimen::getOneFromDb(['specimen_id'=>$deleted_specimen_id],$DB);
+                    if ($del_s->matchedDb) {
+                        $del_s->doDelete();
+                    }
                 }
             }
-        }
 
-        $created_specimen_ids = explode(',',$_REQUEST['created_specimen_ids']);
-        foreach ($created_specimen_ids as $created_specimen_id) {
-//            echo "TO BE IMPLEMENTED: handle creation of specimens";
-            if ($created_specimen_id) {
-                $new_s = Specimen::createNewSpecimenForNotebookPage($notebook_page->notebook_page_id,$DB);
-                $new_s->specimen_id = $created_specimen_id;
-                $new_s->setFromArray($_REQUEST);
-                if ($new_s->name != util_lang('new_specimen_name')) {
-                    $new_s->specimen_id = 'NEW';
-                    $new_s->updateDb();
+            $intitial_specimen_ids = explode(',',$_REQUEST['initial_specimen_ids']);
+            foreach ($intitial_specimen_ids as $specimen_id) {
+                if (! in_array($specimen_id,$deleted_specimen_ids)) {
+                    $s = Specimen::getOneFromDb(['specimen_id'=>$specimen_id],$DB);
+                    if ($s->matchesDb) {
+                        $s->setFromArray($_REQUEST);
+                        $s->updateDb();
+                    }
+                }
+            }
+
+            $created_specimen_ids = explode(',',$_REQUEST['created_specimen_ids']);
+            foreach ($created_specimen_ids as $created_specimen_id) {
+    //            echo "TO BE IMPLEMENTED: handle creation of specimens";
+                if ($created_specimen_id) {
+                    $new_s = Specimen::createNewSpecimenForNotebookPage($notebook_page->notebook_page_id,$DB);
+                    $new_s->specimen_id = $created_specimen_id;
+                    $new_s->setFromArray($_REQUEST);
+                    if ($new_s->name != util_lang('new_specimen_name')) {
+                        $new_s->specimen_id = 'NEW';
+                        $new_s->updateDb();
+                    }
                 }
             }
         }
@@ -199,6 +208,12 @@
     } else
     if ($action == 'delete') {
         echo 'TODO: implement delete action';
+
+        $notebook = $notebook_page->getNotebook();
+
+        $notebook_page->executeDelete();
+
+        // go to notebook view
     }
 require_once('../foot.php');
 ?>

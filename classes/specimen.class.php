@@ -178,7 +178,7 @@
                 '<div id="form-edit-specimen-'.$this->specimen_id.'" class="form-edit-specimen" data-specimen_id="'.$this->specimen_id.'">'."\n".
                 '  <h3><input type="text" name="specimen-name_'.$this->specimen_id.'" id="specimen-name_'.$this->specimen_id.'" value="'.htmlentities($this->name).'"/>'."</h3>\n";
 
-            $rendered .= '<div class="control-workflows">';
+            $rendered .= '  <div class="control-workflows">';
             if ($this->specimen_id != 'NEW') {
                 if ($USER->canActOnTarget('publish',$this)) {
                     $rendered .= '  <span class="published_state workflow-control"><input id="specimen-workflow-publish-control_'.$this->specimen_id.'" type="checkbox" name="specimen-flag_workflow_published_'.$this->specimen_id.'" value="1"'.($this->flag_workflow_published ?  ' checked="checked"' : '').' /> '

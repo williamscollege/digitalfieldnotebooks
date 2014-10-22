@@ -118,8 +118,8 @@
     .'</span></div>'."\n".
 '  <div class="notebook-page-notes">'.htmlentities($this->notes)."</div>\n".
 '  <h4>'.ucfirst(util_lang('metadata'))."</h4>\n";
-            $rendered .= '  <ul class="notebook-page-fields">'."\n";
 
+            $rendered .= '  <ul class="notebook-page-fields">'."\n";
             if ($this->page_fields) {
                 $prev_pf_structure_id = $this->page_fields[0]->label_metadata_structure_id;
                 foreach ($this->page_fields as $pf) {
@@ -163,6 +163,8 @@
 
 //            util_prePrintR('TO BE IMPLEMENTED: handle auth plant for new pages (i.e. where auth plant id == 0)');
 
+//            util_prePrintR($this);
+
             global $USER,$ACTIONS;
 
             $actions_attribs = '';
@@ -181,41 +183,26 @@
                 '<div id="rendered_notebook_page_'.$this->notebook_page_id.'" class="rendered_notebook_page edit_rendered_notebook_page" '.$this->fieldsAsDataAttribs().$actions_attribs.">\n".
                 '<form id="form-edit-notebook-page-base-data" action="'.APP_ROOT_PATH.'/app_code/notebook_page.php">'."\n".
                 '  <input type="hidden" name="action" value="update"/>'."\n".
-                '  <input type="hidden" name="notebook_page_id" value="'.$this->notebook_page_id.'"/>'."\n";
-
-//            $rendered .= '  <div id="actions">';
-//            $rendered .= '<input id="edit-submit-control" class="btn" type="submit" name="edit-submit-control" value="'.util_lang((($this->notebook_page_id != 'NEW') ? 'update' : 'save'),'properize').'"/>'."\n";
-//            $rendered .= '  <a id="edit-cancel-control" class="btn" href="'.APP_ROOT_PATH.'/app_code/notebook_page.php?action=view&notebook_page_id='.$this->notebook_page_id.'">'.util_lang('cancel','properize').'</a>';
-//            $rendered .= '</div>'."\n";
+                '  <input type="hidden" name="notebook_page_id" value="'.$this->notebook_page_id.'"/>'."\n".
+                '  <input type="hidden" name="notebook_id" value="'.$this->notebook_id.'"/>'."\n";
             $rendered .= '  <div id="actions">';
             $rendered .= '<button id="edit-submit-control" class="btn btn-success" type="submit" name="edit-submit-control" value="update"><i class="icon-ok-sign icon-white"></i> '.util_lang((($this->notebook_page_id != 'NEW') ? 'update' : 'save'),'properize').'</button>'."\n";
-            $rendered .= '  <a id="edit-cancel-control" class="btn" href="'.APP_ROOT_PATH.'/app_code/notebook_page.php?action=view&notebook_page_id='.$this->notebook_page_id.'"><i class="icon-remove"></i> '.util_lang('cancel','properize').'</a>';
             if ($this->notebook_page_id != 'NEW') {
-
-//                    $rendered .= '  <button id="edit-delete-notebook-page-control" class="btn btn-danger" type="submit" name="edit-submit-control" value="delete"><i class="icon-trash icon-white"></i> '.util_lang('delete','properize').'</button>';
+                $rendered .= '  <a id="edit-cancel-control" class="btn" href="'.APP_ROOT_PATH.'/app_code/notebook_page.php?action=view&notebook_page_id='.$this->notebook_page_id.'"><i class="icon-remove"></i> '.util_lang('cancel','properize').'</a>';
                 $rendered .= '  <a id="edit-delete-notebook-page-control" class="btn btn-danger" href="'.APP_ROOT_PATH.'/app_code/notebook_page.php?action=delete&notebook_page_id='.$this->notebook_page_id.'"><i class="icon-trash icon-white"></i> '.util_lang('delete','properize').'</a>';
-            }
-            $rendered .= '</div>'."\n";
-/*
-            $rendered .= '<div id="actions">';
-            if ($this->notebook_id == 'NEW') {
-//                $rendered .= '  <input id="edit-submit-control" class="btn" type="submit" name="edit-submit-control" value="'.util_lang('save','properize').'"/>'."\n";
-                $rendered .= '  <button id="edit-submit-control" class="btn btn-success" type="submit" name="edit-submit-control"><i class="icon-ok-sign icon-white"></i> '.util_lang('save','properize').'</button>'."\n";
-                $rendered .= '  <a id="edit-cancel-control" class="btn" href="'.APP_ROOT_PATH.'/app_code/notebook.php?action=list"><i class="icon-remove"></i> '.util_lang('cancel','properize').'</a>'."\n";
             } else {
-//                $rendered .= '  <input id="edit-submit-control" class="btn" type="submit" name="edit-submit-control" value="'.util_lang('update','properize').'"/>'."\n";
-                $rendered .= '  <button id="edit-submit-control" class="btn btn-success" type="submit" name="edit-submit-control"><i class="icon-ok-sign icon-white"></i> '.util_lang('update','properize').'</button>'."\n";
-                $rendered .= '  <a id="edit-cancel-control" class="btn" href="'.APP_ROOT_PATH.'/app_code/notebook.php?action=view&notebook_id='.$this->notebook_id.'"><i class="icon-remove"></i> '.util_lang('cancel','properize').'</a>'."\n";
+                $rendered .= '  <a id="edit-cancel-control" class="btn" href="'.APP_ROOT_PATH.'/app_code/notebook.php?action=edit&notebook_id='.$this->notebook_id.'"><i class="icon-remove"></i> '.util_lang('cancel','properize').'</a>';
             }
-            $rendered .= '</div>';
- */
+
+            $rendered .= '</div>'."\n";
             $rendered .= '<h4>'.util_lang('page_in_notebook','ucfirst').' <a href="'.APP_ROOT_PATH.'/app_code/notebook.php?action=view&notebook_id='.$n->notebook_id.'" id="parent-notebook-link">'.htmlentities($n->name).'</a></h4>'."\n";
 
-            $rendered .= '<a class="show-hide-control" href="#" data-for_elt_id="select_new_authoritative_plant_'.$this->notebook_page_id.'">'.util_lang('change_authoritative_plant').'</a>';
-            $rendered .= '  <div id="select_new_authoritative_plant_'.$this->notebook_page_id.'" class="select_new_authoritative_plant">'.Authoritative_Plant::renderControlSelectAllAuthoritativePlants((($this->notebook_page_id != 'NEW') ? $ap->authoritative_plant_id : 0)).'</div>'."\n";
-
             if ($this->notebook_page_id != 'NEW') {
+                $rendered .= '<a class="show-hide-control" href="#" data-for_elt_id="select_new_authoritative_plant_'.$this->notebook_page_id.'">'.util_lang('change_authoritative_plant').'</a>';
+                $rendered .= '  <div id="select_new_authoritative_plant_'.$this->notebook_page_id.'" class="select_new_authoritative_plant">'.Authoritative_Plant::renderControlSelectAllAuthoritativePlants((($this->notebook_page_id != 'NEW') ? $ap->authoritative_plant_id : 0)).'</div>'."\n";
                 $rendered .= '  '.$ap->renderAsViewEmbed()."\n";
+            } else {
+                $rendered .= '  <div id="select_new_authoritative_plant_'.$this->notebook_page_id.'" class="NEW_select_new_authoritative_plant">'.Authoritative_Plant::renderControlSelectAllAuthoritativePlants(0).'</div>'."\n";
             }
 
             $rendered .= '  <div class="info-timestamps"><span class="created_at">'.util_lang('created_at').' '.util_datetimeFormatted($this->created_at).'</span>, <span class="updated_at">'.util_lang('updated_at').' '.util_datetimeFormatted($this->updated_at)."</span></div>\n".
@@ -244,15 +231,12 @@
                     .'</span>,';
                 $rendered .= ' <span class="verified_state workflow-info">'.($this->flag_workflow_validated ? util_lang('verified_true') : util_lang('verified_false'))
                     .'</span>';
-//                $rendered .= '<br/>'."\n";
             }
             $rendered .= "</div>\n";
 
             $rendered .= '  <div class="notebook_page_notes"><textarea id="notebook-page-notes" name="notes" rows="4" cols="120">'.htmlentities($this->notes).'</textarea></div>'."\n";
 
             if ($this->notebook_page_id != 'NEW') {
-//                $rendered .= '  '.$ap->renderAsViewEmbed()."\n";
-
                 $rendered .= '  <h4>'.ucfirst(util_lang('metadata'))."</h4>\n";
                 $rendered .= '  <ul class="notebook-page-fields">'."\n";
                 $rendered .= '    <li><a href="#" id="add_new_notebook_page_field_button" class="btn">'.util_lang('add_notebook_page_field').'</a></li>'."\n";
