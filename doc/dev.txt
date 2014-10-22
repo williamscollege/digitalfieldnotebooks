@@ -1,0 +1,3 @@
+unix command to count lines in the repo:
+
+ wc -l $(git ls-files | grep -v "tests/simpletest" | grep -v "\.mp3" | grep -v "js/jquery" | grep -v "js/bootstrap" | grep -v ".jpg" | grep -v ".png" | grep -v "css/bootstrap")
