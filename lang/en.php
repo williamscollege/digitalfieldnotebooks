@@ -58,6 +58,7 @@ $LANGUAGE['en'] = [
     'page_in_notebook' => 'in notebook',
     'new_notebook_page_label' => 'New Notebook Page (choose a plant and save))',
     'no_metadata' => 'no metadata yet',
+    'msg_notebook_page_deleted' => 'The notebook page has been deleted.',
 
     'fields' => 'fields',
     'field' => 'field',

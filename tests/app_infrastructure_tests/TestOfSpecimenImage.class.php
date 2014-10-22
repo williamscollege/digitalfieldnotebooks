@@ -121,4 +121,8 @@
             $this->assertEqual($canonical,$rendered);
             $this->assertNoPattern('/IMPLEMENTED/',$rendered);
         }
+
+        function testDoDelete() {
+            $this->todo("Implement handling of delete image files? In general, figure out what to do with image files that are deleted/altered");
+        }
     }

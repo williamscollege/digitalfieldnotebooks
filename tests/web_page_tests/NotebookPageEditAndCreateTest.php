@@ -117,7 +117,7 @@ class NotebookPageEditAndCreateTest extends WMSWebTestCase {
         $this->assertFieldById('notebook-page-workflow-publish-control');
         $this->assertNoFieldById('notebook-page-workflow-validate-control');
 
-        $this->assertEltByIdHasAttrOfValue('edit-submit-control','value',util_lang('update','properize'));
+        $this->assertEltByIdHasAttrOfValue('edit-submit-control','value','update');
 
 //        $this->showContent();
     }
@@ -141,7 +141,7 @@ class NotebookPageEditAndCreateTest extends WMSWebTestCase {
         $this->assertFieldById('notebook-page-workflow-publish-control');
         $this->assertFieldById('notebook-page-workflow-validate-control');
 
-        $this->assertEltByIdHasAttrOfValue('edit-submit-control','value',util_lang('update','properize'));
+        $this->assertEltByIdHasAttrOfValue('edit-submit-control','value','update');
     }
 
 //
@@ -226,7 +226,7 @@ class NotebookPageEditAndCreateTest extends WMSWebTestCase {
 //        $this->showContent();
 
 ////        NOTE: the identifier to use for buttons is the value of the value attribute of the button
-        $this->click(util_lang('update','properize'));
+        $this->click('<i class="icon-ok-sign icon-white"></i> '.util_lang('update','properize'));
 //
 //        $this->showContent();
 //
@@ -269,7 +269,7 @@ class NotebookPageEditAndCreateTest extends WMSWebTestCase {
         $this->checkBasicAsserts();
         $this->assertTitle(LANG_APP_NAME . ': ' . ucfirst(util_lang('page')));
         $this->assertLink(htmlentities($n->name));
-        $this->assertEltByIdHasAttrOfValue('rendered_notebook_page_NEW','class','rendered_notebook_page');
+        $this->assertEltByIdHasAttrOfValue('rendered_notebook_page_NEW','id','rendered_notebook_page_NEW');
 
 //        $this->showContent();
     }
@@ -290,10 +290,14 @@ class NotebookPageEditAndCreateTest extends WMSWebTestCase {
     }
 
     function testDeleteNotebookPage() {
-        $this->doLoginBasic();
-        $this->get('http://localhost/digitalfieldnotebooks/app_code/notebook_page.php?action=edit&notebook_page_id=1101');
+        $np = Notebook_Page::getOneFromDb(['notebook_page_id'=>1101],$this->DB);
+        $this->assertTrue($np->matchesDb);
 
-        $this->todo();
+        $this->doLoginBasic();
+        $this->get('http://localhost/digitalfieldnotebooks/app_code/notebook_page.php?action=delete&notebook_page_id=1101');
+
+        $np2 = Notebook_Page::getOneFromDb(['notebook_page_id'=>1101],$this->DB);
+        $this->assertFalse($np2->matchesDb);
     }
 
         function testToDo() {
@@ -305,12 +309,18 @@ class NotebookPageEditAndCreateTest extends WMSWebTestCase {
 //        $this->todo('  ----------  build in-place editing fragments for related data, and associated tests (not much for this, but gets messy once we get to pages)');
 //        $this->todo('test updating base data');
 //        $this->todo('test updating related data via ajax');
-            $this->todo('test updating/saving new page fields - basic');
-            $this->todo('test updating/saving new page fields - with duplicate structures and differing values (do it)');
+//            $this->todo('test updating/saving new page fields - basic');
+//            $this->todo('test updating/saving new page fields - with duplicate structures and differing values (do it)');
             $this->todo('test updating/saving new page fields - with duplicate structures and same values (skip it)');
-            $this->todo('add deletion controls for page fields');
-            $this->todo('test delete fields on save/update');
-            $this->todo('front end implementation of deletion controls (grey out w/ "delete pending" note, have to click update to do actual delete)');
+//            $this->todo('add deletion controls for page fields');
+//            $this->todo('test delete fields on save/update');
+//            $this->todo('front end implementation of deletion controls (grey out w/ "delete pending" note, have to click update to do actual delete)');
+
+// NOTE: cannot test these as they require javascript - instead test the supporting actions via tests of rendering and tests of AJAX support code/pages
+//            $this->todo('test adding specimens');
+//            $this->todo('test deleting specimens');
+//            $this->todo('test adding specimen images');
+//            $this->todo('test deleting specimen images');
     }
 
 }

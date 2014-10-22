@@ -207,13 +207,11 @@
         //echo 'TODO: implement edit and create actions';
     } else
     if ($action == 'delete') {
-        echo 'TODO: implement delete action';
-
         $notebook = $notebook_page->getNotebook();
 
-        $notebook_page->executeDelete();
+        $notebook_page->doDelete();
 
-        // go to notebook view
+        util_redirectToAppPage('app_code/notebook.php?action=view&notebook_id='.$notebook->notebook_id,'info',util_lang('msg_notebook_page_deleted'));
     }
 require_once('../foot.php');
 ?>
