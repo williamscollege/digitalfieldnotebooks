@@ -299,7 +299,7 @@ class Trial_Bad_Db_Linked_No_Table extends Db_Linked {
         $this->assertEqual(5,$testObj->ID());
     }
 
-    function testUpdateFromArray() {
+    function testSetFromArray() {
         $this->_dbClear();
         $this->_dbInsertTestRecord();
 
@@ -311,7 +311,8 @@ class Trial_Bad_Db_Linked_No_Table extends Db_Linked {
             'dblinktest-flagfield_5' => '1'
         ];
 
-        $testObj->updateFromArray($new_vals_ar);
+        $testObj->setFromArray($new_vals_ar);
+        $testObj->updateDb();
 
         $newTestObj = Trial_Db_Linked::getOneFromDb( ['dblinktest_id'=>'5'],$this->DB);
 

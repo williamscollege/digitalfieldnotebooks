@@ -81,32 +81,33 @@
         function testUserRenderMinimal() {
             $u = User::getOneFromDb(['user_id' => 101], $this->DB);
 
-            $info = '<div class="rendered-object user-render user-render-minimal user-render-101" data-for-user="101">'.Auth_Base::$TEST_LNAME.', '.Auth_Base::$TEST_FNAME.'</div>';
+            $canonical = '<div class="rendered-object user-render user-render-minimal user-render-101" data-for-user="101" data-user_screen_name="'.Auth_Base::$TEST_LNAME.', '.Auth_Base::$TEST_FNAME.'">'.Auth_Base::$TEST_LNAME.', '.Auth_Base::$TEST_FNAME.'</div>';
+            $rendered = $u->renderMinimal();
+//            echo "<pre>\n".htmlentities($canonical)."\n-----------------\n".htmlentities($rendered)."\n</pre>";
+            $this->assertEqual($canonical,$rendered);
 
-//            util_prePrintR($info);
-//            util_prePrintR($u->render());
-//
-//            exit;
-
-            $this->assertEqual($u->renderMinimal(),$info);
+            $canonical = '<div class="rendered-object user-render user-render-minimal user-render-101" data-for-user="101" data-user_screen_name="'.Auth_Base::$TEST_LNAME.', '.Auth_Base::$TEST_FNAME.'"><a href="'.APP_ROOT_PATH.'/app_code/user.php?user_id=101">'.Auth_Base::$TEST_LNAME.', '.Auth_Base::$TEST_FNAME.'</a></div>';
+            $rendered = $u->renderMinimal(true);
+//            echo "<pre>\n".htmlentities($canonical)."\n-----------------\n".htmlentities($rendered)."\n</pre>";
+            $this->assertEqual($canonical,$rendered);
         }
 
         function testUserRender() {
             $u = User::getOneFromDb(['user_id' => 101], $this->DB);
-
-            $info = '<div class="rendered-object user-render user-render-minimal user-render-101" data-for-user="101">'.Auth_Base::$TEST_LNAME.', '.Auth_Base::$TEST_FNAME.'</div>';
-
-            $this->assertEqual($u->render(),$info);
+//            $canonical = '<div class="rendered-object user-render user-render-minimal user-render-101" data-for-user="101">'.Auth_Base::$TEST_LNAME.', '.Auth_Base::$TEST_FNAME.'</div>';
+//            $rendered = $u->render();
+//            echo "<pre>\n".htmlentities($canonical)."\n-----------------\n".htmlentities($rendered)."\n</pre>";
+//            $this->assertEqual($canonical,$rendered);
+            $this->todo('implement user render');
         }
 
         function testUserRenderRich() {
             $u = User::getOneFromDb(['user_id' => 101], $this->DB);
-
-            $info = '<div class="rendered-object user-render user-render-minimal user-render-101" data-for-user="101">'.Auth_Base::$TEST_LNAME.', '.Auth_Base::$TEST_FNAME.'</div>';
-
-            $rendered = $u->renderRich();
-
-            $this->assertEqual($rendered,$info);
+//            $canonical = '<div class="rendered-object user-render user-render-minimal user-render-101" data-for-user="101">'.Auth_Base::$TEST_LNAME.', '.Auth_Base::$TEST_FNAME.'</div>';
+//            $rendered = $u->renderRich();
+//            echo "<pre>\n".htmlentities($canonical)."\n-----------------\n".htmlentities($rendered)."\n</pre>";
+//            $this->assertEqual($canonical,$rendered);
+            $this->todo('implement user renderRich');
         }
 
         //// instance methods - related data

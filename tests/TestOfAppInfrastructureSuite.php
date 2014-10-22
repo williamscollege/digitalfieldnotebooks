@@ -4,6 +4,7 @@
 	SimpleTest::prefer(new TextReporter());
 
 	require_once('../institution.cfg.php');
+    require_once('../lang.cfg.php');
 
 	class TestOfAppInfrastructureSuite extends TestSuite {
 		function TestOfAppInfrastructureSuite() {

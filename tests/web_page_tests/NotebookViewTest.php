@@ -165,7 +165,7 @@ class NotebookViewTest extends WMSWebTestCase {
         $this->assertText($n->notes);
 
         // 'edit' control
-        $this->assertEltByIdHasAttrOfValue('btn-edit','href',APP_ROOT_PATH.'/app_code/notebook.php?action=edit&notebook_id=1001');
+        $this->assertEltByIdHasAttrOfValue('notebook-btn-edit-1001','href',APP_ROOT_PATH.'/app_code/notebook.php?action=edit&notebook_id=1001');
         $this->assertLink(util_lang('edit'));
 
         // number of notebook pages

@@ -176,7 +176,7 @@
             $rendered = '<div id="edit_rendered_notebook_'.$this->notebook_id.'" class="edit_rendered_notebook" '.$this->fieldsAsDataAttribs().$actions_attribs.'>'."\n".
                 '<form action="'.APP_ROOT_PATH.'/app_code/notebook.php">'."\n";
 
-            $rendered .= '<div id="actions">';
+            $rendered .= '<div id="actions">'."\n";
             if ($this->notebook_id == 'NEW') {
 //                $rendered .= '  <input id="edit-submit-control" class="btn" type="submit" name="edit-submit-control" value="'.util_lang('save','properize').'"/>'."\n";
                 $rendered .= '  <button id="edit-submit-control" class="btn btn-success" type="submit" name="edit-submit-control"><i class="icon-ok-sign icon-white"></i> '.util_lang('save','properize').'</button>'."\n";
@@ -186,7 +186,7 @@
                 $rendered .= '  <button id="edit-submit-control" class="btn btn-success" type="submit" name="edit-submit-control"><i class="icon-ok-sign icon-white"></i> '.util_lang('update','properize').'</button>'."\n";
                 $rendered .= '  <a id="edit-cancel-control" class="btn" href="'.APP_ROOT_PATH.'/app_code/notebook.php?action=view&notebook_id='.$this->notebook_id.'"><i class="icon-remove"></i> '.util_lang('cancel','properize').'</a>'."\n";
             }
-            $rendered .= '</div>';
+            $rendered .= "</div>\n";
             $rendered .= '  <input type="hidden" name="action" value="update"/>'."\n".
                 '  <input type="hidden" name="notebook_id" value="'.$this->notebook_id.'"/>'."\n".
                 '  <h3 class="notebook_title">'.ucfirst(util_lang('notebook')).': <input id="notebook-name" type="text" name="name" value="'.$this->name.'"/></h3>'."\n".

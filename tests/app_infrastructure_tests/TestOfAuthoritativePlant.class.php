@@ -174,29 +174,41 @@
             $ap = Authoritative_Plant::getOneFromDb(['authoritative_plant_id' => 5001], $this->DB);
 
             $ap->cacheExtras();
+            $ap->cacheSpecimens();
 
-            $canonical =
-            '<div id="authoritative_plant_embed_5001" class="authoritative-plant embedded" data-authoritative_plant_id="5001">
-  <h3>'.$ap->renderAsShortText().'</h3>
+            $canonical = '<div id="authoritative_plant_embed_5001" class="authoritative-plant embedded" data-authoritative_plant_id="5001">
+  <h3>'.$ap->renderAsLink().'</h3>
+  <div class="canonical_image"><img class="plant-image external-reference" src="https://farm6.staticflickr.com/5556/14761853313_17d5a31479_z.jpg"/></div>
   <ul class="base-info">
-    <li><span class="field-label">'.util_lang('class').'</span> : <span class="field-value taxonomy taxonomy-class">'.htmlentities($ap->class).'</span></li>
-    <li><span class="field-label">'.util_lang('order').'</span> : <span class="field-value taxonomy taxonomy-order">'.htmlentities($ap->order).'</span></li>
-    <li><span class="field-label">'.util_lang('family').'</span> : <span class="field-value taxonomy taxonomy-family">'.htmlentities($ap->family).'</span></li>
-    <li><span class="field-label">'.util_lang('genus').'</span> : <span class="field-value taxonomy taxonomy-genus">'.htmlentities($ap->genus).'</span></li>
-    <li><span class="field-label">'.util_lang('species').'</span> : <span class="field-value taxonomy taxonomy-species">'.htmlentities($ap->species).'</span></li>
-    <li><span class="field-label">'.util_lang('variety').'</span> : <span class="field-value taxonomy taxonomy-variety">\''.htmlentities($ap->variety).'\'</span></li>
-    <li><span class="field-label">'.util_lang('catalog_identifier').'</span> : <span class="field-value">'.htmlentities($ap->catalog_identifier).'</span></li>
-  </ul>
-  <ul class="extra-info">
+    <li><div class="field-label">'.util_lang('class').' : </div><div class="field-value taxonomy taxonomy-class">'.htmlentities($ap->class).'</div></li>
+    <li><div class="field-label">'.util_lang('order').' : </div><div class="field-value taxonomy taxonomy-order">'.htmlentities($ap->order).'</div></li>
+    <li><div class="field-label">'.util_lang('family').' : </div><div class="field-value taxonomy taxonomy-family">'.htmlentities($ap->family).'</div></li>
+    <li><div class="field-label">'.util_lang('genus').' : </div><div class="field-value taxonomy taxonomy-genus">'.htmlentities($ap->genus).'</div></li>
+    <li><div class="field-label">'.util_lang('species').' : </div><div class="field-value taxonomy taxonomy-species">'.htmlentities($ap->species).'</div></li>
+    <li><div class="field-label">'.util_lang('variety').' : </div><div class="field-value taxonomy taxonomy-variety">\''.htmlentities($ap->variety).'\'</div></li>
+    <li><div class="field-label">'.util_lang('catalog_identifier').' : </div><div class="field-value">'.htmlentities($ap->catalog_identifier).'</div></li>
+  </ul><br/>
+  <a class="show-hide-control" href="#" data-for_elt_id="authoritative_plant-details_5001">'.util_lang('show_hide').' '.util_lang('extra_info').'</a>
+  <div class="details-info" id="authoritative_plant-details_5001">
+  <ul class="extra-info" id="authoritative_plant-extra_info_5001">
 ';
             foreach ($ap->extras as $extra) {
                 $canonical .='    '.$extra->renderAsListItem()."\n";
             }
-            $canonical .='  </ul>
+            $canonical .= '  </ul>
+  <h4>'.util_lang('specimens','properize').'</h4>
+  <ul class="specimens">
+';
+            foreach ($ap->specimens as $specimen) {
+                $canonical .= '    <li>'.$specimen->renderAsViewEmbed()."</li>\n";
+            }
+            $canonical .= '  </ul>
+</div>
 </div>';
+
             $rendered = $ap->renderAsViewEmbed();
 
-    //            echo "<pre>\n".htmlentities($canonical)."\n------------------\n".htmlentities($rendered)."\n</pre>";
+//                echo "<pre>\n".htmlentities($canonical)."\n------------------\n".htmlentities($rendered)."\n</pre>";
 
             $this->assertEqual($canonical,$rendered);
         }

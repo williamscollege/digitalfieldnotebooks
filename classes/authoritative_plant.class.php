@@ -177,9 +177,8 @@
             } else {
                 $rendered .='    <li>'.util_lang('no_authoritative_plant_extra_info','ucfirst').'</li>'."\n";
             }
-            $rendered .='  </ul>';
+            $rendered .='  </ul>'."\n";
 
-            $rendered .= '  </ul>';
 $rendered .= '  <h4>'.util_lang('specimens','properize').'</h4>
   <ul class="specimens">
 ';
@@ -190,7 +189,6 @@ $rendered .= '  <h4>'.util_lang('specimens','properize').'</h4>
             } else {
                 $rendered .='    <li>'.util_lang('no_authoritative_plant_specimens','ucfirst').'</li>'."\n";
             }
-
             $rendered .='  </ul>
 </div>
 </div>';
