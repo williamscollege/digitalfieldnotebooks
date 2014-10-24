@@ -40,7 +40,7 @@ class NotebookPageField_AJAX_Test extends WMSWebTestCase {
 
         $this->get('http://localhost/digitalfieldnotebooks/ajax_actions/specimen.php?action=create&unique=ABC123&notebook_page_id=1101');
 
-        $expected = Specimen::renderFormInteriorForNewSpecimen('ABC123',$this->DB);
+        $expected = '<div class="specimen embedded">'."\n".Specimen::renderFormInteriorForNewSpecimen('ABC123',$this->DB)."\n</div>";
 
         $this->assertNoPattern('/error/i');
 

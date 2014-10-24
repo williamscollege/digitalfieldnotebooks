@@ -9,6 +9,19 @@
 $(document).ready(function () {
 //    alert("edit notebook page js loaded");
 
+
+    $('#edit-delete-notebook-page-control').click(function(evt) {
+        evt.preventDefault();
+        dfnUtil_launchConfirm("Are you sure you want to delete this entire notebook page, including all of its specimens?",handleDeletePage);
+    });
+
+    function handleDeletePage() {
+//        alert("handling delete");
+        window.location = $('#edit-delete-notebook-page-control').attr("href");
+    }
+
+    //--------------------------------------------------------------------
+
     function metadataStructureSelectionHandler() {
         var base_id = $(this).attr("id");
 //        alert("'called metadataStructureSelectionHandler on " + base_id);
@@ -82,9 +95,8 @@ $(document).ready(function () {
                     created_ids += unique_id;
                     $("#created_page_field_ids").attr("value",created_ids);
 
-//                    $("#notebook_page_field-label_metadata_structure_id_"+unique_id).css("background","#f00");
+                    // now that the stuff has been added to the DOM, don't forget to connect the handler to update term values when a structure is selected
                     $("#notebook_page_field-label_metadata_structure_id_"+unique_id).change(metadataStructureSelectionHandler);
-//                    notebook_page_field-value_metadata_term_value_id_b8jXdC7fpTqH
 
                 } else {
                     dfnUtil_setTransientAlert("error",data.status+": "+data.note,$("#add_new_notebook_page_field_button"));
@@ -98,15 +110,7 @@ $(document).ready(function () {
 
     });
 
-    $('#edit-delete-notebook-page-control').click(function(evt) {
-        evt.preventDefault();
-        dfnUtil_launchConfirm("Are you sure you want to delete this entire notebook page, including all of its specimens?",handleDeletePage);
-    });
-
-    function handleDeletePage() {
-//        alert("handling delete");
-        window.location = $('#edit-delete-notebook-page-control').attr("href");
-    }
+    //--------------------------------------------------------------------
 
     function toggleDeletionListEntryFor(db_id) {
 
@@ -152,6 +156,57 @@ $(document).ready(function () {
 
         }
         toggleDeletionListEntryFor(db_id);
+    });
+
+    //--------------------------------------------------------------------
+
+    $("#add_new_specimen_button").click(function(evt){
+        evt.preventDefault();
+        if ($(this).hasClass("disabled")) {
+            return;
+        }
+
+        var unique_id = randomString(12);
+
+        var notebook_page_id = $("#notebook_page_id").attr("value");
+
+        var label_holder = $("#add_new_specimen_button").html();
+        $("#add_new_specimen_button").html("......");
+        $("#add_new_specimen_button").addClass("disabled");
+
+//        $(".notebook_page_fields").css("background-color","#f00");
+        $.ajax({
+            url: appRootPath()+"/ajax_actions/specimen.php",
+            data: {
+                "action": "create",
+                "unique": unique_id,
+                "notebook_page_id": notebook_page_id
+            },
+            dataType: "json",
+            error: function(req,textStatus,err){
+                alert("error making ajax request: "+err.toString());
+            },
+            success: function(data,textStatus,req) {
+//               alert("ajax success: "+data.html_output);
+                if (data.status == 'success') {
+                    var new_li = '<li class="list-item-new-specimen">'+data.html_output+'</li>';
+                    $("#add_new_specimen_button").parent().after(new_li);
+                    var created_ids = $("#created_specimen_ids").attr("value");
+                    if (created_ids.length > 0) {
+                        created_ids += ",";
+                    }
+                    created_ids += unique_id;
+                    $("#created_specimen_ids").attr("value",created_ids);
+                } else {
+                    dfnUtil_setTransientAlert("error",data.status+": "+data.note,$("#add_new_specimen_button"));
+                }
+            },
+            complete: function(req,textStatus) {
+                $("#add_new_specimen_button").html(label_holder);
+                $("#add_new_specimen_button").removeClass("disabled");
+            }
+        });
+
     });
 
 });

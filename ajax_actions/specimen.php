@@ -66,7 +66,7 @@
     #      create - return an appropriate form field set
 
     if ($has_permission && ($action == 'create')) {
-        $results['html_output']  = Specimen::renderFormInteriorForNewSpecimen($unique_str,$DB);
+        $results['html_output']  = '<div class="specimen embedded">'."\n".Specimen::renderFormInteriorForNewSpecimen($unique_str,$DB)."\n</div>";
         $results['status']       = 'success';
     }
 
