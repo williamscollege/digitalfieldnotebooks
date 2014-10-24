@@ -34,6 +34,21 @@
         exit;
     }
 
+    $unique_str = '';
+    if (isset($_REQUEST['unique'])) {
+        $unique_str = $_REQUEST['unique'];
+        if (! preg_match('/^[A-Z0-9]+$/i',$unique_str)) {
+            $results['note'] = 'parameter "unique": '.util_lang('invalid_string_base_chars_only');
+            echo json_encode($results);
+            exit;
+        }
+    }
+    if (! $unique_str) {
+        $results['note'] = util_lang('msg_missing_parameter').' : unique';
+        echo json_encode($results);
+        exit;
+    }
+
     # 2. confirm that the user is allowed to take that action
     $has_permission = $USER->flag_is_system_admin;
     if (! $has_permission) {
@@ -73,13 +88,8 @@
     #      create - return an appropriate form field set
 
     if ($has_permission && ($action == 'create')) {
-        $unique_str = $_REQUEST['unique'];
-        if (! preg_match('/^[A-Z0-9]+$/i',$unique_str)) {
-            $results['note'] = 'parameter "unique": '.util_lang('invalid_string_base_chars_only');
-        } else {
-            $results['html_output']  = Notebook_Page_Field::renderFormInteriorForNewNotebookPageField($unique_str);
-            $results['status']       = 'success';
-        }
+        $results['html_output']  = Notebook_Page_Field::renderFormInteriorForNewNotebookPageField($unique_str);
+        $results['status']       = 'success';
     }
 
 echo json_encode($results);
