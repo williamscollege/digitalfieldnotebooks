@@ -25,6 +25,7 @@ $LANGUAGE['en'] = [
     'msg_failed_sign_in' => 'Sign in failed.',
     'msg_record_missing' => 'Record does not exist in database',
     'msg_record_duplicate' => 'Record already exists in database',
+    'msg_missing_parameter' => 'Required information is missing',
 
     'alert_error' => 'Error!',
     'alert_success' => 'Success!',

@@ -97,6 +97,21 @@
             return $s;
         }
 
+
+        public static function renderFormInteriorForNewSpecimen($unique_str,$db_connection) {
+            $s = Specimen::createNewSpecimenForNotebookPage(0,$db_connection);
+            $s->specimen_id = $unique_str;
+
+            $rendered = '<h3><input type="text" name="specimen-name_'.$s->specimen_id.'" id="specimen-name_'.$s->specimen_id.'" value="'.htmlentities($s->name).'"/></h3>'."\n".
+'<ul class="base-info">'."\n".
+'  <li><div class="field-label">'.util_lang('coordinates').'</div> : <div class="field-value"><input type="text" name="specimen-gps_longitude_'.$s->specimen_id.'" id="specimen-gps_longitude_'.$s->specimen_id.'" value="'.htmlentities($s->gps_longitude).'"/>, <input type="text" name="specimen-gps_latitude_'.$s->specimen_id.'" id="specimen-gps_latitude_'.$s->specimen_id.'" value="'.htmlentities($s->gps_latitude).'"/></div></li>'."\n".
+'  <li><div class="field-label">'.util_lang('notes').'</div> : <div class="field-value"><textarea name="specimen-notes_'.$s->specimen_id.'" id="specimen-notes_'.$s->specimen_id.'" class="specimen-notes" row="4" cols="120">'.htmlentities($s->notes).'</textarea></div></li>'."\n".
+'  <li><div class="field-label">'.util_lang('catalog_identifier').'</div> : <div class="field-value"><input type="text" name="specimen-catalog_identifier_'.$s->specimen_id.'" id="specimen-catalog_identifier_'.$s->specimen_id.'" value="'.htmlentities($s->catalog_identifier).'"/></div></li>'."\n".
+'</ul>';
+
+            return $rendered;
+        }
+
         //---------------
 
         public function loadImages() {
