@@ -38,7 +38,7 @@ class NotebookPageField_AJAX_Test extends WMSWebTestCase {
         global $DB;
         $DB = $this->DB;
 
-        $this->get('http://localhost/digitalfieldnotebooks/ajax_actions/notebook_page_field.php?action=create&unique=ABC123');
+        $this->get('http://localhost/digitalfieldnotebooks/ajax_actions/notebook_page_field.php?action=create&unique=ABC123&notebook_page_id=1101');
 
         $expected = Notebook_Page_Field::renderFormInteriorForNewNotebookPageField('ABC123');
 

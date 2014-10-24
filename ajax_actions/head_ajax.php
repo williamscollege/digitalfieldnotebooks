@@ -40,6 +40,7 @@
     #------------------------------------------------#
     $results = [
         'status' => 'failure',
-        'note'   => 'unknown reason'
+        'note'   => 'unknown reason',
+        'html_output'   => ''
     ];
 ?>

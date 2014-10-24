@@ -52,6 +52,7 @@ $(document).ready(function () {
 //        alert("TODO:\n4. update value list from selected structure");
         var unique_id = randomString(12);
 
+        var notebook_page_id = $("#notebook_page_id").attr("value");
 
         var label_holder = $("#add_new_notebook_page_field_button").html();
         $("#add_new_notebook_page_field_button").html("......");
@@ -62,7 +63,8 @@ $(document).ready(function () {
            url: appRootPath()+"/ajax_actions/notebook_page_field.php",
            data: {
                 "action": "create",
-                "unique": unique_id
+                "unique": unique_id,
+                "notebook_page_id": notebook_page_id
            },
            dataType: "json",
            error: function(req,textStatus,err){

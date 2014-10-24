@@ -183,8 +183,8 @@
                 '<div id="rendered_notebook_page_'.$this->notebook_page_id.'" class="rendered_notebook_page edit_rendered_notebook_page" '.$this->fieldsAsDataAttribs().$actions_attribs.">\n".
                 '<form id="form-edit-notebook-page-base-data" action="'.APP_ROOT_PATH.'/app_code/notebook_page.php">'."\n".
                 '  <input type="hidden" name="action" value="update"/>'."\n".
-                '  <input type="hidden" name="notebook_page_id" value="'.$this->notebook_page_id.'"/>'."\n".
-                '  <input type="hidden" name="notebook_id" value="'.$this->notebook_id.'"/>'."\n";
+                '  <input type="hidden" id="notebook_page_id" name="notebook_page_id" value="'.$this->notebook_page_id.'"/>'."\n".
+                '  <input type="hidden" id="notebook_id" name="notebook_id" value="'.$this->notebook_id.'"/>'."\n";
             $rendered .= '  <div id="actions">';
             $rendered .= '<button id="edit-submit-control" class="btn btn-success" type="submit" name="edit-submit-control" value="update"><i class="icon-ok-sign icon-white"></i> '.util_lang((($this->notebook_page_id != 'NEW') ? 'update' : 'save'),'properize').'</button>'."\n";
             if ($this->notebook_page_id != 'NEW') {
