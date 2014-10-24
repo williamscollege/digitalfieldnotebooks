@@ -127,7 +127,7 @@
 '  <div class="info-timestamps"><span class="created_at">'.util_lang('created_at').' '.util_datetimeFormatted($this->created_at).'</span>, <span class="updated_at">'.util_lang('updated_at').' '.util_datetimeFormatted($this->updated_at).'</span></div>'."\n".
 '  <div class="info-owner">'.util_lang('owned_by').' <a href="'.APP_ROOT_PATH.'/app_code/user.php?action=view&user_id='.$notebook_owner->user_id.'">'.htmlentities($notebook_owner->screen_name).'</a></div>'."\n".
 '  <div class="info-workflow"><span class="published_state">'.($this->flag_workflow_published ? util_lang('published_true') : util_lang('published_false'))
-                .'</span>, <span class="verified_state">'.($this->flag_workflow_validated ? util_lang('verified_true') : util_lang('verified_false'))
+                .'</span>, <span class="verified_state verified_state_'.($this->flag_workflow_validated ? 'true' : 'false').'">'.($this->flag_workflow_validated ? util_lang('verified_true') : util_lang('verified_false'))
                 .'</span></div>'."\n".
 '  <div class="notebook-notes">'.htmlentities($this->notes).'</div>'."\n".
 '  <h4>'.ucfirst(util_lang('pages')).'</h4>'."\n".
@@ -203,10 +203,10 @@
                 }
 
                 if ($USER->canActOnTarget('verify',$this)) {
-                    $rendered .= '  <span class="verified_state workflow-control"><input id="notebook-workflow-validate-control" type="checkbox" name="flag_workflow_validated" value="1"'.($this->flag_workflow_validated ?  ' checked="checked"' : '').' /> '
+                    $rendered .= '  <span class="verified_state verified_state_'.($this->flag_workflow_validated ? 'true' : 'false').' workflow-control"><input id="notebook-workflow-validate-control" type="checkbox" name="flag_workflow_validated" value="1"'.($this->flag_workflow_validated ?  ' checked="checked"' : '').' /> '
                         .util_lang('verify').'</span>';
                 } else {
-                    $rendered .= ' <span class="verified_state workflow-info">'.($this->flag_workflow_validated ? util_lang('verified_true') : util_lang('verified_false'))
+                    $rendered .= ' <span class="verified_state verified_state_'.($this->flag_workflow_validated ? 'true' : 'false').' workflow-info">'.($this->flag_workflow_validated ? util_lang('verified_true') : util_lang('verified_false'))
                         .'</span>';
                 }
             }

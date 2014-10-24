@@ -188,7 +188,7 @@
   '.$ap->renderAsViewEmbed().'
   <div class="info-timestamps"><span class="created_at">'.util_lang('created_at').' '.util_datetimeFormatted($np->created_at).'</span>, <span class="updated_at">'.util_lang('updated_at').' '.util_datetimeFormatted($np->updated_at).'</span></div>
   <div class="info-owner">'.util_lang('owned_by').' <a href="'.APP_ROOT_PATH.'/app_code/user.php?action=view&user_id=101">'.$USER->screen_name.'</a></div>
-  <div class="info-workflow"><span class="published_state">'.util_lang('published_false').'</span>, <span class="verified_state">'.util_lang('verified_false').'</span></div>
+  <div class="info-workflow"><span class="published_state">'.util_lang('published_false').'</span>, <span class="verified_state verified_state_false">'.util_lang('verified_false').'</span></div>
   <div class="notebook-page-notes">testing notebook page the first in testnotebook1, owned by user 101</div>
   <h4>'.ucfirst(util_lang('metadata')).'</h4>'."\n";
 
@@ -266,7 +266,7 @@
   '.$ap->renderAsViewEmbed().'
   <div class="info-timestamps"><span class="created_at">'.util_lang('created_at').' '.util_datetimeFormatted($np->created_at).'</span>, <span class="updated_at">'.util_lang('updated_at').' '.util_datetimeFormatted($np->updated_at).'</span></div>
   <div class="info-owner">'.util_lang('owned_by').' <a href="'.APP_ROOT_PATH.'/app_code/user.php?action=view&user_id=101">'.htmlentities($USER->screen_name).'</a></div>
-<div class="control-workflows">  <span class="published_state workflow-control"><input id="notebook-page-workflow-publish-control" type="checkbox" name="flag_workflow_published" value="1" /> '.util_lang('publish').'</span>, <span class="verified_state workflow-info">'.util_lang('verified_false').'</span><br/>
+<div class="control-workflows">  <span class="published_state workflow-control"><input id="notebook-page-workflow-publish-control" type="checkbox" name="flag_workflow_published" value="1" /> '.util_lang('publish').'</span>, <span class="verified_state verified_state_false workflow-info">'.util_lang('verified_false').'</span><br/>
 </div>
   <div class="notebook_page_notes"><textarea id="notebook-page-notes" name="notes" rows="4" cols="120">testing notebook page the first in testnotebook1, owned by user 101</textarea></div>
   <h4>'.ucfirst(util_lang('metadata')).'</h4>
@@ -342,7 +342,7 @@
   <div id="select_new_authoritative_plant_NEW" class="NEW_select_new_authoritative_plant">'.Authoritative_Plant::renderControlSelectAllAuthoritativePlants().'</div>
   <div class="info-timestamps"><span class="created_at">'.util_lang('created_at').' '.util_datetimeFormatted($np->created_at).'</span>, <span class="updated_at">'.util_lang('updated_at').' '.util_datetimeFormatted($np->updated_at).'</span></div>
   <div class="info-owner">owned by <a href="'.APP_ROOT_PATH.'/app_code/user.php?action=view&user_id=101">'.htmlentities($USER->screen_name).'</a></div>
-<div class="control-workflows">  <span class="published_state workflow-info">'.util_lang('published_false').'</span>, <span class="verified_state workflow-info">'.util_lang('verified_false').'</span></div>
+<div class="control-workflows">  <span class="published_state workflow-info">'.util_lang('published_false').'</span>, <span class="verified_state verified_state_false workflow-info">'.util_lang('verified_false').'</span></div>
   <div class="notebook_page_notes"><textarea id="notebook-page-notes" name="notes" rows="4" cols="120">'.util_lang('new_notebook_page_notes').'</textarea></div>
 </form>
 </div>';

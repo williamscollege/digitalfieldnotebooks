@@ -205,10 +205,10 @@
                 }
 
                 if ($USER->canActOnTarget('verify',$this)) {
-                    $rendered .= '  <span class="verified_state workflow-control"><input id="specimen-workflow-validate-control_'.$this->specimen_id.'" type="checkbox" name="specimen-flag_workflow_validated_'.$this->specimen_id.'" value="1"'.($this->flag_workflow_validated ?  ' checked="checked"' : '').' /> '
+                    $rendered .= '  <span class="verified_state verified_state_'.($this->flag_workflow_validated ? 'true' : 'false').' workflow-control"><input id="specimen-workflow-validate-control_'.$this->specimen_id.'" type="checkbox" name="specimen-flag_workflow_validated_'.$this->specimen_id.'" value="1"'.($this->flag_workflow_validated ?  ' checked="checked"' : '').' /> '
                         .util_lang('verify').'</span>';
                 } else {
-                    $rendered .= ' <span class="verified_state workflow-info">'.($this->flag_workflow_validated ? util_lang('verified_true') : util_lang('verified_false'))
+                    $rendered .= ' <span class="verified_state verified_state_'.($this->flag_workflow_validated ? 'true' : 'false').' workflow-info">'.($this->flag_workflow_validated ? util_lang('verified_true') : util_lang('verified_false'))
                         .'</span>';
                 }
             }

@@ -225,6 +225,16 @@ h3 input {
     color: #888;
 }
 
+.verified_state_false {
+    color: #d00;
+    font-weight: bold;
+}
+
+.verified_state_true {
+    color: #070;
+    font-weight: bold;
+}
+
 /***********************************************************************************/
 /* notebooks */
 
