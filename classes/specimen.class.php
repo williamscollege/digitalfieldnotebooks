@@ -190,6 +190,7 @@
             global $USER;
 
             $rendered = '<div class="specimen embedded">'."\n".
+                '<button class="btn btn-danger button-mark-specimen-for-delete" title="'.util_lang('mark_for_delete','ucfirst').'" data-do-mark-title="'.util_lang('mark_for_delete','ucfirst').'" data-remove-mark-title="'.util_lang('unmark_for_delete','ucfirst').'" data-for_dom_id="list_item-specimen_'.$this->specimen_id.'" data-specimen_id="'.$this->specimen_id.'"><i class="icon-remove-sign icon-white"></i></button>'."\n".
                 '<div id="form-edit-specimen-'.$this->specimen_id.'" class="form-edit-specimen" data-specimen_id="'.$this->specimen_id.'">'."\n".
                 '  <h3><input type="text" name="specimen-name_'.$this->specimen_id.'" id="specimen-name_'.$this->specimen_id.'" value="'.htmlentities($this->name).'"/>'."</h3>\n";
 

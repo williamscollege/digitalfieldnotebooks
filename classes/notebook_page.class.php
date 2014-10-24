@@ -260,7 +260,7 @@
                 $rendered .= '    <li><a href="#" id="add_new_specimen_button" class="btn">'.util_lang('add_specimen').'</a></li>'."\n";
                 if ($this->specimens) {
                     foreach ($this->specimens as $specimen) {
-                        $rendered .= '    <li>'.$specimen->renderAsEditEmbed()."</li>\n";
+                        $rendered .= '    <li id="list_item-specimen_'.$specimen->specimen_id.'">'.$specimen->renderAsEditEmbed()."</li>\n";
                     }
                 } else {
                     $rendered .= '<li>'.util_lang('no_metadata','ucfirst').'</li>'."\n";

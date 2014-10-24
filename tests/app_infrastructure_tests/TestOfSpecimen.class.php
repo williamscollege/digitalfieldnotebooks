@@ -226,6 +226,7 @@
 
             $canonical =
                 '<div class="specimen embedded">
+<button class="btn btn-danger button-mark-specimen-for-delete" title="Mark this for removal - the actual removal occurs on update" data-do-mark-title="Mark this for removal - the actual removal occurs on update" data-remove-mark-title="Undo the mark for removal" data-for_dom_id="list_item-specimen_8001" data-specimen_id="8001"><i class="icon-remove-sign icon-white"></i></button>
 <div id="form-edit-specimen-'.$s->specimen_id.'" class="form-edit-specimen" data-specimen_id="'.$s->specimen_id.'">
   <h3><input type="text" name="specimen-name_'.$s->specimen_id.'" id="specimen-name_'.$s->specimen_id.'" value="'.htmlentities($s->name).'"/></h3>
   <div class="control-workflows">  <span class="published_state workflow-control"><input id="specimen-workflow-publish-control_'.$s->specimen_id.'" type="checkbox" name="specimen-flag_workflow_published_'.$s->specimen_id.'" value="1" checked="checked" /> publish</span>,  <span class="verified_state workflow-control"><input id="specimen-workflow-validate-control_'.$s->specimen_id.'" type="checkbox" name="specimen-flag_workflow_validated_'.$s->specimen_id.'" value="1" checked="checked" /> verify</span></div>

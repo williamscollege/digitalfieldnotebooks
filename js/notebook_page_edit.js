@@ -112,7 +112,7 @@ $(document).ready(function () {
 
     //--------------------------------------------------------------------
 
-    function toggleDeletionListEntryFor(db_id) {
+    function togglePageFieldDeletionListEntryFor(db_id) {
 
         var current_delete_list = $("#deleted_page_field_ids").attr("value");
         var haystack = ","+current_delete_list+",";
@@ -155,7 +155,7 @@ $(document).ready(function () {
             $(this).attr("title",$(this).attr("data-remove-mark-title"));
 
         }
-        toggleDeletionListEntryFor(db_id);
+        togglePageFieldDeletionListEntryFor(db_id);
     });
 
     //--------------------------------------------------------------------
@@ -206,7 +206,61 @@ $(document).ready(function () {
                 $("#add_new_specimen_button").removeClass("disabled");
             }
         });
-
     });
 
+    //--------------------------------------------------------------------
+
+    function toggleSpecimenDeletionListEntryFor(db_id) {
+        var current_delete_list = $("#deleted_specimen_ids").attr("value");
+        var haystack = ","+current_delete_list+",";
+
+        var needle = ","+db_id+",";
+        var needle_index = haystack.indexOf(needle);
+
+        if (needle_index == -1) { // not there, so add it
+            if (current_delete_list.length > 0) {
+                $("#deleted_specimen_ids").attr("value",current_delete_list+","+db_id);
+            } else {
+                $("#deleted_specimen_ids").attr("value",db_id);
+            }
+        } else {
+            var needle_free_haystack = haystack.replace(needle,',');
+            var new_delete_list = needle_free_haystack.replace(/^,|,$/gm,'');
+            $("#deleted_specimen_ids").attr("value",new_delete_list);
+        }
+    }
+
+    $(".button-mark-specimen-for-delete").click(function(evt){
+//        alert('button-mark-specimen-for-delete clicked');
+        evt.preventDefault();
+        var dom_id = $(this).attr("data-for_dom_id");
+        var db_id = $(this).attr("data-specimen_id");
+//        alert("handle mark for delete for "+dom_id+" (visual, and add to the hidden list)");
+
+        if ($("#"+dom_id).hasClass('delete-marked')) {
+            $("#"+dom_id).removeClass('delete-marked');
+            $("#"+dom_id+" button i").addClass("icon-remove-sign");
+            $("#"+dom_id+" button i").removeClass("icon-plus-sign");
+            $(this).removeClass("btn-info");
+            $(this).addClass("btn-danger");
+            $(this).attr("title",$(this).attr("data-do-mark-title"));
+        } else {
+            $("#"+dom_id).addClass('delete-marked');
+            $("#"+dom_id+" button i").removeClass("icon-remove-sign");
+            $("#"+dom_id+" button i").addClass("icon-plus-sign");
+            $(this).removeClass("btn-danger");
+            $(this).addClass("btn-info");
+            $(this).attr("title",$(this).attr("data-remove-mark-title"));
+
+        }
+        toggleSpecimenDeletionListEntryFor(db_id);
+        return false;
+    });
+
+    //--------------------------------------------------------------------
+
+    $(".add-specimen-image-button").click(function(evt) {
+        dfnUtil_setTransientAlert('error','specimen image support not yet implemented',$(this));
+        evt.preventDefault();
+    });
 });

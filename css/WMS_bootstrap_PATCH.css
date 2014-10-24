@@ -349,6 +349,19 @@ ul#list-of-user-notebooks li {
     margin-top: -3px;
 }
 
+.edit_rendered_notebook_page .button-mark-specimen-for-delete {
+    float: right;
+}
+
+.list-item-new-page-field {
+    padding-left: 7px;
+}
+
+.list-item-new-page-field,
+.list-item-new-specimen {
+    background-color: #cceebb;
+}
+
 /***********************************************************************************/
 /* authoritative plants */
 

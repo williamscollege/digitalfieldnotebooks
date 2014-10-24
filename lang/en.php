@@ -19,7 +19,7 @@ $LANGUAGE['en'] = [
     'prompt_select' => '-- choose from the list --',
     'show_hide' => 'show/hide',
     'mark_for_delete' => 'mark this for removal - the actual removal occurs on update',
-    'unmark_for_delete' => 'remove the mark for removal',
+    'unmark_for_delete' => 'undo the mark for removal',
 
     'msg_do_sign_in' => 'Please sign in.',
     'msg_failed_sign_in' => 'Sign in failed.',

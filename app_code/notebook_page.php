@@ -154,11 +154,18 @@
 
 
             $deleted_specimen_ids = explode(',',$_REQUEST['deleted_specimen_ids']);
+//            util_prePrintR($deleted_specimen_ids);
             if ($deleted_specimen_ids) {
                 foreach ($deleted_specimen_ids as $deleted_specimen_id) {
-                    $del_s = Specimen::getOneFromDb(['specimen_id'=>$deleted_specimen_id],$DB);
-                    if ($del_s->matchedDb) {
-                        $del_s->doDelete();
+//                    util_prePrintR("handling $deleted_specimen_id\n");
+                    if ($deleted_specimen_id) {
+//                        util_prePrintR("fetching for delete $deleted_specimen_id\n");
+                        $del_s = Specimen::getOneFromDb(['specimen_id'=>$deleted_specimen_id],$DB);
+                        if ($del_s->matchesDb) {
+//                            util_prePrintR("doing delete $deleted_specimen_id\n");
+                            $del_s->doDelete();
+//                            util_prePrintR("complete delete $deleted_specimen_id\n");
+                        }
                     }
                 }
             }

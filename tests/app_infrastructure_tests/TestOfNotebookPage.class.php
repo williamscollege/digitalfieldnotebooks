@@ -257,8 +257,8 @@
                 $canonical = '<div id="rendered_notebook_page_1101" class="rendered_notebook_page edit_rendered_notebook_page" '.$np->fieldsAsDataAttribs().' data-can-edit="1">
 <form id="form-edit-notebook-page-base-data" action="'.APP_ROOT_PATH.'/app_code/notebook_page.php">
   <input type="hidden" name="action" value="update"/>
-  <input type="hidden" name="notebook_page_id" value="'.$np->notebook_page_id.'"/>
-  <input type="hidden" name="notebook_id" value="1001"/>
+  <input type="hidden" id="notebook_page_id" name="notebook_page_id" value="'.$np->notebook_page_id.'"/>
+  <input type="hidden" id="notebook_id" name="notebook_id" value="1001"/>
   <div id="actions"><button id="edit-submit-control" class="btn btn-success" type="submit" name="edit-submit-control" value="update"><i class="icon-ok-sign icon-white"></i> Update</button>
   <a id="edit-cancel-control" class="btn" href="/digitalfieldnotebooks/app_code/notebook_page.php?action=view&notebook_page_id=1101"><i class="icon-remove"></i> Cancel</a>  <a id="edit-delete-notebook-page-control" class="btn btn-danger" href="/digitalfieldnotebooks/app_code/notebook_page.php?action=delete&notebook_page_id=1101"><i class="icon-trash icon-white"></i> Delete</a></div>
 <h4>'.util_lang('page_in_notebook','ucfirst').' <a href="'.APP_ROOT_PATH.'/app_code/notebook.php?action=view&notebook_id='.$n->notebook_id.'" id="parent-notebook-link">'.htmlentities($n->name).'</a></h4>
@@ -296,7 +296,7 @@
 //            $this->todo('refine canonical code for new page specimen');
             $canonical .= '    <li><a href="#" id="add_new_specimen_button" class="btn">'.util_lang('add_specimen').'</a></li>'."\n";
             foreach ($np->specimens as $specimen) {
-                $canonical .= '    <li>'.$specimen->renderAsEditEmbed()."</li>\n";
+                $canonical .= '    <li id="list_item-specimen_'.$specimen->specimen_id.'">'.$specimen->renderAsEditEmbed()."</li>\n";
             }
             $canonical .= '  </ul>'."\n";
 
@@ -334,8 +334,8 @@
             $canonical = '<div id="rendered_notebook_page_NEW" class="rendered_notebook_page edit_rendered_notebook_page" '.$np->fieldsAsDataAttribs().' data-can-edit="1">
 <form id="form-edit-notebook-page-base-data" action="'.APP_ROOT_PATH.'/app_code/notebook_page.php">
   <input type="hidden" name="action" value="update"/>
-  <input type="hidden" name="notebook_page_id" value="NEW"/>
-  <input type="hidden" name="notebook_id" value="1001"/>
+  <input type="hidden" id="notebook_page_id" name="notebook_page_id" value="NEW"/>
+  <input type="hidden" id="notebook_id" name="notebook_id" value="1001"/>
   <div id="actions"><button id="edit-submit-control" class="btn btn-success" type="submit" name="edit-submit-control" value="update"><i class="icon-ok-sign icon-white"></i> Save</button>
   <a id="edit-cancel-control" class="btn" href="'.APP_ROOT_PATH.'/app_code/notebook.php?action=edit&notebook_id=1001"><i class="icon-remove"></i> Cancel</a></div>
 <h4>In notebook <a href="'.APP_ROOT_PATH.'/app_code/notebook.php?action=view&notebook_id=1001" id="parent-notebook-link">testnotebook1</a></h4>
