@@ -138,7 +138,8 @@
         function renderAsLink($action='view') {
             $action = Action::sanitizeAction($action);
 
-            $link = '<a href="'.APP_ROOT_PATH.'/app_code/metadata_structure.php?action='.$action.'&metadata_structure_id='.$this->metadata_structure_id.'">'.htmlentities($this->name).'</a>';
+//            $link = '<a href="'.APP_ROOT_PATH.'/app_code/metadata_structure.php?action='.$action.'&metadata_structure_id='.$this->metadata_structure_id.'">'.htmlentities($this->name).'</a>';
+            $link = '<a href="'.APP_ROOT_PATH.'/app_code/metadata_structure.php?action='.$action.'&metadata_structure_id='.$this->metadata_structure_id.'">'.$this->renderAsFullName().'</a>';
 
             return $link;
         }
@@ -157,6 +158,19 @@
             return $opt;
         }
 
+        public function renderAsFullName() {
+            $full_lineange = $this->getLineage();
+            $full_name = '';
+            foreach ($full_lineange as $lin_step) {
+                if ($full_name) {
+                    $full_name .= ' - ' . htmlentities($lin_step->name);
+                } else {
+                    $full_name .= htmlentities($lin_step->name);
+                }
+            }
+            return $full_name;
+        }
+
         public function renderAsView() {
             $this->loadTermSetAndValues();
             $this->loadReferences();
@@ -172,7 +186,8 @@
                 }
             }
             $rendered .= '</div>'."\n".
-'  <div class="metadata-structure-header">'.ucfirst(util_lang('metadata')).' : '.htmlentities($this->name);
+              '  <div class="metadata-structure-header">'.ucfirst(util_lang('metadata')).' : '.$this->renderAsFullName();
+//            '  <div class="metadata-structure-header">'.ucfirst(util_lang('metadata')).' : '.htmlentities($this->name);
             $rendered .= '<ul class="metadata-references">';
             foreach ($this->references as $r) {
                 $rendered .= '<li>'.$r->renderAsViewEmbed().'</li>';
@@ -242,7 +257,9 @@
             if ($children) {
                 $rendered = $this->renderAsOption($display_prefix,$default_selected)."\n";
                 foreach ($children as $child) {
-                    $rendered .= $child->renderAsOptionTree($display_prefix.'- ',$default_selected);
+                    $new_display_prefix = $display_prefix . htmlentities($this->name).' - ';
+//                    $rendered .= $child->renderAsOptionTree($display_prefix.'- ',$default_selected);
+                    $rendered .= $child->renderAsOptionTree($new_display_prefix,$default_selected);
                 }
                 return $rendered;
             } else {

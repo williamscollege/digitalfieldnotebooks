@@ -103,7 +103,9 @@
             $li_elt .= ' '.$this->fieldsAsDataAttribs().'>';
 
             $mds = $this->getMetadataStructure();
-            $li_elt .= '<div class="notebook-page-field-label field-label" title="'.htmlentities($mds->description).'">'.htmlentities($mds->name).'</div> : ';
+
+//            $li_elt .= '<div class="notebook-page-field-label field-label" title="'.htmlentities($mds->description).'">'.htmlentities($mds->name).'</div> : ';
+            $li_elt .= '<div class="notebook-page-field-label field-label" title="'.htmlentities($mds->description).'">'.$mds->renderAsFullName().'</div> : ';
 
             $val_title = '';
             $val_name = '';
@@ -138,7 +140,9 @@
 
 //            util_prePrintR($mds);
 
-            $li_elt .= '<div class="notebook-page-field-label field-label" title="'.htmlentities($mds->description).'">'.htmlentities($mds->name).'</div> : <div class="notebook-page-field-value field-value">';
+
+//            $li_elt .= '<div class="notebook-page-field-label field-label" title="'.htmlentities($mds->description).'">'.htmlentities($mds->name).'</div> : <div class="notebook-page-field-value field-value">';
+            $li_elt .= '<div class="notebook-page-field-label field-label" title="'.htmlentities($mds->description).'">'.$mds->renderAsFullName().'</div> : <div class="notebook-page-field-value field-value">';
             if ($mds->term_set) {
                 $li_elt .= $mds->term_set->renderAsSelectControl('page_field_select_'.$this->notebook_page_field_id,$this->value_metadata_term_value_id);
             }

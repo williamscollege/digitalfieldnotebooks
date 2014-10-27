@@ -282,7 +282,7 @@ ul#list-of-user-notebooks li {
 }
 
 .rendered_notebook_page .notebook-page-fields li.spacing-list-item {
-    margin-top: 4px;
+    margin-top: 12px;
 }
 
 .rendered_notebook_page .notebook-page-fields li .open-value {
