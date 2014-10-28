@@ -225,8 +225,9 @@
             $USER = User::getOneFromDb(['username'=>TESTINGUSER], $this->DB);
 
             $canonical =
-                '<div id="authoritative_plant_view_5001" class="authoritative-plant" data-authoritative_plant_id="5001">
-  <h3><a href="'.APP_ROOT_PATH.'/app_code/authoritative_plant.php?action=list">'.util_lang('authoritative_plant','properize').'</a>: '.$ap->renderAsShortText().'</h3>
+                '<div id="authoritative_plant_view_5001" class="authoritative-plant view-authoritative-plant" data-authoritative_plant_id="5001">
+  <span class="authoritative-plant-breadcrumb"><a href="'.APP_ROOT_PATH.'/app_code/authoritative_plant.php?action=list">'.util_lang('authoritative_plant').'</a> &gt;</span>
+  <h3>'.$ap->renderAsShortText().'</h3>
   <ul class="base-info">
     <li><span class="field-label">'.util_lang('class').'</span> : <span class="field-value taxonomy taxonomy-class">'.htmlentities($ap->class).'</span></li>
     <li><span class="field-label">'.util_lang('order').'</span> : <span class="field-value taxonomy taxonomy-order">'.htmlentities($ap->order).'</span></li>
@@ -309,9 +310,9 @@
             $this->assertEqual(5103,$ap->extras[0]->authoritative_plant_extra_id);
             $this->assertEqual(5101,$ap->extras[1]->authoritative_plant_extra_id);
             $this->assertEqual(5102,$ap->extras[2]->authoritative_plant_extra_id);
-            $this->assertEqual(5106,$ap->extras[3]->authoritative_plant_extra_id);
-            $this->assertEqual(5105,$ap->extras[4]->authoritative_plant_extra_id);
-            $this->assertEqual(5104,$ap->extras[5]->authoritative_plant_extra_id);
+            $this->assertEqual(5104,$ap->extras[3]->authoritative_plant_extra_id);
+            $this->assertEqual(5106,$ap->extras[4]->authoritative_plant_extra_id);
+            $this->assertEqual(5105,$ap->extras[5]->authoritative_plant_extra_id);
         }
 
         function testLoadNotebookPages() {

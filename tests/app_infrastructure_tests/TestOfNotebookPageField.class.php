@@ -118,7 +118,7 @@
             $USER = User::getOneFromDb(['username'=>TESTINGUSER], $this->DB);
 
             $canonical = '<li data-notebook_page_field_id="1201" data-created_at="'.$npf->created_at.'" data-updated_at="'.$npf->updated_at.'" data-notebook_page_id="1101" data-label_metadata_structure_id="6002" data-value_metadata_term_value_id="6202" data-value_open="" data-flag_delete="0">'.
-                '<div class="notebook-page-field-label field-label" title="'.htmlentities($mds->description).'">'.htmlentities($mds->name).'</div> : <div class="notebook-page-field-value field-value" title="'.htmlentities($mdtv->description).'">'.htmlentities($mdtv->name).'</div>'.
+                '<div class="notebook-page-field-label field-label" title="'.htmlentities($mds->description).'">'.$mds->renderAsFullName().'</div> : <div class="notebook-page-field-value field-value" title="'.htmlentities($mdtv->description).'">'.htmlentities($mdtv->name).'</div>'.
                 '</li>';
 
             $rendered = $npf->renderAsListItem();
@@ -161,7 +161,7 @@
             $USER = User::getOneFromDb(['username'=>TESTINGUSER], $this->DB);
 
             $canonical = '<li data-notebook_page_field_id="1205" data-created_at="'.$npf->created_at.'" data-updated_at="'.$npf->updated_at.'" data-notebook_page_id="1104" data-label_metadata_structure_id="6002" data-value_metadata_term_value_id="6205" data-value_open="rare" data-flag_delete="0">'.
-                '<div class="notebook-page-field-label field-label" title="'.htmlentities($mds->description).'">'.htmlentities($mds->name).'</div> : <div class="notebook-page-field-value field-value" title="'.htmlentities($mdtv->description).'">'.htmlentities($mdtv->name).'; <span class="open-value">rare</span></div>'.
+                '<div class="notebook-page-field-label field-label" title="'.htmlentities($mds->description).'">'.$mds->renderAsFullName().'</div> : <div class="notebook-page-field-value field-value" title="'.htmlentities($mdtv->description).'">'.htmlentities($mdtv->name).'; <span class="open-value">rare</span></div>'.
                 '</li>';
 
             $rendered = $npf->renderAsListItem();
@@ -183,10 +183,10 @@
             $USER = User::getOneFromDb(['username'=>TESTINGUSER], $this->DB);
 
             $canonical = '<li id="list_item-notebook_page_field_1205" data-notebook_page_field_id="1205" data-created_at="'.$npf->created_at.'" data-updated_at="'.$npf->updated_at.'" data-notebook_page_id="1104" data-label_metadata_structure_id="6002" data-value_metadata_term_value_id="6205" data-value_open="rare" data-flag_delete="0">'.
-                '<div class="notebook-page-field-label field-label" title="'.htmlentities($mds->description).'">'.htmlentities($mds->name).'</div> : <div class="notebook-page-field-value field-value">'.
+                '<div class="notebook-page-field-label field-label" title="'.htmlentities($mds->description).'">'.$mds->renderAsFullName().'</div> : <div class="notebook-page-field-value field-value">'.
                 $mdts->renderAsSelectControl('page_field_select_1205',6205).
                 '; <input type="text" name="page_field_open_value_1205" id="page_field_open_value_1205" class="page_field_open_value" value="rare"/>'.
-                '</div> <button class="btn btn-danger button-mark-pagefield-for-delete" title="Mark this for removal - the actual removal occurs on update" data-do-mark-title="Mark this for removal - the actual removal occurs on update" data-remove-mark-title="Remove the mark for removal" data-for_dom_id="list_item-notebook_page_field_1205" data-notebook_page_field_id="1205"><i class="icon-remove-sign icon-white"></i></button></li>';
+                '</div> <button class="btn btn-danger button-mark-pagefield-for-delete" title="'.util_lang('mark_for_delete','ucfirst').'" data-do-mark-title="'.util_lang('mark_for_delete','ucfirst').'" data-remove-mark-title="'.util_lang('unmark_for_delete','ucfirst').'" data-for_dom_id="list_item-notebook_page_field_1205" data-notebook_page_field_id="1205"><i class="icon-remove-sign icon-white"></i></button></li>';
 
             $rendered = $npf->renderAsListItemEdit();
 
@@ -205,10 +205,10 @@
             $USER = User::getOneFromDb(['username'=>TESTINGUSER], $this->DB);
 
             $canonical = '<li id="list_item-notebook_page_field_1204" data-notebook_page_field_id="1204" data-created_at="'.$npf->created_at.'" data-updated_at="'.$npf->updated_at.'" data-notebook_page_id="1101" data-label_metadata_structure_id="6004" data-value_metadata_term_value_id="0" data-value_open="wavy-ish" data-flag_delete="0">'.
-                '<div class="notebook-page-field-label field-label" title="'.htmlentities($mds->description).'">'.htmlentities($mds->name).'</div> : <div class="notebook-page-field-value field-value">'.
+                '<div class="notebook-page-field-label field-label" title="'.htmlentities($mds->description).'">'.$mds->renderAsFullName().'</div> : <div class="notebook-page-field-value field-value">'.
                 util_lang('metadata_structure_has_no_term_set').
                 '; <input type="text" name="page_field_open_value_1204" id="page_field_open_value_1204" class="page_field_open_value" value="wavy-ish"/>'.
-                '</div> <button class="btn btn-danger button-mark-pagefield-for-delete" title="Mark this for removal - the actual removal occurs on update" data-do-mark-title="Mark this for removal - the actual removal occurs on update" data-remove-mark-title="Remove the mark for removal" data-for_dom_id="list_item-notebook_page_field_1204" data-notebook_page_field_id="1204"><i class="icon-remove-sign icon-white"></i></button></li>';
+                '</div> <button class="btn btn-danger button-mark-pagefield-for-delete" title="'.util_lang('mark_for_delete','ucfirst').'" data-do-mark-title="'.util_lang('mark_for_delete','ucfirst').'" data-remove-mark-title="'.util_lang('unmark_for_delete','ucfirst').'" data-for_dom_id="list_item-notebook_page_field_1204" data-notebook_page_field_id="1204"><i class="icon-remove-sign icon-white"></i></button></li>';
 
             $rendered = $npf->renderAsListItemEdit();
 

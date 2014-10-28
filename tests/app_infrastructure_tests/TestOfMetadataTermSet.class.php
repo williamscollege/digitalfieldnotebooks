@@ -126,7 +126,8 @@
             $mdts = Metadata_Term_Set::getOneFromDb(['metadata_term_set_id' => 6101],$this->DB);
             $mdts->loadTermValues();
 
-            $canonical = '<ul class="metadata-term-values">';
+            $canonical = '<h5>'.util_lang('metadata_values','properize').'</h5>'."\n".
+                '<ul class="metadata-term-values">';
             foreach ($mdts->term_values as $tv) {
                 $canonical .= $tv->renderAsListItem();
             }
@@ -144,7 +145,8 @@
             $mdts = Metadata_Term_Set::getOneFromDb(['metadata_term_set_id' => 6101],$this->DB);
             $mdts->loadStructures();
 
-            $canonical = '<div class="metadata-term-set-uses">';
+            $canonical = '<h5>'.util_lang('used_by').'</h5>'."\n";
+            $canonical .= '<div class="metadata-term-set-uses">';
             $canonical .= '<ul class="metadata-structures">';
             foreach ($mdts->structures as $s) {
                 $canonical .= '<li>'.$s->renderAsLink().'</li>';
@@ -165,26 +167,12 @@
             $mdts->loadTermValues();
             $mdts->loadStructures();
 
-            $canonical = '<div class="metadata-term-set-header"><a class="metadata_term_set_name_link" data-metadata_term_set_id="6101">small lengths</a>';
+            $canonical = '<div class="metadata-term-set-header"><h4>Value Set : <a href="'.APP_ROOT_PATH.'/app_code/metadata_term_set.php?action=view&metadata_term_set_id=6101" class="metadata_term_set_name_link" data-metadata_term_set_id="6101">small lengths</a></h4>';
             $canonical .= $mdts->renderAsHtml_references();
             $canonical .= '</div>';
             $canonical .= $mdts->renderAsHtml_term_values();
-//            $canonical .= '<div class="metadata-term-set-uses">';
             $canonical .= $mdts->renderAsHtml_structures();
 
-//            $canonical .= '<ul class="metadata-references">';
-//            foreach ($mdts->references as $r) {
-//                $canonical .= '<li>'.$r->renderAsViewEmbed().'</li>';
-//            }
-//            $canonical .= '</ul></div>';
-//            $canonical .= '<ul class="metadata-term-values">';
-//            foreach ($mdts->term_values as $tv) {
-//                $canonical .= $tv->renderAsListItem();
-//            }
-//            $canonical .= '</ul>';
-//            $canonical .= '<div class="metadata-term-set-uses">';
-//            $canonical .= $mdts->renderAsHtml_structures();
-//            $canonical .= '</div>';
 
             $rendered = $mdts->renderAsHtml();
 
@@ -203,7 +191,7 @@
 
             // 'name', 'ordering', 'description', 'flag_delete'
             $canonical = '<li data-metadata_term_set_id="6101" data-created_at="'.$mdts->created_at.'" data-updated_at="'.$mdts->updated_at.'" data-name="small lengths" data-ordering="1.00000" data-description="lengths ranging from 3 mm to 30 cm" data-flag_delete="0">';
-            $canonical .= $mdts->renderAsHtml();
+            $canonical .= $mdts->renderAsViewEmbed();
             $canonical .= '</li>';
 
             $rendered = $mdts->renderAsListItem();
@@ -220,7 +208,7 @@
             $mdts->loadTermValues();
 
             // 'name', 'ordering', 'description', 'flag_delete'
-            $canonical = '<div id="rendered_metadata_term_set_6101" class="rendered-metadata-term-set" data-metadata_term_set_id="6101" data-created_at="'.$mdts->created_at.'" data-updated_at="'.$mdts->updated_at.'" data-name="small lengths" data-ordering="1.00000" data-description="lengths ranging from 3 mm to 30 cm" data-flag_delete="0">';
+            $canonical = '<div id="rendered_metadata_term_set_6101" class="rendered-metadata-term-set embedded" data-metadata_term_set_id="6101" data-created_at="'.$mdts->created_at.'" data-updated_at="'.$mdts->updated_at.'" data-name="small lengths" data-ordering="1.00000" data-description="lengths ranging from 3 mm to 30 cm" data-flag_delete="0">';
             $canonical .= $mdts->renderAsHtml();
             $canonical .= '</div>';
 
@@ -238,12 +226,14 @@
 
             $mds = Metadata_Structure::getOneFromDb(['metadata_structure_id' => 6002],$this->DB);
 
-            $canonical = '<div class="metadata-term-set-header"><a href="/digitalfieldnotebooks/app_code/metadata_term_set.php?action=list">'.util_lang('all_metadata_term_sets').'</a> &gt; small lengths</div>';
+            $canonical = '<div class="view-metadata-term-set">'."\n";
+            $canonical .= '<div class="view-metadata-term-set-header"><a href="'.APP_ROOT_PATH.'/app_code/metadata_term_set.php?action=list">'.util_lang('all_metadata_term_sets').'</a> &gt; <h3>small lengths</h3></div>';
             $canonical .= $mdts->renderAsHtml_references();
             $canonical .= $mdts->renderAsHtml_term_values();
 //            $canonical .= '<div class="metadata-term-set-uses">';
             $canonical .= $mdts->renderAsHtml_structures();
-//            $canonical .= '</div>';
+            $canonical .= '</div>'."\n";
+            $canonical .= '</div>'."\n";
 
             $rendered = $mdts->renderAsView();
 

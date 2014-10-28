@@ -148,6 +148,7 @@
             $rendered .= $this->renderAsHtml_term_values();
             $rendered .= $this->renderAsHtml_structures();
             $rendered .= '</div>'."\n";
+            $rendered .= '</div>'."\n";
 
             return $rendered;
         }

@@ -164,7 +164,7 @@
             $mdtv->loadReferences();
 
             // 'metadata_term_set_id', 'name', 'ordering', 'description', 'flag_delete'
-            $canonical = '<div id="rendered_metadata_term_value_6210" class="rendered-metadata-term-value" data-metadata_term_value_id="6210" data-created_at="'.$mdtv->created_at.'" data-updated_at="'.$mdtv->updated_at.'" data-metadata_term_set_id="6103" data-name="dentate" data-ordering="1.00000" data-description="teeth outward pointing - 1 level / degree of teeth" data-flag_delete="0">';
+            $canonical = '<div id="rendered_metadata_term_value_6210" class="rendered-metadata-term-value embedded" data-metadata_term_value_id="6210" data-created_at="'.$mdtv->created_at.'" data-updated_at="'.$mdtv->updated_at.'" data-metadata_term_set_id="6103" data-name="dentate" data-ordering="1.00000" data-description="teeth outward pointing - 1 level / degree of teeth" data-flag_delete="0">';
             $canonical .= $mdtv->renderAsHtml();
             $canonical .= '</div>';
 

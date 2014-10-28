@@ -40,12 +40,22 @@
 
             usort($pes,'Authoritative_Plant_Extra::cmp');
 
+//            util_prePrintR($pes[0]->authoritative_plant_extra_id);
+//            util_prePrintR($pes[1]->authoritative_plant_extra_id);
+//            util_prePrintR($pes[2]->authoritative_plant_extra_id);
+//            util_prePrintR($pes[3]->authoritative_plant_extra_id);
+//            util_prePrintR($pes[4]->authoritative_plant_extra_id);
+//            util_prePrintR($pes[5]->authoritative_plant_extra_id);
+//            util_prePrintR($pes[6]->authoritative_plant_extra_id);
+//            util_prePrintR($pes[7]->authoritative_plant_extra_id);
+//            util_prePrintR($pes[8]->authoritative_plant_extra_id);
+
             $this->assertEqual(5103,$pes[0]->authoritative_plant_extra_id);
             $this->assertEqual(5101,$pes[1]->authoritative_plant_extra_id);
             $this->assertEqual(5102,$pes[2]->authoritative_plant_extra_id);
-            $this->assertEqual(5106,$pes[3]->authoritative_plant_extra_id);
-            $this->assertEqual(5105,$pes[4]->authoritative_plant_extra_id);
-            $this->assertEqual(5104,$pes[5]->authoritative_plant_extra_id);
+            $this->assertEqual(5104,$pes[3]->authoritative_plant_extra_id);
+            $this->assertEqual(5106,$pes[4]->authoritative_plant_extra_id);
+            $this->assertEqual(5105,$pes[5]->authoritative_plant_extra_id);
             $this->assertEqual(5107,$pes[6]->authoritative_plant_extra_id);
             $this->assertEqual(5108,$pes[7]->authoritative_plant_extra_id);
             $this->assertEqual(5109,$pes[8]->authoritative_plant_extra_id);

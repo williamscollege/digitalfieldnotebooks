@@ -62,32 +62,33 @@
             $canonical .= '<option value="-1">'.util_lang('prompt_select').'</option>'."\n";
             $canonical .= '<option value="6004" title="info about the individual leaves of the plant" data-details="details">leaf</option>'."\n";
             $canonical .= '<option value="6001" title="info about the flower" data-details="">flower</option>'."\n";
-            $canonical .= '<option value="6002" title="the size of the flower in its largest dimension" data-details="some details">- flower size</option>'."\n";
-            $canonical .= '<option value="6003" title="the primary / dominant color of the flower" data-details="">- flower primary color</option>'."\n";
+            $canonical .= '<option value="6002" title="the size of the flower in its largest dimension" data-details="some details">flower - flower size</option>'."\n";
+            $canonical .= '<option value="6003" title="the primary / dominant color of the flower" data-details="">flower - flower primary color</option>'."\n";
             $canonical .= '</select>';
 
             $rendered = Metadata_Structure::renderControlSelectAllMetadataStructures('ABC123_metadata_structure_id');
 
+//            echo "<pre>\n".htmlentities($canonical)."\n---------------\n".htmlentities($rendered)."\n</pre>";
+
             $this->assertNoPattern('/IMPLEMENTED/',$rendered);
             $this->assertEqual($canonical,$rendered);
 
-//            echo "<pre>\n".htmlentities($canonical)."\n---------------\n".htmlentities($rendered)."\n</pre>";
 
             // default selected
             $canonical = '<select name="ABC123_metadata_structure_id" id="ABC123_metadata_structure_id" class="metadata_structure_selector">'."\n";
             $canonical .= '<option value="-1">'.util_lang('prompt_select').'</option>'."\n";
             $canonical .= '<option value="6004" title="info about the individual leaves of the plant" data-details="details">leaf</option>'."\n";
             $canonical .= '<option value="6001" title="info about the flower" data-details="">flower</option>'."\n";
-            $canonical .= '<option value="6002" title="the size of the flower in its largest dimension" data-details="some details" selected="selected">- flower size</option>'."\n";
-            $canonical .= '<option value="6003" title="the primary / dominant color of the flower" data-details="">- flower primary color</option>'."\n";
+            $canonical .= '<option value="6002" title="the size of the flower in its largest dimension" data-details="some details" selected="selected">flower - flower size</option>'."\n";
+            $canonical .= '<option value="6003" title="the primary / dominant color of the flower" data-details="">flower - flower primary color</option>'."\n";
             $canonical .= '</select>';
 
             $rendered = Metadata_Structure::renderControlSelectAllMetadataStructures('ABC123_metadata_structure_id',6002);
 
+//            echo "<pre>\n".htmlentities($canonical)."\n---------------\n".htmlentities($rendered)."\n</pre>";
+
             $this->assertNoPattern('/IMPLEMENTED/',$rendered);
             $this->assertEqual($canonical,$rendered);
-
-//            echo "<pre>\n".htmlentities($canonical)."\n---------------\n".htmlentities($rendered)."\n</pre>";
 
         }
 
@@ -180,6 +181,18 @@
 
         //// instance methods - object itself
 
+        function testRenderAsFullName() {
+            $mds = Metadata_Structure::getOneFromDb(['metadata_structure_id'=>6002],$this->DB);
+
+            $canonical = 'flower - flower size';
+            $rendered = $mds->renderAsFullName();
+
+//            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
+
+            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
+            $this->assertEqual($canonical,$rendered);
+        }
+
         function testRenderAsLink() {
             $mds = Metadata_Structure::getOneFromDb(['metadata_structure_id'=>6001],$this->DB);
 
@@ -215,6 +228,7 @@
 
 //            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
         }
+
 
 //        function testRenderAsHtml() {
 //            $this->todo();
@@ -289,8 +303,8 @@
             $mds = Metadata_Structure::getOneFromDb(['metadata_structure_id'=>6001],$this->DB);
 
             $canonical = '<option value="6001" title="info about the flower" data-details="">flower</option>'."\n";
-            $canonical .= '<option value="6002" title="the size of the flower in its largest dimension" data-details="some details">- flower size</option>'."\n";
-            $canonical .= '<option value="6003" title="the primary / dominant color of the flower" data-details="">- flower primary color</option>'."\n";
+            $canonical .= '<option value="6002" title="the size of the flower in its largest dimension" data-details="some details">flower - flower size</option>'."\n";
+            $canonical .= '<option value="6003" title="the primary / dominant color of the flower" data-details="">flower - flower primary color</option>'."\n";
 
             $rendered = $mds->renderAsOptionTree();
 
@@ -305,16 +319,25 @@
             $mds->loadTermSetAndValues();
             $mds->loadReferences();
 
-            $canonical = '<div id="rendered_metadata_structure_6001" class="rendered_metadata_structure" '.$mds->fieldsAsDataAttribs().'>
+            /*
+<ul class="metadata-references"><li><div id="rendered_metadata_reference_6301" class="rendered_metadata_reference rendered_metadata_reference_text"><div class="text_data" title="description of what a flower is">This is a flower.</div></div></li></ul></div>
+<h4>further breakdown:</h4>
+<ul class="metadata-structure-tree">
+<li data-metadata_structure_id="6002" data-created_at="2014-10-28 13:42:54" data-updated_at="2014-10-28 13:42:54" data-parent_metadata_structure_id="6001" data-name="flower size" data-ordering="0.50000" data-description="the size of the flower in its largest dimension" data-details="some details" data-metadata_term_set_id="6101" data-flag_delete="0"><a href="/digitalfieldnotebooks/app_code/metadata_structure.php?action=view&metadata_structure_id=6002">flower - flower size</a></li><li data-metadata_structure_id="6003" data-created_at="2014-10-28 13:42:54" data-updated_at="2014-10-28 13:42:54" data-parent_metadata_structure_id="6001" data-name="flower primary color" data-ordering="0.75000" data-description="the primary / dominant color of the flower" data-details="" data-metadata_term_set_id="6102" data-flag_delete="0"><a href="/digitalfieldnotebooks/app_code/metadata_structure.php?action=view&metadata_structure_id=6003">flower - flower primary color</a></li></ul></div>
+             */
+
+            $canonical = '<div id="rendered_metadata_structure_6001" class="view-rendered_metadata_structure" '.$mds->fieldsAsDataAttribs().'>
   <div class="metadata_lineage"><a href="'.APP_ROOT_PATH.'/app_code/metadata_structure.php?action=list">metadata</a> &gt;</div>
-  <div class="metadata-structure-header">'.ucfirst(util_lang('metadata')).' : flower';
+  <div class="metadata-structure-header"><h3>flower</h3>';
+
+            $canonical .= '  <div class="description">info about the flower</div>'."\n";
             $canonical .= '<ul class="metadata-references">';
             foreach ($mds->references as $r) {
                 $canonical .= '<li>'.$r->renderAsViewEmbed().'</li>';
             }
-            $canonical .= '</ul></div>
-  <div class="description">info about the flower</div>'."\n";
+            $canonical .= '</ul></div>'."\n";
 
+            $canonical .= '<h4>further breakdown:</h4>'."\n";
             $canonical .= '<ul class="metadata-structure-tree">'."\n";
             $children = $mds->getChildren();
 
@@ -342,15 +365,16 @@
 
             $mds_parent = Metadata_Structure::getOneFromDb(['metadata_structure_id'=>6001],$this->DB);
 
-            $canonical = '<div id="rendered_metadata_structure_6002" class="rendered_metadata_structure" '.$mds->fieldsAsDataAttribs().'>
+            $canonical =
+   '<div id="rendered_metadata_structure_6002" class="view-rendered_metadata_structure" '.$mds->fieldsAsDataAttribs().'>
   <div class="metadata_lineage"><a href="'.APP_ROOT_PATH.'/app_code/metadata_structure.php?action=list">metadata</a> &gt; '.$mds_parent->renderAsLink().' &gt;</div>
-  <div class="metadata-structure-header">'.ucfirst(util_lang('metadata')).' : flower size';
+  <div class="metadata-structure-header"><h3>flower size</h3>';
+            $canonical .= '  <div class="description">the size of the flower in its largest dimension</div>'."\n";
             $canonical .= '<ul class="metadata-references">';
             foreach ($mds->references as $r) {
                 $canonical .= '<li>'.$r->renderAsViewEmbed().'</li>';
             }
             $canonical .= '</ul></div>
-  <div class="description">the size of the flower in its largest dimension</div>
   <div class="details">some details</div>
   ';
             $canonical .= $mds->term_set->renderAsViewEmbed();
@@ -363,24 +387,5 @@
             $this->assertNoPattern('/IMPLEMENTED/',$rendered);
             $this->assertEqual($canonical,$rendered);
         }
-
-//        function testRenderAsViewEmbed() {
-//            $this->todo();
-//            return;
-//
-//            $mds = Metadata_Structure::getOneFromDb(['metadata_structure_id'=>6001],$this->DB);
-//
-//            global $USER;
-//            $USER = User::getOneFromDb(['username'=>TESTINGUSER], $this->DB);
-//
-//            $canonical = '';
-//
-//            $rendered = $mds->renderAsViewEmbed();
-//
-////            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
-//
-//            $this->assertEqual($canonical,$rendered);
-//            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
-//        }
 
     }
