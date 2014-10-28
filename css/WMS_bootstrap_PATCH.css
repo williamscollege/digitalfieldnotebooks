@@ -46,6 +46,10 @@ UL.unstyled LI, OL.unstyled LI
 	margin-left: 50px;
 }
 
+UL {
+    list-style-type: none;
+}
+
 .form-horizontal .control-group .display-only-controls {
     padding-top: 5px;
 }
@@ -239,7 +243,7 @@ h3 input {
 /* notebooks */
 
 ul#list-of-user-notebooks {
-    list-style-type: none;
+    /*list-style-type: none;*/
     margin-bottom: 15px;
 }
 ul#list-of-user-notebooks li {
@@ -251,9 +255,9 @@ ul#list-of-user-notebooks li {
     margin-top: 10px;
 }
 
-#list-of-notebook-pages {
-    list-style-type: none;
-}
+/*#list-of-notebook-pages {*/
+    /*list-style-type: none;*/
+/*}*/
 
 #list-of-notebook-pages li {
     margin: 7px 0;
@@ -273,7 +277,7 @@ ul#list-of-user-notebooks li {
 
 .rendered_notebook_page .notebook-page-fields {
     margin-top: 10px;
-    list-style-type: none;
+    /*list-style-type: none;*/
     margin-bottom: 20px;
 }
 
@@ -292,7 +296,7 @@ ul#list-of-user-notebooks li {
 .rendered_notebook_page .specimens,
 .rendered_notebook_page .specimens .base-info,
 .rendered_notebook_page .specimens .specimen-images {
-    list-style-type: none;
+    /*list-style-type: none;*/
     margin-bottom: 10px;
 }
 
@@ -385,7 +389,7 @@ ul#list-of-user-notebooks li {
 }
 
 .authoritative-plant .base-info {
-    list-style-type: none;
+    /*list-style-type: none;*/
     display: inline-block;
 }
 
@@ -406,30 +410,64 @@ ul#list-of-user-notebooks li {
 /*}*/
 
 .authoritative-plant .extra-info {
-    list-style-type: none;
+    /*list-style-type: none;*/
     clear: both;
     margin-top: 8px;
     border-top: 1px dashed #aaa;
     padding-top: 8px;
     margin-right: 25px;
+    margin-bottom: 20px;
 }
 
 .authoritative-plant .extra-info li {
     margin-bottom: 4px;
 }
 
-.authoritative-plant .extra-info li img,
+.authoritative-plant .extra-info li img {
+    margin-left: 164px;
+    margin-top: 6px;
+}
+
 .authoritative-plant .extra-info li .plant-description {
     margin-left: 164px;
+    margin-top: 12px;
+    margin-bottom: 6px;
+    font-size: 16px;
+    font-style: italic;
 }
+
+.authoritative-plant ul.notebook-pages {
+    margin-bottom: 20px;
+}
+
+.authoritative-plant ul.notebook-pages li {
+    margin-top: 6px;
+}
+
+/*ul.all-authoritative-plants {*/
+/*list-style-type: none;*/
+/*}*/
+
+ul.all-authoritative-plants li {
+    font-size: 16px;
+    margin-top: 4px;
+}
+
+.authoritative-plant-breadcrumb > a {
+    font-size: 18px;
+}
+
+/*.authoritative-plant ul.notebook-pages {*/
+/*list-style-type: none;*/
+/*}*/
 
 /***********************************************************************************/
 /* metadata structures */
 
-ul.all-metadata-structures,
-ul.all-metadata-structures ul {
-    list-style-type: none;
-}
+/*ul.all-metadata-structures,*/
+/*ul.all-metadata-structures ul {*/
+    /*list-style-type: none;*/
+/*}*/
 
 
 ul.all-metadata-structures li {
@@ -468,7 +506,7 @@ ul.all-metadata-structures > li > a:first-child {
 
 .view-rendered_metadata_structure ul.metadata-structure-tree,
 .view-rendered_metadata_structure ul.metadata-references {
-    list-style-type: none;
+    /*list-style-type: none;*/
     font-size: 16px;
     margin-top: 12px;
 }
@@ -488,30 +526,30 @@ ul.all-metadata-structures > li > a:first-child {
 /***********************************************************************************/
 /* metadata term sets */
 
-ul.all-metadata-term-sets {
-    list-style-type: none;
-}
+/*ul.all-metadata-term-sets {*/
+    /*list-style-type: none;*/
+/*}*/
 
-ul.metadata-term-values {
-    list-style-type: none;
-}
+/*ul.metadata-term-values {*/
+    /*list-style-type: none;*/
+/*}*/
 
-ul.metadata-term-values ul.metadata-references,
-.metadata-term-set-header ul.metadata-references {
-    list-style-type: none;
-}
+/*ul.metadata-term-values ul.metadata-references,*/
+/*.metadata-term-set-header ul.metadata-references {*/
+    /*list-style-type: none;*/
+/*}*/
 
-.metadata-term-set-uses ul.metadata-structures {
-    list-style-type: none;
-}
+/*.metadata-term-set-uses ul.metadata-structures {*/
+    /*list-style-type: none;*/
+/*}*/
 
 .view-metadata-term-set {
     font-size: 16px;
 }
 
-.view-metadata-term-set ul.metadata-references {
-    list-style-type: none;
-}
+/*.view-metadata-term-set ul.metadata-references {*/
+    /*list-style-type: none;*/
+/*}*/
 
 .view-metadata-term-set li {
     margin-top: 4px;

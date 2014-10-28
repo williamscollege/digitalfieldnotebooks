@@ -202,9 +202,13 @@ $rendered .= '  <h4>'.util_lang('specimens','properize').'</h4>
             $this->cacheNotebookPages();
             $this->cacheSpecimens();
 
-            $rendered = '<div id="authoritative_plant_view_'.$this->authoritative_plant_id.'" class="authoritative-plant" data-authoritative_plant_id="'.$this->authoritative_plant_id.'">
-  <h3><a href="'.APP_ROOT_PATH.'/app_code/authoritative_plant.php?action=list">'.util_lang('authoritative_plant','properize').'</a>: '.$this->renderAsShortText().'</h3>
-  <ul class="base-info">
+//            $rendered = '<div id="rendered_metadata_structure_'.$this->metadata_structure_id.'" class="view-rendered_metadata_structure" '.$this->fieldsAsDataAttribs().'>
+//  <div class="metadata_lineage"><a href="'.APP_ROOT_PATH.'/app_code/metadata_structure.php?action=list">metadata</a> &gt;';
+
+            $rendered = '<div id="authoritative_plant_view_'.$this->authoritative_plant_id.'" class="authoritative-plant view-authoritative-plant" data-authoritative_plant_id="'.$this->authoritative_plant_id.'">'."\n";
+            $rendered .='  <span class="authoritative-plant-breadcrumb"><a href="'.APP_ROOT_PATH.'/app_code/authoritative_plant.php?action=list">'.util_lang('authoritative_plant').'</a> &gt;</span>'."\n";
+            $rendered .='  <h3>'.$this->renderAsShortText().'</h3>'."\n";
+            $rendered .='  <ul class="base-info">
     <li><span class="field-label">'.util_lang('class').'</span> : <span class="field-value taxonomy taxonomy-class">'.htmlentities($this->class).'</span></li>
     <li><span class="field-label">'.util_lang('order').'</span> : <span class="field-value taxonomy taxonomy-order">'.htmlentities($this->order).'</span></li>
     <li><span class="field-label">'.util_lang('family').'</span> : <span class="field-value taxonomy taxonomy-family">'.htmlentities($this->family).'</span></li>

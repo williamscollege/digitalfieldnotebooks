@@ -10,7 +10,7 @@
 
         public static $VALID_TYPES = ['common name', 'description', 'image'];
 
-        public static $SORT_PRIORITIES_FOR_TYPES = ['common name'=>1,'image'=>2,'description'=>3];
+        public static $SORT_PRIORITIES_FOR_TYPES = ['common name'=>1,'image'=>3,'description'=>2];
 
         public static function cmp($a, $b) {
                 if ($a->authoritative_plant_id == $b->authoritative_plant_id) {

@@ -178,7 +178,7 @@
             //  '.$mds_parent->renderAsLink().' &gt;
 
             $rendered = '<div id="rendered_metadata_structure_'.$this->metadata_structure_id.'" class="view-rendered_metadata_structure" '.$this->fieldsAsDataAttribs().'>
-  <div class="metadata_lineage"><a href="'.APP_ROOT_PATH.'/app_code/metadata_structure.php?action=list">metadata</a> &gt;';
+  <div class="metadata_lineage"><a href="'.APP_ROOT_PATH.'/app_code/metadata_structure.php?action=list">'.util_lang('metadata').'</a> &gt;';
             $lineage = $this->getLineage();
             foreach ($lineage as $mds_ancestor) {
                 if ($mds_ancestor->metadata_structure_id != $this->metadata_structure_id) {

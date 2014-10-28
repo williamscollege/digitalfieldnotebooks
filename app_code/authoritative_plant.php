@@ -63,7 +63,7 @@
     if ($action == 'list') {
         echo '<h2>'.ucfirst(util_lang('authoritative_plants')).'</h2>'."\n";
         $all_ap = Authoritative_Plant::getAllFromDb(['flag_delete'=>false],$DB);
-        echo '<ul class="">'."\n";
+        echo '<ul class="all-authoritative-plants">'."\n";
         foreach ($all_ap as $ap) {
             if ($USER->canActOnTarget($ACTIONS['view'],$ap)) {
                 echo $ap->renderAsListItem();
