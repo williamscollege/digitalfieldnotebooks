@@ -58,9 +58,9 @@
     }
 
     if ($action == 'list') {
-        echo '<h2>'.util_lang('all_metadata').'</h2>'."\n";
+        echo '<h2>'.util_lang('all_metadata','properize').'</h2>'."\n";
         $all_metadata_structures = Metadata_Structure::getAllFromDb(['parent_metadata_structure_id'=>0],$DB);
-        echo '<ul class="">'."\n";
+        echo '<ul class="all-metadata-structures">'."\n";
         foreach ($all_metadata_structures as $a_mds) {
             if ($USER->canActOnTarget($ACTIONS['view'],$a_mds)) {
                 echo $a_mds->renderAsListTree();

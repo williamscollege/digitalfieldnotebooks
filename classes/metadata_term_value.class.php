@@ -69,7 +69,7 @@
         }
 
         public function renderAsViewEmbed() {
-            $rendered = '<div id="rendered_metadata_term_value_'.$this->metadata_term_value_id.'" class="rendered-metadata-term-value" '.$this->fieldsAsDataAttribs().'>';
+            $rendered = '<div id="rendered_metadata_term_value_'.$this->metadata_term_value_id.'" class="rendered-metadata-term-value embedded" '.$this->fieldsAsDataAttribs().'>';
             $rendered .= $this->renderAsHtml();
             $rendered .= '</div>';
             return $rendered;

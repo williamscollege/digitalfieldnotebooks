@@ -75,17 +75,7 @@
             $this->cacheReferences();
             $this->cacheTermValues();
 
-            $rendered = '<div class="metadata-term-set-header"><a class="metadata_term_set_name_link" data-metadata_term_set_id="'.$this->metadata_term_set_id.'">'.htmlentities($this->name).'</a>';
-//            $rendered .= '<ul class="metadata-references">';
-//            foreach ($this->references as $r) {
-//                $rendered .= '<li>'.$r->renderAsViewEmbed().'</li>';
-//            }
-//            $rendered .= '</ul></div>';
-//            $rendered .= '<ul class="metadata-term-values">';
-//            foreach ($this->term_values as $tv) {
-//                $rendered .= $tv->renderAsListItem();
-//            }
-//            $rendered .= '</ul>';
+            $rendered = '<div class="metadata-term-set-header"><h4>'.util_lang('metadata_term_set','properize').' : <a href="'.APP_ROOT_PATH.'/app_code/metadata_term_set.php?action=view&metadata_term_set_id='.$this->metadata_term_set_id.'" class="metadata_term_set_name_link" data-metadata_term_set_id="'.$this->metadata_term_set_id.'">'.htmlentities($this->name).'</a></h4>';
             $rendered .= $this->renderAsHtml_references();
             $rendered .= '</div>';
             $rendered .= $this->renderAsHtml_term_values();
@@ -109,8 +99,8 @@
 
         public function renderAsHtml_term_values() {
             $this->cacheTermValues();
-
-            $rendered = '<ul class="metadata-term-values">';
+            $rendered = '<h5>'.util_lang('metadata_values','ucfirst').'</h5>'."\n";
+            $rendered .= '<ul class="metadata-term-values">';
             foreach ($this->term_values as $tv) {
                 $rendered .= $tv->renderAsListItem();
             }
@@ -122,7 +112,9 @@
         public function renderAsHtml_structures() {
             $this->cacheStructures();
 
-            $rendered = '<div class="metadata-term-set-uses">';
+            //used_by
+            $rendered = '<h5>'.util_lang('used_by').'</h5>'."\n";
+            $rendered .= '<div class="metadata-term-set-uses">';
             $rendered .= '<ul class="metadata-structures">';
             foreach ($this->structures as $s) {
                 $rendered .= '<li>'.$s->renderAsLink().'</li>';
@@ -135,13 +127,13 @@
         public function renderAsListItem($idstr='',$classes_array = [],$other_attribs_hash = []) {
             $li_elt = substr(util_listItemTag($idstr,$classes_array,$other_attribs_hash),0,-1);
             $li_elt .= ' '.$this->fieldsAsDataAttribs().'>';
-            $li_elt .= $this->renderAsHtml();
+            $li_elt .= $this->renderAsViewEmbed();
             $li_elt .= '</li>';
             return $li_elt;
         }
 
         public function renderAsViewEmbed() {
-            $rendered = '<div id="rendered_metadata_term_set_'.$this->metadata_term_set_id.'" class="rendered-metadata-term-set" '.$this->fieldsAsDataAttribs().'>';
+            $rendered = '<div id="rendered_metadata_term_set_'.$this->metadata_term_set_id.'" class="rendered-metadata-term-set embedded" '.$this->fieldsAsDataAttribs().'>';
             $rendered .= $this->renderAsHtml();
             $rendered .= '</div>';
             return $rendered;
@@ -150,11 +142,12 @@
         public function renderAsView() {
             $this->cacheReferences();
             $this->cacheTermValues();
-
-            $rendered = '<div class="metadata-term-set-header"><a href="'.APP_ROOT_PATH.'/app_code/metadata_term_set.php?action=list">'.util_lang('all_metadata_term_sets').'</a> &gt; '.htmlentities($this->name).'</div>';
+            $rendered = '<div class="view-metadata-term-set">'."\n";
+            $rendered .= '<div class="view-metadata-term-set-header"><a href="'.APP_ROOT_PATH.'/app_code/metadata_term_set.php?action=list">'.util_lang('all_metadata_term_sets').'</a> &gt; <h3>'.htmlentities($this->name).'</h3></div>';
             $rendered .= $this->renderAsHtml_references();
             $rendered .= $this->renderAsHtml_term_values();
             $rendered .= $this->renderAsHtml_structures();
+            $rendered .= '</div>'."\n";
 
             return $rendered;
         }

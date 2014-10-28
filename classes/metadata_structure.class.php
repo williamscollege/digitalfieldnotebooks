@@ -177,7 +177,7 @@
 
             //  '.$mds_parent->renderAsLink().' &gt;
 
-            $rendered = '<div id="rendered_metadata_structure_'.$this->metadata_structure_id.'" class="rendered_metadata_structure" '.$this->fieldsAsDataAttribs().'>
+            $rendered = '<div id="rendered_metadata_structure_'.$this->metadata_structure_id.'" class="view-rendered_metadata_structure" '.$this->fieldsAsDataAttribs().'>
   <div class="metadata_lineage"><a href="'.APP_ROOT_PATH.'/app_code/metadata_structure.php?action=list">metadata</a> &gt;';
             $lineage = $this->getLineage();
             foreach ($lineage as $mds_ancestor) {
@@ -185,33 +185,42 @@
                     $rendered .= ' '.$mds_ancestor->renderAsLink().' &gt;';
                 }
             }
-            $rendered .= '</div>'."\n".
-              '  <div class="metadata-structure-header">'.ucfirst(util_lang('metadata')).' : '.$this->renderAsFullName();
+            $rendered .= '</div>'."\n";
+
+//            $rendered .= '  <div class="metadata-structure-header"><h3>'.ucfirst(util_lang('metadata')).' : '.$this->renderAsFullName().'</h3>';
+            $rendered .= '  <div class="metadata-structure-header"><h3>'.htmlentities($this->name).'</h3>';
 //            '  <div class="metadata-structure-header">'.ucfirst(util_lang('metadata')).' : '.htmlentities($this->name);
+
+            if ($this->description) {
+                $rendered .= '  <div class="description">'.$this->description.'</div>'."\n";
+            }
+
             $rendered .= '<ul class="metadata-references">';
             foreach ($this->references as $r) {
                 $rendered .= '<li>'.$r->renderAsViewEmbed().'</li>';
             }
             $rendered .= '</ul></div>'."\n";
-            if ($this->description) {
-                $rendered .= '  <div class="description">'.$this->description.'</div>'."\n";
-            }
+
             if ($this->details) {
                 $rendered .= '  <div class="details">'.$this->details.'</div>'."\n";
             }
+
             if ($this->term_set) {
                 $rendered .= '  '.$this->term_set->renderAsViewEmbed();
-            } else {
-                $children = $this->getChildren();
-                if ($children) {
-                    $rendered .= '<ul class="metadata-structure-tree">'."\n";
-                    foreach ($children as $child) {
-                        $rendered .= $child->renderAsListTree();
-                    }
-                    $rendered .= '</ul>';
-                } else {
-                    $rendered .= '<span class="info">'.util_lang('metadata_no_children_no_values').'</span>';
+            }
+
+            $children = $this->getChildren();
+            if ($children) {
+                $rendered .= '<h4>'.util_lang('metadata_children').':</h4>'."\n";
+                $rendered .= '<ul class="metadata-structure-tree">'."\n";
+                foreach ($children as $child) {
+                    $rendered .= $child->renderAsListTree();
                 }
+                $rendered .= '</ul>';
+            }
+
+            if (! $this->term_set && ! $children) {
+                $rendered .= '<span class="empty-metadata-msg info">'.util_lang('metadata_no_children_no_values').'</span>';
             }
 
             $rendered .= '</div>';

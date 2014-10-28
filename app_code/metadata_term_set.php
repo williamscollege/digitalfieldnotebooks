@@ -52,9 +52,9 @@
     }
 
     if ($action == 'list') {
-        echo '<h2>'.util_lang('all_metadata_term_sets').'</h2>'."\n";
+        echo '<h2>'.util_lang('all_metadata_term_sets','properize').'</h2>'."\n";
         $all_metadata_term_sets = Metadata_Term_Set::getAllFromDb([],$DB);
-        echo '<ul class="">'."\n";
+        echo '<ul class="all-metadata-term-sets">'."\n";
         foreach ($all_metadata_term_sets as $a_mdts) {
             if ($USER->canActOnTarget($ACTIONS['view'],$a_mdts)) {
                 echo $a_mdts->renderAsListItem();

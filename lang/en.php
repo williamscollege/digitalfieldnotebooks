@@ -20,6 +20,7 @@ $LANGUAGE['en'] = [
     'show_hide' => 'show/hide',
     'mark_for_delete' => 'mark this for removal - the actual removal occurs on update',
     'unmark_for_delete' => 'undo the mark for removal',
+    'used_by' => 'used by',
 
     'msg_do_sign_in' => 'Please sign in.',
     'msg_failed_sign_in' => 'Sign in failed.',
@@ -118,14 +119,16 @@ $LANGUAGE['en'] = [
 
     'metadata' => 'metadata',
     'all_metadata' => 'metadata structures',
-    'metadata_no_children_no_values' => 'This metadata has neither values nor children - it needs to be edited',
+    'metadata_no_children_no_values' => 'This metadata has neither specific values nor children',
     'new_metadata_structure' => 'new kind of metadata',
     'metadata_structure_has_no_term_set' => 'No specific terms - free/open text only',
     'msg_missing_metadata_structure' => 'The metadata structure is missing',
+    'metadata_children' => 'further breakdown',
 
-    'all_metadata_term_sets' => 'metadata value sets',
-    'metadata_term_set' => 'metadata value set',
+    'all_metadata_term_sets' => 'value sets',
+    'metadata_term_set' => 'value set',
     'new_metadata_term_set' => 'new set of metadata values',
+    'metadata_values' => 'values',
 
     'metadata_specific_value' => 'specific value',
     'metadata_open_value' => 'open value',

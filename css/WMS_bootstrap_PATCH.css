@@ -424,6 +424,104 @@ ul#list-of-user-notebooks li {
 }
 
 /***********************************************************************************/
+/* metadata structures */
+
+ul.all-metadata-structures,
+ul.all-metadata-structures ul {
+    list-style-type: none;
+}
+
+
+ul.all-metadata-structures li {
+    margin-top: 4px;
+}
+
+ul.all-metadata-structures > li {
+    margin-top: 20px;
+}
+
+ul.all-metadata-structures > li ul ul {
+    margin-top: 6px;
+    margin-bottom: 10px;
+}
+
+ul.all-metadata-structures a {
+    font-size: 16px;
+}
+
+ul.all-metadata-structures > li > a:first-child {
+    font-size: 20px;
+}
+
+.view-rendered_metadata_structure .metadata_lineage > a {
+    font-size: 18px;
+}
+
+.view-rendered_metadata_structure .description {
+    font-size: 16px;
+    font-style: italic;
+}
+
+.view-rendered_metadata_structure h4 {
+    margin-top: 20px;
+}
+
+.view-rendered_metadata_structure ul.metadata-structure-tree,
+.view-rendered_metadata_structure ul.metadata-references {
+    list-style-type: none;
+    font-size: 16px;
+    margin-top: 12px;
+}
+
+.view-rendered_metadata_structure ul.metadata-structure-tree li,
+.view-rendered_metadata_structure ul.metadata-references li {
+    margin-top: 4px;
+}
+
+.view-rendered_metadata_structure .empty-metadata-msg {
+    margin-top: 30px;
+    display: inline-block;
+    font-size: 20px;
+    font-style: italic;
+}
+
+/***********************************************************************************/
+/* metadata term sets */
+
+ul.all-metadata-term-sets {
+    list-style-type: none;
+}
+
+ul.metadata-term-values {
+    list-style-type: none;
+}
+
+ul.metadata-term-values ul.metadata-references,
+.metadata-term-set-header ul.metadata-references {
+    list-style-type: none;
+}
+
+.metadata-term-set-uses ul.metadata-structures {
+    list-style-type: none;
+}
+
+.view-metadata-term-set {
+    font-size: 16px;
+}
+
+.view-metadata-term-set ul.metadata-references {
+    list-style-type: none;
+}
+
+.view-metadata-term-set li {
+    margin-top: 4px;
+}
+
+.view-metadata-term-set-header > a {
+    font-size: 18px;
+}
+
+/***********************************************************************************/
 /* details on hover/click */
 
 .rendered-object {
