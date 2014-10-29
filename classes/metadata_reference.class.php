@@ -13,6 +13,8 @@
         public static $SORT_PRIORITIES_FOR_METADATA_TYPES = ['structure'=>1,'term_set'=>2,'term_value'=>3];
         public static $SORT_PRIORITIES_FOR_TYPES = ['image'=>1,'link'=>2,'text'=>3];
 
+        //-----------------------------------------
+
         public static function cmp($a, $b) {
             if (Metadata_Reference::$SORT_PRIORITIES_FOR_METADATA_TYPES[$a->metadata_type] == Metadata_Reference::$SORT_PRIORITIES_FOR_METADATA_TYPES[$b->metadata_type]) {
                 if ($a->metadata_id == $b->metadata_id) {
@@ -31,6 +33,13 @@
             }
             return (Metadata_Reference::$SORT_PRIORITIES_FOR_METADATA_TYPES[$a->metadata_type] < Metadata_Reference::$SORT_PRIORITIES_FOR_METADATA_TYPES[$b->metadata_type]) ? -1 : 1;
         }
+
+        public static function createNewMetadataReference($for_metadata_object) {
+            return "TO BE IMPLEMENTED: createNewMetadataReference";
+        }
+
+
+        //-----------------------------------------
 
 		public function getReferrent() {
             if ($this->metadata_type == 'structure') {
@@ -84,7 +93,11 @@
                 return '';
             }
 
-            $rendered = '<div id="rendered_metadata_reference_'.$this->metadata_reference_id.'" class="rendered_metadata_reference '.$reference_class.'">'.$this->renderAsHtml().'</div>';
+            $rendered = '<div id="rendered_metadata_reference_'.$this->metadata_reference_id.'" class="embedded rendered_metadata_reference '.$reference_class.'">'.$this->renderAsHtml().'</div>';
             return $rendered;
+        }
+
+        public function renderAsEditEmbed() {
+            return "TO BE IMPLEMENTED: renderAsEditEmbed";
         }
 	}

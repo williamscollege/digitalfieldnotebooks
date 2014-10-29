@@ -1,4 +1,5 @@
 /*=======================================
+/*=======================================
 Patch For: bootstrap.css
 Purpose: New styles that add icons to validation plugin (jquery.validate.js)
 Source: http://alittlecode.com/jquery-form-validation-with-styles-from-twitter-bootstrap/
@@ -78,6 +79,21 @@ Purpose: CSS that's NOT an extension / modification of the bootstrap framework
 a.show-hide-control {
     font-size: 10px;
     text-decoration: underline;
+}
+
+.ordering-controls-up-down {
+    display: inline-block;
+}
+.ordering-controls-up-down a.btn,
+.ordering-controls-up-down a.btn i {
+    margin: 0 !important;
+    padding: 0 !important;
+    font-size: 10px !important;
+    line-height: 10px !important;
+}
+
+.ordering-controls-up-down a.btn {
+    margin-top: -4px !important;
 }
 
 /***********************************************************************************/
@@ -464,12 +480,6 @@ ul.all-authoritative-plants li {
 /***********************************************************************************/
 /* metadata structures */
 
-/*ul.all-metadata-structures,*/
-/*ul.all-metadata-structures ul {*/
-    /*list-style-type: none;*/
-/*}*/
-
-
 ul.all-metadata-structures li {
     margin-top: 4px;
 }
@@ -504,14 +514,14 @@ ul.all-metadata-structures > li > a:first-child {
     margin-top: 20px;
 }
 
-.view-rendered_metadata_structure ul.metadata-structure-tree,
+ul.metadata-structure-tree,
 .view-rendered_metadata_structure ul.metadata-references {
     /*list-style-type: none;*/
     font-size: 16px;
     margin-top: 12px;
 }
 
-.view-rendered_metadata_structure ul.metadata-structure-tree li,
+ul.metadata-structure-tree li,
 .view-rendered_metadata_structure ul.metadata-references li {
     margin-top: 4px;
 }
@@ -521,6 +531,31 @@ ul.all-metadata-structures > li > a:first-child {
     display: inline-block;
     font-size: 20px;
     font-style: italic;
+}
+
+.edit-rendered_metadata_structure textarea,
+.edit-rendered_metadata_structure input,
+.edit-rendered_metadata_structure select
+{
+    margin: 0 !important;
+}
+
+.edit-rendered_metadata_structure textarea,
+.edit-rendered_metadata_structure input {
+    width: 400px;
+}
+
+.metadata-parent-controls {
+    margin: 12px 0;
+}
+
+/*.metadata-parent-controls .metadata_structure_selector {*/
+    /*margin-top: 8px;*/
+/*}*/
+
+.description-controls,
+.details-controls {
+    margin: 12px 0;
 }
 
 /***********************************************************************************/

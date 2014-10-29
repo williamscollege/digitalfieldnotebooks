@@ -26,16 +26,10 @@
             $this->assertTrue(in_array('flag_delete', Metadata_Term_Value::$fields));
 		}
 
+        ///////////////////////////////////////////////////////////////////
 		//// static methods
 
 		function testCmp() {
-//            $n1 = new Action(['action_id' => 50, 'name' => 'nA', 'DB' => $this->DB]);
-//            $n2 = new Action(['action_id' => 60, 'name' => 'nB', 'DB' => $this->DB]);
-//
-//			$this->assertEqual(Action::cmp($n1, $n2), -1);
-//			$this->assertEqual(Action::cmp($n1, $n1), 0);
-//			$this->assertEqual(Action::cmp($n2, $n1), 1);
-
             $mdtv1 = Metadata_Term_Value::getOneFromDb(['metadata_term_value_id'=>6201],$this->DB);
             $mdtv2 = Metadata_Term_Value::getOneFromDb(['metadata_term_value_id'=>6202],$this->DB);
 
@@ -62,6 +56,15 @@
             $this->assertEqual(6209, $all[12]->metadata_term_value_id);
         }
 
+        function testCreateNewMetadataTermValue() {
+            $this->todo();
+        }
+
+        function testRenderFormInteriorForNewMetadataTermValue() {
+            $this->todo();
+        }
+
+        ///////////////////////////////////////////////////////////////////
         //// instance methods - related data
 
         function testGetMetadataTermSet() {
@@ -206,5 +209,13 @@
             $this->assertEqual($canonical_selected,$rendered);
             $this->assertNoPattern('/IMPLEMENTED/',$rendered);
 
+        }
+
+        function testRenderAsEditEmbed() {
+            $this->todo();
+        }
+
+        function testRenderAsEditEmbed_NEW() {
+            $this->todo();
         }
     }

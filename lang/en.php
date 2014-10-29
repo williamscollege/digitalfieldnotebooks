@@ -118,12 +118,15 @@ $LANGUAGE['en'] = [
     'zoom_level' => 'zoom level',
 
     'metadata' => 'metadata',
-    'all_metadata' => 'metadata structures',
+    'all_metadata' => 'metadata types',
     'metadata_no_children_no_values' => 'This metadata has neither specific values nor children',
-    'new_metadata_structure' => 'new kind of metadata',
-    'metadata_structure_has_no_term_set' => 'No specific terms - free/open text only',
-    'msg_missing_metadata_structure' => 'The metadata structure is missing',
+    'new_metadata_structure' => 'new type of metadata',
+    'metadata_structure_has_no_term_set' => 'No specific values - free/open text only',
+    'msg_missing_metadata_structure' => 'The metadata type is missing',
     'metadata_children' => 'further breakdown',
+    'add_metadata_structure' => '+ Add Metadata Type +',
+    'label_metadata_structure_change_parent' => 'put this under',
+    'metadata_root_level' => '-- TOP LEVEL --',
 
     'all_metadata_term_sets' => 'value sets',
     'metadata_term_set' => 'value set',
@@ -133,8 +136,14 @@ $LANGUAGE['en'] = [
     'metadata_specific_value' => 'specific value',
     'metadata_open_value' => 'open value',
 
+    'metadata_references' => 'references',
+
     'notes' => 'notes',
     'details' => 'details',
+
+    'title_description' => 'brief description/summary',
+    'title_details' => 'additional information/details - no size limit',
+
 
     'no_permission' => 'You do not have permissions to do that.',
     'no_notebook_specified' => 'No notebook was specified.',

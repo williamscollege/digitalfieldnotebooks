@@ -225,7 +225,7 @@
                     '  <ul id="list-of-notebook-pages" data-notebook-page-count="'.count($this->pages).'">'."\n";
                 // NOTE: add page control only in edit mode, not view mode!
                 if ($USER->canActOnTarget($ACTIONS['edit'],$this)) {
-                    $rendered .= '    <li><a href="'.APP_ROOT_PATH.'/app_code/notebook_page.php?action=create&notebook_id='.$this->notebook_id.'" id="btn-add-notebook-page" class="creation_link btn">'.util_lang('add_notebook_page').'</a></li>'."\n";
+                    $rendered .= '    <li><a href="'.APP_ROOT_PATH.'/app_code/notebook_page.php?action=create&notebook_id='.$this->notebook_id.'" id="btn-add-notebook-page" class="creation_link btn">'.htmlentities(util_lang('add_notebook_page')).'</a></li>'."\n";
                 }
                 if (count($this->pages) > 0) {
                     $page_counter = 0;

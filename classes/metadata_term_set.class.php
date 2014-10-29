@@ -23,6 +23,8 @@
             $this->structures = array();
         }
 
+        //------------------------------------------------
+
         public static function cmp($a, $b) {
             if ($a->ordering == $b->ordering) {
                 if ($a->name == $b->name) {
@@ -32,6 +34,16 @@
             }
             return ($a->ordering < $b->ordering) ? -1 : 1;
         }
+
+        public static function createNewMetadataTermSet() {
+            return "TO BE IMPLEMENTED: createNewMetadataTermSet";
+        }
+
+        public static function renderAllAsSelectControl($default_selected_id = 0) {
+            return "TO BE IMPLEMENTED: renderAllAsSelectControl";
+        }
+
+        //------------------------------------------------
 
         //  NOTE: returns 0 if there is no parent
 		public function getMetadataStructures() {

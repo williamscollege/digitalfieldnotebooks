@@ -39,6 +39,14 @@
             $this->assertEqual(Metadata_Term_Set::cmp($n3, $n1), -1);
         }
 
+        function testCreateNewMetadataTermSet() {
+            $this->todo();
+        }
+
+        function testRenderAllAsSelectControl() {
+            $this->todo();
+        }
+
         //// instance methods - related data
 
         function testGetMetadataStructures() {
@@ -266,4 +274,14 @@
 
 //                echo "<pre>\n".htmlentities($canonical)."\n-------\n".htmlentities($rendered)."\n</pre>";
         }
+
+        function testRenderAsEdit() {
+            $this->todo();
+        }
+
+
+    function testRenderAsEditEmbed_NEW() {
+        $this->todo();
     }
+
+}

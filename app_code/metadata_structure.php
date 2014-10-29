@@ -6,6 +6,7 @@
     #############################
     # 1. figure out what action is being attempted (none/default is view)
     # 2. figure out which metadata structure is being acted on (if none specified then list all visible)
+    # 2.5 determine whether user has permissions to perform the action on the target
     # 3. confirm that the user is allowed to take that action on that object (if not then list all visible with an appropriate warning)
     # 4. branch behavior based on the action
     #############################
@@ -40,7 +41,7 @@
 
     # 3. confirm that the user is allowed to take that action on that object (if not, redirect them to the home page with an appropriate warning)
     if (($action != 'list') && (! $USER->canActOnTarget($ACTIONS[$action],$mds))) {
-        $action = 'list';
+        util_redirectToAppPage('app_code/metadata_structure.php?action=list','failure',util_lang('no_permission'));
     }
 
 
@@ -53,13 +54,16 @@
     #      delete - delete the metadata_structure, then go to list w/ 'deleted' message
 
     if (($action == 'update') || ($action == 'verify') || ($action == 'publish')) {
-        echo 'TODO: implement update, verify, and publish actions';
+        echo 'TO BE IMPLEMENTED: update, verify, and publish actions';
         $action = 'view';
     }
 
     if ($action == 'list') {
         echo '<h2>'.util_lang('all_metadata','properize').'</h2>'."\n";
         $all_metadata_structures = Metadata_Structure::getAllFromDb(['parent_metadata_structure_id'=>0],$DB);
+        if ($USER->canActOnTarget($ACTIONS['create'],$all_metadata_structures[0])) {
+            echo '<div id="actions"><a href="'.APP_ROOT_PATH.'/app_code/metadata_structure.php?action=create&parent_metadata_structure_id=0" id="btn-add-metadata_structure-ROOT" class="creation_link btn" title="'.htmlentities(util_lang('add_metadata_structure')).'">'.htmlentities(util_lang('add_metadata_structure')).'</a></div>'."\n";
+        }
         echo '<ul class="all-metadata-structures">'."\n";
         foreach ($all_metadata_structures as $a_mds) {
             if ($USER->canActOnTarget($ACTIONS['view'],$a_mds)) {
@@ -76,10 +80,11 @@
         echo $mds->renderAsView();
     } else
     if (($action == 'edit') || ($action == 'create')) {
-        echo 'TODO: implement edit and create actions';
+        //echo 'TO BE IMPLEMENTED: edit and create actions';
+        echo $mds->renderAsEdit();
     } else
     if ($action == 'delete') {
-        echo 'TODO: implement delete action';
+        echo 'TO BE IMPLEMENTED: delete action';
     }
 require_once('../foot.php');
 ?>

@@ -53,6 +53,11 @@
             $this->assertEqual(6303,$mdrs[6]->metadata_reference_id);
         }
 
+
+        function testCreateNewMetadataReference() {
+            $this->todo();
+        }
+
         //// instance methods - related data
 
         function testGetReferrent() {
@@ -224,4 +229,17 @@
             $this->assertNoPattern('/IMPLEMENTED/',$rendered);
         }
 
+        //---------
+
+        function testRenderAsEditEmbed_text() {
+            $this->todo();
+        }
+
+        function testRenderAsEditEmbed_image() {
+            $this->todo();
+        }
+
+        function testRenderAsEditEmbed_link() {
+            $this->todo();
+        }
     }

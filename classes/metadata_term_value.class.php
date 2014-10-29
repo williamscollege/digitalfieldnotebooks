@@ -18,6 +18,8 @@
             $this->references = array();
         }
 
+        //--------------------------------------------------------------------
+
         public static function cmp($a, $b) {
             if ($a->metadata_term_set_id == $b->metadata_term_set_id) {
                 if ($a->ordering == $b->ordering) {
@@ -30,6 +32,16 @@
             }
             return ($a->metadata_term_set_id < $b->metadata_term_set_id) ? -1 : 1;
         }
+
+        public static function createNewMetadataTermValue($for_term_set_id) {
+            return "TO BE IMPLEMENTED: createNewMetadataTermValue";
+        }
+
+        public static function renderFormInteriorForNewMetadataTermValue($unique_str) {
+            return "TO BE IMPLEMENTED: renderFormInteriorForNewMetadataTermValue";
+        }
+
+        //--------------------------------------------------------------------
 
         //  NOTE: returns 0 if there is no parent
 		public function getMetadataTermSet() {
