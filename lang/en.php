@@ -131,12 +131,19 @@ $LANGUAGE['en'] = [
     'all_metadata_term_sets' => 'value sets',
     'metadata_term_set' => 'value set',
     'new_metadata_term_set' => 'new set of metadata values',
+    'new_metadata_term_set_name' => 'name (change this)',
+    'new_metadata_term_set_description' => 'Notes / description - replace or delete this text',
+
     'metadata_values' => 'values',
+    'add_metadata_term_value' => '+ Add A Value +',
+    'new_metadata_term_value_name' => 'name (change this)',
+    'new_metadata_term_value_description' => 'Notes / description - replace or delete this text',
 
     'metadata_specific_value' => 'specific value',
     'metadata_open_value' => 'open value',
 
     'metadata_references' => 'references',
+    'add_metadata_reference' => '+ Add Reference +',
 
     'notes' => 'notes',
     'details' => 'details',

@@ -300,7 +300,7 @@
             $canonical .= $mds_c1->renderAsListItem();
             $canonical .= $mds_c2->renderAsListItem();
             $canonical .= '</ul>';
-            $canonical .= '</li>';
+            $canonical .= '</li>'."\n";
 
             $rendered = $mds->renderAsListTree();
 
@@ -339,14 +339,12 @@
 
             $canonical = '<div id="rendered_metadata_structure_6001" class="view-rendered_metadata_structure" '.$mds->fieldsAsDataAttribs().'>
   <div class="metadata_lineage"><a href="'.APP_ROOT_PATH.'/app_code/metadata_structure.php?action=list">metadata</a> &gt;</div>
-  <div class="metadata-structure-header"><h3>flower</h3>';
+  <div class="metadata-structure-header">'."\n";
+            $canonical .= '    <h3>flower</h3>'."\n";
 
-            $canonical .= '  <div class="description">info about the flower</div>'."\n";
-            $canonical .= '<ul class="metadata-references">';
-            foreach ($mds->references as $r) {
-                $canonical .= '<li>'.$r->renderAsViewEmbed().'</li>';
-            }
-            $canonical .= '</ul></div>'."\n";
+            $canonical .= '    <div class="description">info about the flower</div>'."\n";
+            $canonical .= Metadata_Reference::renderReferencesArrayAsListsView($mds->references);
+            $canonical .= '  </div>'."\n";
 
             $canonical .= '<h4>further breakdown:</h4>'."\n";
             $canonical .= '<ul class="metadata-structure-tree">'."\n";
@@ -379,18 +377,19 @@
             $canonical =
    '<div id="rendered_metadata_structure_6002" class="view-rendered_metadata_structure" '.$mds->fieldsAsDataAttribs().'>
   <div class="metadata_lineage"><a href="'.APP_ROOT_PATH.'/app_code/metadata_structure.php?action=list">metadata</a> &gt; '.$mds_parent->renderAsLink().' &gt;</div>
-  <div class="metadata-structure-header"><h3>flower size</h3>';
-            $canonical .= '  <div class="description">the size of the flower in its largest dimension</div>'."\n";
-            $canonical .= '  <div class="details">some details</div>
-  ';
+  <div class="metadata-structure-header">
+    <h3>flower size</h3>'."\n";
+            $canonical .= '    <div class="description">the size of the flower in its largest dimension</div>'."\n";
+            $canonical .= '    <div class="details">some details</div>'."\n";
+            $canonical .= Metadata_Reference::renderReferencesArrayAsListsView($mds->references);
+//            $canonical .= '<ul class="metadata-references">';
+//            foreach ($mds->references as $r) {
+//                $canonical .= '<li>'.$r->renderAsViewEmbed().'</li>';
+//            }
+//            $canonical .= '</ul>'."\n";
 
-            $canonical .= '<ul class="metadata-references">';
-            foreach ($mds->references as $r) {
-                $canonical .= '<li>'.$r->renderAsViewEmbed().'</li>';
-            }
-            $canonical .= '</ul></div>
-  ';
-            $canonical .= $mds->term_set->renderAsViewEmbed();
+            $canonical .= '  </div>'."\n";
+            $canonical .= '  '.$mds->term_set->renderAsViewEmbed();
             $canonical .= '</div>';
 
             $rendered = $mds->renderAsView();
@@ -401,9 +400,6 @@
             $this->assertEqual($canonical,$rendered);
         }
 
-        function testRenderAsView_WITH_STRUCTURE_REFERENCES() {
-            $this->todo();
-        }
 
 //if ($USER->canActOnTarget($ACTIONS['create'],$all_metadata_structures[0])) {
 //echo '<li><a href="'.APP_ROOT_PATH.'/app_code/metadata_structure.php?action=create&parent_metadata_structure_id=0" id="btn-add-metadata_structure-ROOT" class="creation_link btn" title="'.htmlentities(util_lang('add_metadata_structure')).'">'.htmlentities(util_lang('add_metadata_structure')).'</a></li>'."\n";
@@ -411,14 +407,53 @@
 
         function testRenderAsEdit() {
             $mds = Metadata_Structure::getOneFromDb(['metadata_structure_id'=>6001],$this->DB);
+            $mds->loadTermSetAndValues();
+            $mds->loadReferences();
+
 
             // name, description, details, term set ('none' is OK) - fields present
             // add/remove child structures - add button present, remove buttons present
             // re-order child structures - ordering handles and data fields present
             // ??? references ?
             $canonical = '';
+            $canonical .= '<form id="form-edit-metadata-structure-base-data" action="/digitalfieldnotebooks/app_code/metadata_structure.php">'."\n";
+            $canonical .= '  <input type="hidden" name="action" value="update"/>'."\n";
+            $canonical .= '  <input type="hidden" id="metadata_structure_id" name="metadata_structure_id" value="'.$mds->metadata_structure_id.'"/>'."\n";
+
+            $canonical .= '  <div id="actions"><button id="edit-submit-control" class="btn btn-success" type="submit" name="edit-submit-control" value="update"><i class="icon-ok-sign icon-white"></i> Update</button>'."\n";
+            $canonical .= '  <a id="edit-cancel-control" class="btn" href="/digitalfieldnotebooks/app_code/metadata_structure.php?action=view&metadata_structure_id=6001"><i class="icon-remove"></i> Cancel</a>  <a id="edit-delete-metadata-structure-control" class="btn btn-danger" href="/digitalfieldnotebooks/app_code/metadata_structure.php?action=delete&metadata_structure_id=6001"><i class="icon-trash icon-white"></i> Delete</a>  </div>'."\n";
+
+            $canonical .= '<div id="edit-rendered_metadata_structure_6001" class="edit-rendered_metadata_structure" '.$mds->fieldsAsDataAttribs().'>'."\n";
+            $canonical .= '  <div class="metadata_lineage"><a href="'.APP_ROOT_PATH.'/app_code/metadata_structure.php?action=list">metadata</a> &gt;</div>'."\n";
+
+            $canonical .= '  <div class="metadata-parent-controls">'.util_lang('label_metadata_structure_change_parent').': '.Metadata_Structure::renderControlSelectAllMetadataStructures($mds->metadata_structure_id,$mds->parent_metadata_structure_id,util_lang('metadata_root_level')).'</div>'."\n";
+
+            $canonical .= '  <div class="metadata-structure-header">'."\n";
+            $canonical .= '    <h3><input id="" class="object-name-control" type="text" name="name" value="flower"/></h3>'."\n";
+            $canonical .= '    <div class="description-controls"><input title="brief description/summary" class="description-control" type="text" name="description" value="info about the flower"/></div>'."\n";
+            $canonical .= '    <div class="details-controls"><textarea title="additional information/details - no size limit" class="details-control" name="details"></textarea></div>'."\n";
+            $canonical .= '    <h4>references</h4>'."\n";
+            $canonical .= Metadata_Reference::renderReferencesArrayAsListsEdit($mds->references);
+            $canonical .= '  </div>'."\n";
+
+            $canonical .= '  <div class="metadata-term-set-controls"><h4>'.util_lang('metadata_term_set')."</h4>\n".Metadata_Term_Set::renderAllAsSelectControl('',$mds->term_set ? $mds->term_set->metadata_term_set_id : 0)."</div>\n";
+
+
+            $canonical .= '  <h4>further breakdown:</h4>'."\n";
+            $canonical .= '  <ul class="metadata-structure-tree">'."\n";
+            $canonical .= '    <li><a href="'.APP_ROOT_PATH.'/app_code/metadata_structure.php?action=create&parent_metadata_structure_id='.$mds->metadata_structure_id.'" id="btn-add-metadata-structure" class="creation_link btn">'.htmlentities(util_lang('add_metadata_structure')).'</a></li>'."\n";
+            $children = $mds->getChildren();
+            foreach ($children as $mds_child) {
+                $canonical .= '    '.$mds_child->renderAsListTreeEditable();
+            }
+            $canonical .= '  </ul>';
+            $canonical .= '</div>';
+
 
             $rendered = $mds->renderAsEdit();
+
+
+//            echo "<pre>\n".htmlentities($canonical)."\n---------------\n".htmlentities($rendered)."\n</pre>";
 
             $this->assertNoPattern('/IMPLEMENTED/',$rendered);
             $this->assertEqual($canonical,$rendered);

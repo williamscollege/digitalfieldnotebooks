@@ -83,7 +83,6 @@
 
             $this->assertEqual($canonical,$rendered);
             $this->assertNoPattern('/IMPLEMENTED/',$rendered);
-
         }
 
         //// instance methods - related data

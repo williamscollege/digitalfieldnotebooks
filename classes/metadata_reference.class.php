@@ -38,6 +38,67 @@
             return "TO BE IMPLEMENTED: createNewMetadataReference";
         }
 
+        public static function renderReferencesArrayAsListsView($ref_ar) {
+            $rendered = '';
+
+            $list_items_image = '';
+            $list_items_link = '';
+            $list_items_text = '';
+            foreach ($ref_ar as $r) {
+                if ($r->type == 'image') {
+                    $list_items_image .= '    <li>'.$r->renderAsViewEmbed().'</li>'."\n";
+                } elseif ($r->type == 'link') {
+                    $list_items_link .= '    <li>'.$r->renderAsViewEmbed().'</li>'."\n";
+                } elseif ($r->type == 'text') {
+                    $list_items_text .= '    <li>'.$r->renderAsViewEmbed().'</li>'."\n";
+                }
+            }
+
+            $rendered .= '<div class="metadata-references">'."\n";
+            $rendered .= '  <ul class="metadata-references metadata-references-images">'."\n";
+            $rendered .= $list_items_image;
+            $rendered .= '  </ul>'."\n";
+            $rendered .= '  <ul class="metadata-references metadata-references-links">'."\n";
+            $rendered .= $list_items_link;
+            $rendered .= '  </ul>'."\n";
+            $rendered .= '  <ul class="metadata-references metadata-references-texts">'."\n";
+            $rendered .= $list_items_text;
+            $rendered .= '  </ul>'."\n";
+            $rendered .= '</div>'."\n";
+
+            return $rendered;
+        }
+
+        public static function renderReferencesArrayAsListsEdit($ref_ar) {
+            $rendered = '';
+
+            $list_items_image = '';
+            $list_items_link = '';
+            $list_items_text = '';
+            foreach ($ref_ar as $r) {
+                if ($r->type == 'image') {
+                    $list_items_image .= '    <li>'.$r->renderAsEditEmbed().'</li>'."\n";
+                } elseif ($r->type == 'link') {
+                    $list_items_link .= '    <li>'.$r->renderAsEditEmbed().'</li>'."\n";
+                } elseif ($r->type == 'text') {
+                    $list_items_text .= '    <li>'.$r->renderAsEditEmbed().'</li>'."\n";
+                }
+            }
+
+            $rendered .= '<div class="metadata-references edit-metadata-references">'."\n";
+            $rendered .= '  <ul class="metadata-references metadata-references-images edit-metadata-references-images">'."\n";
+            $rendered .= $list_items_image;
+            $rendered .= '  </ul>'."\n";
+            $rendered .= '  <ul class="metadata-references metadata-references-links edit-metadata-references-links">'."\n";
+            $rendered .= $list_items_link;
+            $rendered .= '  </ul>'."\n";
+            $rendered .= '  <ul class="metadata-references metadata-references-texts edit-metadata-references-texts">'."\n";
+            $rendered .= $list_items_text;
+            $rendered .= '  </ul>'."\n";
+            $rendered .= '</div>'."\n";
+
+            return $rendered;
+        }
 
         //-----------------------------------------
 
@@ -97,7 +158,26 @@
             return $rendered;
         }
 
+        public function renderAsEdit() {
+            return 'not yet supported';
+        }
+
         public function renderAsEditEmbed() {
-            return "TO BE IMPLEMENTED: renderAsEditEmbed";
+            $reference_class='';
+
+            if ($this->type == 'text') {
+                $reference_class='rendered_metadata_reference_text';
+            }
+            elseif ($this->type == 'image') {
+                $reference_class='rendered_metadata_reference_image';
+            }
+            elseif ($this->type == 'link') {
+                $reference_class='rendered_metadata_reference_link';
+            } else {
+                return '';
+            }
+
+            $rendered = '<div id="edit_rendered_metadata_reference_'.$this->metadata_reference_id.'" class="embedded rendered_metadata_reference edit_rendered_metadata_reference '.$reference_class.'">'.$this->renderAsEdit().'</div>';
+            return $rendered;
         }
 	}

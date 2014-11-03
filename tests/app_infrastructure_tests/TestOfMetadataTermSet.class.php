@@ -40,11 +40,39 @@
         }
 
         function testCreateNewMetadataTermSet() {
-            $this->todo();
+            $new = Metadata_Term_Set::createNewMetadataTermSet($this->DB);
+
+            // 'metadata_term_set_id', 'created_at', 'updated_at', 'name', 'ordering', 'description', 'flag_delete'
+
+            $this->assertEqual('NEW',$new->metadata_term_set_id);
+            $this->assertNotEqual('',$new->created_at);
+            $this->assertNotEqual('',$new->updated_at);
+            $this->assertEqual(util_lang('new_metadata_term_set_name'), $new->name);
+            $this->assertEqual('0',$new->ordering);
+            $this->assertEqual(util_lang('new_metadata_term_set_description'),$new->description);
+//            $this->assertEqual('',$new->flag_workflow_published);
+//            $this->assertEqual('',$new->flag_workflow_validated);
+            $this->assertEqual('',$new->flag_delete);
         }
 
         function testRenderAllAsSelectControl() {
-            $this->todo();
+            global $DB;
+            $DB = $this->DB;
+
+            $canonical = '<select name="metadata_term_set_id" id="metadata_term_set_id" class="metadata_term_set_selector">
+<option value="-1">'.util_lang('prompt_select').'</option>
+<option value="6103" title="the shape / pattern of an edge">margin styles</option>
+<option value="6101" title="lengths ranging from 3 mm to 30 cm">small lengths</option>
+<option value="6102" title="basic colors">colors</option>
+<option value="6104" title="general kinds of places plants live (no terms)">habitats</option>
+</select>';
+
+            $rendered = Metadata_Term_Set::renderAllAsSelectControl();
+
+//            echo "<pre>\n".htmlentities($canonical)."\n--------------\n".htmlentities($rendered)."\n</pre>";
+
+            $this->assertEqual($canonical,$rendered);
+            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
         }
 
         //// instance methods - related data
@@ -116,11 +144,30 @@
             $mdts = Metadata_Term_Set::getOneFromDb(['metadata_term_set_id' => 6101],$this->DB);
             $mdts->loadReferences();
 
-            $canonical = '<ul class="metadata-references">';
-            foreach ($mdts->references as $r) {
-                $canonical .= '<li>'.$r->renderAsViewEmbed().'</li>';
-            }
-            $canonical .= '</ul>';
+            $canonical = Metadata_Reference::renderReferencesArrayAsListsView($mdts->references);
+
+//            $list_items_image = '';
+//            $list_items_link = '';
+//            $list_items_text = '';
+//            foreach ($mdts->references as $r) {
+//                if ($r->type == 'image') {
+//                    $list_items_image .= '<li>'.$r->renderAsViewEmbed().'</li>'."\n";
+//                } elseif ($r->type == 'link') {
+//                    $list_items_link .= '<li>'.$r->renderAsViewEmbed().'</li>'."\n";
+//                } elseif ($r->type == 'text') {
+//                    $list_items_text .= '<li>'.$r->renderAsViewEmbed().'</li>'."\n";
+//                }
+//            }
+//
+//            $canonical .= '<ul class="metadata-references edit-metadata-references metadata-references-images">."\n"';
+//            $canonical .= $list_items_image;
+//            $canonical .= '</ul>'."\n";
+//            $canonical .= '<ul class="metadata-references edit-metadata-references metadata-references-links">'."\n";
+//            $canonical .= $list_items_link;
+//            $canonical .= '</ul>'."\n";
+//            $canonical .= '<ul class="metadata-references edit-metadata-references metadata-references-texts">'."\n";
+//            $canonical .= $list_items_text;
+//            $canonical .= '</ul>'."\n";
 
             $rendered = $mdts->renderAsHtml_references();
 
@@ -129,6 +176,46 @@
             $this->assertEqual($canonical,$rendered);
             $this->assertNoPattern('/IMPLEMENTED/',$rendered);
         }
+
+        function testRenderAsEdit_references() {
+            $mdts = Metadata_Term_Set::getOneFromDb(['metadata_term_set_id' => 6101],$this->DB);
+            $mdts->loadReferences();
+
+            $canonical = Metadata_Reference::renderReferencesArrayAsListsEdit($mdts->references);
+
+//            $canonical = '';
+//
+//            $list_items_image = '';
+//            $list_items_link = '';
+//            $list_items_text = '';
+//            foreach ($mdts->references as $r) {
+//                if ($r->type == 'image') {
+//                    $list_items_image .= '<li>'.$r->renderAsEditEmbed().'</li>'."\n";
+//                } elseif ($r->type == 'link') {
+//                    $list_items_link .= '<li>'.$r->renderAsEditEmbed().'</li>'."\n";
+//                } elseif ($r->type == 'text') {
+//                    $list_items_text .= '<li>'.$r->renderAsEditEmbed().'</li>'."\n";
+//                }
+//            }
+//
+//            $canonical .= '<ul class="metadata-references edit-metadata-references metadata-references-images">."\n"';
+//            $canonical .= $list_items_image;
+//            $canonical .= '</ul>'."\n";
+//            $canonical .= '<ul class="metadata-references edit-metadata-references metadata-references-links">'."\n";
+//            $canonical .= $list_items_link;
+//            $canonical .= '</ul>'."\n";
+//            $canonical .= '<ul class="metadata-references edit-metadata-references metadata-references-texts">'."\n";
+//            $canonical .= $list_items_text;
+//            $canonical .= '</ul>'."\n";
+
+            $rendered = $mdts->renderAsEdit_references();
+
+//            echo "<pre>\n".htmlentities($canonical)."\n--------------\n".htmlentities($rendered)."\n</pre>";
+
+            $this->assertEqual($canonical,$rendered);
+            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
+        }
+
 
         function testRenderAsHtml_term_values() {
             $mdts = Metadata_Term_Set::getOneFromDb(['metadata_term_set_id' => 6101],$this->DB);
@@ -142,6 +229,29 @@
             $canonical .= '</ul>';
 
             $rendered = $mdts->renderAsHtml_term_values();
+
+//            echo "<pre>\n".htmlentities($canonical)."\n--------------\n".htmlentities($rendered)."\n</pre>";
+
+            $this->assertEqual($canonical,$rendered);
+            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
+        }
+
+        function testRenderAsEdit_term_values() {
+            $mdts = Metadata_Term_Set::getOneFromDb(['metadata_term_set_id' => 6101],$this->DB);
+            $mdts->loadTermValues();
+            $canonical = '';
+
+            $canonical .= '<h5>'.util_lang('metadata_values','properize').'</h5>'."\n";
+            $canonical .= '<ul class="metadata-term-values">'."\n";
+//            $canonical .= '  <li></li>'."\n";
+            $canonical .= '    <li><a href="#" id="add_new_metadata_term_value_button" class="btn">'.util_lang('add_metadata_term_value').'</a></li>'."\n";
+
+            foreach ($mdts->term_values as $tv) {
+                $canonical .= $tv->renderAsListItemEdit();
+            }
+            $canonical .= '</ul>';
+
+            $rendered = $mdts->renderAsEdit_term_values();
 
 //            echo "<pre>\n".htmlentities($canonical)."\n--------------\n".htmlentities($rendered)."\n</pre>";
 
@@ -253,6 +363,34 @@
 //            $this->assertPattern('/'.htmlentities($mds->name).'/',$rendered);
         }
 
+        function testRenderAsOption() {
+            $mdts = Metadata_Term_Set::getOneFromDb(['metadata_term_set_id' => 6101],$this->DB);
+
+
+            //---- base
+
+            $canonical = '<option value="'.$mdts->metadata_term_set_id.'" title="'.htmlentities($mdts->description).'">'.htmlentities($mdts->name).'</option>';
+
+            $rendered = $mdts->renderAsOption();
+
+//                echo "<pre>\n".htmlentities($canonical)."\n-------\n".htmlentities($rendered)."\n</pre>";
+
+            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
+            $this->assertEqual($canonical,$rendered);
+
+            //---- selected
+
+            $canonical = '<option value="'.$mdts->metadata_term_set_id.'" title="'.htmlentities($mdts->description).'" selected="selected">'.htmlentities($mdts->name).'</option>';
+
+            $rendered = $mdts->renderAsOption('',$mdts->metadata_term_set_id);
+
+//                echo "<pre>\n".htmlentities($canonical)."\n-------\n".htmlentities($rendered)."\n</pre>";
+
+            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
+            $this->assertEqual($canonical,$rendered);
+
+        }
+
         function testRenderAsSelectControl() {
             $mdts = Metadata_Term_Set::getOneFromDb(['metadata_term_set_id' => 6101],$this->DB);
             $mdtvs = Metadata_Term_Value::getAllFromDb(['metadata_term_set_id' => 6101],$this->DB);
@@ -269,19 +407,50 @@
 
             $rendered = $mdts->renderAsSelectControl('namefoo','6203','idfoo');
 
+            //                echo "<pre>\n".htmlentities($canonical)."\n-------\n".htmlentities($rendered)."\n</pre>";
+
             $this->assertNoPattern('/IMPLEMENTED/',$rendered);
             $this->assertEqual($canonical,$rendered);
-
-//                echo "<pre>\n".htmlentities($canonical)."\n-------\n".htmlentities($rendered)."\n</pre>";
         }
 
         function testRenderAsEdit() {
-            $this->todo();
+            $mdts = Metadata_Term_Set::getOneFromDb(['metadata_term_set_id' => 6101],$this->DB);
+
+            $canonical = '';
+
+            $canonical .= '<form id="form-edit-metadata-term-set-base-data" action="'.APP_ROOT_PATH.'/app_code/metadata_term_set.php">'."\n";
+            $canonical .= '  <input type="hidden" name="action" value="update"/>'."\n";
+            $canonical .= '  <input type="hidden" id="metadata_term_set_id" name="metadata_term_set_id" value="'.$mdts->metadata_term_set_id.'"/>'."\n";
+
+            $canonical .= '  <div id="actions">'."\n";
+            $canonical .= '    <button id="edit-submit-control" class="btn btn-success" type="submit" name="edit-submit-control" value="update"><i class="icon-ok-sign icon-white"></i> '.util_lang('update','properize').'</button>'."\n";
+            $canonical .= '    <a id="edit-cancel-control" class="btn" href="'.APP_ROOT_PATH.'/app_code/metadata_term_set.php?action=view&metadata_term_set_id='.$mdts->metadata_term_set_id.'"><i class="icon-remove"></i> '.util_lang('cancel','properize').'</a>'."\n";
+            $canonical .= '    <a id="edit-delete-metadata-term-set-control" class="btn btn-danger" href="'.APP_ROOT_PATH.'/app_code/metadata_term_set.php?action=delete&metadata_term_set_id='.$mdts->metadata_term_set_id.'"><i class="icon-trash icon-white"></i> '.util_lang('delete','properize').'</a>'."\n";
+            $canonical .= '  </div>'."\n";
+
+            $canonical .= '  <div class="edit-metadata-term-set" '.$mdts->fieldsAsDataAttribs().'>'."\n";
+            $canonical .= '    <div class="edit-metadata-term-set-header">';
+            $canonical .= '<a href="'.APP_ROOT_PATH.'/app_code/metadata_term_set.php?action=list">'.util_lang('all_metadata_term_sets').'</a> &gt;';
+            $canonical .= '<h3><input class="object-name-control" id="mdts-name" name="name" type="text" value="'.htmlentities($mdts->name).'"/></h3>';
+            $canonical .= '</div>';
+            $canonical .= '    <div class="description-controls"><input title="'.util_lang('title_description').'" class="description-control" type="text" name="description" value="'.htmlentities($mdts->description).'"/></div>'."\n";
+            $canonical .= $mdts->renderAsEdit_references();
+            $canonical .= $mdts->renderAsEdit_term_values();
+            $canonical .= $mdts->renderAsHtml_structures();
+            $canonical .= '  </div>'."\n";
+            $canonical .= '</form>'."\n";
+
+            $rendered = $mdts->renderAsEdit();
+
+//            echo "<pre>\n".htmlentities($canonical)."\n-------\n".htmlentities($rendered)."\n</pre>";
+
+            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
+            $this->assertEqual($canonical,$rendered);
         }
 
 
-    function testRenderAsEditEmbed_NEW() {
-        $this->todo();
-    }
+        function testRenderAsEditEmbed_NEW() {
+            $this->todo();
+        }
 
 }

@@ -58,6 +58,68 @@
             $this->todo();
         }
 
+        function testRenderReferencesArrayAsListsView() {
+            $ref_list = [
+                Metadata_Reference::getOneFromDb(['metadata_reference_id'=>6302],$this->DB), // text
+                Metadata_Reference::getOneFromDb(['metadata_reference_id'=>6305],$this->DB), // image
+                Metadata_Reference::getOneFromDb(['metadata_reference_id'=>6304],$this->DB), // link
+                Metadata_Reference::getOneFromDb(['metadata_reference_id'=>6303],$this->DB), // image
+                Metadata_Reference::getOneFromDb(['metadata_reference_id'=>6306],$this->DB) // link
+                ];
+
+            $canonical = '';
+            $canonical .= '<div class="metadata-references">'."\n";
+            $canonical .= '  <ul class="metadata-references metadata-references-images">'."\n";
+            $canonical .= '    <li>'.$ref_list[1]->renderAsViewEmbed().'</li>'."\n";
+            $canonical .= '    <li>'.$ref_list[3]->renderAsViewEmbed().'</li>'."\n";
+            $canonical .= '  </ul>'."\n";
+            $canonical .= '  <ul class="metadata-references metadata-references-links">'."\n";
+            $canonical .= '    <li>'.$ref_list[2]->renderAsViewEmbed().'</li>'."\n";
+            $canonical .= '    <li>'.$ref_list[4]->renderAsViewEmbed().'</li>'."\n";
+            $canonical .= '  </ul>'."\n";
+            $canonical .= '  <ul class="metadata-references metadata-references-texts">'."\n";
+            $canonical .= '    <li>'.$ref_list[0]->renderAsViewEmbed().'</li>'."\n";
+            $canonical .= '  </ul>'."\n";
+            $canonical .= '</div>'."\n";
+
+            $rendered = Metadata_Reference::renderReferencesArrayAsListsView($ref_list);
+
+//            echo "<pre>\n".htmlentities($canonical)."\n-----\n".htmlentities($rendered)."\n</pre>";
+
+            $this->assertEqual($canonical,$rendered);
+            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
+        }
+
+        function testRenderReferencesArrayAsListsEdit() {
+            $ref_list = [
+                Metadata_Reference::getOneFromDb(['metadata_reference_id'=>6302],$this->DB),
+                Metadata_Reference::getOneFromDb(['metadata_reference_id'=>6305],$this->DB),
+                Metadata_Reference::getOneFromDb(['metadata_reference_id'=>6304],$this->DB),
+                Metadata_Reference::getOneFromDb(['metadata_reference_id'=>6303],$this->DB),
+                Metadata_Reference::getOneFromDb(['metadata_reference_id'=>6306],$this->DB)
+            ];
+            $canonical = '';
+
+            $canonical .= '<div class="metadata-references edit-metadata-references">'."\n";
+            $canonical .= '  <ul class="metadata-references metadata-references-images edit-metadata-references-images">'."\n";
+            $canonical .= '    <li>'.$ref_list[1]->renderAsEditEmbed().'</li>'."\n";
+            $canonical .= '    <li>'.$ref_list[3]->renderAsEditEmbed().'</li>'."\n";
+            $canonical .= '  </ul>'."\n";
+            $canonical .= '  <ul class="metadata-references metadata-references-links edit-metadata-references-links">'."\n";
+            $canonical .= '    <li>'.$ref_list[2]->renderAsEditEmbed().'</li>'."\n";
+            $canonical .= '    <li>'.$ref_list[4]->renderAsEditEmbed().'</li>'."\n";
+            $canonical .= '  </ul>'."\n";
+            $canonical .= '  <ul class="metadata-references metadata-references-texts edit-metadata-references-texts">'."\n";
+            $canonical .= '    <li>'.$ref_list[0]->renderAsEditEmbed().'</li>'."\n";
+            $canonical .= '  </ul>'."\n";
+            $canonical .= '</div>'."\n";
+
+            $rendered = Metadata_Reference::renderReferencesArrayAsListsEdit($ref_list);
+
+//            echo "<pre>\n".htmlentities($canonical)."\n-----\n".htmlentities($rendered)."\n</pre>";
+            $this->assertEqual($canonical,$rendered);
+            $this->assertNoPattern('/IMPLEMENTED/',$rendered);        }
+
         //// instance methods - related data
 
         function testGetReferrent() {
@@ -101,32 +163,30 @@
 
         function testRenderAsViewEmbed_text() {
             $mdr = Metadata_Reference::getOneFromDb(['metadata_reference_id'=>6302],$this->DB);
-            $canonical = '<div id="rendered_metadata_reference_6302" class="rendered_metadata_reference rendered_metadata_reference_text">'.$mdr->renderAsHtml().'</div>';
+            $canonical = '<div id="rendered_metadata_reference_6302" class="embedded rendered_metadata_reference rendered_metadata_reference_text">'.$mdr->renderAsHtml().'</div>';
             $rendered = $mdr->renderAsViewEmbed();
 //            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
             $this->assertEqual($canonical,$rendered);
             $this->assertNoPattern('/IMPLEMENTED/',$rendered);
         }
 
-        function ASIDE_testRenderAsListItem_text() {
-            $this->todo(); return;
-
-            $mdr = Metadata_Reference::getOneFromDb(['metadata_reference_id'=>6301],$this->DB);
-
-            global $USER;
-            $USER = User::getOneFromDb(['username'=>TESTINGUSER], $this->DB);
-
-            $canonical = '<li data-metadata_reference_id="6301" data-created_at="'.$mdr->created_at.'" data-updated_at="'.$mdr->updated_at.'" data-flag_delete="0">'.
-                ''.
-                '</li>';
-
-            $rendered = $mdr->renderAsListItem();
-
-//            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
-
-            $this->assertEqual($canonical,$rendered);
-            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
-        }
+//        function testRenderAsListItem_text() {
+//            $mdr = Metadata_Reference::getOneFromDb(['metadata_reference_id'=>6301],$this->DB);
+//
+//            global $USER;
+//            $USER = User::getOneFromDb(['username'=>TESTINGUSER], $this->DB);
+//
+//            $canonical = '<li data-metadata_reference_id="6301" data-created_at="'.$mdr->created_at.'" data-updated_at="'.$mdr->updated_at.'" data-flag_delete="0">'.
+//                ''.
+//                '</li>';
+//
+//            $rendered = $mdr->renderAsListItem();
+//
+////            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
+//
+//            $this->assertEqual($canonical,$rendered);
+//            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
+//        }
 
         //---------
 
@@ -148,39 +208,37 @@
 
         function testRenderAsViewEmbed_image() {
             $mdr = Metadata_Reference::getOneFromDb(['metadata_reference_id'=>6303],$this->DB);
-            $canonical = '<div id="rendered_metadata_reference_6303" class="rendered_metadata_reference rendered_metadata_reference_image">'.$mdr->renderAsHtml().'</div>';
+            $canonical = '<div id="rendered_metadata_reference_6303" class="embedded rendered_metadata_reference rendered_metadata_reference_image">'.$mdr->renderAsHtml().'</div>';
             $rendered = $mdr->renderAsViewEmbed();
 //            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
             $this->assertEqual($canonical,$rendered);
             $this->assertNoPattern('/IMPLEMENTED/',$rendered);
 
             $mdr = Metadata_Reference::getOneFromDb(['metadata_reference_id'=>6305],$this->DB);
-            $canonical = '<div id="rendered_metadata_reference_6305" class="rendered_metadata_reference rendered_metadata_reference_image">'.$mdr->renderAsHtml().'</div>';
+            $canonical = '<div id="rendered_metadata_reference_6305" class="embedded rendered_metadata_reference rendered_metadata_reference_image">'.$mdr->renderAsHtml().'</div>';
             $rendered = $mdr->renderAsViewEmbed();
 //            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
             $this->assertEqual($canonical,$rendered);
             $this->assertNoPattern('/IMPLEMENTED/',$rendered);
         }
 
-        function ASIDE_testRenderAsListItem_image() {
-            $this->todo(); return;
-
-            $mdr = Metadata_Reference::getOneFromDb(['metadata_reference_id'=>6303],$this->DB);
-
-            global $USER;
-            $USER = User::getOneFromDb(['username'=>TESTINGUSER], $this->DB);
-
-            $canonical = '<li data-metadata_reference_id="6303" data-created_at="'.$mdr->created_at.'" data-updated_at="'.$mdr->updated_at.'" data-flag_delete="0">'.
-                ''.
-                '</li>';
-
-            $rendered = $mdr->renderAsListItem();
-
-//            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
-
-            $this->assertEqual($canonical,$rendered);
-            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
-        }
+//        function testRenderAsListItem_image() {
+//            $mdr = Metadata_Reference::getOneFromDb(['metadata_reference_id'=>6303],$this->DB);
+//
+//            global $USER;
+//            $USER = User::getOneFromDb(['username'=>TESTINGUSER], $this->DB);
+//
+//            $canonical = '<li data-metadata_reference_id="6303" data-created_at="'.$mdr->created_at.'" data-updated_at="'.$mdr->updated_at.'" data-flag_delete="0">'.
+//                ''.
+//                '</li>';
+//
+//            $rendered = $mdr->renderAsListItem();
+//
+////            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
+//
+//            $this->assertEqual($canonical,$rendered);
+//            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
+//        }
 
         //---------
 
@@ -199,7 +257,7 @@
             global $USER;
             $USER = User::getOneFromDb(['username'=>TESTINGUSER], $this->DB);
 
-            $canonical = '<div id="rendered_metadata_reference_6304" class="rendered_metadata_reference rendered_metadata_reference_link">'.$mdr->renderAsHtml().'</div>';
+            $canonical = '<div id="rendered_metadata_reference_6304" class="embedded rendered_metadata_reference rendered_metadata_reference_link">'.$mdr->renderAsHtml().'</div>';
 
             $rendered = $mdr->renderAsViewEmbed();
 
@@ -209,25 +267,23 @@
             $this->assertNoPattern('/IMPLEMENTED/',$rendered);
         }
 
-        function ASIDE_testRenderAsListItem_link() {
-            $this->todo(); return;
-
-            $mdr = Metadata_Reference::getOneFromDb(['metadata_reference_id'=>6304],$this->DB);
-
-            global $USER;
-            $USER = User::getOneFromDb(['username'=>TESTINGUSER], $this->DB);
-
-            $canonical = '<li data-metadata_reference_id="6304" data-created_at="'.$mdr->created_at.'" data-updated_at="'.$mdr->updated_at.'" data-flag_delete="0">'.
-                ''.
-                '</li>';
-
-            $rendered = $mdr->renderAsListItem();
-
-//            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
-
-            $this->assertEqual($canonical,$rendered);
-            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
-        }
+//        function testRenderAsListItem_link() {
+//            $mdr = Metadata_Reference::getOneFromDb(['metadata_reference_id'=>6304],$this->DB);
+//
+//            global $USER;
+//            $USER = User::getOneFromDb(['username'=>TESTINGUSER], $this->DB);
+//
+//            $canonical = '<li data-metadata_reference_id="6304" data-created_at="'.$mdr->created_at.'" data-updated_at="'.$mdr->updated_at.'" data-flag_delete="0">'.
+//                ''.
+//                '</li>';
+//
+//            $rendered = $mdr->renderAsListItem();
+//
+////            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
+//
+//            $this->assertEqual($canonical,$rendered);
+//            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
+//        }
 
         //---------
 
@@ -237,6 +293,14 @@
 
         function testRenderAsEditEmbed_image() {
             $this->todo();
+            return;
+
+            $mdr = Metadata_Reference::getOneFromDb(['metadata_reference_id'=>6303],$this->DB);
+            $canonical = '<div id="rendered_metadata_reference_6303" class="embedded rendered_metadata_reference rendered_metadata_reference_image">'.$mdr->renderAsHtml().'</div>';
+            $rendered = $mdr->renderAsEditEmbed();
+//            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
+            $this->assertEqual($canonical,$rendered);
+            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
         }
 
         function testRenderAsEditEmbed_link() {

@@ -57,11 +57,42 @@
         }
 
         function testCreateNewMetadataTermValue() {
-            $this->todo();
+            $new = Metadata_Term_Value::createNewMetadataTermValue(6101,$this->DB);
+
+            // 'metadata_term_set_id', 'created_at', 'updated_at', 'name', 'ordering', 'description', 'flag_delete'
+
+            $this->assertEqual('NEW',$new->metadata_term_value_id);
+            $this->assertNotEqual('',$new->created_at);
+            $this->assertNotEqual('',$new->updated_at);
+            $this->assertEqual(6101,$new->metadata_term_set_id);
+            $this->assertEqual(util_lang('new_metadata_term_value_name'), $new->name);
+            $this->assertEqual('0',$new->ordering);
+            $this->assertEqual(util_lang('new_metadata_term_value_description'),$new->description);
+//            $this->assertEqual('',$new->flag_workflow_published);
+//            $this->assertEqual('',$new->flag_workflow_validated);
+            $this->assertEqual('',$new->flag_delete);
         }
 
         function testRenderFormInteriorForNewMetadataTermValue() {
-            $this->todo();
+            global $DB;
+            $DB = $this->DB;
+
+            $canonical = '';
+            $canonical .= '<div class="new-metadata-term-value edit-metadata-term-value">';
+            $canonical .= '  <div class="edit-metadata-term-value-name">';
+            $canonical .= '<input type="text" name="metadata-term-value-name-ABC" value="'.htmlentities(util_lang('new_metadata_term_value_name')).'"/>';
+            $canonical .= '</div>'."\n";
+            $canonical .= '  <div class="edit-metadata-term-value-description">';
+            $canonical .= '<input type="text" name="metadata-term-value-description-ABC" value="'.htmlentities(util_lang('new_metadata_term_value_description')).'"/>';
+            $canonical .= '</div>'."\n";
+            $canonical .= '</div>';
+
+            $rendered = Metadata_Term_Value::renderFormInteriorForNewMetadataTermValue('ABC');
+
+//            echo "<pre>\n".htmlentities($canonical)."\n------------------\n".htmlentities($rendered)."\n</pre>";
+
+            $this->assertEqual($canonical,$rendered);
+            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
         }
 
         ///////////////////////////////////////////////////////////////////
@@ -91,7 +122,15 @@
 
         function testRenderAsHtml_no_references() {
             $mdtv = Metadata_Term_Value::getOneFromDb(['metadata_term_value_id' => 6205],$this->DB);
-            $canonical = '<span class="term_value" title="up to the the length of the back of the hand when a fist is made">6-12 cm</span>';
+            $canonical = '<span class="term_value" title="up to the the length of the back of the hand when a fist is made">6-12 cm</span><div class="metadata-references"><div class="metadata-references">
+  <ul class="metadata-references metadata-references-images">
+  </ul>
+  <ul class="metadata-references metadata-references-links">
+  </ul>
+  <ul class="metadata-references metadata-references-texts">
+  </ul>
+</div>
+</div>';
 
             $rendered = $mdtv->renderAsHtml();
 
@@ -106,11 +145,10 @@
             $mdtv->loadReferences();
 
             $canonical = '<span class="term_value" title="teeth outward pointing - 1 level / degree of teeth">dentate</span>';
-            $canonical .= '<ul class="metadata-references">';
-            foreach ($mdtv->references as $r) {
-                $canonical .= '<li>'.$r->renderAsViewEmbed().'</li>';
-            }
-            $canonical .= '</ul>';
+            $canonical .= '<div class="metadata-references">';
+            $canonical .= Metadata_Reference::renderReferencesArrayAsListsView($mdtv->references);
+            $canonical .= '</div>';
+
             $rendered = $mdtv->renderAsHtml();
 
 //            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
@@ -128,6 +166,9 @@
             // 'metadata_term_set_id', 'name', 'ordering', 'description', 'flag_delete'
             $canonical = '<li data-metadata_term_value_id="6205" data-created_at="'.$mdtv->created_at.'" data-updated_at="'.$mdtv->updated_at.'" data-metadata_term_set_id="6101" data-name="6-12 cm" data-ordering="5.00000" data-description="up to the the length of the back of the hand when a fist is made" data-flag_delete="0">';
             $canonical .= '<span class="term_value" title="up to the the length of the back of the hand when a fist is made">6-12 cm</span>';
+            $canonical .= '<div class="metadata-references">';
+            $canonical .= Metadata_Reference::renderReferencesArrayAsListsView($mdtv->references);
+            $canonical .= '</div>';
             $canonical .= '</li>';
 
             $rendered = $mdtv->renderAsListItem();
@@ -146,11 +187,9 @@
             // 'metadata_term_set_id', 'name', 'ordering', 'description', 'flag_delete'
             $canonical = '<li data-metadata_term_value_id="6210" data-created_at="'.$mdtv->created_at.'" data-updated_at="'.$mdtv->updated_at.'" data-metadata_term_set_id="6103" data-name="dentate" data-ordering="1.00000" data-description="teeth outward pointing - 1 level / degree of teeth" data-flag_delete="0">';
             $canonical .= '<span class="term_value" title="teeth outward pointing - 1 level / degree of teeth">dentate</span>';
-            $canonical .= '<ul class="metadata-references">';
-            foreach ($mdtv->references as $r) {
-                $canonical .= '<li>'.$r->renderAsViewEmbed().'</li>';
-            }
-            $canonical .= '</ul>';
+            $canonical .= '<div class="metadata-references">';
+            $canonical .= Metadata_Reference::renderReferencesArrayAsListsView($mdtv->references);
+            $canonical .= '</div>';
             $canonical .= '</li>';
 
             $rendered = $mdtv->renderAsListItem();
@@ -208,14 +247,60 @@
 
             $this->assertEqual($canonical_selected,$rendered);
             $this->assertNoPattern('/IMPLEMENTED/',$rendered);
-
         }
 
-        function testRenderAsEditEmbed() {
-            $this->todo();
+        function testRenderAsListItemEdit() {
+            $mdtv = Metadata_Term_Value::getOneFromDb(['metadata_term_value_id' => 6210],$this->DB);
+            $canonical = '';
+
+            $canonical .= '<li id="list-item-metadata-term-value-6210" '.$mdtv->fieldsAsDataAttribs().'>';
+            $canonical .= util_orderingUpDownControls('list-item-metadata-term-value-6210').' ';
+            $canonical .= $mdtv->renderAsEdit();
+            $canonical .= '<input type="hidden" name="original_ordering-list-item-metadata-term-value-6210" id="original_ordering-list-item-metadata-term-value-6210" value="'.$mdtv->ordering.'"/>';
+            $canonical .= '<input type="hidden" name="new_ordering-list-item-metadata-term-value-6210" id="new_ordering-list-item-metadata-term-value-6210" value="'.$mdtv->ordering.'"/>';
+            $canonical .= '</li>';
+
+            $rendered = $mdtv->renderAsListItemEdit();
+
+//            echo "<pre>\n".htmlentities($canonical)."\n-------\n".htmlentities($rendered)."\n</pre>";
+
+            $this->assertEqual($canonical,$rendered);
+            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
         }
 
-        function testRenderAsEditEmbed_NEW() {
-            $this->todo();
+        function testRenderAsEdit() {
+            $mdtv = Metadata_Term_Value::getOneFromDb(['metadata_term_value_id' => 6210],$this->DB);
+            $mdr1 = Metadata_Reference::getOneFromDb(['metadata_reference_id' => 6305],$this->DB);
+            $mdr2 = Metadata_Reference::getOneFromDb(['metadata_reference_id' => 6304],$this->DB);
+            $canonical = '';
+
+            $canonical .= '<div id="edit-metadata-term-value-6210" class="edit-metadata-term-value" '.$mdtv->fieldsAsDataAttribs().'>'."\n";
+            $canonical .= '  <div class="edit-metadata-term-value-name">';
+            $canonical .= '<input type="text" name="metadata-term-value-name-6210" value="'.htmlentities($mdtv->name).'"/>';
+            $canonical .= '</div>'."\n";
+            $canonical .= '  <div class="edit-metadata-term-value-description">';
+            $canonical .= '<input type="text" name="metadata-term-value-description-6210" value="'.htmlentities($mdtv->description).'"/>';
+            $canonical .= '</div>'."\n";
+            $canonical .= '  <div class="edit-metadata-term-value-references">'."\n";
+            $canonical .= '    <ul class="add-metadata-references">'."\n";
+            $canonical .= '      <li><a href="#" id="add_new_metadata_reference_button-for_metadata_term_value_6210" class="btn" data-for_metadata_term_value="6210">'.util_lang('add_metadata_reference').'</a></li>'."\n";
+            $canonical .= '    </ul>'."\n";
+
+            $canonical .= $mdtv->renderAsReferencesListEdit();
+
+//            $canonical .= '<ul class="metadata-references">'."\n";
+//            $canonical .= '<li><a href="#" id="add_new_metadata_reference_button-for_metadata_term_value_6210" class="btn" data-for_metadata_term_value="6210">'.util_lang('add_metadata_reference').'</a></li>'."\n";
+//            $canonical .= '<li>'.$mdr1->renderAsEditEmbed().'</li>'."\n";
+//            $canonical .= '<li>'.$mdr2->renderAsEditEmbed().'</li>'."\n";
+//            $canonical .= '</ul>'."\n";
+            $canonical .= '  </div>'."\n";
+            $canonical .= '</div>'."\n";
+
+            $rendered = $mdtv->renderAsEdit();
+
+//            echo "<pre>\n".htmlentities($canonical)."\n-------\n".htmlentities($rendered)."\n</pre>";
+
+            $this->assertEqual($canonical,$rendered);
+            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
         }
     }

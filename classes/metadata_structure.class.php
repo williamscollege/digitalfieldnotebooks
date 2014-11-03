@@ -78,6 +78,7 @@
             if (! $first_item_text) {
                 $first_item_text = util_lang('prompt_select');
             }
+
             $rendered = '<select name="'.$unique_id.'" id="'.$unique_id.'" class="metadata_structure_selector">'."\n";
             $rendered .= '<option value="-1">'.$first_item_text.'</option>'."\n";
             foreach ($all_mds as $mds) {
@@ -199,8 +200,9 @@
 
             //  '.$mds_parent->renderAsLink().' &gt;
 
-            $rendered = '<div id="rendered_metadata_structure_'.$this->metadata_structure_id.'" class="view-rendered_metadata_structure" '.$this->fieldsAsDataAttribs().'>
-  <div class="metadata_lineage"><a href="'.APP_ROOT_PATH.'/app_code/metadata_structure.php?action=list">'.util_lang('metadata').'</a> &gt;';
+            $rendered = '<div id="rendered_metadata_structure_'.$this->metadata_structure_id.'" class="view-rendered_metadata_structure" '.$this->fieldsAsDataAttribs().'>'."\n";
+
+            $rendered .= '  <div class="metadata_lineage"><a href="'.APP_ROOT_PATH.'/app_code/metadata_structure.php?action=list">'.util_lang('metadata').'</a> &gt;';
             $lineage = $this->getLineage();
             foreach ($lineage as $mds_ancestor) {
                 if ($mds_ancestor->metadata_structure_id != $this->metadata_structure_id) {
@@ -209,23 +211,20 @@
             }
             $rendered .= '</div>'."\n";
 
-//            $rendered .= '  <div class="metadata-structure-header"><h3>'.ucfirst(util_lang('metadata')).' : '.$this->renderAsFullName().'</h3>';
-            $rendered .= '  <div class="metadata-structure-header"><h3>'.htmlentities($this->name).'</h3>';
-//            '  <div class="metadata-structure-header">'.ucfirst(util_lang('metadata')).' : '.htmlentities($this->name);
+            $rendered .= '  <div class="metadata-structure-header">'."\n";
+            $rendered .= '    <h3>'.htmlentities($this->name).'</h3>'."\n";
 
             if ($this->description) {
-                $rendered .= '  <div class="description">'.$this->description.'</div>'."\n";
+                $rendered .= '    <div class="description">'.$this->description.'</div>'."\n";
             }
 
             if ($this->details) {
-                $rendered .= '  <div class="details">'.$this->details.'</div>'."\n";
+                $rendered .= '    <div class="details">'.$this->details.'</div>'."\n";
             }
 
-            $rendered .= '<ul class="metadata-references">';
-            foreach ($this->references as $r) {
-                $rendered .= '<li>'.$r->renderAsViewEmbed().'</li>';
-            }
-            $rendered .= '</ul></div>'."\n";
+            $rendered .= Metadata_Reference::renderReferencesArrayAsListsView($this->references);
+
+            $rendered .= '  </div>'."\n";
 
             if ($this->term_set) {
                 $rendered .= '  '.$this->term_set->renderAsViewEmbed();
@@ -333,18 +332,9 @@
             }
 
             //  '.$mds_parent->renderAsLink().' &gt;
+            $rendered = '';
 
-            $rendered = '<div id="edit-rendered_metadata_structure_'.$this->metadata_structure_id.'" class="edit-rendered_metadata_structure" '.$this->fieldsAsDataAttribs().'>
-  <div class="metadata_lineage"><a href="'.APP_ROOT_PATH.'/app_code/metadata_structure.php?action=list">'.util_lang('metadata').'</a> &gt;';
-            $lineage = $this->getLineage();
-            foreach ($lineage as $mds_ancestor) {
-                if ($mds_ancestor->metadata_structure_id != $this->metadata_structure_id) {
-                    $rendered .= ' '.$mds_ancestor->renderAsLink().' &gt;';
-                }
-            }
-            $rendered .= '</div>'."\n";
-
-            $rendered .= ' <form id="form-edit-metadata-structure-base-data" action="'.APP_ROOT_PATH.'/app_code/metadata_structure.php">'."\n";
+            $rendered .= '<form id="form-edit-metadata-structure-base-data" action="'.APP_ROOT_PATH.'/app_code/metadata_structure.php">'."\n";
             $rendered .= '  <input type="hidden" name="action" value="update"/>'."\n";
             $rendered .= '  <input type="hidden" id="metadata_structure_id" name="metadata_structure_id" value="'.$this->metadata_structure_id.'"/>'."\n";
 
@@ -358,34 +348,38 @@
             }
             $rendered .= '  </div>'."\n";
 
-            $rendered .= '  <div class="metadata-parent-controls">'.util_lang('label_metadata_structure_change_parent').': '.Metadata_Structure::renderControlSelectAllMetadataStructures($this->metadata_structure_id,$this->parent_metadata_structure_id,util_lang('metadata_root_level')).'</div>';
-
-            $rendered .= '  <div class="metadata-structure-header"><h3><input id="" class="object-name-control" type="text" name="name" value="'.htmlentities($this->name).'"/></h3>'."\n";
-
-            $rendered .= '  <div class="description-controls"><input title="'.util_lang('title_description').'" class="description-control" type="text" name="name" value="'.htmlentities($this->description).'"/></div>'."\n";
-
-            $rendered .= '  <div class="details-controls"><textarea title="'.util_lang('title_details').'" class="details-control" name="details">'.htmlentities($this->details).'</textarea></div>'."\n";
-
-            $rendered .= '<h4>'.util_lang('metadata_references').'</h4>'."\n";
-            $rendered .= '<ul class="metadata-references">';
-            $rendered .= '  <li>TO BE IMPLEMENTED: add metadata reference control</li>';
-            foreach ($this->references as $r) {
-                $rendered .= '<li>'.$r->renderAsEditEmbed().'</li>';
+            $rendered .= '<div id="edit-rendered_metadata_structure_'.$this->metadata_structure_id.'" class="edit-rendered_metadata_structure" '.$this->fieldsAsDataAttribs().'>
+  <div class="metadata_lineage"><a href="'.APP_ROOT_PATH.'/app_code/metadata_structure.php?action=list">'.util_lang('metadata').'</a> &gt;';
+            $lineage = $this->getLineage();
+            foreach ($lineage as $mds_ancestor) {
+                if ($mds_ancestor->metadata_structure_id != $this->metadata_structure_id) {
+                    $rendered .= ' '.$mds_ancestor->renderAsLink().' &gt;';
+                }
             }
-            $rendered .= '</ul></div>'."\n";
+            $rendered .= '</div>'."\n";
 
-            $rendered .= '  <div class="metadata-term-set-controls"><h4>'.util_lang('metadata_term_set')."</h4>\n".Metadata_Term_Set::renderAllAsSelectControl($this->term_set ? $this->term_set->metadata_term_set_id : 0)."</div>\n";
 
-            $rendered .= '<h4>'.util_lang('metadata_children').':</h4>'."\n";
-            $rendered .= '<ul class="metadata-structure-tree">'."\n";
-            $rendered .= '  <li>TO BE IMPLEMENTED: add child metadata structure control</li>';
+            $rendered .= '  <div class="metadata-parent-controls">'.util_lang('label_metadata_structure_change_parent').': '.Metadata_Structure::renderControlSelectAllMetadataStructures($this->metadata_structure_id,$this->parent_metadata_structure_id,util_lang('metadata_root_level')).'</div>'."\n";
+
+            $rendered .= '  <div class="metadata-structure-header">'."\n";
+            $rendered .= '    <h3><input id="" class="object-name-control" type="text" name="name" value="'.htmlentities($this->name).'"/></h3>'."\n";
+            $rendered .= '    <div class="description-controls"><input title="'.util_lang('title_description').'" class="description-control" type="text" name="description" value="'.htmlentities($this->description).'"/></div>'."\n";
+            $rendered .= '    <div class="details-controls"><textarea title="'.util_lang('title_details').'" class="details-control" name="details">'.htmlentities($this->details).'</textarea></div>'."\n";
+            $rendered .= '    <h4>'.util_lang('metadata_references').'</h4>'."\n";
+            $rendered .= Metadata_Reference::renderReferencesArrayAsListsEdit($this->references);
+            $rendered .= '  </div>'."\n";
+            $rendered .= '  <div class="metadata-term-set-controls"><h4>'.util_lang('metadata_term_set')."</h4>\n".Metadata_Term_Set::renderAllAsSelectControl('',$this->term_set ? $this->term_set->metadata_term_set_id : 0)."</div>\n";
+
+            $rendered .= '  <h4>'.util_lang('metadata_children').':</h4>'."\n";
+            $rendered .= '  <ul class="metadata-structure-tree">'."\n";
+            $rendered .= '    <li><a href="'.APP_ROOT_PATH.'/app_code/metadata_structure.php?action=create&parent_metadata_structure_id='.$this->metadata_structure_id.'" id="btn-add-metadata-structure" class="creation_link btn">'.htmlentities(util_lang('add_metadata_structure')).'</a></li>'."\n";
             $children = $this->getChildren();
             if ($children) {
                 foreach ($children as $child) {
-                    $rendered .= $child->renderAsListTreeEditable();
+                    $rendered .= '    '.$child->renderAsListTreeEditable();
                 }
             }
-            $rendered .= '</ul>';
+            $rendered .= '  </ul>';
 
             if (! $this->term_set && ! $children) {
                 $rendered .= '<span class="empty-metadata-msg info">'.util_lang('metadata_no_children_no_values').'</span>';
