@@ -109,7 +109,23 @@
         }
 
         function testCreateNewMetadataStructure() {
-            $this->todo();
+            $new = Metadata_Structure::createNewMetadataStructure(10,$this->DB);
+
+            // 'metadata_structure_id', 'created_at', 'updated_at', 'parent_metadata_structure_id', 'name', 'ordering', 'description', 'details', 'metadata_term_set_id', 'flag_active', 'flag_delete'
+
+            $this->assertEqual('NEW',$new->metadata_structure_id);
+            $this->assertNotEqual('',$new->created_at);
+            $this->assertNotEqual('',$new->updated_at);
+            $this->assertEqual(10,$new->parent_metadata_structure_id);
+            $this->assertEqual(util_lang('new_metadata_structure_name'), $new->name);
+            $this->assertEqual('0',$new->ordering);
+            $this->assertEqual(util_lang('new_metadata_structure_description'),$new->description);
+            $this->assertEqual(util_lang('new_metadata_structure_details'),$new->details);
+            $this->assertEqual(0,$new->metadata_term_set_id);
+            $this->assertEqual(true,$new->flag_active);
+//            $this->assertEqual('',$new->flag_workflow_published);
+//            $this->assertEqual('',$new->flag_workflow_validated);
+            $this->assertEqual(false,$new->flag_delete);
         }
 
         //// instance methods - related data

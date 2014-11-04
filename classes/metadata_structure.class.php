@@ -89,8 +89,22 @@
             return $rendered;
         }
 
-        public static function createNewMetadataStructure() {
-            return "TO BE IMPLEMENTED: createNewMetadataStructure";
+        public static function createNewMetadataStructure($parent_metadata_structure_id,$db_connection) {
+            // 'metadata_structure_id', 'created_at', 'updated_at', 'parent_metadata_structure_id', 'name', 'ordering', 'description', 'details', 'metadata_term_set_id', 'flag_active', 'flag_delete'
+            $n = new Metadata_Structure([
+                'metadata_structure_id' => 'NEW',
+                'created_at' => util_currentDateTimeString_asMySQL(),
+                'updated_at' => util_currentDateTimeString_asMySQL(),
+                'parent_metadata_structure_id' => $parent_metadata_structure_id,
+                'name' => util_lang('new_metadata_structure_name'),
+                'ordering' => 0,
+                'description' => util_lang('new_metadata_structure_description'),
+                'details' => util_lang('new_metadata_structure_details'),
+                'metadata_term_set_id' => 0,
+                'flag_active' => true,
+                'flag_delete' => false,
+                'DB'=>$db_connection]);
+            return $n;
         }
 
 

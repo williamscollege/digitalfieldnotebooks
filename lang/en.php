@@ -129,6 +129,9 @@ $LANGUAGE['en'] = [
     'add_metadata_structure' => '+ Add Metadata Type +',
     'label_metadata_structure_change_parent' => 'put this under',
     'metadata_root_level' => '-- TOP LEVEL --',
+    'new_metadata_structure_name' => 'name (change this)',
+    'new_metadata_structure_description' => 'brief description - replace or delete this text',
+    'new_metadata_structure_details' => 'extended notes / description - replace or delete this text',
 
     'all_metadata_term_sets' => 'value sets',
     'metadata_term_set' => 'value set',
