@@ -108,6 +108,7 @@ CREATE TABLE IF NOT EXISTS `metadata_structures` (
   `description` VARCHAR(255) NULL,
   `details` TEXT NULL,
   `metadata_term_set_id` INT NULL, /* if null or <= 0 then this element has no controlled vocab */
+  `flag_active` BIT(1) NOT NULL DEFAULT 0,
   `flag_delete` BIT(1) NOT NULL DEFAULT 0
 )  ENGINE=innodb DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT='defining the metadata available for notebook pages';
 /* FK:parent_metadata_structure_id - metadata_structures.metadata_structure_id */
@@ -120,6 +121,7 @@ CREATE TABLE IF NOT EXISTS `metadata_term_sets` (
   `name` VARCHAR(255) NULL,
   `ordering` DECIMAL(10,5)NOT NULL DEFAULT 0, /* NOTE: within a given ordering value the term sets are ordered by name */
   `description` VARCHAR(255) NULL,
+  `flag_active` BIT(1) NOT NULL DEFAULT 0,
   `flag_delete` BIT(1) NOT NULL DEFAULT 0
 )  ENGINE=innodb DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT='defining the sets of controlled vocab';
 
@@ -131,6 +133,7 @@ CREATE TABLE IF NOT EXISTS `metadata_term_values` (
   `name` VARCHAR(255) NULL,
   `ordering` DECIMAL(10,5)NOT NULL DEFAULT 0, /* NOTE: within a given ordering value the term values are ordered by name */
   `description` VARCHAR(255) NULL,
+  `flag_active` BIT(1) NOT NULL DEFAULT 0,
   `flag_delete` BIT(1) NOT NULL DEFAULT 0
 )  ENGINE=innodb DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT='defining the actual values of controlled vocab';
 /* FK:metadata_term_set_id -  metadata_term_sets.metadata_term_set_id */
@@ -145,6 +148,7 @@ CREATE TABLE IF NOT EXISTS `metadata_references` (
   `external_reference` VARCHAR(255) NULL, /* URL or file path */
   `description` VARCHAR(255) NULL,
   `ordering` DECIMAL(10,5)NOT NULL DEFAULT 0,
+  `flag_active` BIT(1) NOT NULL DEFAULT 0,
   `flag_delete` BIT(1) NOT NULL DEFAULT 0
 )  ENGINE=innodb DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT='example/reference info pertaining to metadata';
 /* FK:metadata_id - single value inheritance pattern: metadata_structures.metadata_structure_id, or metadata_term_sets.metadata_term_set_id or metadata_term_values.metadata_term_value_id*/
@@ -163,6 +167,7 @@ CREATE TABLE IF NOT EXISTS `authoritative_plants` (
   `species` VARCHAR(255) NULL,
   `variety` VARCHAR(255) NULL,
   `catalog_identifier` VARCHAR(255) NULL,
+  `flag_active` BIT(1) NOT NULL DEFAULT 0,
   `flag_delete` BIT(1) NOT NULL DEFAULT 0
 )  ENGINE=innodb DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT='';
 
@@ -174,6 +179,7 @@ CREATE TABLE IF NOT EXISTS `authoritative_plant_extras` (
   `type` VARCHAR(255) NULL, /* common name, description, image */
   `value` VARCHAR(255) NULL, /* either the direct info (for common name and description) or a URL or file path */
   `ordering` DECIMAL(10,5)NOT NULL DEFAULT 0,
+  `flag_active` BIT(1) NOT NULL DEFAULT 0,
   `flag_delete` BIT(1) NOT NULL DEFAULT 0
 )  ENGINE=innodb DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci COMMENT='';
 /* FK: plants.plant_id */

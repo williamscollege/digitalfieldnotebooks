@@ -14,7 +14,7 @@
 		}
 
 		function testAuthoritativePlantExtraAtributesExist() {
-			$this->assertEqual(count(Authoritative_Plant_Extra::$fields), 8);
+			$this->assertEqual(count(Authoritative_Plant_Extra::$fields), 9);
 
             $this->assertTrue(in_array('authoritative_plant_extra_id', Authoritative_Plant_Extra::$fields));
             $this->assertTrue(in_array('created_at', Authoritative_Plant_Extra::$fields));
@@ -23,6 +23,7 @@
             $this->assertTrue(in_array('type', Authoritative_Plant_Extra::$fields));
             $this->assertTrue(in_array('value', Authoritative_Plant_Extra::$fields));
             $this->assertTrue(in_array('ordering', Authoritative_Plant_Extra::$fields));
+            $this->assertTrue(in_array('flag_active', Authoritative_Plant_Extra::$fields));
             $this->assertTrue(in_array('flag_delete', Authoritative_Plant_Extra::$fields));
 		}
 

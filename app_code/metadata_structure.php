@@ -71,6 +71,10 @@
             }
         }
         echo '</ul>'."\n";
+//        if ($USER->canActOnTarget($ACTIONS['create'],new Metadata_Structure(['DB'=>$DB]))) {
+//            ?>
+<!--            <a href="--><?php //echo APP_ROOT_PATH.'/app_code/metadata_structure.php?action=create&user_id='.$USER->user_id; ?><!--" class="btn" id="btn-add-metadata-structure">--><?php //echo util_lang('add_metadata_structure'); ?><!--</a>--><?php
+//        }
     }
 
     if ($action == 'view') {

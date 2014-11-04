@@ -14,7 +14,7 @@
 		}
 
 		function testMetadataReferenceAtributesExist() {
-			$this->assertEqual(count(Metadata_Reference::$fields), 10);
+			$this->assertEqual(count(Metadata_Reference::$fields), 11);
 
             $this->assertTrue(in_array('metadata_reference_id', Metadata_Reference::$fields));
             $this->assertTrue(in_array('created_at', Metadata_Reference::$fields));
@@ -25,6 +25,7 @@
             $this->assertTrue(in_array('external_reference', Metadata_Reference::$fields));
             $this->assertTrue(in_array('description', Metadata_Reference::$fields));
             $this->assertTrue(in_array('ordering', Metadata_Reference::$fields));
+            $this->assertTrue(in_array('flag_active', Metadata_Reference::$fields));
             $this->assertTrue(in_array('flag_delete', Metadata_Reference::$fields));
 		}
 

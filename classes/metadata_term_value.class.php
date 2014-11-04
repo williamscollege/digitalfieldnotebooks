@@ -2,7 +2,7 @@
 	require_once dirname(__FILE__) . '/db_linked.class.php';
 
 	class Metadata_Term_Value extends Db_Linked {
-		public static $fields = array('metadata_term_value_id', 'created_at', 'updated_at', 'metadata_term_set_id', 'name', 'ordering', 'description', 'flag_delete');
+		public static $fields = array('metadata_term_value_id', 'created_at', 'updated_at', 'metadata_term_set_id', 'name', 'ordering', 'description', 'flag_active', 'flag_delete');
 		public static $primaryKeyField = 'metadata_term_value_id';
 		public static $dbTable = 'metadata_term_values';
         public static $entity_type_label = 'metadata_term_value';
@@ -44,6 +44,7 @@
                 'description' => util_lang('new_metadata_term_value_description'),
 //                'flag_workflow_published' => false,
 //                'flag_workflow_validated' => false,
+                'flag_active' => true,
                 'flag_delete' => false,
                 'DB' => $db_connection
             ]);

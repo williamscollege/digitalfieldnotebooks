@@ -14,7 +14,7 @@
 		}
 
 		function testMetadataTermSetAtributesExist() {
-			$this->assertEqual(count(Metadata_Term_Set::$fields), 7);
+			$this->assertEqual(count(Metadata_Term_Set::$fields), 8);
 
             $this->assertTrue(in_array('metadata_term_set_id', Metadata_Term_Set::$fields));
             $this->assertTrue(in_array('created_at', Metadata_Term_Set::$fields));
@@ -22,6 +22,7 @@
             $this->assertTrue(in_array('name', Metadata_Term_Set::$fields));
             $this->assertTrue(in_array('ordering', Metadata_Term_Set::$fields));
             $this->assertTrue(in_array('description', Metadata_Term_Set::$fields));
+            $this->assertTrue(in_array('flag_active', Metadata_Term_Set::$fields));
             $this->assertTrue(in_array('flag_delete', Metadata_Term_Set::$fields));
 		}
 
@@ -308,7 +309,7 @@
             $mdts->loadTermValues();
 
             // 'name', 'ordering', 'description', 'flag_delete'
-            $canonical = '<li data-metadata_term_set_id="6101" data-created_at="'.$mdts->created_at.'" data-updated_at="'.$mdts->updated_at.'" data-name="small lengths" data-ordering="1.00000" data-description="lengths ranging from 3 mm to 30 cm" data-flag_delete="0">';
+            $canonical = '<li data-metadata_term_set_id="6101" data-created_at="'.$mdts->created_at.'" data-updated_at="'.$mdts->updated_at.'" data-name="small lengths" data-ordering="1.00000" data-description="lengths ranging from 3 mm to 30 cm" data-flag_active="1" data-flag_delete="0">';
             $canonical .= $mdts->renderAsViewEmbed();
             $canonical .= '</li>';
 
@@ -326,7 +327,7 @@
             $mdts->loadTermValues();
 
             // 'name', 'ordering', 'description', 'flag_delete'
-            $canonical = '<div id="rendered_metadata_term_set_6101" class="rendered-metadata-term-set embedded" data-metadata_term_set_id="6101" data-created_at="'.$mdts->created_at.'" data-updated_at="'.$mdts->updated_at.'" data-name="small lengths" data-ordering="1.00000" data-description="lengths ranging from 3 mm to 30 cm" data-flag_delete="0">';
+            $canonical = '<div id="rendered_metadata_term_set_6101" class="rendered-metadata-term-set embedded" data-metadata_term_set_id="6101" data-created_at="'.$mdts->created_at.'" data-updated_at="'.$mdts->updated_at.'" data-name="small lengths" data-ordering="1.00000" data-description="lengths ranging from 3 mm to 30 cm" data-flag_active="1" data-flag_delete="0">';
             $canonical .= $mdts->renderAsHtml();
             $canonical .= '</div>';
 

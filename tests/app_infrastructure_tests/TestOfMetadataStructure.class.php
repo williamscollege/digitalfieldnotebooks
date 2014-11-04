@@ -14,7 +14,7 @@
 		}
 
 		function testMetadataStructureAtributesExist() {
-			$this->assertEqual(count(Metadata_Structure::$fields), 10);
+			$this->assertEqual(count(Metadata_Structure::$fields), 11);
 
             $this->assertTrue(in_array('metadata_structure_id', Metadata_Structure::$fields));
             $this->assertTrue(in_array('created_at', Metadata_Structure::$fields));
@@ -25,6 +25,7 @@
             $this->assertTrue(in_array('description', Metadata_Structure::$fields));
             $this->assertTrue(in_array('details', Metadata_Structure::$fields));
             $this->assertTrue(in_array('metadata_term_set_id', Metadata_Structure::$fields));
+            $this->assertTrue(in_array('flag_active', Metadata_Structure::$fields));
             $this->assertTrue(in_array('flag_delete', Metadata_Structure::$fields));
 		}
 
@@ -266,7 +267,7 @@
         function testRenderAsListItem() {
             $mds = Metadata_Structure::getOneFromDb(['metadata_structure_id'=>6001],$this->DB);
 
-            $canonical = '<li data-metadata_structure_id="6001" data-created_at="'.$mds->created_at.'" data-updated_at="'.$mds->updated_at.'" data-parent_metadata_structure_id="0" data-name="flower" data-ordering="1.00000" data-description="info about the flower" data-details="" data-metadata_term_set_id="0" data-flag_delete="0"><a href="'.APP_ROOT_PATH.'/app_code/metadata_structure.php?action=view&metadata_structure_id=6001">flower</a></li>';
+            $canonical = '<li data-metadata_structure_id="6001" data-created_at="'.$mds->created_at.'" data-updated_at="'.$mds->updated_at.'" data-parent_metadata_structure_id="0" data-name="flower" data-ordering="1.00000" data-description="info about the flower" data-details="" data-metadata_term_set_id="0" data-flag_active="1" data-flag_delete="0"><a href="'.APP_ROOT_PATH.'/app_code/metadata_structure.php?action=view&metadata_structure_id=6001">flower</a></li>';
 
             $rendered = $mds->renderAsListItem();
 

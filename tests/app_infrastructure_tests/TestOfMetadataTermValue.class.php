@@ -14,7 +14,7 @@
 		}
 
 		function testMetadataTermValueAtributesExist() {
-			$this->assertEqual(count(Metadata_Term_Value::$fields), 8);
+			$this->assertEqual(count(Metadata_Term_Value::$fields), 9);
 
             $this->assertTrue(in_array('metadata_term_value_id', Metadata_Term_Value::$fields));
             $this->assertTrue(in_array('created_at', Metadata_Term_Value::$fields));
@@ -23,6 +23,7 @@
             $this->assertTrue(in_array('name', Metadata_Term_Value::$fields));
             $this->assertTrue(in_array('ordering', Metadata_Term_Value::$fields));
             $this->assertTrue(in_array('description', Metadata_Term_Value::$fields));
+            $this->assertTrue(in_array('flag_active', Metadata_Term_Value::$fields));
             $this->assertTrue(in_array('flag_delete', Metadata_Term_Value::$fields));
 		}
 
@@ -164,7 +165,7 @@
             $mdtv->loadReferences();
 
             // 'metadata_term_set_id', 'name', 'ordering', 'description', 'flag_delete'
-            $canonical = '<li data-metadata_term_value_id="6205" data-created_at="'.$mdtv->created_at.'" data-updated_at="'.$mdtv->updated_at.'" data-metadata_term_set_id="6101" data-name="6-12 cm" data-ordering="5.00000" data-description="up to the the length of the back of the hand when a fist is made" data-flag_delete="0">';
+            $canonical = '<li data-metadata_term_value_id="6205" data-created_at="'.$mdtv->created_at.'" data-updated_at="'.$mdtv->updated_at.'" data-metadata_term_set_id="6101" data-name="6-12 cm" data-ordering="5.00000" data-description="up to the the length of the back of the hand when a fist is made" data-flag_active="1" data-flag_delete="0">';
             $canonical .= '<span class="term_value" title="up to the the length of the back of the hand when a fist is made">6-12 cm</span>';
             $canonical .= '<div class="metadata-references">';
             $canonical .= Metadata_Reference::renderReferencesArrayAsListsView($mdtv->references);
@@ -185,7 +186,7 @@
             $mdtv->loadReferences();
 
             // 'metadata_term_set_id', 'name', 'ordering', 'description', 'flag_delete'
-            $canonical = '<li data-metadata_term_value_id="6210" data-created_at="'.$mdtv->created_at.'" data-updated_at="'.$mdtv->updated_at.'" data-metadata_term_set_id="6103" data-name="dentate" data-ordering="1.00000" data-description="teeth outward pointing - 1 level / degree of teeth" data-flag_delete="0">';
+            $canonical = '<li data-metadata_term_value_id="6210" data-created_at="'.$mdtv->created_at.'" data-updated_at="'.$mdtv->updated_at.'" data-metadata_term_set_id="6103" data-name="dentate" data-ordering="1.00000" data-description="teeth outward pointing - 1 level / degree of teeth" data-flag_active="1" data-flag_delete="0">';
             $canonical .= '<span class="term_value" title="teeth outward pointing - 1 level / degree of teeth">dentate</span>';
             $canonical .= '<div class="metadata-references">';
             $canonical .= Metadata_Reference::renderReferencesArrayAsListsView($mdtv->references);
@@ -206,7 +207,7 @@
             $mdtv->loadReferences();
 
             // 'metadata_term_set_id', 'name', 'ordering', 'description', 'flag_delete'
-            $canonical = '<div id="rendered_metadata_term_value_6210" class="rendered-metadata-term-value embedded" data-metadata_term_value_id="6210" data-created_at="'.$mdtv->created_at.'" data-updated_at="'.$mdtv->updated_at.'" data-metadata_term_set_id="6103" data-name="dentate" data-ordering="1.00000" data-description="teeth outward pointing - 1 level / degree of teeth" data-flag_delete="0">';
+            $canonical = '<div id="rendered_metadata_term_value_6210" class="rendered-metadata-term-value embedded" data-metadata_term_value_id="6210" data-created_at="'.$mdtv->created_at.'" data-updated_at="'.$mdtv->updated_at.'" data-metadata_term_set_id="6103" data-name="dentate" data-ordering="1.00000" data-description="teeth outward pointing - 1 level / degree of teeth" data-flag_active="1" data-flag_delete="0">';
             $canonical .= $mdtv->renderAsHtml();
             $canonical .= '</div>';
 

@@ -14,7 +14,7 @@
 		}
 
 		function testAuthoritativePlantAtributesExist() {
-			$this->assertEqual(count(Authoritative_Plant::$fields), 11);
+			$this->assertEqual(count(Authoritative_Plant::$fields), 12);
 
             $this->assertTrue(in_array('authoritative_plant_id', Authoritative_Plant::$fields));
             $this->assertTrue(in_array('created_at', Authoritative_Plant::$fields));
@@ -26,7 +26,8 @@
             $this->assertTrue(in_array('species', Authoritative_Plant::$fields));
             $this->assertTrue(in_array('variety', Authoritative_Plant::$fields));
             $this->assertTrue(in_array('catalog_identifier', Authoritative_Plant::$fields));
-            $this->assertTrue(in_array('flag_delete', Action::$fields));
+            $this->assertTrue(in_array('flag_active', Authoritative_Plant::$fields));
+            $this->assertTrue(in_array('flag_delete', Authoritative_Plant::$fields));
 		}
 
 		//// static methods
@@ -138,7 +139,7 @@
      //       (5001,NOW(),NOW(), 'AP_A_class', 'AP_A_order', 'AP_A_family', 'AP_A_genus', 'AP_A_species', 'AP_A_variety', 'AP_1_CI', 0),
 
             $canonical = '<li data-authoritative_plant_id="5001" data-created_at="'.$ap->created_at.'" data-updated_at="'.$ap->updated_at.'" '.
-                'data-class="AP_A_class" data-order="AP_A_order" data-family="AP_A_family" data-genus="AP_A_genus" data-species="AP_A_species" data-variety="AP_A_variety" data-catalog_identifier="AP_1_CI" data-flag_delete="0"><a href="/digitalfieldnotebooks/app_code/authoritative_plant.php?action=view&authoritative_plant_id=5001">'.htmlentities($ap->renderAsShortText()).'</a></li>';
+                'data-class="AP_A_class" data-order="AP_A_order" data-family="AP_A_family" data-genus="AP_A_genus" data-species="AP_A_species" data-variety="AP_A_variety" data-catalog_identifier="AP_1_CI" data-flag_active="1" data-flag_delete="0"><a href="/digitalfieldnotebooks/app_code/authoritative_plant.php?action=view&authoritative_plant_id=5001">'.htmlentities($ap->renderAsShortText()).'</a></li>';
 
             $rendered = $ap->renderAsListItem();
 //            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
@@ -161,7 +162,7 @@
             $this->assertTrue($rat->matchesDb);
 
             $canonical = '<li data-authoritative_plant_id="5001" data-created_at="'.$ap->created_at.'" data-updated_at="'.$ap->updated_at.'" '.
-                'data-class="AP_A_class" data-order="AP_A_order" data-family="AP_A_family" data-genus="AP_A_genus" data-species="AP_A_species" data-variety="AP_A_variety" data-catalog_identifier="AP_1_CI" data-flag_delete="0" data-can-edit="1"><a href="/digitalfieldnotebooks/app_code/authoritative_plant.php?action=view&authoritative_plant_id=5001">'.htmlentities($ap->renderAsShortText()).'</a></li>';
+                'data-class="AP_A_class" data-order="AP_A_order" data-family="AP_A_family" data-genus="AP_A_genus" data-species="AP_A_species" data-variety="AP_A_variety" data-catalog_identifier="AP_1_CI" data-flag_active="1" data-flag_delete="0" data-can-edit="1"><a href="/digitalfieldnotebooks/app_code/authoritative_plant.php?action=view&authoritative_plant_id=5001">'.htmlentities($ap->renderAsShortText()).'</a></li>';
             $rendered = $ap->renderAsListItem();
 //            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
             $this->assertEqual($canonical,$rendered);

@@ -3,7 +3,7 @@
 
 	class Authoritative_Plant_Extra extends Db_Linked {
 		public static $fields = array('authoritative_plant_extra_id', 'created_at', 'updated_at', 'authoritative_plant_id', 'type', 'value', 'ordering',
-                                      'flag_delete');
+                                      'flag_active', 'flag_delete');
 		public static $primaryKeyField = 'authoritative_plant_extra_id';
 		public static $dbTable = 'authoritative_plant_extras';
         public static $entity_type_label = 'authoritative_plant_extra';

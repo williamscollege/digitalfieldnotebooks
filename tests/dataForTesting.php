@@ -46,16 +46,16 @@ function createTestData_XXXX($dbConn) {
 
     function createTestData_Authoritative_Plants($dbConn) {
         // 5000 series ids
-        # 'authoritative_plant_id', 'created_at', 'updated_at', 'class', 'order', 'family', 'genus', 'species', 'variety', 'catalog_identifier', 'flag_delete'
+        # 'authoritative_plant_id', 'created_at', 'updated_at', 'class', 'order', 'family', 'genus', 'species', 'variety', 'catalog_identifier', 'flag_active', 'flag_delete'
         $addTestSql  = "INSERT INTO " . Authoritative_Plant::$dbTable . " VALUES
-            (5001,NOW(),NOW(), 'AP_A_class', 'AP_A_order', 'AP_A_family', 'AP_A_genus', 'AP_A_species', 'AP_A_variety', 'AP_1_CI', 0),
-            (5002,NOW(),NOW(), 'AP_A_class', 'AP_A_order', 'AP_A_family', 'AP_A_genus', 'AP_B_species', 'AP_B_variety', 'AP_3_CI', 0),
-            (5003,NOW(),NOW(), 'AP_A_class', 'AP_A_order', 'AP_A_family', 'AP_A_genus', 'AP_A_species', 'AP_B_variety', 'AP_2_CI', 0),
-            (5004,NOW(),NOW(), 'AP_C_class', 'AP_C_order', 'AP_C_family', 'AP_C_genus', 'AP_C_species', 'AP_C_variety', 'AP_8_CI', 0),
-            (5005,NOW(),NOW(), 'AP_A_class', 'AP_A_order', 'AP_A_family', 'AP_B_genus', 'AP_B_species', 'AP_B_variety', 'AP_4_CI', 0),
-            (5006,NOW(),NOW(), 'AP_A_class', 'AP_B_order', 'AP_B_family', 'AP_B_genus', 'AP_B_species', 'AP_B_variety', 'AP_6_CI', 0),
-            (5007,NOW(),NOW(), 'AP_B_class', 'AP_B_order', 'AP_B_family', 'AP_B_genus', 'AP_B_species', 'AP_B_variety', 'AP_7_CI', 0),
-            (5008,NOW(),NOW(), 'AP_A_class', 'AP_A_order', 'AP_B_family', 'AP_B_genus', 'AP_B_species', 'AP_B_variety', 'AP_5_CI', 0)
+            (5001,NOW(),NOW(), 'AP_A_class', 'AP_A_order', 'AP_A_family', 'AP_A_genus', 'AP_A_species', 'AP_A_variety', 'AP_1_CI', 1, 0),
+            (5002,NOW(),NOW(), 'AP_A_class', 'AP_A_order', 'AP_A_family', 'AP_A_genus', 'AP_B_species', 'AP_B_variety', 'AP_3_CI', 1, 0),
+            (5003,NOW(),NOW(), 'AP_A_class', 'AP_A_order', 'AP_A_family', 'AP_A_genus', 'AP_A_species', 'AP_B_variety', 'AP_2_CI', 1, 0),
+            (5004,NOW(),NOW(), 'AP_C_class', 'AP_C_order', 'AP_C_family', 'AP_C_genus', 'AP_C_species', 'AP_C_variety', 'AP_8_CI', 1, 0),
+            (5005,NOW(),NOW(), 'AP_A_class', 'AP_A_order', 'AP_A_family', 'AP_B_genus', 'AP_B_species', 'AP_B_variety', 'AP_4_CI', 1, 0),
+            (5006,NOW(),NOW(), 'AP_A_class', 'AP_B_order', 'AP_B_family', 'AP_B_genus', 'AP_B_species', 'AP_B_variety', 'AP_6_CI', 1, 0),
+            (5007,NOW(),NOW(), 'AP_B_class', 'AP_B_order', 'AP_B_family', 'AP_B_genus', 'AP_B_species', 'AP_B_variety', 'AP_7_CI', 1, 0),
+            (5008,NOW(),NOW(), 'AP_A_class', 'AP_A_order', 'AP_B_family', 'AP_B_genus', 'AP_B_species', 'AP_B_variety', 'AP_5_CI', 1, 0)
         ";
         $addTestStmt = $dbConn->prepare($addTestSql);
         $addTestStmt->execute();
@@ -69,18 +69,18 @@ function createTestData_XXXX($dbConn) {
 
     function createTestData_Authoritative_Plant_Extras($dbConn) {
         // 5100 series ids
-        # 'authoritative_plant_extra_id', 'created_at', 'updated_at', 'authoritative_plant_id', 'type', 'value', 'ordering', 'flag_delete'
+        # 'authoritative_plant_extra_id', 'created_at', 'updated_at', 'authoritative_plant_id', 'type', 'value', 'ordering', 'flag_active', 'flag_delete'
         # VALID_TYPES = ['common name', 'description', 'image'];
         $addTestSql  = "INSERT INTO " . Authoritative_Plant_Extra::$dbTable . " VALUES
-                (5101,NOW(),NOW(), 5001, 'common name', 'AP_A common z chestnut', 1, 0),
-                (5102,NOW(),NOW(), 5001, 'common name', 'AP_A common a american chestnut', 2, 0),
-                (5103,NOW(),NOW(), 5001, 'common name', 'AP_A common y achestnut', 1, 0),
-                (5104,NOW(),NOW(), 5001, 'description', 'description of american chestnut', 1, 0),
-                (5105,NOW(),NOW(), 5001, 'image', 'testing/castanea_dentata.jpg', 2, 0),
-                (5106,NOW(),NOW(), 5001, 'image', 'https://farm6.staticflickr.com/5556/14761853313_17d5a31479_z.jpg', 1, 0),
-                (5107,NOW(),NOW(), 5008, 'common name', 'AP_C common beebalm', 5, 0),
-                (5108,NOW(),NOW(), 5008, 'image', 'https://www.flickr.com/photos/plussed/213953635', 1, 0),
-                (5109,NOW(),NOW(), 5008, 'image', 'https://www.flickr.com/photos/plussed/213954024', 1, 0)
+                (5101,NOW(),NOW(), 5001, 'common name', 'AP_A common z chestnut', 1, 1, 0),
+                (5102,NOW(),NOW(), 5001, 'common name', 'AP_A common a american chestnut', 2, 1, 0),
+                (5103,NOW(),NOW(), 5001, 'common name', 'AP_A common y achestnut', 1, 1, 0),
+                (5104,NOW(),NOW(), 5001, 'description', 'description of american chestnut', 1, 1, 0),
+                (5105,NOW(),NOW(), 5001, 'image', 'testing/castanea_dentata.jpg', 2, 1, 0),
+                (5106,NOW(),NOW(), 5001, 'image', 'https://farm6.staticflickr.com/5556/14761853313_17d5a31479_z.jpg', 1, 1, 0),
+                (5107,NOW(),NOW(), 5008, 'common name', 'AP_C common beebalm', 5, 1, 0),
+                (5108,NOW(),NOW(), 5008, 'image', 'https://www.flickr.com/photos/plussed/213953635', 1, 1, 0),
+                (5109,NOW(),NOW(), 5008, 'image', 'https://www.flickr.com/photos/plussed/213954024', 1, 1, 0)
             ";
         $addTestStmt = $dbConn->prepare($addTestSql);
         $addTestStmt->execute();
@@ -94,12 +94,12 @@ function createTestData_XXXX($dbConn) {
 
     function createTestData_Metadata_Structures($dbConn) {
         // 6000 series ids
-        # Metadata_Structure: 'metadata_structure_id', 'created_at', 'updated_at', 'parent_metadata_structure_id', 'name', 'ordering', 'description', 'details', 'metadata_term_set_id', 'flag_delete'
+        # Metadata_Structure: 'metadata_structure_id', 'created_at', 'updated_at', 'parent_metadata_structure_id', 'name', 'ordering', 'description', 'details', 'metadata_term_set_id', 'flag_active', 'flag_delete'
         $addTestSql  = "INSERT INTO " . Metadata_Structure::$dbTable . " VALUES
-            (6001,NOW(),NOW(), 0, 'flower', 1, 'info about the flower', '', 0, 0),
-            (6002,NOW(),NOW(), 6001, 'flower size', 0.5, 'the size of the flower in its largest dimension', 'some details', 6101, 0),
-            (6003,NOW(),NOW(), 6001, 'flower primary color', .75, 'the primary / dominant color of the flower', '', 6102, 0),
-            (6004,NOW(),NOW(), 0, 'leaf', 0.5, 'info about the individual leaves of the plant', 'details', 0, 0)
+            (6001,NOW(),NOW(), 0, 'flower', 1, 'info about the flower', '', 0, 1, 0),
+            (6002,NOW(),NOW(), 6001, 'flower size', 0.5, 'the size of the flower in its largest dimension', 'some details', 6101, 1, 0),
+            (6003,NOW(),NOW(), 6001, 'flower primary color', .75, 'the primary / dominant color of the flower', '', 6102, 1, 0),
+            (6004,NOW(),NOW(), 0, 'leaf', 0.5, 'info about the individual leaves of the plant', 'details', 0, 1, 0)
         ";
         $addTestStmt = $dbConn->prepare($addTestSql);
         $addTestStmt->execute();
@@ -113,12 +113,12 @@ function createTestData_XXXX($dbConn) {
 
     function createTestData_Metadata_Term_Sets($dbConn) {
         // 6100 series ids
-        # Metadata_Term_Set: 'metadata_term_set_id', 'created_at', 'updated_at', 'name', 'ordering', 'description', 'flag_delete'
+        # Metadata_Term_Set: 'metadata_term_set_id', 'created_at', 'updated_at', 'name', 'ordering', 'description', 'flag_active', 'flag_delete'
         $addTestSql  = "INSERT INTO " . Metadata_Term_Set::$dbTable . " VALUES
-            (6101,NOW(),NOW(), 'small lengths', 1, 'lengths ranging from 3 mm to 30 cm', 0),
-            (6102,NOW(),NOW(), 'colors', 2, 'basic colors', 0),
-            (6103,NOW(),NOW(), 'margin styles', 1, 'the shape / pattern of an edge', 0),
-            (6104,NOW(),NOW(), 'habitats', 4, 'general kinds of places plants live (no terms)', 0)
+            (6101,NOW(),NOW(), 'small lengths', 1, 'lengths ranging from 3 mm to 30 cm', 1, 0),
+            (6102,NOW(),NOW(), 'colors', 2, 'basic colors', 1, 0),
+            (6103,NOW(),NOW(), 'margin styles', 1, 'the shape / pattern of an edge', 1, 0),
+            (6104,NOW(),NOW(), 'habitats', 4, 'general kinds of places plants live (no terms)', 1, 0)
         ";
         $addTestStmt = $dbConn->prepare($addTestSql);
         $addTestStmt->execute();
@@ -132,21 +132,21 @@ function createTestData_XXXX($dbConn) {
 
     function createTestData_Metadata_Term_Values($dbConn) {
         // 6200 series ids
-        # Metadata_Term_Value: 'metadata_term_value_id', 'created_at', 'updated_at', 'metadata_term_set_id', 'name', 'ordering', 'description', 'flag_delete'
+        # Metadata_Term_Value: 'metadata_term_value_id', 'created_at', 'updated_at', 'metadata_term_set_id', 'name', 'ordering', 'description', 'flag_active', 'flag_delete'
         $addTestSql  = "INSERT INTO " . Metadata_Term_Value::$dbTable . " VALUES
-            (6201,NOW(),NOW(), 6101, '< 3 mm', 1, 'less than the thickness of 3 pennies', 0),
-            (6202,NOW(),NOW(), 6101, '3 mm - 1cm', 2, 'smaller than the smallest thickness of your pinkie finger', 0),
-            (6203,NOW(),NOW(), 6101, '1-3 cm', 3, 'up to the largest thickness of your thumb', 0),
-            (6204,NOW(),NOW(), 6101, '3-6 cm', 4, 'up to the thickness of 3 fingers', 0),
-            (6205,NOW(),NOW(), 6101, '6-12 cm', 5, 'up to the the length of the back of the hand when a fist is made', 0),
-            (6206,NOW(),NOW(), 6101, '12-20 cm', 6, 'up to the thicness of 2 fists pinkie to pinkie (palms up)', 0),
-            (6207,NOW(),NOW(), 6101, '20-30 cm', 7, 'up to the length of your forearm', 0),
-            (6208,NOW(),NOW(), 6101, '> 30 cm', 8, 'bigger than that', 0),
-            (6209,NOW(),NOW(), 6103, 'serrate', 1, 'teeth forward pointing - 1 level / degree of teeth', 0),
-            (6210,NOW(),NOW(), 6103, 'dentate', 1, 'teeth outward pointing - 1 level / degree of teeth', 0),
-            (6211,NOW(),NOW(), 6102, 'red', 3, '', 0),
-            (6212,NOW(),NOW(), 6102, 'green', 1, '', 0),
-            (6213,NOW(),NOW(), 6102, 'blue', 2, '', 0)
+            (6201,NOW(),NOW(), 6101, '< 3 mm', 1, 'less than the thickness of 3 pennies', 1, 0),
+            (6202,NOW(),NOW(), 6101, '3 mm - 1cm', 2, 'smaller than the smallest thickness of your pinkie finger', 1, 0),
+            (6203,NOW(),NOW(), 6101, '1-3 cm', 3, 'up to the largest thickness of your thumb', 1, 0),
+            (6204,NOW(),NOW(), 6101, '3-6 cm', 4, 'up to the thickness of 3 fingers', 1, 0),
+            (6205,NOW(),NOW(), 6101, '6-12 cm', 5, 'up to the the length of the back of the hand when a fist is made', 1, 0),
+            (6206,NOW(),NOW(), 6101, '12-20 cm', 6, 'up to the thicness of 2 fists pinkie to pinkie (palms up)', 1, 0),
+            (6207,NOW(),NOW(), 6101, '20-30 cm', 7, 'up to the length of your forearm', 1, 0),
+            (6208,NOW(),NOW(), 6101, '> 30 cm', 8, 'bigger than that', 1, 0),
+            (6209,NOW(),NOW(), 6103, 'serrate', 1, 'teeth forward pointing - 1 level / degree of teeth', 1, 0),
+            (6210,NOW(),NOW(), 6103, 'dentate', 1, 'teeth outward pointing - 1 level / degree of teeth', 1, 0),
+            (6211,NOW(),NOW(), 6102, 'red', 3, '', 1, 0),
+            (6212,NOW(),NOW(), 6102, 'green', 1, '', 1, 0),
+            (6213,NOW(),NOW(), 6102, 'blue', 2, '', 1, 0)
         ";
         $addTestStmt = $dbConn->prepare($addTestSql);
         $addTestStmt->execute();
@@ -160,17 +160,17 @@ function createTestData_XXXX($dbConn) {
 
     function createTestData_Metadata_References($dbConn) {
         // 6300 series ids
-        # Metadata_Reference: 'metadata_reference_id', 'created_at', 'updated_at', 'metadata_type', 'metadata_id', 'type', 'external_reference', 'description', 'ordering', 'flag_delete'
+        # Metadata_Reference: 'metadata_reference_id', 'created_at', 'updated_at', 'metadata_type', 'metadata_id', 'type', 'external_reference', 'description', 'ordering', 'flag_active', 'flag_delete'
         # VALID_METADATA_TYPES = ['structure', 'set', 'value'];
         # VALID_TYPES = ['text', 'image', 'link'];
         $addTestSql  = "INSERT INTO " . Metadata_Reference::$dbTable . " VALUES
-            (6301,NOW(),NOW(), 'structure', 6001, 'text', 'testing/flower_descr.txt', 'description of what a flower is', 1, 0),
-            (6302,NOW(),NOW(), 'term_set', 6101, 'text', 'testing/small_sizes.txt', 'description of the small sizes', 1, 0),
-            (6303,NOW(),NOW(), 'term_value', 6211, 'image', 'testing/red.jpg', 'image of the color red', 1, 0),
-            (6304,NOW(),NOW(), 'term_value', 6210, 'link', 'http://dictionary.reference.com/browse/dentate', 'definition of dentate', 1, 0),
-            (6305,NOW(),NOW(), 'term_value', 6210, 'image', 'http://cf.ydcdn.net/1.0.1.20/images/main/dentate.jpg', 'picture of dentate', 1, 0),
-            (6306,NOW(),NOW(), 'term_value', 6209, 'link', 'http://dictionary.reference.com/browse/serrate', 'definition of serrate', 1, 0),
-            (6307,NOW(),NOW(), 'term_value', 6209, 'link', 'http://dictionary.reference.com/browse/serrate', 'another definition of serrate', .5, 0)
+            (6301,NOW(),NOW(), 'structure', 6001, 'text', 'testing/flower_descr.txt', 'description of what a flower is', 1, 1, 0),
+            (6302,NOW(),NOW(), 'term_set', 6101, 'text', 'testing/small_sizes.txt', 'description of the small sizes', 1, 1, 0),
+            (6303,NOW(),NOW(), 'term_value', 6211, 'image', 'testing/red.jpg', 'image of the color red', 1, 1, 0),
+            (6304,NOW(),NOW(), 'term_value', 6210, 'link', 'http://dictionary.reference.com/browse/dentate', 'definition of dentate', 1, 1, 0),
+            (6305,NOW(),NOW(), 'term_value', 6210, 'image', 'http://cf.ydcdn.net/1.0.1.20/images/main/dentate.jpg', 'picture of dentate', 1, 1, 0),
+            (6306,NOW(),NOW(), 'term_value', 6209, 'link', 'http://dictionary.reference.com/browse/serrate', 'definition of serrate', 1, 1, 0),
+            (6307,NOW(),NOW(), 'term_value', 6209, 'link', 'http://dictionary.reference.com/browse/serrate', 'another definition of serrate', .5, 1, 0)
         ";
         $addTestStmt = $dbConn->prepare($addTestSql);
         $addTestStmt->execute();
