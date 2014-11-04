@@ -159,16 +159,16 @@
             $action = Action::sanitizeAction($action);
             $this->cacheTermSetAndValues();
 //            $link = '<a href="'.APP_ROOT_PATH.'/app_code/metadata_structure.php?action='.$action.'&metadata_structure_id='.$this->metadata_structure_id.'">'.htmlentities($this->name).'</a>';
-            $link = '<a href="'.APP_ROOT_PATH.'/app_code/metadata_structure.php?action='.$action.'&metadata_structure_id='.$this->metadata_structure_id.'">'.$this->renderAsFullName().'</a>';
+            $link = '<a href="'.APP_ROOT_PATH.'/app_code/metadata_structure.php?action='.$action.'&metadata_structure_id='.$this->metadata_structure_id.'">'.$this->renderAsFullName().' <i class="'.($this->flag_active ? 'icon-ok-circle' : 'icon-ban-circle').'"></i></a>';
             if ($this->term_set) {
-                $link = '<a href="'.APP_ROOT_PATH.'/app_code/metadata_structure.php?action='.$action.'&metadata_structure_id='.$this->metadata_structure_id.'">'.$this->renderAsFullName().' ('.htmlentities($this->term_set->name).')</a>';
+                $link = '<a href="'.APP_ROOT_PATH.'/app_code/metadata_structure.php?action='.$action.'&metadata_structure_id='.$this->metadata_structure_id.'">'.$this->renderAsFullName().' ('.htmlentities($this->term_set->name).') <i class="'.($this->flag_active ? 'icon-ok-circle' : 'icon-ban-circle').'"></i></a>';
             }
 
             return $link;
         }
 
         public function renderAsButtonEdit() {
-            $btn = '<a id="metadata_structure-btn-edit-'.$this->metadata_structure_id.'" href="'.APP_ROOT_PATH.'/app_code/metadata_structure.php?action=edit&metadata_structure_id='.$this->metadata_structure_id.'" class="edit_link btn" >'.util_lang('edit').'</a>';
+            $btn = '<a id="metadata_structure-btn-edit-'.$this->metadata_structure_id.'" href="'.APP_ROOT_PATH.'/app_code/metadata_structure.php?action=edit&metadata_structure_id='.$this->metadata_structure_id.'" title="'.util_lang('edit').'" class="edit_link btn" >'.util_lang('edit').'</a>';
             return $btn;
         }
 
@@ -213,6 +213,8 @@
 
             $rendered .= '  <div class="metadata-structure-header">'."\n";
             $rendered .= '    <h3>'.htmlentities($this->name).'</h3>'."\n";
+
+            $rendered .= '    <div class="active_state_info"><i class="'.($this->flag_active ? 'icon-ok-circle' : 'icon-ban-circle').'"></i> '.($this->flag_active ? util_lang('active_true') : util_lang('active_false')).'</div>'."\n";
 
             if ($this->description) {
                 $rendered .= '    <div class="description">'.$this->description.'</div>'."\n";
@@ -289,7 +291,7 @@
                 $rendered = $this->renderAsListItem_Lead($dom_id,['orderable']);
                 $rendered .= util_orderingUpDownControls($dom_id).' ';
                 $rendered .= $this->renderAsLink();
-                $rendered .= '<input type="hidden" name="original_ordering-'.$dom_id.'" id="original_ordering-'.$dom_id.'" value="'.$this->ordering.'"/>';
+//                $rendered .= '<input type="hidden" name="original_ordering-'.$dom_id.'" id="original_ordering-'.$dom_id.'" value="'.$this->ordering.'"/>';
                 $rendered .= '<input type="hidden" name="new_ordering-'.$dom_id.'" id="new_ordering-'.$dom_id.'" value="'.$this->ordering.'"/>';
                 $rendered .= '<ul class="metadata-structure-tree">'."\n";
                 foreach ($children as $child) {
@@ -303,7 +305,7 @@
                 $rendered = $this->renderAsListItem_Lead('',['orderable']);
                 $rendered .= util_orderingUpDownControls($dom_id).' ';
                 $rendered .= $this->renderAsLink();
-                $rendered .= '<input type="hidden" name="original_ordering-'.$dom_id.'" id="original_ordering-'.$dom_id.'" value="'.$this->ordering.'"/>';
+//                $rendered .= '<input type="hidden" name="original_ordering-'.$dom_id.'" id="original_ordering-'.$dom_id.'" value="'.$this->ordering.'"/>';
                 $rendered .= '<input type="hidden" name="new_ordering-'.$dom_id.'" id="new_ordering-'.$dom_id.'" value="'.$this->ordering.'"/>';
                 $rendered .= '</li>'."\n";
                 return $rendered;
@@ -359,10 +361,13 @@
             $rendered .= '</div>'."\n";
 
 
-            $rendered .= '  <div class="metadata-parent-controls">'.util_lang('label_metadata_structure_change_parent').': '.Metadata_Structure::renderControlSelectAllMetadataStructures($this->metadata_structure_id,$this->parent_metadata_structure_id,util_lang('metadata_root_level')).'</div>'."\n";
+            $rendered .= '  <div class="metadata-parent-controls">'.util_lang('label_metadata_structure_change_parent').': '.Metadata_Structure::renderControlSelectAllMetadataStructures('parent_metadata_structure_id',$this->parent_metadata_structure_id,util_lang('metadata_root_level')).'</div>'."\n";
 
             $rendered .= '  <div class="metadata-structure-header">'."\n";
             $rendered .= '    <h3><input id="" class="object-name-control" type="text" name="name" value="'.htmlentities($this->name).'"/></h3>'."\n";
+
+            $rendered .= '    <div class="active-state-controls"><input type="checkbox" name="flag_active" value="1"'.($this->flag_active ? ' checked="checked"' : '').'/> '.util_lang('active').'</div>'."\n";
+
             $rendered .= '    <div class="description-controls"><input title="'.util_lang('title_description').'" class="description-control" type="text" name="description" value="'.htmlentities($this->description).'"/></div>'."\n";
             $rendered .= '    <div class="details-controls"><textarea title="'.util_lang('title_details').'" class="details-control" name="details">'.htmlentities($this->details).'</textarea></div>'."\n";
             $rendered .= '    <h4>'.util_lang('metadata_references').'</h4>'."\n";
@@ -372,7 +377,7 @@
 
             $rendered .= '  <h4>'.util_lang('metadata_children').':</h4>'."\n";
             $rendered .= '  <ul class="metadata-structure-tree">'."\n";
-            $rendered .= '    <li><a href="'.APP_ROOT_PATH.'/app_code/metadata_structure.php?action=create&parent_metadata_structure_id='.$this->metadata_structure_id.'" id="btn-add-metadata-structure" class="creation_link btn">'.htmlentities(util_lang('add_metadata_structure')).'</a></li>'."\n";
+            $rendered .= '    <li><a href="'.APP_ROOT_PATH.'/app_code/metadata_structure.php?action=create&parent_metadata_structure_id='.$this->metadata_structure_id.'" id="btn-add-metadata-structure" title="'.htmlentities(util_lang('add_metadata_structure')).'" class="creation_link btn">'.htmlentities(util_lang('add_metadata_structure')).'</a></li>'."\n";
             $children = $this->getChildren();
             if ($children) {
                 foreach ($children as $child) {

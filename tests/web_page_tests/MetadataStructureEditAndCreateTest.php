@@ -73,29 +73,7 @@ class MetadataStructureEditAndCreateTest extends WMSWebTestCase {
 //        $this->showContent();
 
         $this->checkBasicAsserts();
-        $this->assertEltByIdHasAttrOfValue('btn-add-metadata_structure-6002','title',util_lang('add_metadata_structure'));
-    }
-
-
-    function testBaseDataUpdate() {
-        $this->todo();
-//
-//        $this->doLoginBasic();
-//        $this->get('http://localhost/digitalfieldnotebooks/app_code/notebook.php?action=edit&notebook_id=1001');
-//
-////      NOTE: the identifier to use for setField is the value of the name attribute of the field
-//        $this->setField('name','new name for testnotebook1');
-////        NOTE: the identifier to use for form buttons is the value of the value attribute of the button, or the interior html of a button element
-//        $this->click('<i class="icon-ok-sign icon-white"></i> '.util_lang('update','properize'));
-//
-//
-//        $this->checkBasicAsserts();
-//        $this->assertText('new name for testnotebook1');
-//
-//        $n = Notebook::getOneFromDb(['notebook_id'=>1001],$this->DB);
-//        $this->assertEqual($n->name,'new name for testnotebook1');
-//
-//        util_prePrintR(htmlentities($this->getBrowser()->getContent()));
+        $this->assertEltByIdHasAttrOfValue('btn-add-metadata-structure','title',util_lang('add_metadata_structure'));
     }
 
     function testCreateButtonAction() {
@@ -110,6 +88,56 @@ class MetadataStructureEditAndCreateTest extends WMSWebTestCase {
 
 //        $this->showContent();
     }
+    function testEditButtonAction() { // make sure it exists and that clicking on it goes to the edit page
+//        $this->doLoginBasic();
+//        $this->get('http://localhost/digitalfieldnotebooks/app_code/notebook.php?action=edit&notebook_id=1001');
+        $this->doLoginAdmin();
+        $this->goToMetadataStructureEdit(6002);
+
+        $edit_content = $this->getBrowser()->getContent();
+
+        $this->goToMetadataStructureView(6002);
+
+        $this->checkBasicAsserts();
+        $this->assertEltByIdHasAttrOfValue('metadata_structure-btn-edit-6002','title',util_lang('edit'));
+
+        $this->click(util_lang('edit'));
+        $clicked_content = $this->getBrowser()->getContent();
+
+        $this->checkBasicAsserts();
+        $this->assertEqual($edit_content,$clicked_content);
+    }
+
+    function testBaseDataUpdate() {
+        $this->doLoginAdmin();
+        $this->goToMetadataStructureEdit(6002);
+
+//      NOTE: the identifier to use for setField is the value of the name attribute of the field
+        $this->setField('name','mds new');
+//        NOTE: the identifier to use for form buttons is the value of the value attribute of the button, or the interior html of a button element
+        $this->click('<i class="icon-ok-sign icon-white"></i> '.util_lang('update','properize'));
+
+        $this->checkBasicAsserts();
+        $this->assertText('mds new');
+
+        $mds = Metadata_Structure::getOneFromDb(['metadata_structure_id'=>6002],$this->DB);
+        $this->assertEqual($mds->name,'mds new');
+    }
+
+    function testSubStructureReOrdering() {
+        $mds_initial = Metadata_Structure::getOneFromDb(['metadata_structure_id'=>6002],$this->DB);
+
+        $this->doLoginAdmin();
+
+        $this->get('http://localhost/digitalfieldnotebooks/app_code/metadata_structure.php?action=update&metadata_structure_id=6001&new_ordering-item-metadata_structure_6002=25');
+
+//        $this->showContent();
+
+        $mds_revised_order = Metadata_Structure::getOneFromDb(['metadata_structure_id'=>6002],$this->DB);
+
+        $this->assertNotEqual($mds_initial->ordering,$mds_revised_order->ordering);
+        $this->assertEqual(25,$mds_revised_order->ordering);
+    }
 
     function testDeleteNotebook() {
 //        $this->doLoginBasic();
@@ -117,6 +145,7 @@ class MetadataStructureEditAndCreateTest extends WMSWebTestCase {
 
         $this->todo();
     }
+
     function testToDo() {
 //        $this->todo('');
     }

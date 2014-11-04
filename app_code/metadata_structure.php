@@ -53,8 +53,52 @@
     #      create/edit - show a form with the object's current values ($action is 'update' on form submit)
     #      delete - delete the metadata_structure, then go to list w/ 'deleted' message
 
-    if (($action == 'update') || ($action == 'verify') || ($action == 'publish')) {
-        echo 'TO BE IMPLEMENTED: update, verify, and publish actions';
+    if ($action == 'update') {
+        // standard fields (check 'parent_metadata_structure_id', 'name', 'ordering', 'description', 'details', 'metadata_term_set_id', 'flag_active')
+        // if any changes, save
+        $changed = false;
+        $updateable_fields = ['parent_metadata_structure_id', 'name', 'description', 'details', 'metadata_term_set_id'];
+        foreach ($updateable_fields as $fname) {
+            if ((isset($_REQUEST[$fname])) && ($mds->fieldValues[$fname] != $_REQUEST[$fname])) {
+                $changed = true;
+                $mds->fieldValues[$fname] = $_REQUEST['name']; // NOTE: this seems dangerous, but the data is sanitized on the way back out
+            }
+        }
+
+        // special handling of 'flag_active' since it's a checkbox
+        $active_check_state = false;
+        if (isset($_REQUEST['flag_active'])) {
+            $active_check_state = true;
+        }
+        if ($mds->flag_active != $active_check_state) {
+            $changed = true;
+            $mds->flag_active = $active_check_state;
+        }
+
+//        util_prePrintR($_REQUEST);
+
+        if ($changed) {
+            $mds->matchesDb = false;
+            $mds->updateDb();
+        }
+
+        // for each child structure (get children of current structure from DB), check if orig ordering == new orderings - if they differ, update the ordering for that child structure (fetch it, alter it, save it)
+        $substructures = $mds->getChildren();
+
+//        util_prePrintR($substructures);
+
+        foreach ($substructures as $ss) {
+            $req_key = 'new_ordering-item-metadata_structure_' . $ss->metadata_structure_id;
+//            util_prePrintR('handling '.$req_key);
+            if (isset($_REQUEST[$req_key]) && is_numeric($_REQUEST[$req_key])) {
+                $new_ordering = $_REQUEST[$req_key];
+                if ($new_ordering != $ss->ordering) {
+                    $ss->ordering = $new_ordering;
+                    $ss->updateDb();
+                }
+            }
+        }
+
         $action = 'view';
     }
 

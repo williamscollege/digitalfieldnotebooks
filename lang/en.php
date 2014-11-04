@@ -78,6 +78,8 @@ $LANGUAGE['en'] = [
     'published_false' => 'private',
     'verified_true' => 'verified',
     'verified_false' => 'not verified',
+    'active_true' => 'usable',
+    'active_false' => 'inactive',
 
     'not' => 'not',
 
