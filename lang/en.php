@@ -126,6 +126,7 @@ $LANGUAGE['en'] = [
     'new_metadata_structure' => 'new type of metadata',
     'metadata_structure_has_no_term_set' => 'No specific values - free/open text only',
     'msg_missing_metadata_structure' => 'The metadata type is missing',
+    'msg_metadata_structure_deleted' => 'The metadata type has been deleted',
     'metadata_children' => 'further breakdown',
     'add_metadata_structure' => '+ Add Metadata Type +',
     'label_metadata_structure_change_parent' => 'put this under',

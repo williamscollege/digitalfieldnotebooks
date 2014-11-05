@@ -39,9 +39,7 @@ class MetadataViewTest extends WMSWebTestCase {
     function testListOfAll() {
         $this->get('http://localhost/digitalfieldnotebooks/app_code/metadata_structure.php?action=list');
 
-        $this->assertNoPattern('/warning/i');
-        $this->assertNoPattern('/error/i');
-        $this->assertNoText('IMPLEMENTED');
+        $this->checkBasicAsserts();
 
         $this->assertText(util_lang('all_metadata'));
 
@@ -55,10 +53,12 @@ class MetadataViewTest extends WMSWebTestCase {
         $this->doLoginBasic();
 
         $this->goToView(6001);
+        $this->checkBasicAsserts();
 
         $view_content = $this->getBrowser()->getContent();
 
         $this->get('http://localhost/digitalfieldnotebooks/app_code/metadata_structure.php?metadata_structure_id=6001');
+        $this->checkBasicAsserts();
 
         $no_action_given_content = $this->getBrowser()->getContent();
 
@@ -69,6 +69,7 @@ class MetadataViewTest extends WMSWebTestCase {
         $this->doLoginBasic();
 
         $this->get('http://localhost/digitalfieldnotebooks/app_code/metadata_structure.php?action=view');
+        $this->checkBasicAsserts();
 
         $this->assertEqual(LANG_APP_NAME . ': ' . ucfirst(util_lang('metadata')) ,$this->getBrowser()->getTitle());
         $this->assertText(util_lang('all_metadata'));
@@ -78,6 +79,7 @@ class MetadataViewTest extends WMSWebTestCase {
         $this->doLoginBasic();
 
         $this->get('http://localhost/digitalfieldnotebooks/app_code/metadata_structure.php?metadata_structure_id=999');
+        $this->checkBasicAsserts();
 
         $this->assertEqual(LANG_APP_NAME . ': ' . ucfirst(util_lang('metadata')) ,$this->getBrowser()->getTitle());
         $this->assertText(util_lang('all_metadata'));
@@ -87,6 +89,7 @@ class MetadataViewTest extends WMSWebTestCase {
         $this->doLoginBasic();
 
         $this->get('http://localhost/digitalfieldnotebooks/app_code/metadata_structure.php?action=edit&metadata_structure_id=6004');
+        $this->checkBasicAsserts();
 
         $this->assertEqual(LANG_APP_NAME . ': ' . ucfirst(util_lang('metadata')) ,$this->getBrowser()->getTitle());
         $this->assertText(util_lang('all_metadata'));
@@ -96,12 +99,9 @@ class MetadataViewTest extends WMSWebTestCase {
 //        $this->doLoginBasic();
 
         $this->goToView(6002);
+        $this->checkBasicAsserts();
 
 //        echo htmlentities($this->getBrowser()->getContent());
-
-        $this->assertNoPattern('/warning/i');
-        $this->assertNoPattern('/error/i');
-        $this->assertNoText('IMPLEMENTED');
 
         $mds = Metadata_Structure::getOneFromDb(['metadata_structure_id'=>6002],$this->DB);
 
@@ -127,16 +127,11 @@ class MetadataViewTest extends WMSWebTestCase {
         $this->assertText('flower size');
         $this->assertText('small lengths');
         $this->assertText('3 mm - 1cm');
-
-
     }
 
     function testViewNotEditable_BRANCH() {
         $this->get('http://localhost/digitalfieldnotebooks/app_code/metadata_structure.php?action=view&metadata_structure_id=6001');
-
-        $this->assertNoPattern('/warning/i');
-        $this->assertNoPattern('/error/i');
-        $this->assertNoText('IMPLEMENTED');
+        $this->checkBasicAsserts();
 
         $mds = Metadata_Structure::getOneFromDb(['metadata_structure_id'=>6001],$this->DB);
 
@@ -154,10 +149,7 @@ class MetadataViewTest extends WMSWebTestCase {
 
     function testViewNotEditable_BUD() {
         $this->get('http://localhost/digitalfieldnotebooks/app_code/metadata_structure.php?action=view&metadata_structure_id=6004');
-
-        $this->assertNoPattern('/warning/i');
-        $this->assertNoPattern('/error/i');
-        $this->assertNoText('IMPLEMENTED');
+        $this->checkBasicAsserts();
 
         $mds = Metadata_Structure::getOneFromDb(['metadata_structure_id'=>6004],$this->DB);
 

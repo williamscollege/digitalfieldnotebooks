@@ -123,6 +123,7 @@ class MetadataStructureEditAndCreateTest extends WMSWebTestCase {
     function testBaseDataUpdate_NEW() {
         $this->doLoginAdmin();
         $this->get('http://localhost/digitalfieldnotebooks/app_code/metadata_structure.php?action=create&parent_metadata_structure_id=6001');
+        $this->checkBasicAsserts();
 
         $this->setField('name','brand new metadata structure');
         $this->click('<i class="icon-ok-sign icon-white"></i> '.util_lang('save','properize'));
@@ -141,6 +142,8 @@ class MetadataStructureEditAndCreateTest extends WMSWebTestCase {
 
         $this->get('http://localhost/digitalfieldnotebooks/app_code/metadata_structure.php?action=update&metadata_structure_id=6001&new_ordering-item-metadata_structure_6002=25');
 
+        $this->checkBasicAsserts();
+
 //        $this->showContent();
 
         $mds_revised_order = Metadata_Structure::getOneFromDb(['metadata_structure_id'=>6002],$this->DB);
@@ -149,11 +152,18 @@ class MetadataStructureEditAndCreateTest extends WMSWebTestCase {
         $this->assertEqual(25,$mds_revised_order->ordering);
     }
 
-    function testDeleteNotebook() {
-//        $this->doLoginBasic();
-//        $this->get('http://localhost/digitalfieldnotebooks/app_code/notebook.php?action=edit&notebook_id=1001');
+    function testDeleteStructure() {
+        $mds_orig = Metadata_Structure::getOneFromDb(['metadata_structure_id'=>6002],$this->DB);
 
-        $this->todo();
+        $this->doLoginAdmin();
+        $this->get('http://localhost/digitalfieldnotebooks/app_code/metadata_structure.php?action=delete&metadata_structure_id='.$mds_orig->metadata_structure_id);
+
+//        $this->showContent();
+
+        $this->checkBasicAsserts();
+
+        $mds_del = Metadata_Structure::getOneFromDb(['metadata_structure_id'=>6002],$this->DB);
+        $this->assertFalse($mds_del->matchesDb);
     }
 
     function testToDo() {

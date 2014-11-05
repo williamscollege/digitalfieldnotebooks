@@ -1,7 +1,6 @@
 <?php
     require_once('../app_setup.php');
 	$pageTitle = ucfirst(util_lang('metadata'));
-	require_once('../app_head.php');
 
     #############################
     # 1. figure out what action is being attempted (none/default is view)
@@ -61,6 +60,9 @@
         util_redirectToAppPage('app_code/metadata_structure.php?action=list','failure',util_lang('no_permission'));
     }
 
+    if ($action != 'delete') {
+        require_once('../app_head.php');
+    }
 
     # 4. branch behavior based on the action
     #      update - update the object with the data coming in, then show the object (w/ 'saved' message)
@@ -149,7 +151,16 @@
         echo $mds->renderAsEdit();
     } else
     if ($action == 'delete') {
-        echo 'TO BE IMPLEMENTED: delete action';
+        $parent_mds = $mds->getParent();
+
+        $mds->doDelete();
+
+        if ($parent_mds) {
+            util_redirectToAppPage('app_code/metadata_structure.php?action=view&metadata_structure_id='.$parent_mds->metadata_structure_id,'info',util_lang('msg_metadata_structure_deleted'));
+        } else {
+            util_redirectToAppPage('app_code/metadata_structure.php?action=list','info',util_lang('msg_metadata_structure_deleted'));
+        }
+
     }
 require_once('../foot.php');
 ?>

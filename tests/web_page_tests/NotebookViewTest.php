@@ -40,10 +40,12 @@ class NotebookViewTest extends WMSWebTestCase {
         $this->doLoginBasic();
 
         $this->goToNotebookView(1001);
+        $this->checkBasicAsserts();
 
         $view_content = $this->getBrowser()->getContent();
 
         $this->get('http://localhost/digitalfieldnotebooks/app_code/notebook.php?notebook_id=1001');
+        $this->checkBasicAsserts();
 
         $no_action_given_content = $this->getBrowser()->getContent();
 
@@ -54,6 +56,7 @@ class NotebookViewTest extends WMSWebTestCase {
         $this->doLoginBasic();
 
         $this->get('http://localhost/digitalfieldnotebooks/app_code/notebook.php?action=view');
+        $this->checkBasicAsserts();
 
         $this->assertEqual(LANG_APP_NAME . ': ' . ucfirst(util_lang('notebook')) ,$this->getBrowser()->getTitle());
         $this->assertText(util_lang('no_notebook_specified'));
@@ -64,6 +67,7 @@ class NotebookViewTest extends WMSWebTestCase {
         $this->doLoginBasic();
 
         $this->get('http://localhost/digitalfieldnotebooks/app_code/notebook.php?action=view&notebook_id=999');
+        $this->checkBasicAsserts();
 
         $this->assertEqual(LANG_APP_NAME . ': ' . ucfirst(util_lang('notebook')) ,$this->getBrowser()->getTitle());
         $this->assertText(util_lang('no_notebook_found'));
@@ -74,6 +78,7 @@ class NotebookViewTest extends WMSWebTestCase {
         $this->doLoginBasic();
 
         $this->get('http://localhost/digitalfieldnotebooks/app_code/notebook.php?action=edit&notebook_id=1004');
+        $this->checkBasicAsserts();
 
         $this->assertEqual(LANG_APP_NAME . ': ' . ucfirst(util_lang('notebook')) ,$this->getBrowser()->getTitle());
         $this->assertText(util_lang('no_permission'));
@@ -83,10 +88,7 @@ class NotebookViewTest extends WMSWebTestCase {
     function testViewList_LoggedIn() {
         $this->doLoginBasic();
         $this->get('http://localhost/digitalfieldnotebooks/app_code/notebook.php?action=list');
-
-        $this->assertNoText('IMPLEMENTED');
-        $this->assertNoPattern('/warning/i');
-        $this->assertNoPattern('/error/i');
+        $this->checkBasicAsserts();
 
         // number of notebooks shown
         $this->assertEltByIdHasAttrOfValue('list-of-user-notebooks','data-notebook-count','3');
@@ -144,12 +146,8 @@ class NotebookViewTest extends WMSWebTestCase {
         $this->doLoginBasic();
 
         $this->goToNotebookView(1001);
+        $this->checkBasicAsserts();
 
-//        echo htmlentities($this->getBrowser()->getContent());
-
-        $this->assertNoText('IMPLEMENTED');
-        $this->assertNoPattern('/warning/i');
-        $this->assertNoPattern('/error/i');
 
         $n = Notebook::getOneFromDb(['notebook_id'=>1001],$this->DB);
 
@@ -185,12 +183,8 @@ class NotebookViewTest extends WMSWebTestCase {
         $this->doLoginBasic();
 
         $this->goToNotebookView(1004);
+        $this->checkBasicAsserts();
 
-//        echo htmlentities($this->getBrowser()->getContent());
-
-        $this->assertNoText('IMPLEMENTED');
-        $this->assertNoPattern('/warning/i');
-        $this->assertNoPattern('/error/i');
 
         $n = Notebook::getOneFromDb(['notebook_id'=>1004],$this->DB);
 

@@ -112,6 +112,12 @@ abstract class WMSWebTestCase extends WebTestCase {
         echo htmlentities($this->getBrowser()->getContent());
         echo "\n</pre>";
     }
+
+    function checkBasicAsserts() {
+        $this->assertNoText('IMPLEMENTED');
+        $this->assertNoPattern('/warning/i');
+        $this->assertNoPattern('/fatal error/i');
+    }
 }
 ?>
 

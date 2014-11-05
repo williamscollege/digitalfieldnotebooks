@@ -1,7 +1,7 @@
 <?php
     require_once('../app_setup.php');
 	$pageTitle = ucfirst(util_lang('authoritative_plant'));
-	require_once('../app_head.php');
+//	require_once('../app_head.php');
 
     #############################
     # 1. figure out what action is being attempted (none/default is list)
@@ -46,6 +46,9 @@
         $action = 'list';
     }
 
+    if ($action != 'delete') {
+        require_once('../app_head.php');
+    }
 
     # 4. branch behavior based on the action
     #      update - update the object with the data coming in, then show the object (w/ 'saved' message)

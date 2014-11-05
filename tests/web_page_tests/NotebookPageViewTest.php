@@ -39,6 +39,7 @@ class NotebookPageViewTest extends WMSWebTestCase {
     function testMissingIdGoesToNotebookList() {
         $this->doLoginBasic();
         $this->get('http://localhost/digitalfieldnotebooks/app_code/notebook_page.php?action=view');
+        $this->checkBasicAsserts();
 
         $this->assertEqual(LANG_APP_NAME . ': ' . ucfirst(util_lang('notebook')) ,$this->getBrowser()->getTitle());
         $this->assertText(util_lang('no_notebook_page_specified'));
@@ -48,10 +49,12 @@ class NotebookPageViewTest extends WMSWebTestCase {
         $this->doLoginBasic();
 
         $this->goToNotebookPageView(1101);
+        $this->checkBasicAsserts();
 
         $view_content = $this->getBrowser()->getContent();
 
         $this->get('http://localhost/digitalfieldnotebooks/app_code/notebook_page.php?notebook_page_id=1101');
+        $this->checkBasicAsserts();
 
         $no_action_given_content = $this->getBrowser()->getContent();
 
@@ -62,12 +65,7 @@ class NotebookPageViewTest extends WMSWebTestCase {
         $this->doLoginBasic();
 
         $this->goToNotebookPageView(1101);
-
-//        echo htmlentities($this->getBrowser()->getContent());
-//        echo $this->getBrowser()->getContent();
-
-        $this->assertNoPattern('/warning/i');
-        $this->assertNoPattern('/error/i');
+        $this->checkBasicAsserts();
 
         // NOTE: most of the messy details of this are checked in the notebook_page object tests of renderAsView - see app_infrastructure_tests/TestOfNotebookPage.class.php
         // this just makes sure that the plant lable is actually showing up and that the appropriate edit buttons are there
@@ -94,9 +92,7 @@ class NotebookPageViewTest extends WMSWebTestCase {
         $this->doLoginBasic();
 
         $this->goToNotebookPageView(1104);
-
-        $this->assertNoPattern('/warning/i');
-        $this->assertNoPattern('/error/i');
+        $this->checkBasicAsserts();
 
         // NOTE: most of the messy details of this are checked in the notebook_page object tests of renderAsView - see app_infrastructure_tests/TestOfNotebookPage.class.php
         // this just makes sure that the plant lable is actually showing up and that the appropriate edit buttons are there

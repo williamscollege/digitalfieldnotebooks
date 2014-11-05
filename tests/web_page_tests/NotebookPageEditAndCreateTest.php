@@ -164,7 +164,6 @@ class NotebookPageEditAndCreateTest extends WMSWebTestCase {
         $this->doLoginBasic();
 
         $this->get('http://localhost/digitalfieldnotebooks/app_code/notebook_page.php?action=edit&notebook_page_id=1101');
-
         $this->checkBasicAsserts();
 
 //        $this->todo('check link to containing notebook');
@@ -202,7 +201,8 @@ class NotebookPageEditAndCreateTest extends WMSWebTestCase {
     function testBaseDataUpdate() {
         $this->doLoginBasic();
         $this->get('http://localhost/digitalfieldnotebooks/app_code/notebook_page.php?action=edit&notebook_page_id=1101');
-//
+        $this->checkBasicAsserts();
+
         $new_notes = 'new notes for the page';
         $new_specimen_notes = 'new notes for the specimen';
 
@@ -262,6 +262,7 @@ class NotebookPageEditAndCreateTest extends WMSWebTestCase {
 
         $this->doLoginBasic();
         $this->get('http://localhost/digitalfieldnotebooks/app_code/notebook.php?action=edit&notebook_id=1001');
+        $this->checkBasicAsserts();
 
 
         $this->click(util_lang('add_notebook_page'));
@@ -280,6 +281,8 @@ class NotebookPageEditAndCreateTest extends WMSWebTestCase {
 
         $this->doLoginBasic();
         $this->get('http://localhost/digitalfieldnotebooks/app_code/notebook.php?action=edit&notebook_id=1001');
+        $this->checkBasicAsserts();
+
         $this->click(util_lang('add_notebook_page'));
 
         $this->checkBasicAsserts();
@@ -295,6 +298,7 @@ class NotebookPageEditAndCreateTest extends WMSWebTestCase {
 
         $this->doLoginBasic();
         $this->get('http://localhost/digitalfieldnotebooks/app_code/notebook_page.php?action=delete&notebook_page_id=1101');
+        $this->checkBasicAsserts();
 
         $np2 = Notebook_Page::getOneFromDb(['notebook_page_id'=>1101],$this->DB);
         $this->assertFalse($np2->matchesDb);

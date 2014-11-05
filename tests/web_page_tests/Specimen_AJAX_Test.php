@@ -1,7 +1,7 @@
 <?php
 require_once dirname(__FILE__) . '/../simpletest/WMS_web_tester.php';
 
-class NotebookPageField_AJAX_Test extends WMSWebTestCase {
+class Specimen_AJAX_Test extends WMSWebTestCase {
 
     function setUp() {
         createAllTestData($this->DB);
@@ -39,10 +39,9 @@ class NotebookPageField_AJAX_Test extends WMSWebTestCase {
         $DB = $this->DB;
 
         $this->get('http://localhost/digitalfieldnotebooks/ajax_actions/specimen.php?action=create&unique=ABC123&notebook_page_id=1101');
+        $this->checkBasicAsserts();
 
         $expected = '<div class="specimen embedded">'."\n".Specimen::renderFormInteriorForNewSpecimen('ABC123',$this->DB)."\n</div>";
-
-        $this->assertNoPattern('/error/i');
 
         $results = json_decode($this->getBrowser()->getContent());
         $this->assertEqual('success',$results->status);

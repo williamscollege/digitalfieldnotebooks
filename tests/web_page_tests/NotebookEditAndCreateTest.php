@@ -156,7 +156,6 @@ class NotebookEditAndCreateTest extends WMSWebTestCase {
         $this->doLoginBasic();
 
         $this->get('http://localhost/digitalfieldnotebooks/app_code/notebook.php?action=edit&notebook_id=1001');
-
         $this->checkBasicAsserts();
 
 //        $this->todo('owner name has link to user page');
@@ -173,6 +172,7 @@ class NotebookEditAndCreateTest extends WMSWebTestCase {
     function testBaseDataUpdate() {
         $this->doLoginBasic();
         $this->get('http://localhost/digitalfieldnotebooks/app_code/notebook.php?action=edit&notebook_id=1001');
+        $this->checkBasicAsserts();
 
 //      NOTE: the identifier to use for setField is the value of the name attribute of the field
         $this->setField('name','new name for testnotebook1');
@@ -193,6 +193,7 @@ class NotebookEditAndCreateTest extends WMSWebTestCase {
     function testCreateButton() {
         $this->doLoginBasic();
         $this->get('http://localhost/digitalfieldnotebooks/app_code/notebook.php?action=list');
+        $this->checkBasicAsserts();
 
         $this->click(util_lang('add_notebook'));
 
@@ -205,6 +206,7 @@ class NotebookEditAndCreateTest extends WMSWebTestCase {
     function testDeleteNotebook() {
         $this->doLoginBasic();
         $this->get('http://localhost/digitalfieldnotebooks/app_code/notebook.php?action=edit&notebook_id=1001');
+        $this->checkBasicAsserts();
 
         $this->todo();
     }

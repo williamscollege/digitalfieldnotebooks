@@ -39,6 +39,7 @@ class MetadataStructure_AJAX_Test extends WMSWebTestCase {
         $DB = $this->DB;
 
         $this->get('http://localhost/digitalfieldnotebooks/ajax_actions/metadata_structure.php?action=value_options&metadata_structure_id=6002');
+        $this->checkBasicAsserts();
 
         $mdts = Metadata_Term_Set::getOneFromDb(['metadata_term_set_id'=>6101],$DB);
 

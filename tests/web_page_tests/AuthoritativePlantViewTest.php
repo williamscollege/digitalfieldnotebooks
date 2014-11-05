@@ -48,13 +48,9 @@ class AuthoritativePlantViewTest extends WMSWebTestCase {
 
         $this->get('http://localhost/digitalfieldnotebooks/app_code/authoritative_plant.php?action=list');
 
-        $this->assertNoPattern('/warning/i');
-        $this->assertNoPattern('/error/i');
-        $this->assertNoText('IMPLEMENTED');
+        $this->checkBasicAsserts();
 
-//        $this->todo();
         $this->assertPattern('/'.util_lang('authoritative_plants').'/i');
-//        $this->assertText(util_lang('authoritative_plants'));
 
         $this->assertLink($ap1->renderAsShortText());
         $this->assertLink($ap2->renderAsShortText());
@@ -70,10 +66,12 @@ class AuthoritativePlantViewTest extends WMSWebTestCase {
         $this->doLoginBasic();
 
         $this->goToView(5001);
+        $this->checkBasicAsserts();
 
         $view_content = $this->getBrowser()->getContent();
 
         $this->get('http://localhost/digitalfieldnotebooks/app_code/authoritative_plant.php?authoritative_plant_id=5001');
+        $this->checkBasicAsserts();
 
         $no_action_given_content = $this->getBrowser()->getContent();
 
@@ -84,6 +82,7 @@ class AuthoritativePlantViewTest extends WMSWebTestCase {
         $this->doLoginBasic();
 
         $this->get('http://localhost/digitalfieldnotebooks/app_code/authoritative_plant.php?action=view');
+        $this->checkBasicAsserts();
 
         $this->assertEqual(LANG_APP_NAME . ': ' . ucfirst(util_lang('authoritative_plant')) ,$this->getBrowser()->getTitle());
         $this->assertPattern('/'.util_lang('authoritative_plants').'/i');
@@ -93,6 +92,7 @@ class AuthoritativePlantViewTest extends WMSWebTestCase {
         $this->doLoginBasic();
 
         $this->get('http://localhost/digitalfieldnotebooks/app_code/authoritative_plant.php?authoritative_plant_id=999');
+        $this->checkBasicAsserts();
 
         $this->assertEqual(LANG_APP_NAME . ': ' . ucfirst(util_lang('authoritative_plant')) ,$this->getBrowser()->getTitle());
         $this->assertPattern('/'.util_lang('authoritative_plants').'/i');
@@ -102,6 +102,7 @@ class AuthoritativePlantViewTest extends WMSWebTestCase {
         $this->doLoginBasic();
 
         $this->get('http://localhost/digitalfieldnotebooks/app_code/authoritative_plant.php?action=edit&authoritative_plant_id=5001');
+        $this->checkBasicAsserts();
 
         $this->assertEqual(LANG_APP_NAME . ': ' . ucfirst(util_lang('authoritative_plant')) ,$this->getBrowser()->getTitle());
         $this->assertPattern('/'.util_lang('authoritative_plants').'/i');
@@ -113,12 +114,7 @@ class AuthoritativePlantViewTest extends WMSWebTestCase {
 
         $this->goToView($ap->authoritative_plant_id);
 
-//        echo htmlentities($this->getBrowser()->getContent());
-
-        $this->assertNoPattern('/warning/i');
-        $this->assertNoPattern('/error/i');
-        $this->assertNoText('IMPLEMENTED');
-
+        $this->checkBasicAsserts();
 
         // page heading
         $this->assertLink(ucfirst(util_lang('authoritative_plant','properize')));

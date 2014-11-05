@@ -56,9 +56,12 @@ class MetadataTermSetViewTest extends WMSWebTestCase {
 
         $this->goToView(6101);
 
+        $this->checkBasicAsserts();
+
         $view_content = $this->getBrowser()->getContent();
 
         $this->get('http://localhost/digitalfieldnotebooks/app_code/metadata_term_set.php?metadata_term_set_id=6101');
+        $this->checkBasicAsserts();
 
         $no_action_given_content = $this->getBrowser()->getContent();
 
@@ -69,6 +72,7 @@ class MetadataTermSetViewTest extends WMSWebTestCase {
         $this->doLoginBasic();
 
         $this->get('http://localhost/digitalfieldnotebooks/app_code/metadata_term_set.php?action=view');
+        $this->checkBasicAsserts();
 
         $this->assertEqual(LANG_APP_NAME . ': ' . ucfirst(util_lang('metadata_term_set')) ,$this->getBrowser()->getTitle());
         $this->assertText(util_lang('all_metadata_term_sets'));
@@ -78,6 +82,7 @@ class MetadataTermSetViewTest extends WMSWebTestCase {
         $this->doLoginBasic();
 
         $this->get('http://localhost/digitalfieldnotebooks/app_code/metadata_term_set.php?metadata_term_set_id=999');
+        $this->checkBasicAsserts();
 
         $this->assertEqual(LANG_APP_NAME . ': ' . ucfirst(util_lang('metadata_term_set')) ,$this->getBrowser()->getTitle());
         $this->assertText(util_lang('all_metadata_term_sets'));
@@ -87,34 +92,21 @@ class MetadataTermSetViewTest extends WMSWebTestCase {
         $this->doLoginBasic();
 
         $this->get('http://localhost/digitalfieldnotebooks/app_code/metadata_term_set.php?action=edit&metadata_term_set_id=6004');
+        $this->checkBasicAsserts();
 
         $this->assertEqual(LANG_APP_NAME . ': ' . ucfirst(util_lang('metadata_term_set')) ,$this->getBrowser()->getTitle());
         $this->assertText(util_lang('all_metadata_term_sets'));
     }
 
     function testViewNotEditable() {
-//        $this->doLoginBasic();
-
         $this->goToView(6101);
 
         $mds = Metadata_Structure::getOneFromDb(['metadata_structure_id'=>6002],$this->DB);
 
-//        echo htmlentities($this->getBrowser()->getContent());
-
-        $this->assertNoPattern('/warning/i');
-        $this->assertNoPattern('/error/i');
-        $this->assertNoText('IMPLEMENTED');
-
-//        $mds = Metadata_Structure::getOneFromDb(['metadata_structure_id'=>6002],$this->DB);
-
-//        util_prePrintR($n);
+        $this->checkBasicAsserts();
 
         // page heading
         $this->assertLink(util_lang('all_metadata_term_sets'));
-
-//        $this->assertText($mds->description);
-//        $this->assertText($mds->details);
-//        $this->assertEltByIdHasAttrOfValue('rendered_metadata_reference_6302','class','rendered_metadata_reference rendered_metadata_reference_text');
 
         // NO 'edit' control
         $this->assertNoLink(util_lang('edit'));
