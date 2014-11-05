@@ -84,7 +84,7 @@ class AuthoritativePlantViewTest extends WMSWebTestCase {
         $this->get('http://localhost/digitalfieldnotebooks/app_code/authoritative_plant.php?action=view');
         $this->checkBasicAsserts();
 
-        $this->assertEqual(LANG_APP_NAME . ': ' . ucfirst(util_lang('authoritative_plant')) ,$this->getBrowser()->getTitle());
+        $this->assertEqual(LANG_APP_NAME . ': ' . util_lang('authoritative_plant','properize') ,$this->getBrowser()->getTitle());
         $this->assertPattern('/'.util_lang('authoritative_plants').'/i');
     }
 
@@ -94,7 +94,7 @@ class AuthoritativePlantViewTest extends WMSWebTestCase {
         $this->get('http://localhost/digitalfieldnotebooks/app_code/authoritative_plant.php?authoritative_plant_id=999');
         $this->checkBasicAsserts();
 
-        $this->assertEqual(LANG_APP_NAME . ': ' . ucfirst(util_lang('authoritative_plant')) ,$this->getBrowser()->getTitle());
+        $this->assertEqual(LANG_APP_NAME . ': ' . util_lang('authoritative_plant','properize') ,$this->getBrowser()->getTitle());
         $this->assertPattern('/'.util_lang('authoritative_plants').'/i');
     }
 
@@ -104,7 +104,7 @@ class AuthoritativePlantViewTest extends WMSWebTestCase {
         $this->get('http://localhost/digitalfieldnotebooks/app_code/authoritative_plant.php?action=edit&authoritative_plant_id=5001');
         $this->checkBasicAsserts();
 
-        $this->assertEqual(LANG_APP_NAME . ': ' . ucfirst(util_lang('authoritative_plant')) ,$this->getBrowser()->getTitle());
+        $this->assertEqual(LANG_APP_NAME . ': ' . util_lang('authoritative_plant','properize') ,$this->getBrowser()->getTitle());
         $this->assertPattern('/'.util_lang('authoritative_plants').'/i');
     }
 
@@ -116,8 +116,10 @@ class AuthoritativePlantViewTest extends WMSWebTestCase {
 
         $this->checkBasicAsserts();
 
+//        $this->showContent();
+
         // page heading
-        $this->assertLink(ucfirst(util_lang('authoritative_plant','properize')));
+        $this->assertLink(util_lang('authoritative_plant'));
 
         // NO 'edit' control
         $this->assertNoLink(util_lang('edit'));

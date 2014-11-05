@@ -41,12 +41,12 @@ class MetadataViewTest extends WMSWebTestCase {
 
         $this->checkBasicAsserts();
 
-        $this->assertText(util_lang('all_metadata'));
+        $this->assertText(util_lang('all_metadata','properize'));
 
-        $this->assertLink('flower');
-        $this->assertLink('flower size');
-        $this->assertLink('flower primary color');
-        $this->assertLink('leaf');
+        $this->assertText('flower');
+        $this->assertText('flower - flower size');
+        $this->assertText('flower - flower primary color');
+        $this->assertText('leaf');
     }
 
     function testViewIsDefaultActionForSpecific() {
@@ -72,7 +72,7 @@ class MetadataViewTest extends WMSWebTestCase {
         $this->checkBasicAsserts();
 
         $this->assertEqual(LANG_APP_NAME . ': ' . ucfirst(util_lang('metadata')) ,$this->getBrowser()->getTitle());
-        $this->assertText(util_lang('all_metadata'));
+        $this->assertText(util_lang('all_metadata','properize'));
     }
 
     function testNonexistentRedirectsToFullList() {
@@ -82,7 +82,7 @@ class MetadataViewTest extends WMSWebTestCase {
         $this->checkBasicAsserts();
 
         $this->assertEqual(LANG_APP_NAME . ': ' . ucfirst(util_lang('metadata')) ,$this->getBrowser()->getTitle());
-        $this->assertText(util_lang('all_metadata'));
+        $this->assertText(util_lang('all_metadata','properize'));
     }
 
     function testActionNotAllowedRedirectsToFullList() {
@@ -92,7 +92,7 @@ class MetadataViewTest extends WMSWebTestCase {
         $this->checkBasicAsserts();
 
         $this->assertEqual(LANG_APP_NAME . ': ' . ucfirst(util_lang('metadata')) ,$this->getBrowser()->getTitle());
-        $this->assertText(util_lang('all_metadata'));
+        $this->assertText(util_lang('all_metadata','properize'));
     }
 
     function testViewNotEditable_LEAF() {
@@ -107,15 +107,17 @@ class MetadataViewTest extends WMSWebTestCase {
 
 //        util_prePrintR($n);
 
+//        $this->showContent();
+
         // page heading
         $this->assertLink(util_lang('metadata'));
         $this->assertLink('flower');
 
-        $this->assertText(ucfirst(util_lang('metadata')).' : '.$mds->name);
+        $this->assertText('flower size');
 
         $this->assertText($mds->description);
         $this->assertText($mds->details);
-        $this->assertEltByIdHasAttrOfValue('rendered_metadata_reference_6302','class','rendered_metadata_reference rendered_metadata_reference_text');
+        $this->assertEltByIdHasAttrOfValue('rendered_metadata_reference_6302','class','embedded rendered_metadata_reference rendered_metadata_reference_text');
 
         // NO 'edit' control
         $this->assertNoLink(util_lang('edit'));
@@ -124,7 +126,6 @@ class MetadataViewTest extends WMSWebTestCase {
 //        $this->todo('additional metadata view checks/asserts');
         // term set & values
 
-        $this->assertText('flower size');
         $this->assertText('small lengths');
         $this->assertText('3 mm - 1cm');
     }
@@ -133,17 +134,19 @@ class MetadataViewTest extends WMSWebTestCase {
         $this->get('http://localhost/digitalfieldnotebooks/app_code/metadata_structure.php?action=view&metadata_structure_id=6001');
         $this->checkBasicAsserts();
 
+//        $this->showContent();
+//
         $mds = Metadata_Structure::getOneFromDb(['metadata_structure_id'=>6001],$this->DB);
 
         $this->assertText($mds->description);
 
         $this->assertLink(util_lang('metadata'));
         $this->assertNoLink('flower');
-        $this->assertLink('flower size');
-        $this->assertLink('flower primary color');
+        $this->assertText('flower - flower size');
+        $this->assertText('flower - flower primary color');
         $this->assertNoLink('leaf');
 
-        $this->assertEltByIdHasAttrOfValue('rendered_metadata_reference_6301','class','rendered_metadata_reference rendered_metadata_reference_text');
+        $this->assertEltByIdHasAttrOfValue('rendered_metadata_reference_6301','class','embedded rendered_metadata_reference rendered_metadata_reference_text');
     }
 
 
@@ -158,8 +161,8 @@ class MetadataViewTest extends WMSWebTestCase {
         $this->assertLink(util_lang('metadata'));
 
         $this->assertNoLink('flower');
-        $this->assertNoLink('flower size');
-        $this->assertNoLink('flower primary color');
+        $this->assertNoLink('flower - flower size');
+        $this->assertNoLink('flower - flower primary color');
         $this->assertNoLink('leaf');
 
         $this->assertText(util_lang('metadata_no_children_no_values'));

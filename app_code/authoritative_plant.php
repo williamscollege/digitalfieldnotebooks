@@ -1,6 +1,6 @@
 <?php
     require_once('../app_setup.php');
-	$pageTitle = ucfirst(util_lang('authoritative_plant'));
+	$pageTitle = ucfirst(util_lang('authoritative_plant','properize'));
 //	require_once('../app_head.php');
 
     #############################

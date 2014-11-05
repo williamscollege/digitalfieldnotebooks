@@ -43,7 +43,7 @@ class MetadataTermSetViewTest extends WMSWebTestCase {
         $this->assertNoPattern('/error/i');
         $this->assertNoText('IMPLEMENTED');
 
-        $this->assertText(util_lang('all_metadata_term_sets'));
+        $this->assertText(util_lang('all_metadata_term_sets','properize'));
 
         $this->assertLink('small lengths');
         $this->assertLink('colors');
@@ -74,8 +74,8 @@ class MetadataTermSetViewTest extends WMSWebTestCase {
         $this->get('http://localhost/digitalfieldnotebooks/app_code/metadata_term_set.php?action=view');
         $this->checkBasicAsserts();
 
-        $this->assertEqual(LANG_APP_NAME . ': ' . ucfirst(util_lang('metadata_term_set')) ,$this->getBrowser()->getTitle());
-        $this->assertText(util_lang('all_metadata_term_sets'));
+        $this->assertEqual(LANG_APP_NAME . ': ' . util_lang('metadata_term_set','properize') ,$this->getBrowser()->getTitle());
+        $this->assertText(util_lang('all_metadata_term_sets','properize'));
     }
 
     function testNonexistentRedirectsToFullList() {
@@ -84,8 +84,8 @@ class MetadataTermSetViewTest extends WMSWebTestCase {
         $this->get('http://localhost/digitalfieldnotebooks/app_code/metadata_term_set.php?metadata_term_set_id=999');
         $this->checkBasicAsserts();
 
-        $this->assertEqual(LANG_APP_NAME . ': ' . ucfirst(util_lang('metadata_term_set')) ,$this->getBrowser()->getTitle());
-        $this->assertText(util_lang('all_metadata_term_sets'));
+        $this->assertEqual(LANG_APP_NAME . ': ' . util_lang('metadata_term_set','properize') ,$this->getBrowser()->getTitle());
+        $this->assertText(util_lang('all_metadata_term_sets','properize'));
     }
 
     function testActionNotAllowedRedirectsToFullList() {
@@ -94,15 +94,12 @@ class MetadataTermSetViewTest extends WMSWebTestCase {
         $this->get('http://localhost/digitalfieldnotebooks/app_code/metadata_term_set.php?action=edit&metadata_term_set_id=6004');
         $this->checkBasicAsserts();
 
-        $this->assertEqual(LANG_APP_NAME . ': ' . ucfirst(util_lang('metadata_term_set')) ,$this->getBrowser()->getTitle());
-        $this->assertText(util_lang('all_metadata_term_sets'));
+        $this->assertEqual(LANG_APP_NAME . ': ' . util_lang('metadata_term_set','properize') ,$this->getBrowser()->getTitle());
+        $this->assertText(util_lang('all_metadata_term_sets','properize'));
     }
 
     function testViewNotEditable() {
         $this->goToView(6101);
-
-        $mds = Metadata_Structure::getOneFromDb(['metadata_structure_id'=>6002],$this->DB);
-
         $this->checkBasicAsserts();
 
         // page heading
@@ -112,7 +109,6 @@ class MetadataTermSetViewTest extends WMSWebTestCase {
         $this->assertNoLink(util_lang('edit'));
 
         // MORE!!!!
-        $this->assertLink(htmlentities($mds->name));
 
         $this->assertText('small lengths');
         $this->assertText('3 mm - 1cm');

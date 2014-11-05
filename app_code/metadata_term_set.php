@@ -1,6 +1,6 @@
 <?php
     require_once('../app_setup.php');
-	$pageTitle = ucfirst(util_lang('metadata_term_set'));
+	$pageTitle = ucfirst(util_lang('metadata_term_set','properize'));
 //	require_once('../app_head.php');
 
     #############################
