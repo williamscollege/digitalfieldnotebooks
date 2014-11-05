@@ -77,10 +77,14 @@
         // if any changes, save
         $changed = false;
         $updateable_fields = ['parent_metadata_structure_id', 'name', 'description', 'details', 'metadata_term_set_id'];
+
+//        util_prePrintR($_REQUEST);
+//
+//        util_prePrintR($mds);
         foreach ($updateable_fields as $fname) {
             if ((isset($_REQUEST[$fname])) && ($mds->fieldValues[$fname] != $_REQUEST[$fname])) {
                 $changed = true;
-                $mds->fieldValues[$fname] = $_REQUEST['name']; // NOTE: this seems dangerous, but the data is sanitized on the way back out
+                $mds->fieldValues[$fname] = $_REQUEST[$fname]; // NOTE: this seems dangerous, but the data is sanitized on the way back out
             }
         }
 

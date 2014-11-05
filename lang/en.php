@@ -123,6 +123,10 @@ $LANGUAGE['en'] = [
     'metadata' => 'metadata',
     'all_metadata' => 'metadata types',
     'metadata_no_children_no_values' => 'This metadata has neither specific values nor children',
+    'metadata_no_term_set' => 'This metadata type has no fixed values - it is open entry or organizational',
+    'metadata_no_children' => 'This metadata type has no subdivisions',
+
+
     'new_metadata_structure' => 'new type of metadata',
     'metadata_structure_has_no_term_set' => 'No specific values - free/open text only',
     'msg_missing_metadata_structure' => 'The metadata type is missing',

@@ -242,8 +242,10 @@
 
             $rendered .= '  </div>'."\n";
 
-            if ($this->term_set) {
+            if ($this->term_set && $this->term_set->matchesDb) {
                 $rendered .= '  '.$this->term_set->renderAsViewEmbed();
+            } else {
+                $rendered .= '<span class="empty-metadata-msg info">'.util_lang('metadata_no_term_set').'</span>';
             }
 
             $children = $this->getChildren();
@@ -254,11 +256,13 @@
                     $rendered .= $child->renderAsListTree();
                 }
                 $rendered .= '</ul>';
+            } else {
+                $rendered .= '<span class="empty-metadata-msg info">'.util_lang('metadata_no_children').'</span>';
             }
 
-            if (! $this->term_set && ! $children) {
-                $rendered .= '<span class="empty-metadata-msg info">'.util_lang('metadata_no_children_no_values').'</span>';
-            }
+//            if (! $this->term_set && ! $children) {
+//                $rendered .= '<span class="empty-metadata-msg info">'.util_lang('metadata_no_children_no_values').'</span>';
+//            }
 
             $rendered .= '</div>';
 
