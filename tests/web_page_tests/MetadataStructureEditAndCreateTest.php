@@ -77,20 +77,16 @@ class MetadataStructureEditAndCreateTest extends WMSWebTestCase {
     }
 
     function testCreateButtonAction() {
-        $this->todo();
-//        $this->doLoginBasic();
-//        $this->get('http://localhost/digitalfieldnotebooks/app_code/notebook.php?action=list');
-//
-//        $this->click(util_lang('add_notebook'));
-//
-//        $this->checkBasicAsserts();
-//        $this->assertPattern('/'.util_lang('new_notebook_title').'/');
+        $this->doLoginAdmin();
+        $this->get('http://localhost/digitalfieldnotebooks/app_code/metadata_structure.php?action=create&parent_metadata_structure_id=6001');
 
 //        $this->showContent();
+
+        $this->checkBasicAsserts();
+        $this->assertPattern('/'.util_lang('new_metadata_structure_description').'/');
     }
+
     function testEditButtonAction() { // make sure it exists and that clicking on it goes to the edit page
-//        $this->doLoginBasic();
-//        $this->get('http://localhost/digitalfieldnotebooks/app_code/notebook.php?action=edit&notebook_id=1001');
         $this->doLoginAdmin();
         $this->goToMetadataStructureEdit(6002);
 
@@ -122,6 +118,20 @@ class MetadataStructureEditAndCreateTest extends WMSWebTestCase {
 
         $mds = Metadata_Structure::getOneFromDb(['metadata_structure_id'=>6002],$this->DB);
         $this->assertEqual($mds->name,'mds new');
+    }
+
+    function testBaseDataUpdate_NEW() {
+        $this->doLoginAdmin();
+        $this->get('http://localhost/digitalfieldnotebooks/app_code/metadata_structure.php?action=create&parent_metadata_structure_id=6001');
+
+        $this->setField('name','brand new metadata structure');
+        $this->click('<i class="icon-ok-sign icon-white"></i> '.util_lang('save','properize'));
+
+        $this->checkBasicAsserts();
+        $this->assertText('brand new metadata structure');
+
+        $mds = Metadata_Structure::getOneFromDb(['name'=>'brand new metadata structure'],$this->DB);
+        $this->assertTrue($mds->matchesDb);
     }
 
     function testSubStructureReOrdering() {

@@ -11,36 +11,53 @@
     # 4. branch behavior based on the action
     #############################
 
+//util_prePrintR('#a#');
+
     # 1. figure out what action is being attempted (none/default is view)
     $action = 'view';
     if (isset($_REQUEST['action']) && ($_REQUEST['action'] == 'list')) {
+        //util_prePrintR('#b#');
         $action = 'list';
     } elseif (isset($_REQUEST['action']) && in_array($_REQUEST['action'],Action::$VALID_ACTIONS)) {
+        //util_prePrintR('#c#');
         $action = $_REQUEST['action'];
     }
+
+//util_prePrintR('#d#');
 
     # 2. figure out which metadata structure is being acted on (if none specified then list all visible)
     $mds = '';
     if ($action == 'create') {
-        $mds = new Metadata_Structure(['name'=>util_lang('new_metadata_structure').' '.util_currentDateTimeString(),'DB'=>$DB]);
-        if ($_REQUEST['parent_metadata_structure_id'] && is_numeric($_REQUEST['parent_metadata_structure_id'])) {
+        //util_prePrintR('#e#');
+//        $mds = new Metadata_Structure(['name'=>util_lang('new_metadata_structure').' '.util_currentDateTimeString(),'DB'=>$DB]);
+        $mds = Metadata_Structure::createNewMetadataStructure(0,$DB);
+        if (isset($_REQUEST['parent_metadata_structure_id']) && is_numeric($_REQUEST['parent_metadata_structure_id'])) {
             $parent = Metadata_Structure::getOneFromDb(['metadata_structure_id'=>$_REQUEST['parent_metadata_structure_id']],$DB);
-            if ($parent->matchesDb) {
+            if ($parent && $parent->matchesDb) {
                 $mds->parent_metadata_structure_id = $parent->metadata_structure_id;
             }
         }
+    } elseif (($action == 'update') && ($_REQUEST['metadata_structure_id'] == 'NEW'))  {
+        //util_prePrintR('#f#');
+        $mds = Metadata_Structure::createNewMetadataStructure(0,$DB);
     } elseif (($action != 'list')
               && isset($_REQUEST['metadata_structure_id'])
               && is_numeric($_REQUEST['metadata_structure_id'])) {
+        //util_prePrintR('#g#');
         $mds = Metadata_Structure::getOneFromDb(['metadata_structure_id'=>$_REQUEST['metadata_structure_id']],$DB);
     }
 
-    if ((! $mds) || (! $mds->matchesDb)) {
+//util_prePrintR('#h#');
+
+    if ((! $mds) || (($mds->metadata_structure_id != 'NEW') && (! $mds->matchesDb))) {
+        //util_prePrintR('#i#');
         $action = 'list';
     }
 
     # 3. confirm that the user is allowed to take that action on that object (if not, redirect them to the home page with an appropriate warning)
+//util_prePrintR('#j#');
     if (($action != 'list') && (! $USER->canActOnTarget($ACTIONS[$action],$mds))) {
+        //util_prePrintR('#k#');
         util_redirectToAppPage('app_code/metadata_structure.php?action=list','failure',util_lang('no_permission'));
     }
 

@@ -58,7 +58,7 @@ $LANGUAGE['en'] = [
     'new_notebook_page_notes' => 'Notes / description about this particular page - replace or delete this text',
     'zero_pages' => 'no notebook pages',
     'page_in_notebook' => 'in notebook',
-    'new_notebook_page_label' => 'New Notebook Page (choose a plant and save))',
+    'new_notebook_page_label' => 'New Notebook Page - choose a plant and save',
     'no_metadata' => 'no metadata yet',
     'msg_notebook_page_deleted' => 'The notebook page has been deleted.',
 
@@ -80,6 +80,7 @@ $LANGUAGE['en'] = [
     'verified_false' => 'not verified',
     'active_true' => 'usable',
     'active_false' => 'inactive',
+    'active' => 'usable',
 
     'not' => 'not',
 
@@ -129,19 +130,19 @@ $LANGUAGE['en'] = [
     'add_metadata_structure' => '+ Add Metadata Type +',
     'label_metadata_structure_change_parent' => 'put this under',
     'metadata_root_level' => '-- TOP LEVEL --',
-    'new_metadata_structure_name' => 'name (change this)',
+    'new_metadata_structure_name' => 'name - change this',
     'new_metadata_structure_description' => 'brief description - replace or delete this text',
     'new_metadata_structure_details' => 'extended notes / description - replace or delete this text',
 
     'all_metadata_term_sets' => 'value sets',
     'metadata_term_set' => 'value set',
     'new_metadata_term_set' => 'new set of metadata values',
-    'new_metadata_term_set_name' => 'name (change this)',
+    'new_metadata_term_set_name' => 'name - change this',
     'new_metadata_term_set_description' => 'Notes / description - replace or delete this text',
 
     'metadata_values' => 'values',
     'add_metadata_term_value' => '+ Add A Value +',
-    'new_metadata_term_value_name' => 'name (change this)',
+    'new_metadata_term_value_name' => 'name - change this',
     'new_metadata_term_value_description' => 'Notes / description - replace or delete this text',
 
     'metadata_specific_value' => 'specific value',

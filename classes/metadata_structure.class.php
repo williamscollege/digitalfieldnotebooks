@@ -384,24 +384,30 @@
 
             $rendered .= '    <div class="description-controls"><input title="'.util_lang('title_description').'" class="description-control" type="text" name="description" value="'.htmlentities($this->description).'"/></div>'."\n";
             $rendered .= '    <div class="details-controls"><textarea title="'.util_lang('title_details').'" class="details-control" name="details">'.htmlentities($this->details).'</textarea></div>'."\n";
-            $rendered .= '    <h4>'.util_lang('metadata_references').'</h4>'."\n";
-            $rendered .= Metadata_Reference::renderReferencesArrayAsListsEdit($this->references);
-            $rendered .= '  </div>'."\n";
+
+            if ($this->metadata_structure_id != 'NEW') {
+                $rendered .= '    <h4>'.util_lang('metadata_references').'</h4>'."\n";
+                $rendered .= Metadata_Reference::renderReferencesArrayAsListsEdit($this->references);
+                $rendered .= '  </div>'."\n";
+            }
+
             $rendered .= '  <div class="metadata-term-set-controls"><h4>'.util_lang('metadata_term_set')."</h4>\n".Metadata_Term_Set::renderAllAsSelectControl('',$this->term_set ? $this->term_set->metadata_term_set_id : 0)."</div>\n";
 
-            $rendered .= '  <h4>'.util_lang('metadata_children').':</h4>'."\n";
-            $rendered .= '  <ul class="metadata-structure-tree">'."\n";
-            $rendered .= '    <li><a href="'.APP_ROOT_PATH.'/app_code/metadata_structure.php?action=create&parent_metadata_structure_id='.$this->metadata_structure_id.'" id="btn-add-metadata-structure" title="'.htmlentities(util_lang('add_metadata_structure')).'" class="creation_link btn">'.htmlentities(util_lang('add_metadata_structure')).'</a></li>'."\n";
-            $children = $this->getChildren();
-            if ($children) {
-                foreach ($children as $child) {
-                    $rendered .= '    '.$child->renderAsListTreeEditable();
+            if ($this->metadata_structure_id != 'NEW') {
+                $rendered .= '  <h4>'.util_lang('metadata_children').':</h4>'."\n";
+                $rendered .= '  <ul class="metadata-structure-tree">'."\n";
+                $rendered .= '    <li><a href="'.APP_ROOT_PATH.'/app_code/metadata_structure.php?action=create&parent_metadata_structure_id='.$this->metadata_structure_id.'" id="btn-add-metadata-structure" title="'.htmlentities(util_lang('add_metadata_structure')).'" class="creation_link btn">'.htmlentities(util_lang('add_metadata_structure')).'</a></li>'."\n";
+                $children = $this->getChildren();
+                if ($children) {
+                    foreach ($children as $child) {
+                        $rendered .= '    '.$child->renderAsListTreeEditable();
+                    }
                 }
-            }
-            $rendered .= '  </ul>';
+                $rendered .= '  </ul>';
 
-            if (! $this->term_set && ! $children) {
-                $rendered .= '<span class="empty-metadata-msg info">'.util_lang('metadata_no_children_no_values').'</span>';
+                if (! $this->term_set && ! $children) {
+                    $rendered .= '<span class="empty-metadata-msg info">'.util_lang('metadata_no_children_no_values').'</span>';
+                }
             }
 
             $rendered .= '</div>';
