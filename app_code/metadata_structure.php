@@ -17,6 +17,23 @@
     if (isset($_REQUEST['action']) && ($_REQUEST['action'] == 'list')) {
         //util_prePrintR('#b#');
         $action = 'list';
+    } elseif (isset($_REQUEST['action']) && ($_REQUEST['action'] == 'update_top_level_orderings')) {
+//echo "a";
+        // special handling of updating order for top-level objects
+//        new_ordering-item-metadata_structure_6001
+        $all_metadata_structures = Metadata_Structure::getAllFromDb(['parent_metadata_structure_id'=>0],$DB);
+        foreach ($all_metadata_structures as $top_mds) {
+//            echo "b";
+            if (isset($_REQUEST['new_ordering-item-metadata_structure_'.$top_mds->metadata_structure_id])
+                && is_numeric($_REQUEST['new_ordering-item-metadata_structure_'.$top_mds->metadata_structure_id])
+                && $USER->canActOnTarget($ACTIONS['edit'],$top_mds)) {
+//                echo "c";
+                $top_mds->ordering = $_REQUEST['new_ordering-item-metadata_structure_'.$top_mds->metadata_structure_id];
+//                util_prePrintR($top_mds);
+                $top_mds->updateDb();
+            }
+        }
+        $action = 'list';
     } elseif (isset($_REQUEST['action']) && in_array($_REQUEST['action'],Action::$VALID_ACTIONS)) {
         //util_prePrintR('#c#');
         $action = $_REQUEST['action'];
@@ -137,20 +154,40 @@
     if ($action == 'list') {
         echo '<h2>'.util_lang('all_metadata','properize').'</h2>'."\n";
         $all_metadata_structures = Metadata_Structure::getAllFromDb(['parent_metadata_structure_id'=>0],$DB);
+        usort($all_metadata_structures,'Metadata_Structure::cmp');
+
+        $form_started= false;
+        $available_actions = '';
         if ($USER->canActOnTarget($ACTIONS['create'],$all_metadata_structures[0])) {
-            echo '<div id="actions"><a href="'.APP_ROOT_PATH.'/app_code/metadata_structure.php?action=create&parent_metadata_structure_id=0" id="btn-add-metadata_structure-ROOT" class="creation_link btn" title="'.htmlentities(util_lang('add_metadata_structure')).'">'.htmlentities(util_lang('add_metadata_structure')).'</a></div>'."\n";
+            $available_actions .= '<a href="'.APP_ROOT_PATH.'/app_code/metadata_structure.php?action=create&parent_metadata_structure_id=0" id="btn-add-metadata_structure-ROOT" class="creation_link btn" title="'.htmlentities(util_lang('add_metadata_structure')).'">'.htmlentities(util_lang('add_metadata_structure')).'</a>';
+        }
+        if ($USER->canActOnTarget($ACTIONS['edit'],$all_metadata_structures[0])) {
+            $available_actions .= '<button id="ordering-submit-control" class="btn btn-success" type="submit" name="ordering-submit-control" value="update_top_level_orderings"><i class="icon-ok-sign icon-white"></i> '.util_lang('save_ordering').'</button>'."\n";
+            echo '<form action="'.APP_ROOT_PATH.'/app_code/metadata_structure.php">'."\n";
+            echo '  <input type="hidden" name="action" value="update_top_level_orderings"/>'."\n";
+            $form_started = true;
         }
         echo '<ul class="all-metadata-structures">'."\n";
+        if ($available_actions) {
+            echo '<li id="actions">'.$available_actions.'</li>'."\n";
+        }
         foreach ($all_metadata_structures as $a_mds) {
+            if ($USER->canActOnTarget($ACTIONS['edit'],$a_mds)) {
+                echo $a_mds->renderAsListTreeEditable();
+            } else
             if ($USER->canActOnTarget($ACTIONS['view'],$a_mds)) {
                 echo $a_mds->renderAsListTree();
             }
         }
         echo '</ul>'."\n";
+        if ($form_started) {
+            echo '</form>'."\n";
+        }
 //        if ($USER->canActOnTarget($ACTIONS['create'],new Metadata_Structure(['DB'=>$DB]))) {
 //            ?>
 <!--            <a href="--><?php //echo APP_ROOT_PATH.'/app_code/metadata_structure.php?action=create&user_id='.$USER->user_id; ?><!--" class="btn" id="btn-add-metadata-structure">--><?php //echo util_lang('add_metadata_structure'); ?><!--</a>--><?php
 //        }
+        echo '<script src="'.APP_ROOT_PATH.'/js/metadata_edit.js"></script>'."\n";
     }
 
     if ($action == 'view') {

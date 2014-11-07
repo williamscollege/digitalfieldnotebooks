@@ -72,7 +72,7 @@
 
             global $DB;
 
-            $all_mds = Metadata_Structure::getAllFromDb(['parent_metadata_structure_id'=>0,'flag_delete' => FALSE], $DB);
+            $all_mds = Metadata_Structure::getAllFromDb(['parent_metadata_structure_id'=>0,'flag_active' => TRUE,'flag_delete' => FALSE], $DB);
             usort($all_mds,'Metadata_Structure::cmp');
 
             if (! $first_item_text) {
@@ -173,9 +173,9 @@
             $action = Action::sanitizeAction($action);
             $this->cacheTermSetAndValues();
 //            $link = '<a href="'.APP_ROOT_PATH.'/app_code/metadata_structure.php?action='.$action.'&metadata_structure_id='.$this->metadata_structure_id.'">'.htmlentities($this->name).'</a>';
-            $link = '<a href="'.APP_ROOT_PATH.'/app_code/metadata_structure.php?action='.$action.'&metadata_structure_id='.$this->metadata_structure_id.'">'.$this->renderAsFullName().' <i class="'.($this->flag_active ? 'icon-ok-circle' : 'icon-ban-circle').'"></i></a>';
+            $link = '<a href="'.APP_ROOT_PATH.'/app_code/metadata_structure.php?action='.$action.'&metadata_structure_id='.$this->metadata_structure_id.'">'.$this->renderAsFullName().' <i class="'.($this->flag_active ? 'icon-ok' : 'icon-ban-circle').'"></i></a>';
             if ($this->term_set) {
-                $link = '<a href="'.APP_ROOT_PATH.'/app_code/metadata_structure.php?action='.$action.'&metadata_structure_id='.$this->metadata_structure_id.'">'.$this->renderAsFullName().' ('.htmlentities($this->term_set->name).') <i class="'.($this->flag_active ? 'icon-ok-circle' : 'icon-ban-circle').'"></i></a>';
+                $link = '<a href="'.APP_ROOT_PATH.'/app_code/metadata_structure.php?action='.$action.'&metadata_structure_id='.$this->metadata_structure_id.'">'.$this->renderAsFullName().' ('.htmlentities($this->term_set->name).') <i class="'.($this->flag_active ? 'icon-ok' : 'icon-ban-circle').'"></i></a>';
             }
 
             return $link;
@@ -228,7 +228,7 @@
             $rendered .= '  <div class="metadata-structure-header">'."\n";
             $rendered .= '    <h3>'.htmlentities($this->name).'</h3>'."\n";
 
-            $rendered .= '    <div class="active_state_info"><i class="'.($this->flag_active ? 'icon-ok-circle' : 'icon-ban-circle').'"></i> '.($this->flag_active ? util_lang('active_true') : util_lang('active_false')).'</div>'."\n";
+            $rendered .= '    <div class="active_state_info"><i class="'.($this->flag_active ? 'icon-ok' : 'icon-ban-circle').'"></i> '.($this->flag_active ? util_lang('active_true') : util_lang('active_false')).'</div>'."\n";
 
             if ($this->description) {
                 $rendered .= '    <div class="description">'.$this->description.'</div>'."\n";
@@ -331,6 +331,9 @@
         }
 
         public function renderAsOptionTree($display_prefix='',$default_selected=0) {
+            if (! $this->flag_active) {
+                return;
+            }
             $children = $this->getChildren();
             if ($children) {
                 $rendered = $this->renderAsOption($display_prefix,$default_selected)."\n";

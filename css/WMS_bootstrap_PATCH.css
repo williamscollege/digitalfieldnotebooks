@@ -480,6 +480,10 @@ ul.all-authoritative-plants li {
 /***********************************************************************************/
 /* metadata structures */
 
+#ordering-submit-control {
+    margin-left: 24px;
+}
+
 ul.all-metadata-structures li {
     margin-top: 4px;
 }
@@ -553,10 +557,21 @@ ul.metadata-structure-tree li,
     margin: 12px 0;
 }
 
+.active_state_info {
+    font-size: 12px;
+    margin: 12px 0;
+}
+.active-state-controls {
+    margin: 12px 0;
+}
+.active-state-controls input {
+    width: 20px;
+}
 /*.metadata-parent-controls .metadata_structure_selector {*/
     /*margin-top: 8px;*/
 /*}*/
 
+.edit-rendered_metadata_structure .active-state-controls,
 .edit-rendered_metadata_structure .description-controls,
 .edit-rendered_metadata_structure .details-controls {
     margin: 12px 0;
