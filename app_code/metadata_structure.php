@@ -85,6 +85,15 @@
             if ((isset($_REQUEST[$fname])) && ($mds->fieldValues[$fname] != $_REQUEST[$fname])) {
                 $changed = true;
                 $mds->fieldValues[$fname] = $_REQUEST[$fname]; // NOTE: this seems dangerous, but the data is sanitized on the way back out
+                if ($fname == 'parent_metadata_structure_id') {
+                    if ($mds->parent_metadata_structure_id <= 0) {
+                        $mds->parent_metadata_structure_id = 0;
+                    }
+                } elseif ($fname == 'metadata_term_set_id') {
+                    if ($mds->metadata_term_set_id <= 0) {
+                        $mds->metadata_term_set_id = 0;
+                    }
+                }
             }
         }
 
@@ -153,6 +162,7 @@
     if (($action == 'edit') || ($action == 'create')) {
         //echo 'TO BE IMPLEMENTED: edit and create actions';
         echo $mds->renderAsEdit();
+        echo '<script src="'.APP_ROOT_PATH.'/js/metadata_edit.js"></script>'."\n";
     } else
     if ($action == 'delete') {
         $parent_mds = $mds->getParent();

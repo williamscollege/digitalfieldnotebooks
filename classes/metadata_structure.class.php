@@ -320,7 +320,7 @@
                 $rendered .= '</li>'."\n";
                 return $rendered;
             } else {
-                $rendered = $this->renderAsListItem_Lead('',['orderable']);
+                $rendered = $this->renderAsListItem_Lead($dom_id,['orderable']);
                 $rendered .= util_orderingUpDownControls($dom_id).' ';
                 $rendered .= $this->renderAsLink();
 //                $rendered .= '<input type="hidden" name="original_ordering-'.$dom_id.'" id="original_ordering-'.$dom_id.'" value="'.$this->ordering.'"/>';
