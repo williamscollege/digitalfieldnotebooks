@@ -393,6 +393,17 @@ ul#list-of-user-notebooks li {
 }
 
 /***********************************************************************************/
+/* specimens */
+
+.specimen-image-upload-section {
+    width: 180px;
+}
+
+.specimen-image-upload-form {
+    display: none;
+}
+
+/***********************************************************************************/
 /* authoritative plants */
 
 .authoritative-plant .canonical_image {

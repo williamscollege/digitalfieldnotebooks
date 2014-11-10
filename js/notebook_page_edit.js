@@ -260,7 +260,24 @@ $(document).ready(function () {
     //--------------------------------------------------------------------
 
     $(".add-specimen-image-button").click(function(evt) {
-        dfnUtil_setTransientAlert('error','specimen image support not yet implemented',$(this));
+//        dfnUtil_setTransientAlert('error','specimen image support not yet implemented',$(this));
         evt.preventDefault();
+        var for_specimen = $(this).attr('data-for-specimen');
+        $(this).hide();
+        $('#specimen-image-upload-form-for-'+for_specimen).show();
+
     });
+
+    $(".specimen-image-upload-do-it-button").click(function(evt) {
+        evt.preventDefault();
+        dfnUtil_setTransientAlert('error','specimen image support not yet implemented',$(this));
+    });
+
+    $(".specimen-image-upload-cancel-button").click(function(evt) {
+        evt.preventDefault();
+        var for_specimen = $(this).attr('data-for-specimen');
+        $('#specimen-control-add-image-for-'+for_specimen).show();
+        $('#specimen-image-upload-form-for-'+for_specimen).hide();
+    });
+
 });

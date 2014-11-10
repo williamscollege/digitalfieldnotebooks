@@ -21,6 +21,7 @@ $LANGUAGE['en'] = [
     'mark_for_delete' => 'mark this for removal - the actual removal occurs on update',
     'unmark_for_delete' => 'undo the mark for removal',
     'used_by' => 'used by',
+    'upload' => 'upload',
 
     'msg_do_sign_in' => 'Please sign in.',
     'msg_failed_sign_in' => 'Sign in failed.',
