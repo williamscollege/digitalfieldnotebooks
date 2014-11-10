@@ -81,9 +81,12 @@ a.show-hide-control {
     text-decoration: underline;
 }
 
+.ordering-controls-left-right,
 .ordering-controls-up-down {
     display: inline-block;
 }
+.ordering-controls-left-right a.btn,
+.ordering-controls-left-right a.btn i,
 .ordering-controls-up-down a.btn,
 .ordering-controls-up-down a.btn i {
     margin: 0 !important;
@@ -395,6 +398,31 @@ ul#list-of-user-notebooks li {
 /***********************************************************************************/
 /* specimens */
 
+.specimen-save-image-ordering-button {
+    float: right;
+    margin-top: -30px;
+    display: none;
+}
+
+li.specimen-image {
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    border-width: 1px;
+    border-color: #999;
+    border-style: solid;
+
+    width: 180px;
+    padding: 5px;
+    margin: 8px;
+}
+
+li.specimen-image .control-workflows {
+    float: right;
+    margin: 0;
+    font-size: 10px !important;
+}
+
 .specimen-image-upload-section {
     width: 180px;
 }
@@ -403,6 +431,13 @@ ul#list-of-user-notebooks li {
     display: none;
 }
 
+.button-delete-specimen-image {
+    margin: 0 !important;
+    padding: 0 !important;
+    font-size: 10px !important;
+    line-height: 10px !important;
+    float: right;
+}
 /***********************************************************************************/
 /* authoritative plants */
 

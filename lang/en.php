@@ -29,6 +29,8 @@ $LANGUAGE['en'] = [
     'msg_record_duplicate' => 'Record already exists in database',
     'msg_missing_parameter' => 'Required information is missing',
 
+    'prompt_confirm_delete' => 'Are you sure you want to delete this?',
+
     'alert_error' => 'Error!',
     'alert_success' => 'Success!',
     'alert_info' => 'Note:',

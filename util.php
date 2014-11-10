@@ -404,3 +404,14 @@
 
         return $controls;
     }
+
+    function util_orderingLeftRightControls($target_dom_id) {
+        $controls = '';
+
+        $controls .= '<div class="ordering-controls-left-right">';
+        $controls .= '<a href="#" class="btn ordering-button-earlier" data-for-dom-id="'.$target_dom_id.'"><i class="icon-arrow-left"></i></a>';
+        $controls .= '<a href="#" class="btn ordering-button-later" data-for-dom-id="'.$target_dom_id.'"><i class="icon-arrow-right"></i></a>';
+        $controls .= '</div>';
+
+        return $controls;
+    }

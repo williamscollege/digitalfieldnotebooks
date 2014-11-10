@@ -280,4 +280,34 @@ $(document).ready(function () {
         $('#specimen-image-upload-form-for-'+for_specimen).hide();
     });
 
+    //--------------------------------------------------------------------
+
+    $("li.specimen-image .ordering-controls-left-right .btn").on("click",function(evt) {
+        $('#save-specimen-image-ordering-for-'+$(this).parent().parent().parent().attr('data-specimen_id')).show();
+    });
+
+    $('.specimen-save-image-ordering-button').on("click",function(evt) {
+        dfnUtil_setTransientAlert('error','specimen image ordering saving yet implemented',$(this));
+        $(this).hide();
+        evt.preventDefault();
+    });
+
+    //--------------------------------------------------------------------
+
+    var PARAM_handleDeleteSpecimenImage_dom_elt = '';
+    var PARAM_handleDeleteSpecimenImage_dom_evt = '';
+    $(".button-delete-specimen-image").on("click",function(evt) {
+        PARAM_handleDeleteSpecimenImage_dom_elt = $(this);
+        PARAM_handleDeleteSpecimenImage_dom_evt = evt;
+        dfnUtil_launchConfirm("Are you sure you want to delete that image?",handleDeleteSpecimenImage)
+//        handleDeleteSpecimenImage($(this),evt);
+        evt.preventDefault();
+    });
+
+    function handleDeleteSpecimenImage() {
+        var dom_elt = PARAM_handleDeleteSpecimenImage_dom_elt;
+        var evt = PARAM_handleDeleteSpecimenImage_dom_evt;
+        dfnUtil_setTransientAlert('error','specimen image deletion not yet implemented',dom_elt);
+    }
+
 });

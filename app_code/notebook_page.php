@@ -214,6 +214,7 @@
             echo $notebook_page->renderAsEdit();
         }
         echo '<script src="'.APP_ROOT_PATH.'/js/notebook_page_edit.js"></script>'."\n";
+        echo '<script src="'.APP_ROOT_PATH.'/js/ordering_controls.js"></script>'."\n";
         //echo 'TODO: implement edit and create actions';
     } else
     if ($action == 'delete') {

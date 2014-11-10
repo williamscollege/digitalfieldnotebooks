@@ -188,6 +188,7 @@
 <!--            <a href="--><?php //echo APP_ROOT_PATH.'/app_code/metadata_structure.php?action=create&user_id='.$USER->user_id; ?><!--" class="btn" id="btn-add-metadata-structure">--><?php //echo util_lang('add_metadata_structure'); ?><!--</a>--><?php
 //        }
         echo '<script src="'.APP_ROOT_PATH.'/js/metadata_edit.js"></script>'."\n";
+        echo '<script src="'.APP_ROOT_PATH.'/js/ordering_controls.js"></script>'."\n";
     }
 
     if ($action == 'view') {
@@ -200,6 +201,7 @@
         //echo 'TO BE IMPLEMENTED: edit and create actions';
         echo $mds->renderAsEdit();
         echo '<script src="'.APP_ROOT_PATH.'/js/metadata_edit.js"></script>'."\n";
+        echo '<script src="'.APP_ROOT_PATH.'/js/ordering_controls.js"></script>'."\n";
     } else
     if ($action == 'delete') {
         $parent_mds = $mds->getParent();

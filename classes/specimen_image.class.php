@@ -71,11 +71,15 @@
             array_unshift($classes_array,'specimen-image');
             $li_elt = substr(util_listItemTag($idstr,$classes_array,$other_attribs_hash),0,-1);
             $li_elt .= ' '.$this->fieldsAsDataAttribs().'>';
+            $li_elt .= '<button type="button" class="btn btn-danger button-delete-specimen-image" title="'.util_lang('prompt_confirm_delete','ucfirst').'" data-specimen_image_id="'.$this->specimen_image_id.'" data-dom_id="'.$idstr.'"><i class="icon-remove icon-white"></i></button><br/>';
             $li_elt .= $this->renderAsHtml();
 
             $li_elt .= '<div class="controls">';
             // publish, verify, reordering handle
+            $li_elt .= util_orderingLeftRightControls($idstr);
+            $li_elt .= '<input type="hidden" name="new_ordering-'.$idstr.'" id="new_ordering-'.$idstr.'" value="'.$this->ordering.'"/>';
             if ($this->specimen_image_id != 'NEW') {
+                $li_elt .= '<div class="control-workflows">';
                 if ($USER->canActOnTarget('publish',$this)) {
                     $li_elt .= '<span class="control-publish"><input id="flag_workflow_published_'.$this->specimen_image_id.'-control" type="checkbox" name="flag_workflow_published" value="1"'.($this->flag_workflow_published ?  ' checked="checked"' : '').' /> '
                         .util_lang('publish').'</span>, ';
@@ -91,7 +95,9 @@
                     $li_elt .= '<span class="control-verify">'.($this->flag_workflow_validated ? util_lang('verified_true') : util_lang('verified_false'))
                         .'</span>';
                 }
+                $li_elt .= '</div>';
             }
+
 
 //            $li_elt .= '<span class="ordering-handle">&lt; &gt;</span>';
             $li_elt .= '</div>';

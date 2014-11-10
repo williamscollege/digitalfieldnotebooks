@@ -19,40 +19,40 @@ $(document).ready(function () {
         window.location = $('#edit-delete-metadata-structure-control').attr("href");
     }
 
-    $(".ordering-controls-up-down .btn").on("click",function(evt) {
-        handleOrderingClick($(this),evt);
-    });
-
-    function handleOrderingClick(targetBtn,evt) {
-//        alert("clicked");
-        var targetId = targetBtn.attr("data-for-dom-id");
-        var target = $("#"+targetId);
-        if (targetBtn.hasClass("ordering-button-earlier")) {
-            if (target.is(':nth-child(2)')) { // first in list after the add button can't go any earlier
-                return;
-            }
-            target.prev().before(target);
-        } else {
-            if (target.is(':last-child')) { // last in list can't go any later
-                return;
-            }
-            target.next().after(target);
-        }
-
-        var newOrd = 0;
-        if (target.is(':nth-child(2)')) {
-            var basisOrdId = "new_ordering-" + target.next().attr("id");
-            newOrd = -1 + Number($("#"+basisOrdId).attr("value"));
-        } else if (target.is(':last-child')) {
-            var basisOrdId = "new_ordering-" + target.prev().attr("id");
-            newOrd = 5 +  Number($("#"+basisOrdId).attr("value"));
-        } else {
-            var basisOrdIdP = "new_ordering-" + target.prev().attr("id");
-            var basisOrdIdN = "new_ordering-" + target.next().attr("id");
-            newOrd = .5 * ( Number($("#"+basisOrdIdP).attr("value")) +  Number($("#"+basisOrdIdN).attr("value")));
-        }
-        $("#new_ordering-"+targetId).attr("value",newOrd);
-    }
+//    $(".ordering-controls-up-down .btn").on("click",function(evt) {
+//        handleOrderingClick($(this),evt);
+//    });
+//
+//    function handleOrderingClick(targetBtn,evt) {
+////        alert("clicked");
+//        var targetId = targetBtn.attr("data-for-dom-id");
+//        var target = $("#"+targetId);
+//        if (targetBtn.hasClass("ordering-button-earlier")) {
+//            if (target.is(':nth-child(2)')) { // first in list after the add button can't go any earlier
+//                return;
+//            }
+//            target.prev().before(target);
+//        } else {
+//            if (target.is(':last-child')) { // last in list can't go any later
+//                return;
+//            }
+//            target.next().after(target);
+//        }
+//
+//        var newOrd = 0;
+//        if (target.is(':nth-child(2)')) {
+//            var basisOrdId = "new_ordering-" + target.next().attr("id");
+//            newOrd = -1 + Number($("#"+basisOrdId).attr("value"));
+//        } else if (target.is(':last-child')) {
+//            var basisOrdId = "new_ordering-" + target.prev().attr("id");
+//            newOrd = 5 +  Number($("#"+basisOrdId).attr("value"));
+//        } else {
+//            var basisOrdIdP = "new_ordering-" + target.prev().attr("id");
+//            var basisOrdIdN = "new_ordering-" + target.next().attr("id");
+//            newOrd = .5 * ( Number($("#"+basisOrdIdP).attr("value")) +  Number($("#"+basisOrdIdN).attr("value")));
+//        }
+//        $("#new_ordering-"+targetId).attr("value",newOrd);
+//    }
 
 
     //--------------------------------------------------------------------
