@@ -177,6 +177,21 @@
                 if ($action->name != 'verify') { return true; }
             }
 
+//            util_prePrintR($target);
+
+            // view & list is controlled by flags on the object rather than explicit permissions / access records
+            if (($action->name == 'view') || ($action->name == 'list')) {
+                if (array_key_exists('flag_active',$target->fieldValues)) {
+                    if ($target->flag_active) {
+                        return true;
+                    }
+                } elseif (array_key_exists('flag_workflow_published',$target->fieldValues)) {
+                    if (($target->flag_workflow_published) && (($target->flag_workflow_validated))) {
+                        return true;
+                    }
+                }
+            }
+
             // all other situatons -> check role action targets
             $this->cacheRoleActionTargets();
 
@@ -189,6 +204,9 @@
                     }
                 }
             }
+
+//            util_prePrintR($this->cached_role_action_targets_hash_by_target_type_by_id);
+//            util_prePrintR($this);
 
             //   - specifics
             //      + gets messy
@@ -259,6 +277,8 @@
 //            util_prePrintR($ids_to_check);
 //            util_prePrintR($this->cached_role_action_targets_hash_by_target_type_by_id);
 
+//            echo 'a'; exit;
+
             foreach ($this->cached_role_action_targets_hash_by_target_type_by_id[$target_specific_type] as $spec_rat) {
                 if (($spec_rat->action_id == $action->action_id) && (in_array($spec_rat->target_id,$ids_to_check))) {
                     if ($action->name == 'view') {
@@ -286,8 +306,13 @@
                 global $ACTIONS;
                 $for_action = $ACTIONS[$for_action];
             }
+//util_prePrintR($this);
 
             $accessible_notebooks_ids = array();
+            if (($for_action->name=='view') || ($for_action->name=='list')) {
+                $all_notebooks = Notebook::getAllFromDb(['flag_workflow_published'=>TRUE, 'flag_workflow_validated'=>TRUE, 'flag_delete' => FALSE],$this->dbConnection);
+                $accessible_notebooks_ids = Db_Linked::arrayOfAttrValues($all_notebooks,'notebook_id');
+            }
             $roles = $this->getRoles();
             if ($debug_flag) {
                 echo "user roles are<br/>\n";
@@ -296,8 +321,14 @@
 
             foreach (Db_Linked::arrayOfAttrValues($roles,'role_id') as $role_id) {
                 $global_check = Role_Action_Target::getAllFromDb(['role_id'=>$role_id,'action_id'=>$for_action->action_id,'target_type'=>'global_notebook'],$this->dbConnection);
+                if ($debug_flag) {
+                    echo "global_check is <br/>\n";
+                    util_prePrintR($global_check);
+                }
+
                 if (count($global_check) > 0) {
-                    return Notebook::getAllFromDb(['flag_delete' => FALSE],$this->dbConnection);
+                    $all_notebooks = Notebook::getAllFromDb(['flag_delete' => FALSE],$this->dbConnection);
+                    $accessible_notebooks_ids = Db_Linked::arrayOfAttrValues($all_notebooks,'notebook_id');
                 }
                 $role_action_targets = Role_Action_Target::getAllFromDb(['role_id'=>$role_id,'action_id'=>$for_action->action_id,'target_type'=>'notebook'],$this->dbConnection);
                 foreach ($role_action_targets as $rat) {
@@ -306,6 +337,8 @@
                     }
                 }
             }
+
+//            util_prePrintR($accessible_notebooks_ids);
 
             $owned_notebooks = Notebook::getAllFromDb(['user_id' => $this->user_id],$this->dbConnection);
             $owned_notebook_ids = Db_Linked::arrayOfAttrValues($owned_notebooks,'notebook_id');
@@ -322,7 +355,9 @@
                 $additional_notebooks = Notebook::getAllFromDb(['notebook_id' => $additional_notebook_ids],$this->dbConnection);
             }
 
-            return array_merge($owned_notebooks,$additional_notebooks);
+            $ret = array_merge($owned_notebooks,$additional_notebooks);
+//            util_prePrintR($accessible_notebooks_ids);
+            return  $ret;
         }
 
 	}

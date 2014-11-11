@@ -32,6 +32,8 @@
         $notebook = Notebook::createNewNotebookForUser($USER->user_id, $DB);
     } elseif ($action == 'list') {
         $all_accessible_notebooks = $USER->getAccessibleNotebooks($ACTIONS['view']);
+//        $listable_notebooks = $USER->getAccessibleNotebooks($ACTIONS['list']);
+//        exit;
         if (count($all_accessible_notebooks) < 1) {
             util_redirectToAppHome('failure',util_lang('no_notebooks_found'));
         }
