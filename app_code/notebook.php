@@ -35,9 +35,13 @@
 //        $listable_notebooks = $USER->getAccessibleNotebooks($ACTIONS['list']);
 //        exit;
         if (count($all_accessible_notebooks) < 1) {
-            util_redirectToAppHome('failure',util_lang('no_notebooks_found'));
+            $notebook = new Notebook(['DB'=>$DB]);
+            if (! $USER->canActOnTarget($ACTIONS['create'],$notebook)) {
+                util_redirectToAppHome('failure',util_lang('no_notebooks_found'));
+            }
+        } else {
+            $notebook = $all_accessible_notebooks[0];
         }
-        $notebook = $all_accessible_notebooks[0];
     } else {
 //        if ((! isset($_REQUEST['notebook_id'])) || (! is_numeric($_REQUEST['notebook_id']))) {
 ////            util_redirectToAppHome('failure',util_lang('no_notebook_specified'));
@@ -133,8 +137,10 @@
         echo '<h2>'.ucfirst(util_lang('notebooks')).'</h2>';
         echo "<ul id=\"list-of-user-notebooks\" data-notebook-count=\"$num_notebooks\">\n";
         foreach ($all_accessible_notebooks as $notebook) {
-            $counter++;
-            echo $notebook->renderAsListItem('notebook-item-'.$counter)."\n";
+            if ($notebook) {
+                $counter++;
+                echo $notebook->renderAsListItem('notebook-item-'.$counter)."\n";
+            }
         }
         echo "</ul>\n";
         if ($USER->canActOnTarget($ACTIONS['create'],new Notebook(['DB'=>$DB]))) {

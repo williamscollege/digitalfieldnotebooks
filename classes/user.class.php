@@ -177,7 +177,6 @@
                 if ($action->name != 'verify') { return true; }
             }
 
-//            util_prePrintR($target);
 
             // view & list is controlled by flags on the object rather than explicit permissions / access records
             if (($action->name == 'view') || ($action->name == 'list')) {
@@ -206,7 +205,6 @@
             }
 
 //            util_prePrintR($this->cached_role_action_targets_hash_by_target_type_by_id);
-//            util_prePrintR($this);
 
             //   - specifics
             //      + gets messy

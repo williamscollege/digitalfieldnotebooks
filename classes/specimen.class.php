@@ -147,7 +147,7 @@
             $rendered = '<div class="specimen embedded">'."\n".
 '  <h3>'.htmlentities($this->name).'</h3>'."\n".
 '  <ul class="base-info">'."\n";
-            if ($this->gps_longitude && $this->gps_latitude) {
+            if ($this->gps_longitude && $this->gps_latitude && ( ($this->gps_longitude != 0) || ($this->gps_latitude != 0) )) {
                 $rendered .= '    <li><span class="field-label">'.util_lang('coordinates').'</span> : <span class="field-value"><a href="'.util_coordsMapLink($this->gps_longitude,$this->gps_latitude).'">'.htmlentities($this->gps_longitude).','.htmlentities($this->gps_latitude).'</a></span></li>'."\n";
             }
             if ($this->notes) {
