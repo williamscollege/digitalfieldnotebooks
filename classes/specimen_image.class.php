@@ -37,6 +37,24 @@
             return Specimen::getOneFromDb(['specimen_id' => $this->specimen_id, 'flag_delete' => FALSE],$this->dbConnection);
         }
 
+        public static function createNewSpecimenImageForSpecimen($specimen_id,$db_connection) {
+            global $USER;
+            $s = new Specimen_Image([
+                'specimen_image_id' => 'NEW',
+                'created_at' => util_currentDateTimeString_asMySQL(),
+                'updated_at' => util_currentDateTimeString_asMySQL(),
+                'specimen_id' => $specimen_id,
+                'user_id' => $USER->user_id,
+                'image_reference' => '',
+                'ordering' => 0,
+                'flag_workflow_published' => false,
+                'flag_workflow_validated' => false,
+                'flag_delete' => false,
+                'DB'=>$db_connection]);
+            return $s;
+        }
+
+        //-----------------------------------------------------------------------------------
 
         public function renderAsHtml() {
             $rendered = '';

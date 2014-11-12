@@ -26,16 +26,16 @@
     }
 
     # 1.5 verify required params passed in (for_specimen)
-    $for_specimen = '';
+    $specimenId = '';
     if (isset($_REQUEST['for_specimen'])) {
-        $for_specimen = $_REQUEST['for_specimen'];
-        if (! is_numeric($for_specimen)) {
+        $specimenId = $_REQUEST['for_specimen'];
+        if (! is_numeric($specimenId)) {
             $results['note'] = 'parameter "for_specimen": '.util_lang('invalid_value');
             echo json_encode($results);
             exit;
         }
     }
-    if (! $for_specimen) {
+    if (! $specimenId) {
         $results['note'] = util_lang('msg_missing_parameter').' : for_specimen';
         echo json_encode($results);
         exit;
@@ -68,10 +68,73 @@
 
 
     # 3. branch behavior based on the action
-    #      create - return an appropriate form field set
+    #      image_upload - process the uploaded image and return an approp. list item
+    #      TODO: delete - delete the given specimen image
+    #      TODO: save_ordering - set the ordering values as approp for all the given specimen images
 
     if ($has_permission && ($action == 'image_upload')) {
-        $results['html_output']  = '<li><div class="newly_uploaded_specimen_image">'."\n".'TODO: embed approp code here'."\n</div><li>";
+        // attempt to save the file (end w/ approp error & note on failure)
+//        util_prePrintR($_FILES);
+//        exit;
+
+        if (! isset($_FILES['upload_file'])) {
+            $results['note'] = util_lang('msg_no_file_to_upload');
+            echo json_encode($results);
+            exit;
+        }
+
+        $file = $_FILES['upload_file'];
+        $target_file_name = basename($file['name']);
+        $target_file_name = preg_replace("/[^a-zA-Z0-9\\.]/", "_", $target_file_name);
+        $file_reference = $specimenId.'/'.$target_file_name;
+        $uploaddir = $_SERVER['DOCUMENT_ROOT'].APP_ROOT_PATH.'/image_data/specimen/'.$specimenId.'/';
+        if (false) {
+            $uploaddir = preg_replace("/\\//","\\",$uploaddir);
+        }
+
+        if (!file_exists($uploaddir)) {
+            mkdir($uploaddir, 0777, true);
+        }
+
+        error_log( print_R($file,TRUE) );
+        error_log($target_file_name);
+        error_log($file_reference);
+        error_log($uploaddir);
+
+
+        if(! move_uploaded_file($file['tmp_name'], $uploaddir .$target_file_name)) {
+            $results['note'] = util_lang('msg_file_upload_failed_copy_from_temp');
+            echo json_encode($results);
+            exit;
+        }
+
+        // get all the specimen images for the given specimen
+        $otherImages = Specimen_Image::getAllFromDb(['specimen_id'=>$specimenId],$DB);
+
+        // figure out the lowest ordering value - the ordering for the new image will be that - 1
+        $new_spec_ordering = 0;
+        foreach ($otherImages as $otherImage) {
+            if ($otherImage->ordering <= $new_spec_ordering) {
+                $new_spec_ordering = $otherImage->ordering - 1;
+            }
+        }
+
+        // create a new specimen image object, linked to that specimen and with the approp ordering and file info
+        $newSpecimenImage = Specimen_Image::createNewSpecimenImageForSpecimen($specimenId,$DB);
+        $newSpecimenImage->ordering = $new_spec_ordering;
+        $newSpecimenImage->image_reference = $file_reference;
+
+        // save the new specimen image object (end w/ approp error & note on failure)
+        $newSpecimenImage->updateDb();
+        if (! $newSpecimenImage->matchesDb) {
+            $results['note'] = util_lang('mag_database_update_failed');
+            echo json_encode($results);
+            exit;
+        }
+
+        // render the new specimen image as a list item for editing & return that
+//        $results['html_output']  = '<li><div class="newly_uploaded_specimen_image">'."\n".'TODO: embed approp code here'."\n</div><li>";
+        $results['html_output']  = $newSpecimenImage->renderAsListItemEdit();
         $results['status']       = 'success';
     }
 

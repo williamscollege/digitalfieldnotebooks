@@ -424,11 +424,39 @@ li.specimen-image .control-workflows {
 }
 
 .specimen-image-upload-section {
-    width: 180px;
+    /*width: 180px; oops - also account for margin & border of other image list items*/
+    width: 198px;
+    text-align: center;
+}
+
+.specimen-image-upload-section .add-specimen-image-button {
+    margin-top: 25px;
 }
 
 .specimen-image-upload-form {
     display: none;
+    /*margin-top: 20px;*/
+}
+
+.specimen-image-file-input-label {
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    border: 1px solid #999;
+    /*width: 100px;*/
+    margin: auto;
+    margin-bottom: 8px;
+    background-color: #eee;
+    background: -webkit-linear-gradient(#eee, #ddd); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(#eee, #ddd); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(#eee, #ddd); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(#eee, #ddd); /* Standard syntax */
+}
+
+.specimen-image-file-picker {
+    /*max-width: 180px;*/
+    width: 0 !important;
+    height: 0 !important;
 }
 
 .button-delete-specimen-image {

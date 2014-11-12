@@ -7,18 +7,17 @@
  */
 
 $(document).ready(function () {
-//    alert("edit metadata js loaded");
+//    alert("ordering controls js loaded");
 
-    $(".ordering-controls-up-down .btn").on("click",function(evt) {
+    $(document.body).on('click', '.ordering-controls-up-down .btn', function(evt){
         handleOrderingClick($(this),evt);
     });
-
-    $(".ordering-controls-left-right .btn").on("click",function(evt) {
+    $(document.body).on('click', '.ordering-controls-left-right .btn', function(evt){
         handleOrderingClick($(this),evt);
     });
 
     function handleOrderingClick(targetBtn,evt) {
-//        alert("clicked");
+//        alert("clicked orig");
         evt.preventDefault();
         var targetId = targetBtn.attr("data-for-dom-id");
         var target = $("#"+targetId);

@@ -271,14 +271,22 @@ $(document).ready(function () {
     var uploadFileInfo = {};
     $(".specimen-image-file-picker").on('change',prepareUpload);
     function prepareUpload(evt) {
-//        console.dir(evt);
+        console.dir(evt.target);
         uploadFileInfo[evt.target.id] = evt.target.files[0];
-//        console.dir(uploadFileInfo);
+
+        var label = $("label[for='"+evt.target.id+"']");
+        console.dir(label);
+        label.text( evt.target.files[0].name);
+
+        // then jump the focus to the upload button
+        $(this).next().next().focus();
+
     }
     function clearUploadForSpecimen(specimenId) {
         var domId = 'specimen-image-file-for-'+specimenId;
         uploadFileInfo[domId] = '';
         resetFormField($('#'+domId));
+        $("#"+domId+"-label").text('Choose File');
 //        console.dir(uploadFileInfo);
     }
 
@@ -321,10 +329,19 @@ $(document).ready(function () {
                     // Success, so update the DOM with the new info
 //                    alert('SUCCESS');
 //                    $("#list_item-specimen_"+specimenId).css('background-color','red');
-                    console.dir(data);
+//                    console.dir(data);
                     if (data.status == 'success') {
-                        dfnUtil_setTransientAlert('success','new image added; TODO- update the DOM with the new info',$("#specimen-image-upload-submit-for-"+specimenId));
+                        dfnUtil_setTransientAlert('success','new image added',$("#specimen-image-upload-submit-for-"+specimenId));
                         $('#list_item-specimen_'+specimenId+' ul.specimen-images li:first-child').after(data.html_output);
+
+                        // attach the ordering handlers (don't know why the existing 'on' delcaration isn't catching it.... oh well, just making it work....)
+                        // and the save ordering button linkage
+//                        $('#list_item-specimen_'+specimenId+' ul.specimen-images li:nth-child(2) .ordering-controls-left-right .btn').on("click",function(evt) {
+////                            alert('clicked');
+//                            handleOrderingClick($(this),evt);
+//                            $('#save-specimen-image-ordering-for-'+$(this).parent().parent().parent().attr('data-specimen_id')).show();
+//                        });
+
                         // clear and hide these controls by clicking the cancel button
                         $('#specimen-image-upload-form-for-'+specimenId+' .specimen-image-upload-cancel-button').click();
                     } else {
@@ -339,6 +356,7 @@ $(document).ready(function () {
                     // Handle errors here
                     alert('ERRORS: ' + data.error);
                     console.log('ERRORS: ' + data.error);
+                    console.dir(data);
                     // just clear the file input control
                     clearUploadForSpecimen(specimenId);
                 }
@@ -348,6 +366,7 @@ $(document).ready(function () {
                 // Handle errors here
                 alert('ERROR: ' + textStatus);
                 console.log('ERROR: ' + textStatus);
+                console.dir(jqXHR);
                 clearUploadForSpecimen(specimenId);
             },
             complete: function(jqXHR,textStatus)
@@ -371,9 +390,14 @@ $(document).ready(function () {
 
     //--------------------------------------------------------------------
 
-    $("li.specimen-image .ordering-controls-left-right .btn").on("click",function(evt) {
+//    $("li.specimen-image .ordering-controls-left-right .btn").on("click",function(evt) {
+//        $('#save-specimen-image-ordering-for-'+$(this).parent().parent().parent().attr('data-specimen_id')).show();
+//    });
+
+    $(document.body).on('click', "li.specimen-image .ordering-controls-left-right .btn", function(evt){
         $('#save-specimen-image-ordering-for-'+$(this).parent().parent().parent().attr('data-specimen_id')).show();
     });
+
 
     $('.specimen-save-image-ordering-button').on("click",function(evt) {
         dfnUtil_setTransientAlert('error','specimen image ordering saving yet implemented',$(this));

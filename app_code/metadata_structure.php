@@ -200,8 +200,8 @@
     if (($action == 'edit') || ($action == 'create')) {
         //echo 'TO BE IMPLEMENTED: edit and create actions';
         echo $mds->renderAsEdit();
-        echo '<script src="'.APP_ROOT_PATH.'/js/metadata_edit.js"></script>'."\n";
         echo '<script src="'.APP_ROOT_PATH.'/js/ordering_controls.js"></script>'."\n";
+        echo '<script src="'.APP_ROOT_PATH.'/js/metadata_edit.js"></script>'."\n";
     } else
     if ($action == 'delete') {
         $parent_mds = $mds->getParent();
