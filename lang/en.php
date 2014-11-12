@@ -28,8 +28,12 @@ $LANGUAGE['en'] = [
     'msg_record_missing' => 'Record does not exist in database',
     'msg_record_duplicate' => 'Record already exists in database',
     'msg_missing_parameter' => 'Required information is missing',
+    'msg_no_file_to_upload' => 'No file to upload',
+    'msg_file_upload_failed_copy_from_temp' => 'File upload failed on copy from temp directory',
+    'mag_database_update_failed' => 'Could not update the database',
 
     'prompt_confirm_delete' => 'Are you sure you want to delete this?',
+    'prompt_choose_file' => 'choose file',
 
     'alert_error' => 'Error!',
     'alert_success' => 'Success!',
