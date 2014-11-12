@@ -225,7 +225,7 @@
             $rendered .= '  <ul class="specimen-images inline">'."\n";
             $rendered .= '    <li class="specimen-image-upload-section"><a href="#" id="specimen-control-add-image-for-'.$this->specimen_id.'" class="btn add-specimen-image-button" data-for-specimen="'.$this->specimen_id.'">'.util_lang('add_specimen_image').'</a>'."\n";
             $rendered .= '<div id="specimen-image-upload-form-for-'.$this->specimen_id.'" class="specimen-image-upload-form">'."\n";
-            $rendered .= '<input name="image_file" id="specimen-image-file-for-'.$this->specimen_id.'" type="file" /><br/>'."\n";
+            $rendered .= '<input name="image_file" id="specimen-image-file-for-'.$this->specimen_id.'" class="specimen-image-file-picker" type="file" /><br/>'."\n";
             $rendered .= '<input type="button" class="specimen-image-upload-do-it-button" id="specimen-image-upload-submit-for-'.$this->specimen_id.'" value="'.util_lang('upload','properize').'" data-for-specimen="'.$this->specimen_id.'"/>'."\n";
             $rendered .= '<input type="button" class="specimen-image-upload-cancel-button" value="'.util_lang('cancel','properize').'" data-for-specimen="'.$this->specimen_id.'"/>'."\n";
             $rendered .= '<img src="'.APP_ROOT_PATH.'/img/ajax-loader.gif" id="loading-img" style="display:none;" alt="Please Wait"/>'."\n";

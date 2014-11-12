@@ -268,16 +268,105 @@ $(document).ready(function () {
 
     });
 
+    var uploadFileInfo = {};
+    $(".specimen-image-file-picker").on('change',prepareUpload);
+    function prepareUpload(evt) {
+//        console.dir(evt);
+        uploadFileInfo[evt.target.id] = evt.target.files[0];
+//        console.dir(uploadFileInfo);
+    }
+    function clearUploadForSpecimen(specimenId) {
+        var domId = 'specimen-image-file-for-'+specimenId;
+        uploadFileInfo[domId] = '';
+        resetFormField($('#'+domId));
+//        console.dir(uploadFileInfo);
+    }
+
+    function showLoadingSpinner(specimenId) {
+        $("#specimen-image-upload-form-for-"+specimenId).after('<div id="loadingSpinner"><img src="'+appRootPath()+'/img/ajax-loader.gif"/> Loading...</div>');
+    }
+
+    function hideLoadingSpinner(specimenId) {
+        $("#loadingSpinner").remove();
+    }
+
     $(".specimen-image-upload-do-it-button").click(function(evt) {
+//        console.dir(uploadFileInfo);
         evt.preventDefault();
-        dfnUtil_setTransientAlert('error','specimen image support not yet implemented',$(this));
+        var specimenId = $(this).attr('data-for-specimen');
+        var filesKey = 'specimen-image-file-for-'+specimenId;
+        if (! uploadFileInfo[filesKey]) {
+            dfnUtil_setTransientAlert('error','no file to upload',$(this));
+            return false;
+        }
+        var data = new FormData();
+        data.append('upload_file', uploadFileInfo[filesKey]);
+        data.append('for_specimen',specimenId);
+
+        // SHOW LOADING SPINNER
+        showLoadingSpinner(specimenId);
+
+        $.ajax({
+            url: appRootPath()+'/ajax_actions/specimen_image.php?action=image_upload',
+            type: 'POST',
+            data: data,
+            cache: false,
+            dataType: 'json',
+            processData: false, // Don't process the files
+            contentType: false, // Set content type to false as jQuery will tell the server its a query string request
+            success: function(data, textStatus, jqXHR)
+            {
+                if(typeof data.error === 'undefined')
+                {
+                    // Success, so update the DOM with the new info
+//                    alert('SUCCESS');
+//                    $("#list_item-specimen_"+specimenId).css('background-color','red');
+                    console.dir(data);
+                    if (data.status == 'success') {
+                        dfnUtil_setTransientAlert('success','new image added; TODO- update the DOM with the new info',$("#specimen-image-upload-submit-for-"+specimenId));
+                        $('#list_item-specimen_'+specimenId+' ul.specimen-images li:first-child').after(data.html_output);
+                        // clear and hide these controls by clicking the cancel button
+                        $('#specimen-image-upload-form-for-'+specimenId+' .specimen-image-upload-cancel-button').click();
+                    } else {
+                        dfnUtil_setTransientAlert('error',data.note,$("#specimen-image-upload-submit-for-"+specimenId));
+//                        console.dir(data);
+                        // just clear the file input control
+                        clearUploadForSpecimen(specimenId);
+                    }
+                }
+                else
+                {
+                    // Handle errors here
+                    alert('ERRORS: ' + data.error);
+                    console.log('ERRORS: ' + data.error);
+                    // just clear the file input control
+                    clearUploadForSpecimen(specimenId);
+                }
+            },
+            error: function(jqXHR, textStatus, errorThrown)
+            {
+                // Handle errors here
+                alert('ERROR: ' + textStatus);
+                console.log('ERROR: ' + textStatus);
+                clearUploadForSpecimen(specimenId);
+            },
+            complete: function(jqXHR,textStatus)
+            {
+                // HIDE LOADING SPINNER
+                hideLoadingSpinner(specimenId);
+            }
+        });
+
     });
 
     $(".specimen-image-upload-cancel-button").click(function(evt) {
         evt.preventDefault();
-        var for_specimen = $(this).attr('data-for-specimen');
-        $('#specimen-control-add-image-for-'+for_specimen).show();
-        $('#specimen-image-upload-form-for-'+for_specimen).hide();
+        var specimenId = $(this).attr('data-for-specimen');
+//        resetFormField($('#specimen-image-file-for-'+specimenId));
+        clearUploadForSpecimen(specimenId);
+
+        $('#specimen-control-add-image-for-'+specimenId).show();
+        $('#specimen-image-upload-form-for-'+specimenId).hide();
     });
 
     //--------------------------------------------------------------------

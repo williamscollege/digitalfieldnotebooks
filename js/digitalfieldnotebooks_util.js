@@ -6,6 +6,11 @@ function appRootPath() {
     return "/digitalfieldnotebooks";
 }
 
+function resetFormField (e) {
+    e.wrap('<form>').parent('form').trigger('reset');
+    e.unwrap();
+}
+
 function dfnUtil_setTransientAlert(alertType,alertMessage,optionalReferenceElt) {
     if (optionalReferenceElt !== undefined) {
         $('#page_alert').css('top', optionalReferenceElt.position().top);
