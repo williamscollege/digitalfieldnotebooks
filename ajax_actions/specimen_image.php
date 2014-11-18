@@ -17,30 +17,60 @@
         exit;
     }
 
+    $VIABLE_ACTIONS = ['image_upload','delete'];
+
     $action = $_REQUEST['action'];
     $results['which_action'] = $action;
-    if ($action != 'image_upload') {
+//    if ($action != 'image_upload') {
+    if (! in_array($action,$VIABLE_ACTIONS)) {
         $results['note'] = util_lang('not_supported');
         echo json_encode($results);
         exit;
     }
+    $results['which_action'] = $action;
 
     # 1.5 verify required params passed in (for_specimen)
     $specimenId = '';
-    if (isset($_REQUEST['for_specimen'])) {
-        $specimenId = $_REQUEST['for_specimen'];
-        if (! is_numeric($specimenId)) {
-            $results['note'] = 'parameter "for_specimen": '.util_lang('invalid_value');
+    $specimenImageId = '';
+    if ($action == 'image_upload') {
+        if (isset($_REQUEST['for_specimen'])) {
+            $specimenId = $_REQUEST['for_specimen'];
+            if (! is_numeric($specimenId)) {
+                $results['note'] = 'parameter "for_specimen": '.util_lang('invalid_value');
+                echo json_encode($results);
+                exit;
+            }
+        }
+        if (! $specimenId) {
+            $results['note'] = util_lang('msg_missing_parameter').' : for_specimen';
+            echo json_encode($results);
+            exit;
+        }
+    } elseif ($action == 'delete') {
+        if (isset($_REQUEST['specimen_image_id'])) {
+            $specimenImageId = $_REQUEST['specimen_image_id'];
+            if (! is_numeric($specimenImageId)) {
+                $results['note'] = 'parameter "specimen_image_id": '.util_lang('invalid_value');
+                echo json_encode($results);
+                exit;
+            }
+        }
+        if (! $specimenImageId) {
+            $results['note'] = util_lang('msg_missing_parameter').' : specimen_image_id';
             echo json_encode($results);
             exit;
         }
     }
-    if (! $specimenId) {
-        $results['note'] = util_lang('msg_missing_parameter').' : for_specimen';
-        echo json_encode($results);
-        exit;
-    }
 
+    $specimenImage = '';
+    if ($specimenImageId) {
+        $specimenImage = Specimen_Image::getOneFromDb(['specimen_image_id'=>$specimenImageId],$DB);
+        if (! $specimenImage->matchesDb) {
+            $results['note'] = util_lang('msg_record_missing').' : '.$specimenImageId;
+            echo json_encode($results);
+            exit;
+        }
+    }
 
     # 2. confirm that the user is allowed to take that action
     // global specimen create
@@ -49,14 +79,29 @@
     if (! $has_permission) {
         $USER->cacheRoleActionTargets();
 
-        // check global specimen perms (indiv specimen perms are only for editing, not creating, as indiv perms require a specific object ID as a target for the permission)
-        if (in_array('global_specimen',array_keys($USER->cached_role_action_targets_hash_by_target_type_by_id))) {
-            foreach ($USER->cached_role_action_targets_hash_by_target_type_by_id['global_specimen'] as $glob_rat) {
-                if ($glob_rat->action_id == $ACTIONS['create']->action_id) {
-                    $has_permission = true;
-                    break;
+        if ($action == 'image_upload') {
+            // check global specimen perms (indiv specimen perms are only for editing, not creating, as indiv perms require a specific object ID as a target for the permission)
+            if (in_array('global_specimen',array_keys($USER->cached_role_action_targets_hash_by_target_type_by_id))) {
+                foreach ($USER->cached_role_action_targets_hash_by_target_type_by_id['global_specimen'] as $glob_rat) {
+                    if ($glob_rat->action_id == $ACTIONS['create']->action_id) {
+                        $has_permission = true;
+                        break;
+                    }
                 }
             }
+        } elseif ($action == 'delete') {
+            $has_permission = $USER->canActOnTarget($ACTIONS['delete'],$specimenImage);
+//            if (in_array('global_specimen',array_keys($USER->cached_role_action_targets_hash_by_target_type_by_id))) {
+//                foreach ($USER->cached_role_action_targets_hash_by_target_type_by_id['global_specimen'] as $glob_rat) {
+//                    if ($glob_rat->action_id == $ACTIONS['delete']->action_id) {
+//                        $has_permission = true;
+//                        break;
+//                    }
+//                }
+//            }
+//            if (! ) {
+//                if (
+//            }
         }
     }
 
@@ -70,7 +115,7 @@
     # 3. branch behavior based on the action
     #      image_upload - process the uploaded image and return an approp. list item
     #      TODO: delete - delete the given specimen image
-    #      TODO: save_ordering - set the ordering values as approp for all the given specimen images
+    #      TODO: save_ordering - set the ordering values as approp for all the given specimen images (perhaps handled at specimen level... probably here is best...?)
 
     if ($has_permission && ($action == 'image_upload')) {
         // attempt to save the file (end w/ approp error & note on failure)
@@ -127,7 +172,7 @@
         // save the new specimen image object (end w/ approp error & note on failure)
         $newSpecimenImage->updateDb();
         if (! $newSpecimenImage->matchesDb) {
-            $results['note'] = util_lang('mag_database_update_failed');
+            $results['note'] = util_lang('msg_database_update_failed');
             echo json_encode($results);
             exit;
         }
@@ -137,7 +182,20 @@
         $results['html_output']  = $newSpecimenImage->renderAsListItemEdit();
         $results['status']       = 'success';
     }
+    elseif ($has_permission && ($action == 'delete')) {
+        $specimenImage->doDelete();
+        $specimenImageDel = Specimen_Image::getOneFromDb(['specimen_image_id'=>$specimenImageId],$DB);
+        if (! $specimenImageDel->matchesDb) {
+            $results['status']       = 'success';
+        } else {
+            $results['note'] = util_lang('msg_delete_failed');
+            echo json_encode($results);
+            exit;
+        }
+    }
 
-echo json_encode($results);
+
+
+        echo json_encode($results);
 exit;
 ?>

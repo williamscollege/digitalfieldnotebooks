@@ -31,6 +31,7 @@ $LANGUAGE['en'] = [
     'msg_no_file_to_upload' => 'No file to upload',
     'msg_file_upload_failed_copy_from_temp' => 'File upload failed on copy from temp directory',
     'mag_database_update_failed' => 'Could not update the database',
+    'msg_delete_failed' => 'Failed to delete - reason unknown',
 
     'prompt_confirm_delete' => 'Are you sure you want to delete this?',
     'prompt_choose_file' => 'choose file',

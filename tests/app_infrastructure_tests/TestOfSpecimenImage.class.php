@@ -107,10 +107,13 @@
             global $USER;
             $USER = User::getOneFromDb(['username'=>TESTINGUSER], $this->DB);
             $canonical = '<li id="specimen-image-8103" class="specimen-image" data-specimen_image_id="8103" data-created_at="'.$si->created_at.'" data-updated_at="'.$si->updated_at.'" data-specimen_id="8002" data-user_id="101" data-image_reference="testing/USER101_8103_cnh_castanea_dentata.jpg" data-ordering="0.75000" data-flag_workflow_published="0" data-flag_workflow_validated="1" data-flag_delete="0">';
+            $canonical .= '<button type="button" class="btn btn-danger button-delete-specimen-image" title="'.util_lang('prompt_confirm_delete','ucfirst').'" data-specimen_image_id="'.$si->specimen_image_id.'" data-dom_id="specimen-image-8103"><i class="icon-remove icon-white"></i></button><br/>';
             $canonical .= $si->renderAsHtml();
             $canonical .= '<div class="controls">';
+            $canonical .= util_orderingLeftRightControls('specimen-image-8103');
+            $canonical .= '<input type="hidden" name="new_ordering-specimen-image-8103" id="new_ordering-specimen-image-8103" value="'.$si->ordering.'"/>';
             // publish, verify, reordering handle
-            $canonical .= '<span class="control-publish"><input id="flag_workflow_published_8103-control" type="checkbox" name="flag_workflow_published" value="1" /> publish</span>, <span class="control-verify">verified</span>';
+            $canonical .= '<div class="control-workflows"><span class="control-publish"><input id="flag_workflow_published_8103-control" type="checkbox" name="flag_workflow_published" value="1" /> publish</span>, <span class="control-verify">verified</span></div>';
             $canonical .= '</div>';
             $canonical .= '</li>';
 
@@ -123,6 +126,24 @@
         }
 
         function testDoDelete() {
-            $this->todo("Implement handling of delete image files? In general, figure out what to do with image files that are deleted/altered");
+            // record is deleted
+            // file is moved to one w/ same name but .DEL extension added
+            $si = Specimen_Image::getOneFromDb(['specimen_image_id'=>8101],$this->DB);
+            $origFile = $_SERVER['DOCUMENT_ROOT'].APP_ROOT_PATH.'/image_data/specimen/'.$si->image_reference;
+            $this->assertTrue(file_exists($origFile));
+
+            $si->doDelete();
+
+            $siDel = Specimen_Image::getOneFromDb(['specimen_image_id'=>8101],$this->DB);
+            $this->assertFalse($siDel->matchesDb);
+
+            $this->assertFalse(file_exists($origFile));
+            $this->assertTrue(file_exists($origFile.'.DEL'));
+
+            // now clean up after this test by putting the file back
+            if (file_exists($origFile.'.DEL')) {
+                rename($origFile.'.DEL',$origFile);
+                $this->assertTrue(file_exists($origFile));
+            }
         }
     }
