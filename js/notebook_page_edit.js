@@ -437,9 +437,9 @@ $(document).ready(function () {
             },
             dataType: "json",
             error: function(req,textStatus,err){
-                console.dir(req);
-                console.dir(textStatus);
-                console.dir(err);
+//                console.dir(req);
+//                console.dir(textStatus);
+//                console.dir(err);
                 alert("error making ajax request: "+err.toString());
             },
             success: function(data,textStatus,req) {
