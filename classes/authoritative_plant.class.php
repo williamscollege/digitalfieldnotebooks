@@ -32,7 +32,10 @@
                         if ($a->genus == $b->genus) {
                             if ($a->species == $b->species) {
                                 if ($a->variety == $b->variety) {
+                                    if ($a->catalog_identifier == $b->catalog_identifier) {
                                         return 0;
+                                    }
+                                    return ($a->catalog_identifier < $b->catalog_identifier) ? -1 : 1;
                                 }
                                 return ($a->variety < $b->variety) ? -1 : 1;
                             }
@@ -47,6 +50,30 @@
 //            return ($a->class < $b->class) ? -1 : 1;
         }
 
+        public static function cmpExtended($a, $b) {
+            if ($a->class == $b->class) {
+                if ($a->order == $b->order) {
+                    if ($a->family == $b->family) {
+                        if ($a->genus == $b->genus) {
+                            if ($a->species == $b->species) {
+                                if ($a->variety == $b->variety) {
+                                    if ($a->catalog_identifier == $b->catalog_identifier) {
+                                        return 0;
+                                    }
+                                    return ($a->catalog_identifier < $b->catalog_identifier) ? -1 : 1;
+                                }
+                                return ($a->variety < $b->variety) ? -1 : 1;
+                            }
+                            return ($a->species < $b->species) ? -1 : 1;
+                        }
+                        return ($a->genus < $b->genus) ? -1 : 1;
+                    }
+                    return ($a->family < $b->family) ? -1 : 1;
+                }
+                return ($a->order < $b->order) ? -1 : 1;
+            }
+            return ($a->class < $b->class) ? -1 : 1;
+        }
 
        public static function renderControlSelectAllAuthoritativePlants($default_selected = 0) {
            if (is_object($default_selected)) {

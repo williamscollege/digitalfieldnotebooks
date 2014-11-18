@@ -329,7 +329,7 @@
             $this->assertFalse($u->canActOnTarget($actions['verify'],$np1));
 
 
-            $this->assertFalse($u->canActOnTarget($actions['view'],   $s1));
+            $this->assertTrue($u->canActOnTarget($actions['view'],   $s1));
             $this->assertFalse($u->canActOnTarget($actions['edit'],   $s1));
             $this->assertTrue ($u->canActOnTarget($actions['create'], $s1));
             $this->assertFalse($u->canActOnTarget($actions['delete'], $s1));
@@ -464,7 +464,7 @@
             $this->assertFalse($u->canActOnTarget($actions['publish'],$n3));
             $this->assertFalse($u->canActOnTarget($actions['verify'], $n3));
 
-            $this->assertFalse($u->canActOnTarget($actions['view'],   $s1));
+            $this->assertTrue($u->canActOnTarget($actions['view'],   $s1));
             $this->assertFalse($u->canActOnTarget($actions['edit'],   $s1));
             $this->assertFalse ($u->canActOnTarget($actions['create'], $s1));
             $this->assertFalse($u->canActOnTarget($actions['delete'], $s1));

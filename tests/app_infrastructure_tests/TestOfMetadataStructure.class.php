@@ -233,7 +233,7 @@
             $mds = Metadata_Structure::getOneFromDb(['metadata_structure_id'=>6001],$this->DB);
             $mds->loadTermSetAndValues();
 
-            $canonical = '<a href="'.APP_ROOT_PATH.'/app_code/metadata_structure.php?action=view&metadata_structure_id='.$mds->metadata_structure_id.'">'.$mds->renderAsFullName().' <i class="icon-ok-circle"></i></a>';
+            $canonical = '<a href="'.APP_ROOT_PATH.'/app_code/metadata_structure.php?action=view&metadata_structure_id='.$mds->metadata_structure_id.'">'.$mds->renderAsFullName().' <i class="icon-ok"></i></a>';
             $rendered = $mds->renderAsLink('view');
 
 //            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
@@ -246,7 +246,7 @@
             $mds = Metadata_Structure::getOneFromDb(['metadata_structure_id'=>6003],$this->DB);
             $mds->loadTermSetAndValues();
 
-            $canonical = '<a href="'.APP_ROOT_PATH.'/app_code/metadata_structure.php?action=view&metadata_structure_id='.$mds->metadata_structure_id.'">'.$mds->renderAsFullName().' ('.htmlentities($mds->term_set->name).') <i class="icon-ok-circle"></i></a>';
+            $canonical = '<a href="'.APP_ROOT_PATH.'/app_code/metadata_structure.php?action=view&metadata_structure_id='.$mds->metadata_structure_id.'">'.$mds->renderAsFullName().' ('.htmlentities($mds->term_set->name).') <i class="icon-ok"></i></a>';
             $rendered = $mds->renderAsLink('view');
 
 //            echo "<pre>\n".htmlentities($canonical)."\n".htmlentities($rendered)."\n</pre>";
@@ -283,7 +283,7 @@
         function testRenderAsListItem() {
             $mds = Metadata_Structure::getOneFromDb(['metadata_structure_id'=>6001],$this->DB);
 
-            $canonical = '<li data-metadata_structure_id="6001" data-created_at="'.$mds->created_at.'" data-updated_at="'.$mds->updated_at.'" data-parent_metadata_structure_id="0" data-name="flower" data-ordering="1.00000" data-description="info about the flower" data-details="" data-metadata_term_set_id="0" data-flag_active="1" data-flag_delete="0"><a href="'.APP_ROOT_PATH.'/app_code/metadata_structure.php?action=view&metadata_structure_id=6001">flower <i class="icon-ok-circle"></i></a></li>';
+            $canonical = '<li data-metadata_structure_id="6001" data-created_at="'.$mds->created_at.'" data-updated_at="'.$mds->updated_at.'" data-parent_metadata_structure_id="0" data-name="flower" data-ordering="1.00000" data-description="info about the flower" data-details="" data-metadata_term_set_id="0" data-flag_active="1" data-flag_delete="0"><a href="'.APP_ROOT_PATH.'/app_code/metadata_structure.php?action=view&metadata_structure_id=6001">flower <i class="icon-ok"></i></a></li>';
 
             $rendered = $mds->renderAsListItem();
 
@@ -358,12 +358,12 @@
   <div class="metadata_lineage"><a href="'.APP_ROOT_PATH.'/app_code/metadata_structure.php?action=list">metadata</a> &gt;</div>
   <div class="metadata-structure-header">'."\n";
             $canonical .= '    <h3>flower</h3>'."\n";
-            $canonical .= '    <div class="active_state_info"><i class="icon-ok-circle"></i> '.util_lang('active_true').'</div>'."\n";
+            $canonical .= '    <div class="active_state_info"><i class="icon-ok"></i> '.util_lang('active_true').'</div>'."\n";
             $canonical .= '    <div class="description">info about the flower</div>'."\n";
             $canonical .= Metadata_Reference::renderReferencesArrayAsListsView($mds->references);
             $canonical .= '  </div>'."\n";
 
-            $canonical .= '<h4>further breakdown:</h4>'."\n";
+            $canonical .= '<span class="empty-metadata-msg info">This metadata type has no fixed values - it is open entry or organizational</span><h4>further breakdown:</h4>'."\n";
             $canonical .= '<ul class="metadata-structure-tree">'."\n";
             $children = $mds->getChildren();
 
@@ -396,7 +396,7 @@
   <div class="metadata_lineage"><a href="'.APP_ROOT_PATH.'/app_code/metadata_structure.php?action=list">metadata</a> &gt; '.$mds_parent->renderAsLink().' &gt;</div>
   <div class="metadata-structure-header">
     <h3>flower size</h3>'."\n";
-            $canonical .= '    <div class="active_state_info"><i class="icon-ok-circle"></i> '.util_lang('active_true').'</div>'."\n";
+            $canonical .= '    <div class="active_state_info"><i class="icon-ok"></i> '.util_lang('active_true').'</div>'."\n";
             $canonical .= '    <div class="description">the size of the flower in its largest dimension</div>'."\n";
             $canonical .= '    <div class="details">some details</div>'."\n";
             $canonical .= Metadata_Reference::renderReferencesArrayAsListsView($mds->references);
@@ -408,7 +408,7 @@
 
             $canonical .= '  </div>'."\n";
             $canonical .= '  '.$mds->term_set->renderAsViewEmbed();
-            $canonical .= '</div>';
+            $canonical .= '<span class="empty-metadata-msg info">This metadata type has no subdivisions</span></div>';
 
             $rendered = $mds->renderAsView();
 

@@ -32,7 +32,7 @@
 
 		//// static methods
 
-		function testCmp() {
+        function testCmp() {
             $p1 = Authoritative_Plant::getOneFromDb(['authoritative_plant_id'=>5001],$this->DB);
             $p2 = Authoritative_Plant::getOneFromDb(['authoritative_plant_id'=>5002],$this->DB);
 
@@ -43,6 +43,28 @@
             $ps = Authoritative_Plant::getAllFromDb([],$this->DB);
 
             usort($ps,'Authoritative_Plant::cmp');
+
+            $this->assertEqual('AP_1_CI',$ps[0]->catalog_identifier);
+            $this->assertEqual('AP_2_CI',$ps[1]->catalog_identifier);
+            $this->assertEqual('AP_3_CI',$ps[2]->catalog_identifier);
+            $this->assertEqual('AP_4_CI',$ps[3]->catalog_identifier);
+            $this->assertEqual('AP_5_CI',$ps[4]->catalog_identifier);
+            $this->assertEqual('AP_6_CI',$ps[5]->catalog_identifier);
+            $this->assertEqual('AP_7_CI',$ps[6]->catalog_identifier);
+            $this->assertEqual('AP_8_CI',$ps[7]->catalog_identifier);
+        }
+
+		function testCmpExtended() {
+            $p1 = Authoritative_Plant::getOneFromDb(['authoritative_plant_id'=>5001],$this->DB);
+            $p2 = Authoritative_Plant::getOneFromDb(['authoritative_plant_id'=>5002],$this->DB);
+
+            $this->assertEqual(Authoritative_Plant::cmp($p1, $p2), -1);
+            $this->assertEqual(Authoritative_Plant::cmp($p1, $p1), 0);
+            $this->assertEqual(Authoritative_Plant::cmp($p2, $p1), 1);
+
+            $ps = Authoritative_Plant::getAllFromDb([],$this->DB);
+
+            usort($ps,'Authoritative_Plant::cmpExtended');
 
             $this->assertEqual('AP_1_CI',$ps[0]->catalog_identifier);
             $this->assertEqual('AP_2_CI',$ps[1]->catalog_identifier);

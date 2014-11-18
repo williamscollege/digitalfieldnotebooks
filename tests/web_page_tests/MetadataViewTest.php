@@ -165,6 +165,7 @@ class MetadataViewTest extends WMSWebTestCase {
         $this->assertNoLink('flower - flower primary color');
         $this->assertNoLink('leaf');
 
-        $this->assertText(util_lang('metadata_no_children_no_values'));
+        $this->assertText(util_lang('metadata_no_term_set'));
+        $this->assertText(util_lang('metadata_no_children'));
     }
 }
