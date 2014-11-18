@@ -220,7 +220,7 @@
             $rendered .= '    <li><div class="field-label">'.util_lang('catalog_identifier').'</div> : <div class="field-value"><input type="text" name="specimen-catalog_identifier_'.$this->specimen_id.'" id="specimen-catalog_identifier_'.$this->specimen_id.'" value="'.htmlentities($this->catalog_identifier).'"/></div></li>'."\n";
             $rendered .= '  </ul>'."\n";
 
-            $rendered .= '<button type="button" class="specimen-save-image-ordering-button btn-success" id="save-specimen-image-ordering-for-'.$this->specimen_id.'" data-for-specimen-id="">'.util_lang('save_ordering','ucfirst').'</button>';
+            $rendered .= '<button type="button" class="specimen-save-image-ordering-button btn-success" id="save-specimen-image-ordering-for-'.$this->specimen_id.'" data-for-specimen-id="'.$this->specimen_id.'">'.util_lang('save_ordering','ucfirst').'</button>';
 
             $rendered .= '  <ul class="specimen-images inline">'."\n";
             $rendered .= '    <li class="specimen-image-upload-section"><a href="#" id="specimen-control-add-image-for-'.$this->specimen_id.'" class="btn add-specimen-image-button" data-for-specimen="'.$this->specimen_id.'">'.util_lang('add_specimen_image').'</a>'."\n";

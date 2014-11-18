@@ -291,7 +291,7 @@ $(document).ready(function () {
     }
 
     function showLoadingSpinner(specimenId) {
-        $("#specimen-image-upload-form-for-"+specimenId).after('<div id="loadingSpinner"><img src="'+appRootPath()+'/img/ajax-loader.gif"/> Loading...</div>');
+        $("#specimen-image-upload-form-for-"+specimenId).after('<div id="loadingSpinner"><img src="'+appRootPath()+'/img/ajax-loader.gif"/> working...</div>');
     }
 
     function hideLoadingSpinner(specimenId) {
@@ -400,9 +400,60 @@ $(document).ready(function () {
 
 
     $('.specimen-save-image-ordering-button').on("click",function(evt) {
-        dfnUtil_setTransientAlert('error','specimen image ordering saving yet implemented',$(this));
-        $(this).hide();
+//        dfnUtil_setTransientAlert('error','specimen image ordering saving yet implemented',$(this));
+//        $(this).hide();
         evt.preventDefault();
+
+        var targetSaveBtn = $(this);
+
+        // build the base data hash, with action = reorder
+        var ajaxData = {'action': 'reorder'};
+        // get specimen id and set it in the data has too (for_specimen)
+        var specimen_id = $(this).attr('data-for-specimen-id');
+        ajaxData['for_specimen'] = specimen_id;
+
+        // walk the specimen images to get the relevant specimen image ids and orderings, creating the data hash entries
+        $("#list_item-specimen_"+specimen_id).find("ul.specimen-images li.specimen-image").each(function(idx,elt){
+            var siId = $(this).attr('data-specimen_image_id');
+            ajaxData['ordering_'+siId] = $('#new_ordering-specimen-image-'+siId).val();
+        });
+
+//        console.dir(data);
+        var initialButtonLabel = targetSaveBtn.html();
+        targetSaveBtn.html("....");
+        targetSaveBtn.prop("disabled",true);
+
+        showLoadingSpinner(specimen_id);
+
+        // make the ajax call
+        $.ajax({
+            url: appRootPath()+"/ajax_actions/specimen_image.php",
+            data: ajaxData,
+            dataType: "json",
+            error: function(req,textStatus,err){
+//                console.dir(req);
+//                console.dir(textStatus);
+//                console.dir(err);
+                alert("error making ajax request: "+err.toString());
+            },
+            success: function(data,textStatus,req) {
+//               alert("ajax success: "+data.html_output);
+                if (data.status != 'success') {
+                    dfnUtil_setTransientAlert("error",data.status+": "+data.note,targetSaveBtn.next());
+                }
+            },
+            complete: function(jqXHR,textStatus)
+            {
+                // HIDE LOADING SPINNER
+                targetSaveBtn.prop("disabled",false);
+                targetSaveBtn.html(initialButtonLabel);
+                $(targetSaveBtn).hide();
+                hideLoadingSpinner(specimen_id);
+            }
+        });
+
+        return false;
+
     });
 
     //--------------------------------------------------------------------
@@ -425,9 +476,12 @@ $(document).ready(function () {
 //        console.dir(dom_elt);
 
         var specimen_image_id = dom_elt.attr('data-specimen_image_id');
+        var specimenId = dom_elt.parent().attr("data-specimen_id");
 
 //        console.log(specimen_image_id);
 //        return;
+
+        showLoadingSpinner(specimenId);
 
         $.ajax({
             url: appRootPath()+"/ajax_actions/specimen_image.php",
@@ -449,6 +503,11 @@ $(document).ready(function () {
                 } else {
                     dfnUtil_setTransientAlert("error",data.status+": "+data.note,dom_elt.parent().parent());
                 }
+            },
+            complete: function(jqXHR,textStatus)
+            {
+                // HIDE LOADING SPINNER
+                hideLoadingSpinner(specimenId);
             }
         });
 
