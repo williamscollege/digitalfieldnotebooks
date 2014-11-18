@@ -420,7 +420,38 @@ $(document).ready(function () {
     function handleDeleteSpecimenImage() {
         var dom_elt = PARAM_handleDeleteSpecimenImage_dom_elt;
         var evt = PARAM_handleDeleteSpecimenImage_dom_evt;
-        dfnUtil_setTransientAlert('error','specimen image deletion not yet implemented',dom_elt);
+//        dfnUtil_setTransientAlert('error','specimen image deletion not yet implemented',dom_elt);
+
+//        console.dir(dom_elt);
+
+        var specimen_image_id = dom_elt.attr('data-specimen_image_id');
+
+//        console.log(specimen_image_id);
+//        return;
+
+        $.ajax({
+            url: appRootPath()+"/ajax_actions/specimen_image.php",
+            data: {
+                "action": "delete",
+                "specimen_image_id": specimen_image_id
+            },
+            dataType: "json",
+            error: function(req,textStatus,err){
+                console.dir(req);
+                console.dir(textStatus);
+                console.dir(err);
+                alert("error making ajax request: "+err.toString());
+            },
+            success: function(data,textStatus,req) {
+//               alert("ajax success: "+data.html_output);
+                if (data.status == 'success') {
+                    $("#specimen-image-"+specimen_image_id).remove();
+                } else {
+                    dfnUtil_setTransientAlert("error",data.status+": "+data.note,dom_elt.parent().parent());
+                }
+            }
+        });
+
     }
 
 });

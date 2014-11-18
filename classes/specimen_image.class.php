@@ -129,7 +129,11 @@
 
         public function doDelete($debug = 0) {
             $origFile = $_SERVER['DOCUMENT_ROOT'].APP_ROOT_PATH.'/image_data/specimen/'.$this->image_reference;
-            if (rename($origFile,$origFile.'.DEL')) {
+            if (file_exists($origFile)) {
+                if (rename($origFile,$origFile.'.DEL')) {
+                    parent::doDelete($debug);
+                }
+            } else {
                 parent::doDelete($debug);
             }
         }
