@@ -17,7 +17,7 @@
         exit;
     }
 
-    $VIABLE_ACTIONS = ['image_upload','delete'];
+    $VIABLE_ACTIONS = ['image_upload','delete','reorder'];
 
     $action = $_REQUEST['action'];
     $results['which_action'] = $action;
@@ -31,8 +31,9 @@
 
     # 1.5 verify required params passed in (for_specimen)
     $specimenId = '';
+    $specimen = '';
     $specimenImageId = '';
-    if ($action == 'image_upload') {
+    if (($action == 'image_upload') || ($action == 'reorder')) {
         if (isset($_REQUEST['for_specimen'])) {
             $specimenId = $_REQUEST['for_specimen'];
             if (! is_numeric($specimenId)) {
@@ -91,17 +92,9 @@
             }
         } elseif ($action == 'delete') {
             $has_permission = $USER->canActOnTarget($ACTIONS['delete'],$specimenImage);
-//            if (in_array('global_specimen',array_keys($USER->cached_role_action_targets_hash_by_target_type_by_id))) {
-//                foreach ($USER->cached_role_action_targets_hash_by_target_type_by_id['global_specimen'] as $glob_rat) {
-//                    if ($glob_rat->action_id == $ACTIONS['delete']->action_id) {
-//                        $has_permission = true;
-//                        break;
-//                    }
-//                }
-//            }
-//            if (! ) {
-//                if (
-//            }
+        } elseif ($action == 'reorder') {
+            $specimen = Specimen::getOneFromDb(['specimen_id'=>$specimenId],$DB);
+            $has_permission = $USER->canActOnTarget($ACTIONS['edit'],$specimen);
         }
     }
 
@@ -192,6 +185,30 @@
             echo json_encode($results);
             exit;
         }
+    }
+    elseif ($has_permission && ($action == 'reorder')) {
+
+        // get the specimen
+        if (! $specimen) {
+            $specimen = Specimen::getOneFromDb(['specimen_id'=>$specimenId],$DB);
+        }
+
+        // get the image for it
+        $specimen->loadImages();
+        foreach ($specimen->images as $si) {
+            $req_key = 'ordering_' . $si->specimen_image_id;
+            if (array_key_exists($req_key,$_REQUEST) && is_numeric($_REQUEST[$req_key])) {
+                $si->ordering = $_REQUEST[$req_key];
+                $si->updateDb();
+                if (! $si->matchesDb) {
+                    $results['note'] = util_lang('mag_database_update_failed');
+                    echo json_encode($results);
+                    exit;
+                }
+            }
+        }
+
+        $results['status']       = 'success';
     }
 
 

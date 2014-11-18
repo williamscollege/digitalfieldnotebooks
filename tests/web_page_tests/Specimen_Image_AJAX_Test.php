@@ -131,6 +131,24 @@ class Specimen_Image_AJAX_Test extends WMSWebTestCase {
 
     }
 
+    function testImageReordering() {
+        $this->doLoginAdmin();
+
+        $this->get('http://localhost/digitalfieldnotebooks/ajax_actions/specimen_image.php?action=reorder&for_specimen=8002&ordering_8104=70&ordering_8103=50');
+        $this->checkBasicAsserts();
+
+        // script status should be success
+        $results = json_decode($this->getBrowser()->getContent());
+//        util_prePrintR($results);
+        $this->assertEqual('success',$results->status);
+
+        $s03 = Specimen_Image::getOneFromDb(['specimen_image_id'=>8103],$this->DB);
+        $s04 = Specimen_Image::getOneFromDb(['specimen_image_id'=>8104],$this->DB);
+
+        $this->assertEqual(50,$s03->ordering);
+        $this->assertEqual(70,$s04->ordering);
+    }
+
     function testToDo() {
 // NOTE: image upload too messy to test at the moment - it works for now, and if it breaks later then we'll add a test for it then
 //        $this->todo('image delete test');
