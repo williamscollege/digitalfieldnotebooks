@@ -142,7 +142,7 @@
     }
 
     function util_currentDateTimeString_asMySQL() {
-        return date('Y-m-d H:i:ss');
+        return date('Y-m-d H:i:s');
     }
 
     /**
