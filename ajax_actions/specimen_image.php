@@ -134,10 +134,10 @@
             mkdir($uploaddir, 0777, true);
         }
 
-        error_log( print_R($file,TRUE) );
-        error_log($target_file_name);
-        error_log($file_reference);
-        error_log($uploaddir);
+//        error_log( print_R($file,TRUE) );
+//        error_log($target_file_name);
+//        error_log($file_reference);
+//        error_log($uploaddir);
 
 
         if(! move_uploaded_file($file['tmp_name'], $uploaddir .$target_file_name)) {
