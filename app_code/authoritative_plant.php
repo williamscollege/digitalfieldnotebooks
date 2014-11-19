@@ -81,6 +81,7 @@
             echo '<div id="actions">'.$ap->renderAsButtonEdit().'</div>'."\n";
         }
         echo $ap->renderAsView();
+        echo '<script src="'.APP_ROOT_PATH.'/js/plant_image_viewer.js"></script>'."\n";
 //        echo 'TODO: implement view action';
     } else
     if (($action == 'edit') || ($action == 'create')) {

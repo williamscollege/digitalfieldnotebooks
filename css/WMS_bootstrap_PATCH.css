@@ -258,6 +258,21 @@ h3 input {
     font-weight: bold;
 }
 
+#plantImageViewer {
+    width: 900px;
+    /*height: 600px;*/
+    margin-left: -450px;
+}
+
+#plantImageViewer .modal-body {
+    max-height: 650px;
+    text-align: center;
+}
+
+#plantImageViewer-image {
+    max-height: 610px;
+    max-width: 830px;
+}
 /***********************************************************************************/
 /* notebooks */
 
