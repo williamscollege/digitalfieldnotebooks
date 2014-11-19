@@ -47,10 +47,14 @@
 ////            util_redirectToAppHome('failure',util_lang('no_notebook_specified'));
 //            util_redirectToAppPage('app_code/notebook.php?action=list','failure',util_lang('no_notebook_specified'));
 //        }
-        $notebook = Notebook::getOneFromDb(['notebook_id'=>$_REQUEST['notebook_id']],$DB);
-        if (! $notebook->matchesDb) {
-//            util_redirectToAppHome('failure',util_lang('no_notebook_found'));
-            util_redirectToAppPage('app_code/notebook.php?action=list','failure',util_lang('no_notebook_found'));
+        if ($_REQUEST['notebook_id'] == 'NEW') {
+            $notebook = Notebook::createNewNotebookForUser($USER->user_id,$DB);
+        } else {
+            $notebook = Notebook::getOneFromDb(['notebook_id'=>$_REQUEST['notebook_id']],$DB);
+            if (! $notebook->matchesDb) {
+    //            util_redirectToAppHome('failure',util_lang('no_notebook_found'));
+                util_redirectToAppPage('app_code/notebook.php?action=list','failure',util_lang('no_notebook_found'));
+            }
         }
     }
 
