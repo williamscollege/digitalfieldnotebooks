@@ -13,8 +13,8 @@
 		</div>
 		<div class="modal-body">
 			<ol>
-				<li><p>To sign in, please use your Williams username and password.</p></li>
-				<li><p>Users must initially log in to the Equipment Reservation system one time, in order for this system to be "aware" of them and send them notifications, etc.</p></li>
+                <li><p>To sign in use your Williams username and password.</p></li>
+                <li><p>Digitial Field Notebooks is a work in progress - some parts are yet-to-be-implemented. If you have specific questions and/or comments please contact the address below.</p></li>
 			</ol>
 
 			<p>&nbsp;</p>
@@ -26,7 +26,7 @@
 				}
 				else {
 					# show default suypport address
-					echo "<p>Please contact: <a href=\"mailto:itech@" . INSTITUTION_DOMAIN . "?subject=DigitalFieldNotebooks_Help_Request\"><i class=\"icon-envelope\"></i> itech@williams.edu</a></p>";
+					echo "<p>Please contact: <a href=\"mailto:cwarren@" . INSTITUTION_DOMAIN . "?subject=DigitalFieldNotebooks_Help_Request\"><i class=\"icon-envelope\"></i> cwarren@williams.edu</a></p>";
 				}
 				?>
 		</div>
