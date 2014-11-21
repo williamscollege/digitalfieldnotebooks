@@ -112,6 +112,25 @@
             return $rendered;
         }
 
+        public static function renderSpecimenListBlock($specimens_ar) {
+            $rendered = '';
+
+            $rendered .= '  <h4>'.ucfirst(util_lang('specimens'))."</h4>\n".
+                '  <ul class="specimens">'."\n";
+            $rendered .= '    <li><a href="#" id="add_new_specimen_button" class="btn">'.util_lang('add_specimen').'</a></li>'."\n";
+            if ($specimens_ar) {
+                foreach ($specimens_ar as $specimen) {
+                    $rendered .= '    <li id="list_item-specimen_'.$specimen->specimen_id.'">'.$specimen->renderAsEditEmbed()."</li>\n";
+                }
+            } else {
+                $rendered .= '<li>'.util_lang('no_metadata','ucfirst').'</li>'."\n";
+            }
+            $rendered .= "  </ul>\n";
+
+            return $rendered;
+        }
+
+
         //---------------
 
         public function loadImages() {
@@ -220,7 +239,7 @@
             $rendered .= '    <li><div class="field-label">'.util_lang('catalog_identifier').'</div> : <div class="field-value"><input type="text" name="specimen-catalog_identifier_'.$this->specimen_id.'" id="specimen-catalog_identifier_'.$this->specimen_id.'" value="'.htmlentities($this->catalog_identifier).'"/></div></li>'."\n";
             $rendered .= '  </ul>'."\n";
 
-            $rendered .= '<button type="button" class="specimen-save-image-ordering-button btn-success" id="save-specimen-image-ordering-for-'.$this->specimen_id.'" data-for-specimen-id="'.$this->specimen_id.'">'.util_lang('save_ordering','ucfirst').'</button>';
+            $rendered .= '  <button type="button" class="specimen-save-image-ordering-button btn-success" id="save-specimen-image-ordering-for-'.$this->specimen_id.'" data-for-specimen-id="'.$this->specimen_id.'">'.util_lang('save_ordering','ucfirst').'</button>'."\n";
 
             $rendered .= '  <ul class="specimen-images inline">'."\n";
             $rendered .= '    <li class="specimen-image-upload-section"><a href="#" id="specimen-control-add-image-for-'.$this->specimen_id.'" class="btn add-specimen-image-button" data-for-specimen="'.$this->specimen_id.'">'.util_lang('add_specimen_image').'</a>'."\n";

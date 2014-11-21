@@ -135,6 +135,30 @@
 
         }
 
+
+        function testRenderSpecimenListBlock() {
+            $ap = Authoritative_Plant::getOneFromDb(['authoritative_plant_id' => 5001],$this->DB);
+            $ap->cacheSpecimens();
+
+            $canonical = '';
+            $canonical .= '  <h4>'.ucfirst(util_lang('specimens'))."</h4>\n".
+                '  <ul class="specimens">'."\n";
+            $canonical .= '    <li><a href="#" id="add_new_specimen_button" class="btn">'.util_lang('add_specimen').'</a></li>'."\n";
+            if ($ap->specimens) {
+                foreach ($ap->specimens as $specimen) {
+                    $canonical .= '    <li id="list_item-specimen_'.$specimen->specimen_id.'">'.$specimen->renderAsEditEmbed()."</li>\n";
+                }
+            } else {
+                $canonical .= '<li>'.util_lang('no_metadata','ucfirst').'</li>'."\n";
+            }
+            $canonical .= "  </ul>\n";
+
+            $rendered = Specimen::renderSpecimenListBlock($ap->specimens);
+
+            $this->assertEqual($canonical,$rendered);
+            $this->assertNoPattern('/IMPLEMENTED/',$rendered);
+        }
+
         //// instance methods - object itself
 
         //// instance methods - related data
@@ -233,10 +257,20 @@
     <li><div class="field-label">'.util_lang('notes').'</div> : <div class="field-value"><textarea name="specimen-notes_'.$s->specimen_id.'" id="specimen-notes_'.$s->specimen_id.'" class="specimen-notes" row="4" cols="120">'.htmlentities($s->notes).'</textarea></div></li>
     <li><div class="field-label">'.util_lang('catalog_identifier').'</div> : <div class="field-value"><input type="text" name="specimen-catalog_identifier_'.$s->specimen_id.'" id="specimen-catalog_identifier_'.$s->specimen_id.'" value="'.htmlentities($s->catalog_identifier).'"/></div></li>
   </ul>
+  <button type="button" class="specimen-save-image-ordering-button btn-success" id="save-specimen-image-ordering-for-8001" data-for-specimen-id="8001">Save order</button>
   <ul class="specimen-images inline">
 ';
-            $canonical .= '    <li><a href="#" id="specimen-control-add-image-for-'.$s->specimen_id.'" class="btn add-specimen-image-button" data-for-specimen="'.$s->specimen_id.'">'.util_lang('add_specimen_image').'</a></li>
-';
+//            $canonical .= '    <li><a href="#" id="specimen-control-add-image-for-'.$s->specimen_id.'" class="btn add-specimen-image-button" data-for-specimen="'.$s->specimen_id.'">'.util_lang('add_specimen_image').'</a></li>
+//';
+            $canonical .= '    <li class="specimen-image-upload-section"><a href="#" id="specimen-control-add-image-for-8001" class="btn add-specimen-image-button" data-for-specimen="8001">+ Add Image +</a>
+<div id="specimen-image-upload-form-for-8001" class="specimen-image-upload-form">
+<input name="image_file" id="specimen-image-file-for-8001" class="specimen-image-file-picker" type="file" />
+<label class="specimen-image-file-input-label" id="specimen-image-file-for-8001-label" for="specimen-image-file-for-8001">Choose File</label>
+<input type="button" class="specimen-image-upload-do-it-button" id="specimen-image-upload-submit-for-8001" value="Upload" data-for-specimen="8001"/>
+<input type="button" class="specimen-image-upload-cancel-button" value="Cancel" data-for-specimen="8001"/>
+<img src="/digitalfieldnotebooks/img/ajax-loader.gif" id="loading-img" style="display:none;" alt="Please Wait"/>
+</div>
+</li>'."\n";
             foreach ($s->images as $image) {
                 $canonical .='    '.$image->renderAsListItemEdit()."\n";
             }

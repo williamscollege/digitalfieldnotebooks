@@ -255,17 +255,19 @@
                 }
                 $rendered .= '  </ul>'."\n";
 
-                $rendered .= '  <h4>'.ucfirst(util_lang('specimens'))."</h4>\n".
-                    '  <ul class="specimens">'."\n";
-                $rendered .= '    <li><a href="#" id="add_new_specimen_button" class="btn">'.util_lang('add_specimen').'</a></li>'."\n";
-                if ($this->specimens) {
-                    foreach ($this->specimens as $specimen) {
-                        $rendered .= '    <li id="list_item-specimen_'.$specimen->specimen_id.'">'.$specimen->renderAsEditEmbed()."</li>\n";
-                    }
-                } else {
-                    $rendered .= '<li>'.util_lang('no_metadata','ucfirst').'</li>'."\n";
-                }
-                $rendered .= "  </ul>\n";
+                $rendered .= Specimen::renderSpecimenListBlock($this->specimens);
+
+//                $rendered .= '  <h4>'.ucfirst(util_lang('specimens'))."</h4>\n".
+//                    '  <ul class="specimens">'."\n";
+//                $rendered .= '    <li><a href="#" id="add_new_specimen_button" class="btn">'.util_lang('add_specimen').'</a></li>'."\n";
+//                if ($this->specimens) {
+//                    foreach ($this->specimens as $specimen) {
+//                        $rendered .= '    <li id="list_item-specimen_'.$specimen->specimen_id.'">'.$specimen->renderAsEditEmbed()."</li>\n";
+//                    }
+//                } else {
+//                    $rendered .= '<li>'.util_lang('no_metadata','ucfirst').'</li>'."\n";
+//                }
+//                $rendered .= "  </ul>\n";
 
                 $rendered .= '<input type="hidden" id="initial_page_field_ids" name="initial_page_field_ids" value="'.implode(',', Db_Linked::arrayOfAttrValues($this->page_fields,'notebook_page_field_id') ).'"/>'."\n";
                 $rendered .= '<input type="hidden" id="created_page_field_ids" name="created_page_field_ids" value=""/>'."\n";
