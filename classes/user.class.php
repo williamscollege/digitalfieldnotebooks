@@ -210,10 +210,6 @@
             //      + gets messy
 
             // if the allowed target types do not contain the specific type of the target in question, then no need to go further
-            $target_specific_type = Role_Action_Target::getSpecificTargetTypeForObject($target);
-            if (! in_array($target_specific_type,array_keys($this->cached_role_action_targets_hash_by_target_type_by_id))) {
-                return false;
-            }
 
             // get a list of all the specific ids to check. This gets a bit messy as we have to climb or include a hierarchy depending on what exactly the target is
 
@@ -275,7 +271,10 @@
 //            util_prePrintR($ids_to_check);
 //            util_prePrintR($this->cached_role_action_targets_hash_by_target_type_by_id);
 
-//            echo 'a'; exit;
+            $target_specific_type = Role_Action_Target::getSpecificTargetTypeForObject($target);
+            if (! in_array($target_specific_type,array_keys($this->cached_role_action_targets_hash_by_target_type_by_id))) {
+                return false;
+            }
 
             foreach ($this->cached_role_action_targets_hash_by_target_type_by_id[$target_specific_type] as $spec_rat) {
                 if (($spec_rat->action_id == $action->action_id) && (in_array($spec_rat->target_id,$ids_to_check))) {
