@@ -112,6 +112,7 @@ $LANGUAGE['en'] = [
     'variety' => 'variety',
     'catalog_identifier' => 'catalog ID',
     'common_name' => 'common name',
+    'description' => 'description',
 
     'plants' => 'plants',
 
@@ -147,6 +148,7 @@ $LANGUAGE['en'] = [
     'new_metadata_structure_description' => 'brief description - replace or delete this text',
     'new_metadata_structure_details' => 'extended notes / description - replace or delete this text',
     'save_ordering' => 'save order',
+    'msg_save_page_before_image_upload' => 'this page must be saved before images can be added to the new specimen',
 
     'all_metadata_term_sets' => 'value sets',
     'metadata_term_set' => 'value set',
