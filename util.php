@@ -63,6 +63,10 @@
         if (strpos($page,'?') >0) {
             $joiner = '&';
         }
+
+//        echo APP_FOLDER . '/' . $page . $joiner . $status . '=' . urlencode($msg_key_or_text);
+//        exit;
+
         header('Location: ' . APP_FOLDER . '/' . $page . $joiner . $status . '=' . urlencode($msg_key_or_text));
         exit;
     }

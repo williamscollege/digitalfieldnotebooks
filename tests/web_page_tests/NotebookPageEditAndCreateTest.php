@@ -305,6 +305,7 @@ class NotebookPageEditAndCreateTest extends WMSWebTestCase {
     }
 
         function testToDo() {
+        $this->todo('reordering controls for specimens, w/ corresponding update implementation on back end');
 //        $this->todo('test fall backs and default behaviors');
 //        $this->todo('test access control to edit page');
 // NOTE: nothing here for notebooks       $this->todo('test look-up data form fields (not much for this, but gets messy once we get to pages)');
@@ -315,7 +316,7 @@ class NotebookPageEditAndCreateTest extends WMSWebTestCase {
 //        $this->todo('test updating related data via ajax');
 //            $this->todo('test updating/saving new page fields - basic');
 //            $this->todo('test updating/saving new page fields - with duplicate structures and differing values (do it)');
-            $this->todo('test updating/saving new page fields - with duplicate structures and same values (skip it)');
+//            $this->todo('test updating/saving new page fields - with duplicate structures and same values (skip it)');
 //            $this->todo('add deletion controls for page fields');
 //            $this->todo('test delete fields on save/update');
 //            $this->todo('front end implementation of deletion controls (grey out w/ "delete pending" note, have to click update to do actual delete)');

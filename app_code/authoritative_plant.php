@@ -31,19 +31,45 @@
 ////        }
         echo "TODO: create action support";
         exit;
-    } elseif (($action != 'list')
-              && isset($_REQUEST['authoritative_plant_id'])
-              && is_numeric($_REQUEST['authoritative_plant_id'])) {
-        $ap = Authoritative_Plant::getOneFromDb(['authoritative_plant_id'=>$_REQUEST['authoritative_plant_id']],$DB);
+    } else {
+        if (isset($_REQUEST['authoritative_plant_id'])) {
+            if ($_REQUEST['authoritative_plant_id'] == 'NEW') {
+                $ap = Authoritative_Plant::createNewAuthoritativePlant($DB);
+            } elseif (is_numeric($_REQUEST['authoritative_plant_id'])) {
+                $ap = Authoritative_Plant::getOneFromDb(['authoritative_plant_id'=>$_REQUEST['authoritative_plant_id']],$DB);
+                if (! $ap->matchesDb) {
+                    util_redirectToAppPage('app_code/authoritative_plant.php?action=list','failure',util_lang('no_authoritative_plant_found'));
+                }
+            } else {
+                util_redirectToAppPage('app_code/authoritative_plant.php?action=list','failure',util_lang('no_authoritative_plant_found'));
+            }
+        } else { // no authoritative_plant_id in request
+            if ($action != 'list') { // list actions can have no id - all other actions need an id
+                util_redirectToAppPage('app_code/authoritative_plant.php?action=list','failure',util_lang('no_authoritative_plant_specified'));
+            }
+            $ap = Authoritative_Plant::createNewAuthoritativePlant($DB);
+        }
     }
+//elseif (($action != 'list')
+//              && isset($_REQUEST['authoritative_plant_id'])
+//              && is_numeric($_REQUEST['authoritative_plant_id'])) {
+//        $ap = Authoritative_Plant::getOneFromDb(['authoritative_plant_id'=>$_REQUEST['authoritative_plant_id']],$DB);
+//    }
 
     if ((! $ap) || (! $ap->matchesDb)) {
         $action = 'list';
     }
 //
     # 3. confirm that the user is allowed to take that action on that object (if not, redirect them to the home page with an appropriate warning)
-    if (($action != 'list') && (! $USER->canActOnTarget($ACTIONS[$action],$ap))) {
-        $action = 'list';
+    if (($action == 'list') && (! $USER->canActOnTarget($ACTIONS[$action],$ap))) {
+//        util_prePrintR($USER);
+//        exit;
+        util_redirectToAppHome('failure',util_lang('no_permission'));
+    } elseif (($action != 'list') && (! $USER->canActOnTarget($ACTIONS[$action],$ap))) {
+        if ($action == 'view') {
+            util_redirectToAppPage('app_code/authoritative_plant.php?action=list','failure',util_lang('no_permission'));
+        }
+        util_redirectToAppPage('app_code/authoritative_plant.php?action=view&authoritative_plant_id='.$_REQUEST['authoritative_plant_id'],'failure',util_lang('no_permission'));
     }
 
     if ($action != 'delete') {
@@ -66,7 +92,7 @@
     if ($action == 'list') {
         echo '<h2>'.ucfirst(util_lang('authoritative_plants')).'</h2>'."\n";
         $all_ap = Authoritative_Plant::getAllFromDb(['flag_delete'=>false],$DB);
-        echo '<ul class="all-authoritative-plants">'."\n";
+        echo '<ul id="list-of-authoritative-plants" class="all-authoritative-plants">'."\n";
         foreach ($all_ap as $ap) {
             if ($USER->canActOnTarget($ACTIONS['view'],$ap)) {
                 echo $ap->renderAsListItem();
@@ -85,7 +111,12 @@
 //        echo 'TODO: implement view action';
     } else
     if (($action == 'edit') || ($action == 'create')) {
-        echo 'TODO: implement edit and create actions';
+//        echo 'TODO: implement edit and create actions';
+        echo $ap->renderAsEdit();
+        echo '<script src="'.APP_ROOT_PATH.'/js/plant_image_viewer.js"></script>'."\n";
+        echo '<script src="'.APP_ROOT_PATH.'/js/ordering_controls.js"></script>'."\n";
+        echo '<script src="'.APP_ROOT_PATH.'/js/authoritative_plant_edit.js"></script>'."\n";
+
     } else
     if ($action == 'delete') {
         echo 'TODO: implement delete action';

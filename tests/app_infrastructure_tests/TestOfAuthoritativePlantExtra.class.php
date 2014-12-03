@@ -62,6 +62,35 @@
             $this->assertEqual(5109,$pes[8]->authoritative_plant_extra_id);
         }
 
+        function testCreateNewAuthoritativePlantExtra() {
+            $n = Authoritative_Plant_Extra::createNewAuthoritativePlantExtraFor('common name',5001,$this->DB);
+
+            $this->assertEqual('NEW',$n->authoritative_plant_extra_id);
+            $this->assertNotEqual('',$n->created_at);
+            $this->assertNotEqual('',$n->updated_at);
+            $this->assertEqual(5001, $n->authoritative_plant_id);
+            $this->assertEqual('common name', $n->type);
+            $this->assertEqual('', $n->value);
+            $this->assertEqual(0, $n->ordering);
+            $this->assertEqual(false,$n->flag_active);
+            $this->assertEqual(false,$n->flag_delete);
+        }
+
+        //// instance methods - object itself
+
+
+        function testRenderFormForNew_COMMON_NAME() {
+            $this->todo();
+        }
+
+        function testRenderFormForNew_IMAGE() {
+            $this->todo();
+        }
+
+        function testRenderFormForNew_DESCRIPTION() {
+            $this->todo();
+        }
+
         //// instance methods - related data
 
 		function testGetAuthoritativePlant() {
@@ -117,5 +146,73 @@
             $rendered = $pe->renderAsListItem();
 
             $this->assertEqual($canonical,$rendered);
+        }
+
+        function testRenderAsListItemEdit_COMMON_NAME() {
+            $pe = Authoritative_Plant_Extra::getOneFromDb(['authoritative_plant_extra_id'=>5101],$this->DB);
+            $canonical = '';
+
+            $canonical .= '<li id="authoritative_plant_extra_5101" class="authoritative-plant-extra-edit authoritative-plant-extra" data-authoritative_plant_extra_id="5101" data-created_at="'.$pe->created_at.'" data-updated_at="'.$pe->updated_at.'" data-authoritative_plant_id="5001" data-type="common name" data-value="AP_A common z chestnut" data-ordering="1.00000" data-flag_active="1" data-flag_delete="0">'."\n";
+            $canonical .= '  '.util_orderingUpDownControls('authoritative_plant_extra_5101')."\n";
+            $canonical .= '  <div class="authoritative-plant-extra embedded">'."\n";
+            $canonical .= '    <div id="form-edit-authoritative-plant-extra-5101" class="form-edit-authoritative-plant-extra" data-authoritative_plant_extra_id="5101">'."\n";
+            $canonical .= '      <div class="field-label">common name : </div><div class="field-value"><input type="text" name="authoritative_plant_extra-common_name_5101" id="authoritative_plant_extra-common_name_5101" value="AP_A common z chestnut"/></div>'."\n";
+            $canonical .= '    </div>'."\n";
+            $canonical .= '    <button class="btn btn-danger button-mark-authoritative-plant-extra-for-delete" title="Mark this for removal - the actual removal occurs on update" data-do-mark-title="Mark this for removal - the actual removal occurs on update" data-remove-mark-title="Undo the mark for removal" data-for_dom_id="authoritative_plant_extra_5101" data-authoritative_plant_extra_id="5101"><i class="icon-remove-sign icon-white"></i></button>'."\n";
+            $canonical .= '  </div>'."\n";
+            $canonical .= '</li>';
+
+            $rendered = $pe->renderAsListItemEdit();
+
+//            echo "<pre>\n".htmlentities($canonical)."\n------------------\n".htmlentities($rendered)."\n</pre>";
+
+            $this->assertEqual($canonical,$rendered);
+        }
+
+        function testRenderAsListItemEdit_IMAGE() {
+            $pe = Authoritative_Plant_Extra::getOneFromDb(['authoritative_plant_extra_id'=>5105],$this->DB);
+            $canonical = '';
+
+            $canonical .= '<li id="authoritative_plant_extra_5105" class="authoritative-plant-extra-edit authoritative-plant-extra" data-authoritative_plant_extra_id="5105" data-created_at="'.$pe->created_at.'" data-updated_at="'.$pe->updated_at.'" data-authoritative_plant_id="5001" data-type="image" data-value="testing/castanea_dentata.jpg" data-ordering="2.00000" data-flag_active="1" data-flag_delete="0">'."\n";
+            $canonical .= '  '.util_orderingUpDownControls('authoritative_plant_extra_5105')."\n";
+            $canonical .= '  <div class="authoritative-plant-extra embedded">'."\n";
+            $canonical .= '    <div id="form-edit-authoritative-plant-extra-5105" class="form-edit-authoritative-plant-extra" data-authoritative_plant_extra_id="5105">'."\n";
+            $canonical .= '      <img class="plant-image" src="/digitalfieldnotebooks/image_data/authoritative/testing/castanea_dentata.jpg"/>'."\n";
+            $canonical .= '    </div>'."\n";
+            $canonical .= '    <button class="btn btn-danger button-mark-authoritative-plant-extra-for-delete" title="Mark this for removal - the actual removal occurs on update" data-do-mark-title="Mark this for removal - the actual removal occurs on update" data-remove-mark-title="Undo the mark for removal" data-for_dom_id="authoritative_plant_extra_5105" data-authoritative_plant_extra_id="5105"><i class="icon-remove-sign icon-white"></i></button>'."\n";
+            $canonical .= '  </div>'."\n";
+            $canonical .= '</li>';
+
+            $rendered = $pe->renderAsListItemEdit();
+
+//            echo "<pre>\n".htmlentities($canonical)."\n------------------\n".htmlentities($rendered)."\n</pre>";
+
+            $this->assertEqual($canonical,$rendered);
+        }
+
+        function testRenderAsListItemEdit_DESCRIPTION() {
+            $pe = Authoritative_Plant_Extra::getOneFromDb(['authoritative_plant_extra_id'=>5104],$this->DB);
+            $canonical = '';
+
+            $canonical .= '<li id="authoritative_plant_extra_5104" class="authoritative-plant-extra-edit authoritative-plant-extra" data-authoritative_plant_extra_id="5104" data-created_at="'.$pe->created_at.'" data-updated_at="'.$pe->updated_at.'" data-authoritative_plant_id="5001" data-type="description" data-value="description of american chestnut" data-ordering="1.00000" data-flag_active="1" data-flag_delete="0">'."\n";
+            $canonical .= '  '.util_orderingUpDownControls('authoritative_plant_extra_5104')."\n";
+            $canonical .= '  <div class="authoritative-plant-extra embedded">'."\n";
+            $canonical .= '    <div id="form-edit-authoritative-plant-extra-5104" class="form-edit-authoritative-plant-extra" data-authoritative_plant_extra_id="5104">'."\n";
+            $canonical .= '      <div class="field-label">description : </div><div class="field-value"><input type="text" name="authoritative_plant_extra-description_5104" id="authoritative_plant_extra-description_5104" value="description of american chestnut"/></div>'."\n";
+            $canonical .= '    </div>'."\n";
+            $canonical .= '    <button class="btn btn-danger button-mark-authoritative-plant-extra-for-delete" title="Mark this for removal - the actual removal occurs on update" data-do-mark-title="Mark this for removal - the actual removal occurs on update" data-remove-mark-title="Undo the mark for removal" data-for_dom_id="authoritative_plant_extra_5104" data-authoritative_plant_extra_id="5104"><i class="icon-remove-sign icon-white"></i></button>'."\n";
+            $canonical .= '  </div>'."\n";
+            $canonical .= '</li>';
+
+            $rendered = $pe->renderAsListItemEdit();
+
+//            echo "<pre>\n".htmlentities($canonical)."\n------------------\n".htmlentities($rendered)."\n</pre>";
+
+            $this->assertEqual($canonical,$rendered);
+        }
+
+        function testToDo() {
+//            $this->todo('render as list item edit');
+//            $this->todo('factory to create new');
         }
     }

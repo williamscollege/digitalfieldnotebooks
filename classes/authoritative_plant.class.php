@@ -75,24 +75,42 @@
             return ($a->class < $b->class) ? -1 : 1;
         }
 
-       public static function renderControlSelectAllAuthoritativePlants($default_selected = 0) {
-           if (is_object($default_selected)) {
+        public static function renderControlSelectAllAuthoritativePlants($default_selected = 0) {
+            if (is_object($default_selected)) {
                $default_selected = $default_selected->authoritative_plant_id;
-           }
+            }
 
-           global $DB;
+            global $DB;
 
-           $all_ap = Authoritative_Plant::getAllFromDb(['flag_delete' => FALSE], $DB);
-           usort($all_ap,'Authoritative_Plant::cmp');
+            $all_ap = Authoritative_Plant::getAllFromDb(['flag_active'=>true,'flag_delete' => FALSE], $DB);
+            usort($all_ap,'Authoritative_Plant::cmp');
 
-           $rendered = '<select name="authoritative_plant_id" id="authoritative-plant-id">'."\n";
-           foreach ($all_ap as $ap) {
+            $rendered = '<select name="authoritative_plant_id" id="authoritative-plant-id">'."\n";
+            foreach ($all_ap as $ap) {
                $rendered .= '  '.$ap->renderAsOption($ap->authoritative_plant_id == $default_selected)."\n";
-           }
-           $rendered .= '</select>';
+            }
+            $rendered .= '</select>';
 
-           return $rendered;
-       }
+            return $rendered;
+        }
+
+        public static function createNewAuthoritativePlant($db_connection) {
+            $n = new Authoritative_Plant([
+                'authoritative_plant_id' => 'NEW',
+                'created_at' => util_currentDateTimeString_asMySQL(),
+                'updated_at' => util_currentDateTimeString_asMySQL(),
+                'class' => '',
+                'order' => '',
+                'family' => '',
+                'genus' => '',
+                'species' => '',
+                'variety' => '',
+                'catalog_identifier' => '',
+                'flag_active' => false,
+                'flag_delete' => false,
+                'DB'=>$db_connection]);
+            return $n;
+        }
 
         //------------------------------------------------------------------------------------
 
@@ -155,6 +173,11 @@
             return $link;
         }
 
+        public function renderAsButtonEdit() {
+            $btn = '<a id="btn-edit" href="'.APP_ROOT_PATH.'/app_code/authoritative_plant.php?action=edit&authoritative_plant_id='.$this->authoritative_plant_id.'" class="edit_link btn" ><i class="icon-edit"></i> '.util_lang('edit').'</a>';
+            return $btn;
+        }
+
         public function renderAsListItem($idstr='',$classes_array = [],$other_attribs_hash = []) {
             global $USER,$ACTIONS;
             $actions_attribs = '';
@@ -164,9 +187,31 @@
             }
             $li_elt = substr(util_listItemTag($idstr,$classes_array,$other_attribs_hash),0,-1);
             $li_elt .= ' '.$this->fieldsAsDataAttribs().$actions_attribs.'>';
-            $li_elt .= $this->renderAsLink().'</li>';
+            if ($this->flag_active) {
+                $li_elt .= '<i class="icon-ok"></i> ';
+            } else {
+                $li_elt .= '<i class="icon-ban-circle"></i> ';
+            }
+            $li_elt .= $this->renderAsLink();
+            $li_elt .= '</li>';
 //            $li_elt .= '<a href="/app_code/authoritative_plant.php?authoritative_plant_id='.$this->authoritative_plant_id.'">'.htmlentities($this->renderAsShortText()).'</a></li>';
             return $li_elt;
+        }
+
+        private function _renderBaseInfo() {
+            $rendered = '';
+
+            $rendered .= '  <ul class="base-info">'."\n";
+            if ($this->class) { $rendered .= '    <li><div class="field-label">'.util_lang('class').' : </div><div class="field-value taxonomy taxonomy-class">'.htmlentities($this->class).'</div></li>'."\n"; }
+            if ($this->order) { $rendered .= '    <li><div class="field-label">'.util_lang('order').' : </div><div class="field-value taxonomy taxonomy-order">'.htmlentities($this->order).'</div></li>'."\n"; }
+            if ($this->family) { $rendered .= '    <li><div class="field-label">'.util_lang('family').' : </div><div class="field-value taxonomy taxonomy-family">'.htmlentities($this->family).'</div></li>'."\n"; }
+            if ($this->genus) { $rendered .= '    <li><div class="field-label">'.util_lang('genus').' : </div><div class="field-value taxonomy taxonomy-genus">'.htmlentities($this->genus).'</div></li>'."\n"; }
+            if ($this->species) { $rendered .= '    <li><div class="field-label">'.util_lang('species').' : </div><div class="field-value taxonomy taxonomy-species">'.htmlentities($this->species).'</div></li>'."\n"; }
+            if ($this->variety) { $rendered .= '    <li><div class="field-label">'.util_lang('variety').' : </div><div class="field-value taxonomy taxonomy-variety">\''.htmlentities($this->variety).'\'</div></li>'."\n"; }
+            if ($this->catalog_identifier) { $rendered .= '    <li><div class="field-label">'.util_lang('catalog_identifier').' : </div><div class="field-value">'.htmlentities($this->catalog_identifier).'</div></li>'."\n"; }
+            $rendered .= '  </ul><br/>'."\n";
+
+            return $rendered;
         }
 
         public function renderAsViewEmbed() {
@@ -183,17 +228,18 @@
 
             $rendered = '<div id="authoritative_plant_embed_'.$this->authoritative_plant_id.'" class="authoritative-plant embedded" data-authoritative_plant_id="'.$this->authoritative_plant_id.'">
   <h3>'.$this->renderAsLink().'</h3>
-  <div class="canonical_image">'.$canonical_image.'</div>
-  <ul class="base-info">
-    <li><div class="field-label">'.util_lang('class').' : </div><div class="field-value taxonomy taxonomy-class">'.htmlentities($this->class).'</div></li>
-    <li><div class="field-label">'.util_lang('order').' : </div><div class="field-value taxonomy taxonomy-order">'.htmlentities($this->order).'</div></li>
-    <li><div class="field-label">'.util_lang('family').' : </div><div class="field-value taxonomy taxonomy-family">'.htmlentities($this->family).'</div></li>
-    <li><div class="field-label">'.util_lang('genus').' : </div><div class="field-value taxonomy taxonomy-genus">'.htmlentities($this->genus).'</div></li>
-    <li><div class="field-label">'.util_lang('species').' : </div><div class="field-value taxonomy taxonomy-species">'.htmlentities($this->species).'</div></li>
-    <li><div class="field-label">'.util_lang('variety').' : </div><div class="field-value taxonomy taxonomy-variety">\''.htmlentities($this->variety).'\'</div></li>
-    <li><div class="field-label">'.util_lang('catalog_identifier').' : </div><div class="field-value">'.htmlentities($this->catalog_identifier).'</div></li>
-  </ul><br/>
-  <a class="show-hide-control" href="#" data-for_elt_id="authoritative_plant-details_'.$this->authoritative_plant_id.'">'.util_lang('show_hide').' '.util_lang('extra_info').'</a>
+  <div class="canonical_image">'.$canonical_image.'</div>'."\n";
+            $rendered .= $this->_renderBaseInfo();
+//  <ul class="base-info">'."\n";
+//            $rendered .= '    <li><div class="field-label">'.util_lang('class').' : </div><div class="field-value taxonomy taxonomy-class">'.htmlentities($this->class).'</div></li>'."\n";
+//            $rendered .= '    <li><div class="field-label">'.util_lang('order').' : </div><div class="field-value taxonomy taxonomy-order">'.htmlentities($this->order).'</div></li>'."\n";
+//            $rendered .= '    <li><div class="field-label">'.util_lang('family').' : </div><div class="field-value taxonomy taxonomy-family">'.htmlentities($this->family).'</div></li>'."\n";
+//            $rendered .= '    <li><div class="field-label">'.util_lang('genus').' : </div><div class="field-value taxonomy taxonomy-genus">'.htmlentities($this->genus).'</div></li>'."\n";
+//            $rendered .= '    <li><div class="field-label">'.util_lang('species').' : </div><div class="field-value taxonomy taxonomy-species">'.htmlentities($this->species).'</div></li>'."\n";
+//            $rendered .= '    <li><div class="field-label">'.util_lang('variety').' : </div><div class="field-value taxonomy taxonomy-variety">\''.htmlentities($this->variety).'\'</div></li>'."\n";
+//            $rendered .= '    <li><div class="field-label">'.util_lang('catalog_identifier').' : </div><div class="field-value">'.htmlentities($this->catalog_identifier).'</div></li>'."\n";
+//            $rendered .= '  </ul><br/>
+            $rendered .= '  <a class="show-hide-control" href="#" data-for_elt_id="authoritative_plant-details_'.$this->authoritative_plant_id.'">'.util_lang('show_hide').' '.util_lang('extra_info').'</a>
   <div class="details-info" id="authoritative_plant-details_'.$this->authoritative_plant_id.'">
   <ul class="extra-info" id="authoritative_plant-extra_info_'.$this->authoritative_plant_id.'">
 ';
@@ -235,18 +281,28 @@ $rendered .= '  <h4>'.util_lang('specimens','properize').'</h4>
             $rendered = '<div id="authoritative_plant_view_'.$this->authoritative_plant_id.'" class="authoritative-plant view-authoritative-plant" data-authoritative_plant_id="'.$this->authoritative_plant_id.'">'."\n";
             $rendered .='  <span class="authoritative-plant-breadcrumb"><a href="'.APP_ROOT_PATH.'/app_code/authoritative_plant.php?action=list">'.util_lang('authoritative_plant').'</a> &gt;</span>'."\n";
             $rendered .='  <h3>'.$this->renderAsShortText().'</h3>'."\n";
-            $rendered .='  <ul class="base-info">
-    <li><span class="field-label">'.util_lang('class').'</span> : <span class="field-value taxonomy taxonomy-class">'.htmlentities($this->class).'</span></li>
-    <li><span class="field-label">'.util_lang('order').'</span> : <span class="field-value taxonomy taxonomy-order">'.htmlentities($this->order).'</span></li>
-    <li><span class="field-label">'.util_lang('family').'</span> : <span class="field-value taxonomy taxonomy-family">'.htmlentities($this->family).'</span></li>
-    <li><span class="field-label">'.util_lang('genus').'</span> : <span class="field-value taxonomy taxonomy-genus">'.htmlentities($this->genus).'</span></li>
-    <li><span class="field-label">'.util_lang('species').'</span> : <span class="field-value taxonomy taxonomy-species">'.htmlentities($this->species).'</span></li>
-    <li><span class="field-label">'.util_lang('variety').'</span> : <span class="field-value taxonomy taxonomy-variety">\''.htmlentities($this->variety).'\'</span></li>
-    <li><span class="field-label">'.util_lang('catalog_identifier').'</span> : <span class="field-value">'.htmlentities($this->catalog_identifier).'</span></li>
-  </ul>
+            $rendered .= $this->_renderBaseInfo();
+//            $rendered .='  <ul class="base-info">
+//    <li><span class="field-label">'.util_lang('class').'</span> : <span class="field-value taxonomy taxonomy-class">'.htmlentities($this->class).'</span></li>
+//    <li><span class="field-label">'.util_lang('order').'</span> : <span class="field-value taxonomy taxonomy-order">'.htmlentities($this->order).'</span></li>
+//    <li><span class="field-label">'.util_lang('family').'</span> : <span class="field-value taxonomy taxonomy-family">'.htmlentities($this->family).'</span></li>
+//    <li><span class="field-label">'.util_lang('genus').'</span> : <span class="field-value taxonomy taxonomy-genus">'.htmlentities($this->genus).'</span></li>
+//    <li><span class="field-label">'.util_lang('species').'</span> : <span class="field-value taxonomy taxonomy-species">'.htmlentities($this->species).'</span></li>
+//    <li><span class="field-label">'.util_lang('variety').'</span> : <span class="field-value taxonomy taxonomy-variety">\''.htmlentities($this->variety).'\'</span></li>
+//    <li><span class="field-label">'.util_lang('catalog_identifier').'</span> : <span class="field-value">'.htmlentities($this->catalog_identifier).'</span></li>
+//  </ul>
+            $rendered .='  <div class="active_state_info">';
+            if ($this->flag_active) {
+                $rendered .= '<i class="icon-ok"></i> '.util_lang('active_true');
+            } else {
+                $rendered .= '<i class="icon-ban-circle"></i> '.util_lang('active_false');
+            }
+            $rendered .='</div>
   <h4>'.util_lang('details','properize').'</h4>
   <ul class="extra-info">
 ';
+
+//
             if ($this->extras) {
                 foreach ($this->extras as $extra) {
                     $rendered .='    '.$extra->renderAsListItem()."\n";
@@ -291,4 +347,74 @@ $rendered .= '  <h4>'.util_lang('specimens','properize').'</h4>
             $rendered = '<option data-authoritative_plant_id="'.$this->authoritative_plant_id.'" value="'.$this->authoritative_plant_id.'"'.($flag_is_selected ? ' selected="selected"' : '').'>'.$this->renderAsShortText().'</option>';
             return $rendered;
         }
+
+        function renderAsEdit() {
+            $this->cacheExtras();
+            $this->cacheNotebookPages();
+            $this->cacheSpecimens();
+
+
+            $rendered = '<div id="rendered_authoritative_plant_'.$this->authoritative_plant_id.'" class="authoritative-plant edit-authoritative-plant" '.$this->fieldsAsDataAttribs().' data-can-edit="1">'."\n";
+            $rendered .= '  <form id="form-edit-authoritative-plant" action="'.APP_ROOT_PATH.'/app_code/authoritative_plant.php">'."\n";
+            $rendered .= '    <input type="hidden" name="action" value="update"/>'."\n";
+            $rendered .= '    <input type="hidden" id="authoritative_plant_id" name="authoritative_plant_id" value="'.$this->authoritative_plant_id.'"/>'."\n";
+            $rendered .= '    <div id="actions"><button id="edit-submit-control" class="btn btn-success" type="submit" name="edit-submit-control" value="update"><i class="icon-ok-sign icon-white"></i> '.util_lang('update','properize').'</button>'."\n";
+            $rendered .= '    <a id="edit-cancel-control" class="btn" href="/digitalfieldnotebooks/app_code/authoritative_plant.php?action=view&authoritative_plant_id='.$this->authoritative_plant_id.'"><i class="icon-remove"></i> '.util_lang('cancel','properize').'</a>  <a id="edit-delete-authoritative-plant-control" class="btn btn-danger" href="/digitalfieldnotebooks/app_code/authoritative_plant.php?action=delete&authoritative_plant_id='.$this->authoritative_plant_id.'"><i class="icon-trash icon-white"></i> '.util_lang('delete','properize').'</a></div>'."\n";
+
+// basic data fields
+            $rendered .= '    <ul class="base-info">'."\n";
+            $rendered .= '      <li><div class="field-label">'.util_lang('class').'</div> : <div class="field-value taxonomy taxonomy-class"><input type="text" name="authoritative_plant-class_'.$this->authoritative_plant_id.'" id="authoritative_plant-class_'.$this->authoritative_plant_id.'" value="'.htmlentities($this->class).'"/></div></li>'."\n";
+            $rendered .= '      <li><div class="field-label">'.util_lang('order').'</div> : <div class="field-value taxonomy taxonomy-order"><input type="text" name="authoritative_plant-order_'.$this->authoritative_plant_id.'" id="authoritative_plant-order_'.$this->authoritative_plant_id.'" value="'.htmlentities($this->order).'"/></div></li>'."\n";
+            $rendered .= '      <li><div class="field-label">'.util_lang('family').'</div> : <div class="field-value taxonomy taxonomy-family"><input type="text" name="authoritative_plant-family_'.$this->authoritative_plant_id.'" id="authoritative_plant-family_'.$this->authoritative_plant_id.'" value="'.htmlentities($this->family).'"/></div></li>'."\n";
+            $rendered .= '      <li><div class="field-label">'.util_lang('genus').'</div> : <div class="field-value taxonomy taxonomy-genus"><input type="text" name="authoritative_plant-genus_'.$this->authoritative_plant_id.'" id="authoritative_plant-genus_'.$this->authoritative_plant_id.'" value="'.htmlentities($this->genus).'"/></div></li>'."\n";
+            $rendered .= '      <li><div class="field-label">'.util_lang('species').'</div> : <div class="field-value taxonomy taxonomy-species"><input type="text" name="authoritative_plant-species_'.$this->authoritative_plant_id.'" id="authoritative_plant-species_'.$this->authoritative_plant_id.'" value="'.htmlentities($this->species).'"/></div></li>'."\n";
+            $rendered .= '      <li><div class="field-label">'.util_lang('variety').'</div> : <div class="field-value taxonomy taxonomy-variety"><input type="text" name="authoritative_plant-variety_'.$this->authoritative_plant_id.'" id="authoritative_plant-variety_'.$this->authoritative_plant_id.'" value="'.htmlentities($this->variety).'"/></div></li>'."\n";
+            $rendered .= '      <li><div class="field-label">'.util_lang('catalog_identifier').'</div> : <div class="field-value" taxonomy taxonomy-catalog_identifier><input type="text" name="authoritative_plant-catalog_identifier_'.$this->authoritative_plant_id.'" id="authoritative_plant-catalog_identifier_'.$this->authoritative_plant_id.'" value="'.htmlentities($this->catalog_identifier).'"/></div></li>'."\n";
+            $rendered .= '    </ul>'."\n";
+
+// flag active control
+            $rendered .= '    <div class="active-state-controls"><input type="checkbox" name="flag_active" value="1"'.($this->flag_active ? ' checked="checked"' : '').'/> '.util_lang('active').'</div>'."\n";
+
+// extra info : common names (w/ reordering controls)
+
+            $rendered .= '    <h5>'.util_lang('common_names','properize').'</h5>'."\n";
+            $rendered .= '    <ul class="authoritative-plant-extras authoritative-plant-extra-common_name">'."\n";
+            $rendered .= '      <li><a href="#" id="add_new_authoritative_plant_common_name_button" class="btn">'.util_lang('add_common_name').'</a></li>'."\n";
+            foreach ($this->extras as $ae) {
+                if ($ae->type == 'common name') {
+                    $rendered .= '      '.$ae->renderAsListItemEdit()."\n";
+                }
+            }
+            $rendered .= '    </ul>'."\n";
+
+// extra info : images (w/ reordering controls)
+            $rendered .= '    <h5>'.util_lang('images','properize').'</h5>'."\n";
+            $rendered .= '    <ul class="authoritative-plant-extras authoritative-plant-extra-image">'."\n";
+            $rendered .= '      <li><a href="#" id="add_new_authoritative_plant_image_button" class="btn">'.util_lang('add_image').'</a></li>'."\n";
+            foreach ($this->extras as $ae) {
+                if ($ae->type == 'image') {
+                    $rendered .= '      '.$ae->renderAsListItemEdit()."\n";
+                }
+            }
+            $rendered .= '    </ul>'."\n";
+
+// extra info : text (w/ reordering controls)
+            $rendered .= '    <h5>'.util_lang('descriptions','properize').'</h5>'."\n";
+            $rendered .= '    <ul class="authoritative-plant-extras authoritative-plant-extra-description">'."\n";
+            $rendered .= '      <li><a href="#" id="add_new_authoritative_plant_description_button" class="btn">'.util_lang('add_description').'</a></li>'."\n";
+            foreach ($this->extras as $ae) {
+                if ($ae->type == 'description') {
+                    $rendered .= '      '.$ae->renderAsListItemEdit()."\n";
+                }
+            }
+            $rendered .= '    </ul>'."\n";
+
+            $rendered .= Specimen::renderSpecimenListBlock($this->specimens);
+
+            $rendered .= '  </form>'."\n";
+            $rendered .= '</div>'."\n";
+
+            return $rendered;
+        }
+
     }

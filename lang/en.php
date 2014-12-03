@@ -112,6 +112,7 @@ $LANGUAGE['en'] = [
     'variety' => 'variety',
     'catalog_identifier' => 'catalog ID',
     'common_name' => 'common name',
+    'image' => 'image',
     'description' => 'description',
 
     'plants' => 'plants',
@@ -123,6 +124,12 @@ $LANGUAGE['en'] = [
     'no_authoritative_plant_extra_info' => 'no details / extra information',
     'no_authoritative_plant_specimens' => 'no specimens',
     'no_authoritative_plant_notebook_pages' => 'not used in any notebook pages yet',
+    'add_common_name' => '+ Add Common Name +',
+    'add_image' => '+ Add Image +',
+    'add_description' => '+ Add Brief Description/Note +',
+    'common_names' => 'common names',
+    'images' => 'images',
+    'descriptions' => 'descriptions',
 
     'coordinates' => 'coordinates',
     'longitude' => 'longitude',
@@ -181,6 +188,9 @@ $LANGUAGE['en'] = [
     'no_notebook_page_specified' => 'No notebook page was specified.',
     'no_notebook_page_found' => 'Could not find that notebook page.',
     'not_supported' => 'That is not supported',
+    'no_authoritative_plant_specified' => 'No plant was specified.',
+    'no_authoritative_plant_found' => 'Could not find that plant.',
+
 
     'no_user_specified' => 'No user was specified.',
 

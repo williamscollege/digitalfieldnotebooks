@@ -514,6 +514,7 @@ li.specimen-image .control-workflows {
     /*display: inline-block;*/
 /*}*/
 
+
 .authoritative-plant .extra-info {
     /*list-style-type: none;*/
     clear: both;
@@ -539,6 +540,87 @@ li.specimen-image .control-workflows {
     margin-bottom: 6px;
     font-size: 16px;
     font-style: italic;
+}
+
+.edit-authoritative-plant ul.base-info {
+    margin-top: 12px;
+}
+
+.edit-authoritative-plant ul.base-info li {
+    margin-top: 6px;
+}
+
+.edit-authoritative-plant ul.authoritative-plant-extras {
+    margin-top: 6px;
+}
+
+.edit-authoritative-plant .form-edit-authoritative-plant-extra {
+    display: inline-block;
+}
+
+.edit-authoritative-plant .button-mark-authoritative-plant-extra-for-delete {
+    /*float: right;*/
+    /*margin-left: 6px;*/
+    vertical-align: top;
+}
+
+.authoritative-plant-extra-edit div.embedded {
+    display: inline-block;
+    /*min-width: 400px;*/
+    margin-left: 2px;
+    padding: 6px;
+}
+
+.authoritative-plant-extra-edit div.embedded .field-value {
+    margin: 0;
+}
+
+.authoritative-plant-extra-edit div.embedded input {
+    margin-top: 0 !important;
+    width: 300px;
+}
+
+ul.authoritative-plant-extra-description .authoritative-plant-extra-edit div.embedded input {
+    width: 500px;
+}
+
+.edit-authoritative-plant .button-mark-specimen-for-delete {
+    float: right;
+}
+
+
+.authoritative-plant .specimens,
+.authoritative-plant .specimens .base-info,
+.authoritative-plant .specimens .specimen-images {
+    /*list-style-type: none;*/
+    margin-bottom: 10px;
+}
+
+
+.edit-authoritative-plant .specimens .specimen-images li:first-of-type {
+    vertical-align: top;
+}
+
+
+.authoritative-plant .specimens .base-info li {
+    margin-top: 4px;
+    margin-bottom: 2px;
+}
+
+.authoritative-plant .specimens {
+    margin-top: 12px;
+}
+
+.edit-authoritative-plant .specimens .base-info li {
+    margin-bottom: 6px;
+}
+
+.edit-authoritative-plant .specimens .base-info li .specimen-notes {
+    width: 434px;
+}
+
+.authoritative-plant-extra-edit div.embedded .field-label {
+    display: none;
 }
 
 .authoritative-plant ul.notebook-pages {

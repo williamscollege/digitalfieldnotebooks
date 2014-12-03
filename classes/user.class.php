@@ -172,6 +172,9 @@
                 return true;
             }
 
+//            util_prePrintR($action);
+//            util_prePrintR($target);
+
             // owner of target -> always yes, except for verification
             if ($target->user_id == $this->user_id) {
                 if ($action->name != 'verify') { return true; }

@@ -118,6 +118,7 @@
 '  <li><div class="field-label">'.util_lang('coordinates').'</div> : <div class="field-value"><input type="text" name="specimen-gps_longitude_'.$s->specimen_id.'" id="specimen-gps_longitude_'.$s->specimen_id.'" value="'.htmlentities($s->gps_longitude).'"/>, <input type="text" name="specimen-gps_latitude_'.$s->specimen_id.'" id="specimen-gps_latitude_'.$s->specimen_id.'" value="'.htmlentities($s->gps_latitude).'"/></div></li>'."\n".
 '  <li><div class="field-label">'.util_lang('notes').'</div> : <div class="field-value"><textarea name="specimen-notes_'.$s->specimen_id.'" id="specimen-notes_'.$s->specimen_id.'" class="specimen-notes" row="4" cols="120">'.htmlentities($s->notes).'</textarea></div></li>'."\n".
 '  <li><div class="field-label">'.util_lang('catalog_identifier').'</div> : <div class="field-value"><input type="text" name="specimen-catalog_identifier_'.$s->specimen_id.'" id="specimen-catalog_identifier_'.$s->specimen_id.'" value="'.htmlentities($s->catalog_identifier).'"/></div></li>'."\n".
+'  <li><b><i>'.util_lang('msg_save_page_before_image_upload','ucfirst').'</i></b></li>'."\n".
 '</ul>';
 
             $rendered = Specimen::renderFormInteriorForNewSpecimen($unique_str,$this->DB);

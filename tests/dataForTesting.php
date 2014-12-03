@@ -55,7 +55,8 @@ function createTestData_XXXX($dbConn) {
             (5005,NOW(),NOW(), 'AP_A_class', 'AP_A_order', 'AP_A_family', 'AP_B_genus', 'AP_B_species', 'AP_B_variety', 'AP_4_CI', 1, 0),
             (5006,NOW(),NOW(), 'AP_A_class', 'AP_B_order', 'AP_B_family', 'AP_B_genus', 'AP_B_species', 'AP_B_variety', 'AP_6_CI', 1, 0),
             (5007,NOW(),NOW(), 'AP_B_class', 'AP_B_order', 'AP_B_family', 'AP_B_genus', 'AP_B_species', 'AP_B_variety', 'AP_7_CI', 1, 0),
-            (5008,NOW(),NOW(), 'AP_A_class', 'AP_A_order', 'AP_B_family', 'AP_B_genus', 'AP_B_species', 'AP_B_variety', 'AP_5_CI', 1, 0)
+            (5008,NOW(),NOW(), 'AP_A_class', 'AP_A_order', 'AP_B_family', 'AP_B_genus', 'AP_B_species', 'AP_B_variety', 'AP_5_CI', 1, 0),
+            (5009,NOW(),NOW(), 'Z', 'Z', 'Z', 'Z', 'Z', 'inactive', '', 0, 0)
         ";
         $addTestStmt = $dbConn->prepare($addTestSql);
         $addTestStmt->execute();
