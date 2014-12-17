@@ -143,6 +143,7 @@
                 $new_ordering = $_REQUEST[$req_key];
                 if ($new_ordering != $ss->ordering) {
                     $ss->ordering = $new_ordering;
+//                    $ss->matchesDb = false; // not needed because ordering field is access via -> rather than the fieldValues array
                     $ss->updateDb();
                 }
             }

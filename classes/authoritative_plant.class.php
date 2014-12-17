@@ -359,7 +359,11 @@ $rendered .= '  <h4>'.util_lang('specimens','properize').'</h4>
             $rendered .= '    <input type="hidden" name="action" value="update"/>'."\n";
             $rendered .= '    <input type="hidden" id="authoritative_plant_id" name="authoritative_plant_id" value="'.$this->authoritative_plant_id.'"/>'."\n";
             $rendered .= '    <div id="actions"><button id="edit-submit-control" class="btn btn-success" type="submit" name="edit-submit-control" value="update"><i class="icon-ok-sign icon-white"></i> '.util_lang('update','properize').'</button>'."\n";
-            $rendered .= '    <a id="edit-cancel-control" class="btn" href="/digitalfieldnotebooks/app_code/authoritative_plant.php?action=view&authoritative_plant_id='.$this->authoritative_plant_id.'"><i class="icon-remove"></i> '.util_lang('cancel','properize').'</a>  <a id="edit-delete-authoritative-plant-control" class="btn btn-danger" href="/digitalfieldnotebooks/app_code/authoritative_plant.php?action=delete&authoritative_plant_id='.$this->authoritative_plant_id.'"><i class="icon-trash icon-white"></i> '.util_lang('delete','properize').'</a></div>'."\n";
+            $rendered .= '    <a id="edit-cancel-control" class="btn" href="/digitalfieldnotebooks/app_code/authoritative_plant.php?action=view&authoritative_plant_id='.$this->authoritative_plant_id.'"><i class="icon-remove"></i> '.util_lang('cancel','properize').'</a>  ';
+            if ($this->authoritative_plant_id != 'NEW') {
+                $rendered .= '<a id="edit-delete-authoritative-plant-control" class="btn btn-danger" href="/digitalfieldnotebooks/app_code/authoritative_plant.php?action=delete&authoritative_plant_id='.$this->authoritative_plant_id.'"><i class="icon-trash icon-white"></i> '.util_lang('delete','properize').'</a>';
+            }
+            $rendered .= '</div>'."\n";
 
 // basic data fields
             $rendered .= '    <ul class="base-info">'."\n";
@@ -377,39 +381,47 @@ $rendered .= '  <h4>'.util_lang('specimens','properize').'</h4>
 
 // extra info : common names (w/ reordering controls)
 
-            $rendered .= '    <h5>'.util_lang('common_names','properize').'</h5>'."\n";
-            $rendered .= '    <ul class="authoritative-plant-extras authoritative-plant-extra-common_name">'."\n";
-            $rendered .= '      <li><a href="#" id="add_new_authoritative_plant_common_name_button" class="btn">'.util_lang('add_common_name').'</a></li>'."\n";
-            foreach ($this->extras as $ae) {
-                if ($ae->type == 'common name') {
-                    $rendered .= '      '.$ae->renderAsListItemEdit()."\n";
-                }
-            }
-            $rendered .= '    </ul>'."\n";
+            if ($this->authoritative_plant_id != 'NEW') {
 
-// extra info : images (w/ reordering controls)
-            $rendered .= '    <h5>'.util_lang('images','properize').'</h5>'."\n";
-            $rendered .= '    <ul class="authoritative-plant-extras authoritative-plant-extra-image">'."\n";
-            $rendered .= '      <li><a href="#" id="add_new_authoritative_plant_image_button" class="btn">'.util_lang('add_image').'</a></li>'."\n";
-            foreach ($this->extras as $ae) {
-                if ($ae->type == 'image') {
-                    $rendered .= '      '.$ae->renderAsListItemEdit()."\n";
+                $rendered .= '    <h5>'.util_lang('common_names','properize').'</h5>'."\n";
+                $rendered .= '    <ul class="authoritative-plant-extras authoritative-plant-extra-common_name">'."\n";
+                $rendered .= '      <li><a href="#" id="add_new_authoritative_plant_common_name_button" class="btn">'.util_lang('add_common_name').'</a></li>'."\n";
+                foreach ($this->extras as $ae) {
+                    if ($ae->type == 'common name') {
+                        $rendered .= '      '.$ae->renderAsListItemEdit()."\n";
+                    }
                 }
-            }
-            $rendered .= '    </ul>'."\n";
+                $rendered .= '    </ul>'."\n";
 
-// extra info : text (w/ reordering controls)
-            $rendered .= '    <h5>'.util_lang('descriptions','properize').'</h5>'."\n";
-            $rendered .= '    <ul class="authoritative-plant-extras authoritative-plant-extra-description">'."\n";
-            $rendered .= '      <li><a href="#" id="add_new_authoritative_plant_description_button" class="btn">'.util_lang('add_description').'</a></li>'."\n";
-            foreach ($this->extras as $ae) {
-                if ($ae->type == 'description') {
-                    $rendered .= '      '.$ae->renderAsListItemEdit()."\n";
+    // extra info : images (w/ reordering controls)
+                $rendered .= '    <h5>'.util_lang('images','properize').'</h5>'."\n";
+                $rendered .= '    <ul class="authoritative-plant-extras authoritative-plant-extra-image">'."\n";
+                $rendered .= '      <li><a href="#" id="add_new_authoritative_plant_image_button" class="btn">'.util_lang('add_image').'</a></li>'."\n";
+                foreach ($this->extras as $ae) {
+                    if ($ae->type == 'image') {
+                        $rendered .= '      '.$ae->renderAsListItemEdit()."\n";
+                    }
                 }
-            }
-            $rendered .= '    </ul>'."\n";
+                $rendered .= '    </ul>'."\n";
 
-            $rendered .= Specimen::renderSpecimenListBlock($this->specimens);
+    // extra info : text (w/ reordering controls)
+                $rendered .= '    <h5>'.util_lang('descriptions','properize').'</h5>'."\n";
+                $rendered .= '    <ul class="authoritative-plant-extras authoritative-plant-extra-description">'."\n";
+                $rendered .= '      <li><a href="#" id="add_new_authoritative_plant_description_button" class="btn">'.util_lang('add_description').'</a></li>'."\n";
+                foreach ($this->extras as $ae) {
+                    if ($ae->type == 'description') {
+                        $rendered .= '      '.$ae->renderAsListItemEdit()."\n";
+                    }
+                }
+                $rendered .= '    </ul>'."\n";
+
+                $rendered .= '    <input type="hidden" id="created_authoritative_plant_extra_ids" name="created_authoritative_plant_extra_ids" value=""/>'."\n";
+                $rendered .= '    <input type="hidden" id="deleted_authoritative_plant_extra_ids" name="deleted_authoritative_plant_extra_ids" value=""/>'."\n";
+                $rendered .= '    <input type="hidden" id="deleted_specimen_ids" name="deleted_specimen_ids" value=""/>'."\n";
+                $rendered .= '    <input type="hidden" id="created_specimen_ids" name="created_specimen_ids" value=""/>'."\n";
+
+                $rendered .= Specimen::renderSpecimenListBlock($this->specimens);
+            }
 
             $rendered .= '  </form>'."\n";
             $rendered .= '</div>'."\n";

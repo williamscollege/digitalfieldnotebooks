@@ -85,100 +85,122 @@ class AuthoritativePlantEditAndCreateTest extends WMSWebTestCase {
     }
 
     function testBaseDataUpdate() {
-        $this->todo();
+        $this->doLoginAdmin();
+        $this->get('http://localhost/digitalfieldnotebooks/app_code/authoritative_plant.php?action=edit&authoritative_plant_id=5001');
+        $this->checkBasicAsserts();
 
-//        $this->doLoginBasic();
-//        $this->get('http://localhost/digitalfieldnotebooks/app_code/notebook_page.php?action=edit&notebook_page_id=1101');
-//        $this->checkBasicAsserts();
-//
-//        $new_notes = 'new notes for the page';
-//        $new_specimen_notes = 'new notes for the specimen';
-//
+        ///////////////////////////////
+        //// set form fields
+
 //////      NOTE: the identifier to use for setField is the value of the name attribute of the field
-//        $this->setField('notes',$new_notes);
+        $this->assertTrue($this->setField('authoritative_plant-class_5001',''));
+        $this->assertTrue($this->setField('authoritative_plant-order_5001','neworder'));
+        $this->assertTrue($this->setField('authoritative_plant-species_5001','newspecies'));
+
+//        // alter common name
+        $this->assertTrue($this->setField('authoritative_plant_extra_5103-value','altered common name'));
+
+//        // alter description
+        $this->assertTrue($this->setField('authoritative_plant_extra_5104-value','altered description'));
+
+//        // alter specimen
+        $this->assertTrue($this->setField('specimen-name_8001','altered specimen name'));
+
+        // JS-driven - can't test here
+//        $this->todo('add new APE');
+//        $this->todo('delete existing APE');
 //
-//        // page field alteration
-//        $this->assertTrue($this->setField('page_field_select_1201','6204'));
-//        $this->assertTrue($this->setField('page_field_open_value_1204','new open value'));
-//
-//        // page field addition
-////        $this->todo('figure out how to do page field addition');
-////        $this->todo('figure out how to do page deletion');
-//
-//        // specimen alteration
-//        $this->assertTrue($this->setField('specimen-notes_8002',$new_specimen_notes));
-//
-////        $this->todo('figure out how to do specimen addition');
-////        $this->todo('figure out how to do specimen deletion');
-//
-////        $this->showContent();
-//
-//////        NOTE: the identifier to use for buttons is the value of the value attribute of the button
-//        $this->click('<i class="icon-ok-sign icon-white"></i> '.util_lang('update','properize'));
+//        $this->todo('add new specimen');
+//        $this->todo('delete specimen');
+
+//        $this->showContent();
+//        exit;
+
+////        NOTE: the identifier to use for buttons is the value of the value attribute of the button
+        ///////////////////////////////
+        //// submit the form
+        $this->click('<i class="icon-ok-sign icon-white"></i> '.util_lang('update','properize'));
+
+//        $this->showContent();
+
+//        exit;
 ////
-////        $this->showContent();
-////
-//        $this->checkBasicAsserts();
-//        $this->assertText($new_notes);
-////
-//        $np = Notebook_Page::getOneFromDb(['notebook_page_id'=>1101],$this->DB);
-//        $this->assertEqual($np->notes,$new_notes);
-//
-////        $this->todo('check page field alteration on 1201');
-//        $npf = Notebook_Page_Field::getOneFromDb(['notebook_page_field_id'=>1201],$this->DB);
-//        $this->assertEqual($npf->value_metadata_term_value_id,6204);
-//        $npf = Notebook_Page_Field::getOneFromDb(['notebook_page_field_id'=>1204],$this->DB);
-//        $this->assertEqual($npf->value_open,'new open value');
-//
-////        $this->todo('check page field addition');
-////        $this->todo('check page field deletion');
-//
-////        $this->todo('check specimen alteration on 8002');
-//        $s = Specimen::getOneFromDb(['specimen_id'=>8002],$this->DB);
-//        $this->assertEqual($s->notes,$new_specimen_notes);
-//
-////        $this->todo('check specimen addition');
-////        $this->todo('check specimen deletion');
-////        util_prePrintR(htmlentities($this->getBrowser()->getContent()));
-//
-//        echo "<br><b>NOTE: skipping create and delete tests for pagefields and specimens because that requires javascript interaction</b><br/>\n";
-//
+        ///////////////////////////////
+        //// check the resulting page
+        $this->checkBasicAsserts();
+
+        $this->assertNoText('class :');
+        $this->assertText('neworder');
+        $this->assertText('newspecies');
+
+        $this->assertText('altered common name');
+        $this->assertText('altered description');
+
+        $this->assertText('altered specimen name');
+
+        // JS-driven - can't test here
+//        $this->todo('web - check add new APE');
+//        $this->todo('web - check delete existing APE');
+//        $this->todo('web - add new specimen');
+//        $this->todo('web - delete specimen');
+
+        ///////////////////////////////
+        //// check the db records
+
+        $ap = Authoritative_Plant::getOneFromDb(['authoritative_plant_id'=>5001],$this->DB);
+
+        $this->assertEqual($ap->class,'');
+        $this->assertEqual($ap->order,'neworder');
+        $this->assertEqual($ap->genus,'AP_A_genus');
+        $this->assertEqual($ap->species,'newspecies');
+
+        $apeCN = Authoritative_Plant_Extra::getOneFromDb(['authoritative_plant_extra_id'=>5103],$this->DB);
+        $apeDe = Authoritative_Plant_Extra::getOneFromDb(['authoritative_plant_extra_id'=>5104],$this->DB);
+        $spec = Specimen::getOneFromDb(['specimen_id'=>8001],$this->DB);
+
+        $this->assertEqual('altered common name',$apeCN->value);
+        $this->assertEqual('altered description',$apeDe->value);
+        $this->assertEqual('altered specimen name',$spec->name);
+
+        // JS-driven - can't test here
+//        $this->todo('db - check add new APE');
+//        $this->todo('db - check delete existing APE');
+//        $this->todo('db - add new specimen');
+//        $this->todo('db - delete specimen');
     }
 
-//    function testCreateButton() {
+    function testCreateButton() {
 //        $n = Notebook::getOneFromDb(['notebook_id' => 1001], $this->DB);
-//
-//        $this->doLoginBasic();
-//        $this->get('http://localhost/digitalfieldnotebooks/app_code/notebook.php?action=edit&notebook_id=1001');
-//        $this->checkBasicAsserts();
-//
-//
-//        $this->click(util_lang('add_notebook_page'));
-//
-//        $this->checkBasicAsserts();
-//        $this->assertTitle(LANG_APP_NAME . ': ' . ucfirst(util_lang('page')));
-//        $this->assertLink(htmlentities($n->name));
-//        $this->assertEltByIdHasAttrOfValue('rendered_notebook_page_NEW','id','rendered_notebook_page_NEW');
-//
-////        $this->showContent();
-//    }
-//
-//
-//    function testNewNotebookPage() {
-//        $n = Notebook::getOneFromDb(['notebook_id' => 1001], $this->DB);
-//
-//        $this->doLoginBasic();
-//        $this->get('http://localhost/digitalfieldnotebooks/app_code/notebook.php?action=edit&notebook_id=1001');
-//        $this->checkBasicAsserts();
-//
-//        $this->click(util_lang('add_notebook_page'));
-//
-//        $this->checkBasicAsserts();
-//
-//        $this->assertEltByIdHasAttrOfValue('form-edit-notebook-page-base-data','action',APP_ROOT_PATH.'/app_code/notebook_page.php');
-//
-////        $this->showContent();
-//    }
+
+        $this->doLoginAdmin();
+
+        $this->get('http://localhost/digitalfieldnotebooks/app_code/authoritative_plant.php?action=create');
+
+        $this->checkBasicAsserts();
+        $this->assertTitle(LANG_APP_NAME . ': ' . util_lang('authoritative_plant','properize'));
+        $this->assertEltByIdHasAttrOfValue('rendered_authoritative_plant_NEW','id','rendered_authoritative_plant_NEW');
+//        $this->showContent();
+    }
+
+    function testCreationOfNewPlant() {
+        $this->doLoginAdmin();
+
+        $this->get('http://localhost/digitalfieldnotebooks/app_code/authoritative_plant.php?action=create');
+        $this->checkBasicAsserts();
+
+        $this->assertTrue($this->setField('authoritative_plant-genus_NEW','uniquenewgenus'));
+        $this->assertTrue($this->setField('authoritative_plant-species_NEW','uniquenewspecies'));
+        $this->assertTrue($this->setField('flag_active',true));
+
+        ///////////////////////////////
+        //// submit the form
+        $this->click('<i class="icon-ok-sign icon-white"></i> '.util_lang('update','properize'));
+
+        $new_ap = Authoritative_Plant::getOneFromDb(['species'=>'uniquenewspecies'],$this->DB);
+
+        $this->assertTrue($new_ap->matchesDb);
+        $this->assertTrue($new_ap->flag_active);
+    }
 //
 //    function testDeleteNotebookPage() {
 //        $np = Notebook_Page::getOneFromDb(['notebook_page_id'=>1101],$this->DB);
@@ -199,8 +221,8 @@ class AuthoritativePlantEditAndCreateTest extends WMSWebTestCase {
 //            $this->todo('test existence of dynamic elements for in-place related data');
     //        $this->todo('  ----------  build in-place editing fragments for related data, and associated tests (not much for this, but gets messy once we get to pages)');
 //            $this->todo('test updating base data');
-            $this->todo('test create/add button action and form for creation of new authoritative plant');
-            $this->todo('test updating related data, perhaps via ajax but probably mainly as a part of the base update call'); // NOTE: ajax used sporadically throughout the site - need to make the consistent at some point
+//            $this->todo('test create/add button action and form for creation of new authoritative plant');
+//            $this->todo('test updating related data, perhaps via ajax but probably mainly as a part of the base update call'); // NOTE: ajax used sporadically throughout the site - need to make the consistent at some point
 //            $this->todo('test updating/saving new page fields - basic');
 //            $this->todo('test updating/saving new page fields - with duplicate structures and differing values (do it)');
 //            $this->todo('test updating/saving new page fields - with duplicate structures and same values (skip it)');
@@ -209,14 +231,15 @@ class AuthoritativePlantEditAndCreateTest extends WMSWebTestCase {
 //            $this->todo('front end implementation of deletion controls (grey out w/ "delete pending" note, have to click update to do actual delete)');
 
 // NOTE: cannot test these as they require javascript - instead test the supporting actions via tests of rendering and tests of AJAX support code/pages
+
 //            $this->todo('test adding auth plant extras - common name');
 //            $this->todo('test adding auth plant extras - image');
 //            $this->todo('test adding auth plant extras - text');
 
-            $this->todo('test adding specimens');
-            $this->todo('test deleting specimens');
-            $this->todo('test adding specimen images');
-            $this->todo('test deleting specimen images');
+//            $this->todo('test adding specimens');
+//            $this->todo('test deleting specimens');
+//            $this->todo('test adding specimen images');
+//            $this->todo('test deleting specimen images');
     }
 
 }

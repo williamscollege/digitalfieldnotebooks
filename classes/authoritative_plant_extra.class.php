@@ -96,16 +96,19 @@
             // common frame
             $li_elt .= '  <div class="authoritative-plant-extra embedded">'."\n";
             $li_elt .= '    <div id="form-edit-authoritative-plant-extra-'.$this->authoritative_plant_extra_id.'" class="form-edit-authoritative-plant-extra" data-authoritative_plant_extra_id="'.$this->authoritative_plant_extra_id.'">'."\n";
+            $li_elt .= '      <input type="hidden" name="'.$idstr.'-id" value="'.$this->authoritative_plant_extra_id.'"/>'."\n";
+            $li_elt .= '      <input type="hidden" name="'.$idstr.'-type" value="'.$this->type.'"/>'."\n";
 
             // ordering controls here?
 
             // branch on type
+            $value_key = $idstr.'-value';
             if ($this->type == 'common name') {
-                $li_elt .= '      <div class="field-label">'.util_lang('common_name').' : </div><div class="field-value"><input type="text" name="authoritative_plant_extra-common_name_'.$this->authoritative_plant_extra_id.'" id="authoritative_plant_extra-common_name_'.$this->authoritative_plant_extra_id.'" value="'.htmlentities($this->value).'"/></div>'."\n";
+                $li_elt .= '      <div class="field-label">'.util_lang('common_name').' : </div><div class="field-value"><input type="text" name="'.$value_key.'" id="'.$value_key.'" value="'.htmlentities($this->value).'"/></div>'."\n";
             } elseif ($this->type == 'image') {
                 $li_elt .= '      '.$this->renderAsHtml()."\n";
             } elseif ($this->type == 'description') {
-                $li_elt .= '      <div class="field-label">'.util_lang('description').' : </div><div class="field-value"><input type="text" name="authoritative_plant_extra-description_'.$this->authoritative_plant_extra_id.'" id="authoritative_plant_extra-description_'.$this->authoritative_plant_extra_id.'" value="'.htmlentities($this->value).'"/></div>'."\n";
+                $li_elt .= '      <div class="field-label">'.util_lang('description').' : </div><div class="field-value"><input type="text" name="'.$value_key.'" id="'.$value_key.'" value="'.htmlentities($this->value).'"/></div>'."\n";
             }
 
             // close common frame

@@ -388,6 +388,12 @@
             $canonical .= '    </ul>'."\n";
 
 // specimens, as per notebook page rendering
+
+            $canonical .= '    <input type="hidden" id="created_authoritative_plant_extra_ids" name="created_authoritative_plant_extra_ids" value=""/>'."\n";
+            $canonical .= '    <input type="hidden" id="deleted_authoritative_plant_extra_ids" name="deleted_authoritative_plant_extra_ids" value=""/>'."\n";
+            $canonical .= '    <input type="hidden" id="deleted_specimen_ids" name="deleted_specimen_ids" value=""/>'."\n";
+            $canonical .= '    <input type="hidden" id="created_specimen_ids" name="created_specimen_ids" value=""/>'."\n";
+
             $canonical .= Specimen::renderSpecimenListBlock($ap->specimens);
 //
 //                '  <h4>'.ucfirst(util_lang('specimens'))."</h4>\n".
