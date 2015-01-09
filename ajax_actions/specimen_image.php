@@ -201,7 +201,7 @@
                 $si->ordering = $_REQUEST[$req_key];
                 $si->updateDb();
                 if (! $si->matchesDb) {
-                    $results['note'] = util_lang('mag_database_update_failed');
+                    $results['note'] = util_lang('msg_database_update_failed');
                     echo json_encode($results);
                     exit;
                 }
